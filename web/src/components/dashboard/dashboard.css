@@ -1,0 +1,61 @@
+.ant-avatar img{
+  object-fit: scale-down;
+}
+
+.affix-button{
+  float: right;
+}
+
+.vehicle-desc{
+  /* text-align: center; */
+  background-color: #F0F0F0;
+  height: 400px;
+  padding: 20px;
+}
+
+.vehicle-desc .ant-descriptions-view{
+  margin: 50px 15%;
+  width: auto;
+}
+
+.vehicle-desc .ant-descriptions-item-label{
+  background: none;
+  font-size: 20px;
+}
+
+.vehicle-desc .ant-descriptions-item-content{
+  font-size: 20px;
+}
+
+.dashboard-header{
+  padding-left: 0;
+  padding-right: 0;
+}
+.refresh-loc-btn{
+  width: 400px;
+  /* left: 30%; */
+}
+
+.map-iframe{
+  border: 0;
+}
+
+.alert-msg-box{
+  margin: auto;
+  text-align: center;
+}
+
+.alert-msg-box .btn{
+  color: blue;
+  background-color: transparent;
+  border: none;
+}
+
+.alert-header{
+  font-size: larger;
+  font-weight: bold;
+}
+
+.alert-msg{
+  font-size: large;
+}

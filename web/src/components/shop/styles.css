@@ -1,0 +1,42 @@
+.page-header{
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.balance-desc span{
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.balance-desc .ant-descriptions-item-content{
+  color: darkgreen;
+}
+
+.product-card{
+  padding-top: 24px;
+}
+
+.product-avatar{
+  margin: auto;
+}
+
+.product-card .ant-page-header-heading-left{
+  margin: auto;
+}
+
+.product-card .ant-page-header-heading-title{
+  margin-right: 0;
+}
+
+.buy-btn{
+  width: 30%;
+  margin: 0 35%;
+}
+
+/* .product-desc span{
+  font-size: medium;
+}
+
+.product-desc .ant-descriptions-item{
+  padding-left: 24px;
+} */

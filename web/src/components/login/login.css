@@ -1,0 +1,37 @@
+.container{
+  display: flex;
+  height: 91vh;
+  width: 100%;
+}
+
+.alternative-style{
+  color:#262C6F;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  float: right;
+  box-sizing: border-box;
+  padding-bottom: 2%;
+  border: none;
+  background-color: transparent;
+}
+.spinner{
+  max-height: none !important;
+}
+.error-message{
+  text-align: left;
+  color: red;
+  font-size: 12px;
+  padding: 15px 0;
+}
+
+.form-card{
+  border-radius: 5px; 
+  width: 30%;
+  margin: auto;
+  min-width: 400px ;
+}
+
+.form-button{
+  width: 100%;
+}

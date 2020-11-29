@@ -1,0 +1,20 @@
+.order-desc{
+  padding: 0 10%;
+}
+
+.order-desc .ant-descriptions-item-label, .order-desc .ant-descriptions-item-content{
+  font-size: 18px;
+}
+
+.return-btn{
+  width: 30%;
+  margin: 0 35%;
+}
+
+.order-card{
+  padding-top: 24px;
+}
+
+.order-avatar{
+  margin: auto;
+}

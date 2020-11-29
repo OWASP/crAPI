@@ -1,0 +1,107 @@
+package com.crapi.config;
+
+
+import com.crapi.entity.User;
+import com.crapi.entity.UserDetails;
+import com.crapi.entity.VehicleDetails;
+import com.crapi.enums.ERole;
+import com.crapi.repository.*;
+import com.crapi.service.Impl.VehicleServiceImpl;
+import com.crapi.service.VehicleService;
+import com.crapi.utils.UserData;
+import com.crapi.utils.VehicleLocationData;
+import com.crapi.utils.VehicleModelData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+
+/**
+ * @author Traceabel AI
+ */
+@Component
+public class InitialDataConfig {
+
+    private static final Logger logger = LoggerFactory.getLogger(InitialDataConfig.class);
+
+    @Autowired
+    VehicleLocationRepository vehicleLocationRepository;
+
+    @Autowired
+    VehicleModelRepository vehicleModelRepository;
+
+    @Autowired
+    VehicleDetailsRepository vehicleDetailsRepository;
+
+    @Autowired
+    UserDetailsRepository userDetailsRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    VehicleService vehicleService;
+
+    @Autowired
+    PasswordEncoder encoder;
+
+
+    public void addLocation(){
+        if (CollectionUtils.isEmpty(vehicleLocationRepository.findAll())) {
+            VehicleLocationData vehicleLocationData = new VehicleLocationData();
+            vehicleLocationRepository.saveAll(vehicleLocationData.getVehicleLocationData());
+        }
+    }
+
+    public void addVehicleModel(){
+        if (CollectionUtils.isEmpty(vehicleModelRepository.findAll())){
+            VehicleModelData vehicleModelData = new VehicleModelData();
+            vehicleModelRepository.saveAll(vehicleModelData.getModelList());
+        }
+    }
+
+    @EventListener
+    public void addUser(ApplicationReadyEvent event){
+        addLocation();
+        addVehicleModel();
+        if (CollectionUtils.isEmpty(userDetailsRepository.findAll())) {
+            boolean user1 = predefineUserData("Adam","adam007@gmail.com","9876895423");
+            boolean user2 = predefineUserData("Pogba", "pogba006@gmail.com", "9876570006");
+            boolean user3 = predefineUserData("Robot", "robot001@gmail.com", "9876570001");
+            if(!user1 || !user2 || !user1){
+                logger.error("Fail to create user predefine data -> Message: {}");
+            }
+        }
+    }
+
+    public boolean predefineUserData(String name, String email, String number){
+        UserData userData = new UserData();
+        VehicleDetails vehicleDetails = null;
+        UserDetails userDetails = null;
+        try {
+
+            User loginForm = new User(email, number, encoder.encode(name), ERole.ROLE_PREDEFINE);
+            loginForm = userRepository.save(loginForm);
+            userDetails = userData.getPredefineUser(name, loginForm);
+            userDetailsRepository.save(userDetails);
+            vehicleDetails = vehicleService.createVehicle();
+            if (vehicleDetails != null) {
+                vehicleDetails.setOwner(loginForm);
+                vehicleDetailsRepository.save(vehicleDetails);
+                return true;
+            }
+            logger.error("Fail to create vehicle for user {}", email);
+            return false;
+        } catch (Exception e){
+            logger.error("Fail to create user {}, Exception :: {}", email, e);
+            return false;
+        }
+    }
+
+}

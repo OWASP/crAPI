@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: crapi-identity
+  labels:
+    app: crapi-identity
+spec:
+  ports:
+  - port: 8080
+    name: java
+  selector:
+    app: crapi-identity

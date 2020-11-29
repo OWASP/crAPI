@@ -1,0 +1,26 @@
+.avatar-uploader{
+  width: auto;
+}
+
+.page-container{
+  width: 65%;
+  min-width: 900px;
+  margin: auto;
+}
+
+.profile-header{
+  padding-left: 0;
+}
+
+.change-email-btn{
+  margin-left: 50px;
+}
+
+.profile-video{
+  width: 60%;
+}
+
+.more-icon{
+  color: black;
+  font-size: x-large;
+}

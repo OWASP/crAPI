@@ -1,0 +1,19 @@
+.post-header{
+  padding-bottom: 0;
+}
+
+.post-subtitle{
+  padding: 0;
+}
+
+.comment-heading{
+  padding-top: 0;
+}
+
+.comment-title{
+  padding: 0;
+}
+
+.comment-row{
+  align-items: center;
+}

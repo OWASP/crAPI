@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: crapi-web-configmap
+  labels:
+    app: crapi-web
+data: 
+  GO_SERVICE: crapi-community:8087
+  JAVA_SERVICE: crapi-identity:8080
+  PYTHON_SERVICE: crapi-workshop:8000
+  DB_NAME: crapi
+  DB_USER: admin
+  DB_PASSWORD: crapisecretpassword
+  DB_HOST: postgresdb
+  DB_PORT: "5432"
+  JWT_SECRET: crapi
+  SECRET_KEY: crapi

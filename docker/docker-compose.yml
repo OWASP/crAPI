@@ -1,0 +1,190 @@
+version: '3.7'
+services: 
+
+  crapi-identity:
+    container_name: crapi-identity
+    image: crapi-identity
+    #ports:
+    #  - "127.0.0.1:8080:8080"
+    environment:
+      - DB_NAME=crapi
+      - DB_USER=admin
+      - DB_PASSWORD=crapisecretpassword
+      - DB_HOST=postgresdb
+      - DB_PORT=5432
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+      - BLOCK_SHELL_INJECTION=false
+      - JWT_SECRET=crapi
+      - WAIT_HOSTS=postgresdb:5432,mongodb:27017
+      - WAIT_HOSTS_TIMEOUT=120
+      - WAIT_SLEEP_INTERVAL=5
+    depends_on:
+      - postgresdb
+      - mongodb
+    healthcheck:
+        test: curl 0.0.0.0:8080/identity/health_check
+        interval: 15s
+        timeout: 15s
+        retries: 15
+    deploy:
+      resources:
+        limits:
+          cpus: '0.8'
+          memory: 256M
+
+  crapi-community:
+    container_name: crapi-community
+    image: crapi-community
+    #ports:
+    #  - "127.0.0.1:8087:8087"
+    environment:
+      - DB_NAME=crapi
+      - DB_USER=admin
+      - DB_PASSWORD=crapisecretpassword
+      - DB_HOST=postgresdb
+      - DB_PORT=5432
+      - MONGO_DB_HOST=mongodb
+      - MONGO_DB_PORT=27017
+      - MONGO_DB_USER=admin
+      - MONGO_DB_PASSWORD=crapisecretpassword
+      - MONGO_DB_NAME=crapi
+      - JWT_SECRET=crapi
+      - WAIT_HOSTS=postgresdb:5432,mongodb:27017,crapi-identity:8080
+      - WAIT_HOSTS_TIMEOUT=120
+      - WAIT_SLEEP_INTERVAL=5
+      - WAIT_AFTER_HOSTS=10
+    depends_on:
+      - postgresdb
+      - mongodb
+      - crapi-identity
+    healthcheck:
+        test: curl 0.0.0.0:8087/community/home
+        interval: 15s
+        timeout: 15s
+        retries: 15
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 128M
+
+  crapi-workshop:
+    container_name: crapi-workshop
+    image: crapi-workshop
+    #ports:
+    #  - "127.0.0.1:8000:8000"
+    environment:
+      - DB_NAME=crapi
+      - DB_USER=admin
+      - DB_PASSWORD=crapisecretpassword
+      - DB_HOST=postgresdb
+      - DB_PORT=5432
+      - MONGO_DB_HOST=mongodb
+      - MONGO_DB_PORT=27017
+      - MONGO_DB_USER=admin
+      - MONGO_DB_PASSWORD=crapisecretpassword
+      - MONGO_DB_NAME=crapi
+      - JWT_SECRET=crapi
+      - SECRET_KEY=crapi
+      - WAIT_HOSTS=crapi-identity:8080,crapi-community:8087,mailhog:1025
+      - WAIT_HOSTS_TIMEOUT=120
+      - WAIT_SLEEP_INTERVAL=5
+      - WAIT_AFTER_HOSTS=10
+    depends_on:
+      - postgresdb
+      - mongodb
+      - crapi-identity
+      - crapi-community
+    healthcheck:
+        test: curl 0.0.0.0:8000/workshop/health_check/
+        interval: 15s
+        timeout: 15s
+        retries: 15
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 128M
+
+  crapi-web:
+    container_name: crapi-web
+    image: crapi-web
+    ports:
+      - "127.0.0.1:8888:80"
+    environment:
+      - GO_SERVICE=crapi-community:8087
+      - JAVA_SERVICE=crapi-identity:8080
+      - PYTHON_SERVICE=crapi-workshop:8000
+      - WAIT_HOSTS=crapi-community:8087,crapi-identity:8080,crapi-workshop:8000,mailhog:1025
+      - WAIT_HOSTS_TIMEOUT=120
+      - WAIT_SLEEP_INTERVAL=5
+    depends_on:
+      - crapi-community
+      - crapi-identity
+      - crapi-workshop
+    healthcheck:
+        test: curl 0.0.0.0:80/web/health
+        interval: 15s
+        timeout: 15s
+        retries: 15
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 128M
+
+  postgresdb:
+    container_name: postgresdb
+    image: 'postgres'
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: crapisecretpassword
+      POSTGRES_DB: crapi
+    #ports:
+    #  - "127.0.0.1:5432:5432"
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data/
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 128M
+  
+  mongodb:
+    container_name: mongodb
+    image: 'mongo'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: crapisecretpassword
+    #ports:
+    #  - "127.0.0.1:27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 128M
+
+  mailhog:
+    user: root
+    container_name: mailhog
+    image: mailhog/mailhog
+    command: ["-storage=maildir", "-maildir-path=/maildir"]
+    volumes:
+      - mailhog-data:/maildir
+    ports: 
+    #  - "127.0.0.1:1025:1025" # smtp server
+      - "127.0.0.1:8025:8025" # Mail ui
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 128M
+
+volumes:
+  mongodb-data:
+  postgresql-data:
+  mailhog-data:
+
