@@ -13,6 +13,10 @@ know more about crAPI, please check [crAPI's overview][overview].
 
 ### Docker
 
+You'll need to have Docker installed and running on your host system.
+After having crAPI running, you may want to remove unnecessary docker images
+left behind.
+
 1. Clone crAPI repository
     ```
     $ git clone [REPOSITORY-URL]
@@ -32,11 +36,40 @@ know more about crAPI, please check [crAPI's overview][overview].
 `http://localhost:8025`
 
 If you would like to deploy on kubernetes we have sample k8s configs already
-created. Check [the setup instructions][setup] for more details.
+created. Check [the setup instructions][setup-k8s] for more details.
+
+### Vagrant
+
+This option allows you to run crAPI within a virtual machine, thus isolated from
+your system. You'll need to have [Vagrant] and, for example [VirtualBox]
+installed.
+
+1. Clone crAPI repository
+    ```
+    $ git clone [REPOSITORY-URL]
+    ```
+2. Start crAPI Virtual Machine
+    ```
+    $ cd deploy/vagrant && vagrant up
+    ```
+3. Visit `http://192.168.33.20`
+
+
+**Note**: All emails are sent to mailhog service and can be checked on
+`http://192.168.33.20:8025`
+
+Once you're done playing with crAPI, you can remote it completely from your
+system running the following command from the repository root directory
+
+```
+$ cd deploy/vagrant && vagrant destroy
+```
 
 ---
 
 Copyright (c) 2020 "Traceable AI". All rights reserved.
 
 [overview]: docs/overview.md
-[setup]: docs/setup.md
+[setup-k8s]: docs/setup.md#kubernetes-minikube
+[Vagrant]: https://www.vagrantup.com/downloads
+[VirtualBox]: https://www.virtualbox.org/wiki/Downloads
