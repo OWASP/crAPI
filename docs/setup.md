@@ -65,7 +65,7 @@ installed.
 **Note**: All emails are sent to mailhog service and can be checked on
 `http://192.168.33.20:8025`
 
-Once you're done playing with crAPI, you can remote it completely from your
+Once you're done playing with crAPI, you can remove it completely from your
 system running the following command from the repository root directory
 
 ```
