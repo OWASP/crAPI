@@ -33,7 +33,7 @@ spec:
         - containerPort: 8000
         envFrom:
             - configMapRef:
-                name: crapi-identity-configmap
+                name: crapi-workshop-configmap
         resources:
           limits:
             cpu: "256m"

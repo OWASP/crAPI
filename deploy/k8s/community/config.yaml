@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: crapi-community-configmap
+  labels:
+    app: crapi-community
+data:
+    DB_HOST: postgresdb
+    DB_DRIVER: postgres
+    JWT_SECRET: crapi
+    DB_USER: admin
+    DB_PASSWORD: crapisecretpassword
+    DB_NAME: crapi
+    DB_PORT: "5432"
+    MONGO_DB_HOST: mongodb
+    MONGO_DB_DRIVER: mongodb
+    MONGO_DB_PORT: "27017"
+    MONGO_DB_USER: admin
+    MONGO_DB_PASSWORD: crapisecretpassword
+    MONGO_DB_NAME: crapi

@@ -2,7 +2,7 @@
 set -x
 set -e
 cd "$(dirname $0)"
-scripts=$(find ../ -name 'build-image*')
+scripts=$(find ../../services/ -name 'build-image*')
 for script in ${scripts}
 do
     echo "Executing $script"

@@ -1,4 +1,11 @@
-The vulnerabilities induced in OWASP crAPI are categorized majorly based on OWASP API Top 10 and includes few other common attacks.
+Challenges | crAPI
+==================
+
+crAPI covers the [OWASP API Security Top 10 2019][t10] and includes few other
+common attacks.
+
+The table below provides some guidance on what you should focus to find and
+exploit the existing vulnerabilities.
 
 | Category                                                            | Level  | Challenge                                    |
 |:--------------------------------------------------------------------|:-------|:---------------------------------------------|
@@ -16,3 +23,5 @@ The vulnerabilities induced in OWASP crAPI are categorized majorly based on OWAS
 | Mass Assignment                                                     | Medium | Return item                                  |
 | Broken Object Level Authentication,<br/> Improper Assets Management | Hard   | Change email address - Full account takeover |
 | Remote Code Execution                                               | Hard   | Share video                                  |
+
+[t10]: https://raw.githubusercontent.com/OWASP/API-Security/master/2019/en/dist/owasp-api-security-top-10.pdf
