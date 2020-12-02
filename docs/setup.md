@@ -3,6 +3,10 @@ Setup | crAPI
 
 ## Docker
 
+You'll need to have Docker installed and running on your host system.
+After having crAPI running, you may want to remove unnecessary docker images
+left behind.
+
 1. Clone crAPI repository
     ```
     $ git clone [REPOSITORY-URL]
@@ -41,3 +45,32 @@ Make sure minikube is up and running as well as the following addons:
     ```
     $ deploy/k8s/deploy.sh
     ```
+### Vagrant
+
+This option allows you to run crAPI within a virtual machine, thus isolated from
+your system. You'll need to have [Vagrant] and, for example [VirtualBox]
+installed.
+
+1. Clone crAPI repository
+    ```
+    $ git clone [REPOSITORY-URL]
+    ```
+2. Start crAPI Virtual Machine
+    ```
+    $ cd deploy/vagrant && vagrant up
+    ```
+3. Visit `http://192.168.33.20`
+
+
+**Note**: All emails are sent to mailhog service and can be checked on
+`http://192.168.33.20:8025`
+
+Once you're done playing with crAPI, you can remove it completely from your
+system running the following command from the repository root directory
+
+```
+$ cd deploy/vagrant && vagrant destroy
+```
+
+[Vagrant]: https://www.vagrantup.com/downloads
+[VirtualBox]: https://www.virtualbox.org/wiki/Downloads

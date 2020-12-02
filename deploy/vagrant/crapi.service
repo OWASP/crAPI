@@ -1,0 +1,14 @@
+[Unit]
+Description=crAPI
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+WorkingDirectory=/opt/crapi
+ExecStart=/bin/bash -c "/usr/local/bin/docker-compose up -d --remove-orphans"
+ExecStop=/bin/bash -c "/usr/local/bin/docker-compose down"
+
+[Install]
+WantedBy=multi-user.target
