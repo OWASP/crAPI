@@ -120,7 +120,7 @@ class OrderControlView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         user_details.available_credit -= float(product.price * request_data['quantity'])
-        Order.objects.create(
+        order = Order.objects.create(
             user=user,
             product=product,
             quantity=request_data['quantity'],
@@ -128,6 +128,7 @@ class OrderControlView(APIView):
         )
         user_details.save()
         return Response({
+            'id': order.id,
             'message': messages.ORDER_CREATED,
             'credit': user_details.available_credit,
         }, status=status.HTTP_200_OK)

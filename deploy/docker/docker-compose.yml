@@ -171,9 +171,9 @@ services:
     user: root
     container_name: mailhog
     image: mailhog/mailhog
-    command: ["-storage=maildir", "-maildir-path=/maildir"]
-    volumes:
-      - mailhog-data:/maildir
+    environment:
+      MH_MONGO_URI: admin:crapisecretpassword@mongodb:27017
+      MH_STORAGE: mongodb
     ports: 
     #  - "127.0.0.1:1025:1025" # smtp server
       - "127.0.0.1:8025:8025" # Mail ui
@@ -186,5 +186,3 @@ services:
 volumes:
   mongodb-data:
   postgresql-data:
-  mailhog-data:
-

@@ -138,14 +138,10 @@ public class ProfileController {
         CRAPIResponse convertVideoResponse = profileService.convertVideo(video_id, request);
         if (convertVideoResponse != null && convertVideoResponse.getStatus()==200) {
             return ResponseEntity.status(HttpStatus.OK).body(convertVideoResponse);
-        }
-        else if (convertVideoResponse!=null && convertVideoResponse.getStatus()==400){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(convertVideoResponse);
+        } else if (convertVideoResponse!=null && convertVideoResponse.getStatus()!=200){
+            return ResponseEntity.status(HttpStatus.valueOf(convertVideoResponse.getStatus())).body(convertVideoResponse);
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(convertVideoResponse);
-
     }
-
-
 
 }

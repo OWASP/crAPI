@@ -267,18 +267,22 @@ public class UserServiceImpl implements UserService {
         ChangeEmailRequest changeEmailRequest;
         User user;
         changeEmailRequest = changeEmailRepository.findByEmailToken(changeEmailForm.getToken());
-            user = getUserFromToken(request);
-            if (changeEmailRequest != null  && user.getEmail().equalsIgnoreCase(changeEmailRequest.getOldEmail())) {
+        user = getUserFromToken(request);
+        if (changeEmailRequest != null) {
+            if (user.getEmail().equalsIgnoreCase(changeEmailRequest.getOldEmail())) {
                 if (changeEmailRequest.getNewEmail().equalsIgnoreCase(changeEmailForm.getNew_email())){
                     user.setEmail(changeEmailRequest.getNewEmail());
                     user.setJwtToken("");
                     userRepository.save(user);
                     return new CRAPIResponse(UserMessage.EMAIL_CHANGE_SUCCESSFUL,200);
+                } else {
+                    return new CRAPIResponse(UserMessage.NEW_MAIL_DOES_NOT_BELONG,500);
+                }
             } else {
-                    return new CRAPIResponse(UserMessage.OLD_MAIL_DOES_NOT_BELONG,500);
-                   }
+                return new CRAPIResponse(UserMessage.OLD_MAIL_DOES_NOT_BELONG,500);
             }
-            return new CRAPIResponse(UserMessage.INVALID_EMAIL_TOKEN,500);
+        }
+        return new CRAPIResponse(UserMessage.INVALID_EMAIL_TOKEN,500);
     }
 
     /**

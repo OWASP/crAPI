@@ -11,7 +11,7 @@ exploit the existing vulnerabilities.
 |:--------------------------------------------------------------------|:-------|:---------------------------------------------|
 | Security Misconfiguration                                           | Easy   | Data flow                                    |
 | Broken Object Level Authentication                                  | Easy   | Contact mechanic form                        |
-| Excessive Data Exposure                                             | Easy   | Change video                                 |
+| Excessive Data Exposure                                             | Easy   | Add/Change video                             |
 | Mass Assignment                                                     | Easy   | Change video name                            |
 | Broken Object Level Authentication                                  | Medium | Get car location                             |
 | Broken Authentication,<br/> Lack of Resource & Rate Limiting        | Medium | Forgot Password                              |

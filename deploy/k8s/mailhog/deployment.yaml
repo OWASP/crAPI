@@ -41,6 +41,9 @@ spec:
           - containerPort: 1025
             name: smtp
             protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: mailhog-configmap
           resources:
             limits:
               cpu: "1"
@@ -48,11 +51,3 @@ spec:
             requests:
               cpu: 50m
               memory: 64Mi
-          command: ["MailHog", "-storage=maildir", "-maildir-path=/maildir"]
-          volumeMounts:
-                - mountPath: /maildir
-                  name: mailhog-data
-      volumes:
-        - name: mailhog-data
-          persistentVolumeClaim:
-            claimName: mailhog-pv-claim

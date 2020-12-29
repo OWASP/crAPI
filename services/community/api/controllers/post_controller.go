@@ -30,12 +30,12 @@ func (s *Server) AddNewPost(w http.ResponseWriter, r *http.Request) {
 	}
 	post.Prepare()
 
-	_, err = models.SavePost(s.Client, post)
+	savedPost, err := models.SavePost(s.Client, post)
 	if err != nil {
 		responses.ERROR(w, http.StatusInternalServerError, err)
 	}
 
-	responses.JSON(w, http.StatusOK, "Post Added in database")
+	responses.JSON(w, http.StatusOK, savedPost)
 }
 
 //GetPostByID fetch the post by ID,

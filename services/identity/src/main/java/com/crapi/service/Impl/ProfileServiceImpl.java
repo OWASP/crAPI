@@ -126,7 +126,6 @@ public class ProfileServiceImpl implements ProfileService {
         profileVideo = profileVideoRepository.findByUser_id(user.getId());
         if (profileVideo!=null) {
             if (profileVideo.getId() == videoId) {
-                profileVideo.setUser(null);
                 return profileVideo;
             }
         }
@@ -219,26 +218,26 @@ public class ProfileServiceImpl implements ProfileService {
                             return new CRAPIResponse(UserMessage.CONVERSION_VIDEO_OK, 200);
                         } else if (profileVideo.getConversion_params().equalsIgnoreCase("-v codec h264")) {
                             return new CRAPIResponse(UserMessage.CONVERT_VIDEO_BASH_COMMAND_TRIGGERED, 200);
-                        } else if (!profileVideo.getConversion_params().equalsIgnoreCase("-v codec h264")
-                                && !ProfileValidator.checkSpecialCharacter(profileVideo.getConversion_params())) {
+                        } else if (!profileVideo.getConversion_params().equalsIgnoreCase("-v codec h264")) {
+                            if (ProfileValidator.checkSpecialCharacter(profileVideo.getConversion_params())) {
+                               return new CRAPIResponse(UserMessage.CONVERT_VIDEO_INTERNAL_ERROR, 500);
+                            }
                             return new CRAPIResponse(UserMessage.YOU_WON_THE_GAME, 200);
                         }
-               /*else if ( profileValidator.checkSpecialCharacter(profileVideo.getConversion_params())
-                       && !profileVideo.getConversion_params().equalsIgnoreCase("-v codec h264"))
-                    return ConversionParamStatus.YOU_WON_THE_GAME.toString();*/
+                        return new CRAPIResponse(UserMessage.CONVERT_VIDEO_INTERNAL_ERROR, 500);
                     } else if (optionalProfileVideo.isPresent() && !block_shell_injections && optionalProfileVideo.get().getConversion_params() != null) {
                         profileVideo = optionalProfileVideo.get();
                         return new CRAPIResponse(bashCommand.executeBashCommand(profileVideo.getConversion_params()), 200);
                     }
+                    return new CRAPIResponse(UserMessage.CONVERT_VIDEO_INTERNAL_ERROR, 500);
                 }
                 return new CRAPIResponse(UserMessage.CONVERT_VIDEO_PARAM_IS_MISSING, 400);
+            } else {
+                return new CRAPIResponse(UserMessage.CONVERT_VIDEO_INTERNAL_USE_ONLY, 403);
             }
-            return new CRAPIResponse(UserMessage.CONVERT_VIDEO_INTERNAL_USE_ONLY, 403);
-
         } catch (IOException exception) {
             logger.error("unable to convert video -> Message: %d ", exception);
             throw new IOExceptionHandler(ProfileServiceImpl.class, UserMessage.ERROR);
         }
-
     }
 }
