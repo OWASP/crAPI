@@ -18,13 +18,18 @@
 set -x
 set -e
 cd "$(dirname $0)"
-scripts=$(find ../../services/ -name 'build-image*')
+scripts=$(find ../../../services/ -name 'build-image*')
 for script in ${scripts}
 do
     echo "Executing $script"
     bash -x "$script"
 done
 
+if [ -z "${DOCKER_REGISTRY}" ]; then 
+  DOCKER_REGISTRY=crapi
+fi
+export DOCKER_REGISTRY
+
 # Deploy to local repository
-docker images | grep crapi | grep -v localhost | awk '{print $1}' | xargs -L1 -I{} docker tag {} localhost:5000/{}:v1
-docker images | grep crapi |  grep localhost | grep v1 | awk '{print $1}' | xargs -L1 -I{}  docker push {}:v1
+docker images | grep crapi | grep -v '/' | awk '{print $1}' | xargs -L1 -I{} docker tag {} ${DOCKER_REGISTRY}/{}:v1
+docker images | grep crapi |  grep "${DOCKER_REGISTRY}/" | grep v1 | awk '{print $1":"$2}' | xargs -L1 docker push

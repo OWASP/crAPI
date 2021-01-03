@@ -21,7 +21,7 @@ spec:
             - "postgresdb"
       containers:
       - name: crapi-identity
-        image: localhost:5000/crapi-identity:v1
+        image: crapi/crapi-identity:v1
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

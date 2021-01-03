@@ -15,7 +15,7 @@ server {
       end
     }
     proxy_pass  http://${GO_SERVICE};
-    proxy_set_header Host $http_host;
+    proxy_set_header Host ${GO_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
     sub_filter_types application/json text/html;
     sub_filter "://${GO_SERVICE}" "://$http_host";
@@ -32,7 +32,7 @@ server {
       end
     }
     proxy_pass  http://${JAVA_SERVICE};
-    proxy_set_header Host $http_host;
+    proxy_set_header Host ${JAVA_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
   }
 
@@ -46,7 +46,7 @@ server {
       end
     }
     proxy_pass  http://${PYTHON_SERVICE};
-    proxy_set_header Host $http_host;
+    proxy_set_header Host ${PYTHON_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
     sub_filter_types application/json text/html;
     sub_filter "://${PYTHON_SERVICE}" "://$http_host";

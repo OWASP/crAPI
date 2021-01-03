@@ -1,12 +1,13 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: postgresdb
 spec:
+  serviceName: postgresdb
+  replicas: 1
   selector:
     matchLabels:
       app: postgresdb
-  replicas: 1
   template:
     metadata:
       labels:
@@ -25,6 +26,7 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgres-data
+              subPath: postgres
       volumes:
         - name: postgres-data
           persistentVolumeClaim:

@@ -25,7 +25,9 @@ left behind.
 **Note**: All emails are sent to mailhog service and can be checked on
 `http://localhost:8025`
 
-## Kubernetes (minikube)
+## Kubernetes 
+
+###  Minikube
 
 Make sure minikube is up and running as well as the following addons:
 `storage-provisioner`, `default-storageclass`, and `registry`.
@@ -38,14 +40,25 @@ Make sure minikube is up and running as well as the following addons:
 2. Build Docker images and push to minikube registry
 
     ```
-    $ deploy/k8s/build-all.sh
+    $ deploy/k8s/minikube/build-all.sh
     ```
 3. Bring the k8s cluster up
 
     ```
-    $ deploy/k8s/deploy.sh
+    $ deploy/k8s/minikube/deploy.sh
     ```
-### Vagrant
+
+4. Run the following command to get the URLs
+    ```
+    crAPI URL:
+    $ echo "http://$(minikube ip):30080"
+    ```
+    ```
+    Mailhog URL:
+    echo "http://$(minikube ip):30025"
+    ```
+
+## Vagrant
 
 This option allows you to run crAPI within a virtual machine, thus isolated from
 your system. You'll need to have [Vagrant] and, for example [VirtualBox]

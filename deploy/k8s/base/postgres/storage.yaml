@@ -2,12 +2,12 @@ kind: PersistentVolumeClaim
 apiVersion: v1
  
 metadata:
-  name: mongodb-pv-claim
+  name: postgres-pv-claim
   labels:
-    app: mongo
+    app: postgresdb
  
 spec:
-  storageClassName: local-path
+  #storageClassName: local-path
   accessModes:
     - ReadWriteOnce
  
