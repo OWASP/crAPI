@@ -255,13 +255,13 @@ public class OtpServiceImplTest {
 
     private ForgetPassword getDummyForgetPassword(){
         ForgetPassword forgetPassword = new ForgetPassword();
-        forgetPassword.setEmail("mail@email.com");
+        forgetPassword.setEmail("mail@example.com");
         return forgetPassword;
     }
 
     private OtpForm getDummyOtpForm(){
         OtpForm otpForm = new OtpForm();
-        otpForm.setEmail("sample@sample.com");
+        otpForm.setEmail("sample@example.com");
         otpForm.setOtp("123456");
         otpForm.setPassword("password");
         return otpForm;
@@ -278,7 +278,7 @@ public class OtpServiceImplTest {
     }
 
     private User getDummyUser() {
-        User user = new User("email@gmail.com", "9798789212", "Pass", ERole.ROLE_USER);
+        User user = new User("email@example.com", "9798789212", "Pass", ERole.ROLE_USER);
         user.setId(1l);
         return user;
     }

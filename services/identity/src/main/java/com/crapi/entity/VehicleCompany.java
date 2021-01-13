@@ -22,7 +22,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 @Entity

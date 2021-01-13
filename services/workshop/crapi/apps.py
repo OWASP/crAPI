@@ -30,9 +30,6 @@ logger = logging.getLogger()
 
 def create_products():
     from crapi.shop.models import Product
-    count = Product.objects.all().count()
-    if (count > 0):
-        return
     product_details_all = [
         {
             'name': 'Seat',
@@ -58,51 +55,51 @@ def create_products():
 def create_mechanics():
     from user.models import User, UserDetails
     from crapi.mechanic.models import Mechanic
-    count = Mechanic.objects.all().count()
-    if (count > 0):
-        return
     mechanic_details_all = [
         {
             'name': 'Jhon',
-            'email': 'jhon@gmail.com',
+            'email': 'jhon@example.com',
             'number': '',
             'password': 'Admin1@#',
             'mechanic_code': 'TRAC_JHN'
         },
         {
             'name': 'James',
-            'email': 'james@gmail.com',
+            'email': 'james@example.com',
             'number': '',
             'password': 'Admin1@#',
             'mechanic_code': 'TRAC_JME'
         },
     ]
     for mechanic_details in mechanic_details_all:
-        if User.objects.filter(email=mechanic_details['email']).exists():
-            continue
+        uset = User.objects.filter(email=mechanic_details['email'])
+        if not uset.exists():
+            try:
+                cursor = connection.cursor()
+                cursor.execute("select nextval('user_login_id_seq')")
+                result = cursor.fetchone()
+                user_id = result[0]
+            except Exception as e:
+                logger.error("Failed to fetch user_login_id_seq"+str(e))
+                user_id = 1
+
+            user = User.objects.create(
+                id=user_id,
+                email=mechanic_details['email'],
+                number=mechanic_details['number'],
+                password=bcrypt.hashpw(
+                    mechanic_details['password'].encode('utf-8'),
+                    bcrypt.gensalt()
+                ).decode(),
+                role=User.ROLE_CHOICES.MECH,
+                created_on=timezone.now()
+            )
+        else:
+            user = uset.first()
+            
         if Mechanic.objects.filter(mechanic_code=mechanic_details['mechanic_code']):
             continue
-
-        try:
-            cursor = connection.cursor()
-            cursor.execute("select nextval('user_login_id_seq')")
-            result = cursor.fetchone()
-            user_id = result[0]
-        except Exception as e:
-            logger.error("Failed to fetch user_login_id_seq"+str(e))
-            user_id = 1
-
-        user = User.objects.create(
-            id=user_id,
-            email=mechanic_details['email'],
-            number=mechanic_details['number'],
-            password=bcrypt.hashpw(
-                mechanic_details['password'].encode('utf-8'),
-                bcrypt.gensalt()
-            ).decode(),
-            role=User.ROLE_CHOICES.MECH,
-            created_on=timezone.now()
-        )
+        
         Mechanic.objects.create(
             mechanic_code=mechanic_details['mechanic_code'],
             user=user
@@ -187,13 +184,13 @@ class CRAPIConfig(AppConfig):
         """
         try:
             create_products()
-        except django.db.utils.ProgrammingError as e:
+        except Exception as e:
             logger.error("Cannot Pre Populate Products: "+str(e))
         try:
             create_mechanics()
-        except django.db.utils.ProgrammingError as e:
+        except Exception as e:
             logger.error("Cannot Pre Populate Mechanics: "+str(e))
         try:
             create_reports()
-        except django.db.utils.ProgrammingError as e:
+        except Exception as e:
             logger.error("Cannot Pre Populate Reports: "+str(e))

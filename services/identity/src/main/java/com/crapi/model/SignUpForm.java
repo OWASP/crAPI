@@ -23,7 +23,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 @Data
 public class SignUpForm {

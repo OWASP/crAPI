@@ -27,7 +27,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 /*

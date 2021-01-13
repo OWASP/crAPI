@@ -32,8 +32,9 @@ left behind.
 4. Visit `http://localhost:8888`
 
 
-**Note**: All emails are sent to mailhog service and can be checked on
+**Note**: All emails are sent to mailhog service by default and can be checked on
 `http://localhost:8025`
+You can change the smtp configuration if required however all emails with domain **example.com** will still go to mailhog.
 
 If you would like to deploy on kubernetes we have sample k8s configs already
 created. Check [the setup instructions][setup-k8s] for more details.

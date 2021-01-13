@@ -22,7 +22,7 @@ import com.crapi.model.OtpForm;
 import com.crapi.model.CRAPIResponse;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 public interface OtpService {
 

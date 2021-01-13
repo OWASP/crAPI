@@ -22,7 +22,7 @@ import lombok.Data;
 import javax.persistence.*;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 @Entity
@@ -40,6 +40,7 @@ public class ChangeEmailRequest {
     @Column(name = "email_token")
     private String emailToken;
     private String status;
+    
     @OneToOne
     private User user;
 

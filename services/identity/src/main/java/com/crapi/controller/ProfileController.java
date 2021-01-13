@@ -32,7 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 @CrossOrigin
@@ -149,7 +149,7 @@ public class ProfileController {
      * this api will be accessed by locally only
      */
     @GetMapping("api/v2/user/videos/convert_video")
-    public ResponseEntity<?> convertVideoEndPoint(@RequestParam Long video_id,
+    public ResponseEntity<?> convertVideoEndPoint(@RequestParam(required = false) Long video_id,
                                                   HttpServletRequest request) {
         CRAPIResponse convertVideoResponse = profileService.convertVideo(video_id, request);
         if (convertVideoResponse != null && convertVideoResponse.getStatus()==200) {

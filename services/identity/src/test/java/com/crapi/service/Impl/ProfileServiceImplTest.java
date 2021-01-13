@@ -360,7 +360,7 @@ public class ProfileServiceImplTest {
     }
 
     private SignUpForm getDummySignUpForm() {
-        SignUpForm signUpForm = new SignUpForm(1l, "Name", "email@gmail.com", "9999999");
+        SignUpForm signUpForm = new SignUpForm(1l, "Name", "email@example.com", "9999999");
         signUpForm.setPassword("myPass");
         return signUpForm;
     }
@@ -375,7 +375,7 @@ public class ProfileServiceImplTest {
     }
 
     private User getDummyUser() {
-        User user = new User("email@gmail.com", "9798789212", "Pass", ERole.ROLE_USER);
+        User user = new User("email@example.com", "9798789212", "Pass", ERole.ROLE_USER);
         user.setId(1l);
         return user;
     }
@@ -384,7 +384,7 @@ public class ProfileServiceImplTest {
         LoginForm loginForm = new LoginForm();
         loginForm.setPassword("password");
         loginForm.setNumber("9798789212");
-        loginForm.setEmail("email@gmail.com");
+        loginForm.setEmail("email@example.com");
         return loginForm;
     }
 

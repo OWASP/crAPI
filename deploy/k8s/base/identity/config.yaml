@@ -12,7 +12,15 @@ data:
   DB_PASSWORD: crapisecretpassword
   DB_NAME: crapi
   DB_PORT: "5432"
-  SMTP_HOST: mailhog
-  SMTP_PORT: "1025"
-  BLOCK_SHELL_INJECTION: "true"
   APP_NAME: "crapi-identity"
+  BLOCK_SHELL_INJECTION: "true"
+  MAILHOG_HOST: mailhog
+  MAILHOG_PORT: "1025"
+  MAILHOG_DOMAIN: "example.com"
+  SMTP_HOST: "smtp.example.com"
+  SMTP_PORT: "587"
+  SMTP_EMAIL: "user@example.com"
+  SMTP_PASS: "xxxxxxxxxxxxxx"
+  SMTP_FROM: "no-reply@example.com"
+  SMTP_AUTH: "true"
+  SMTP_STARTTLS: "true"

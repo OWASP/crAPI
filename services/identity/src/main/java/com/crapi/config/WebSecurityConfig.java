@@ -34,7 +34,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 @Configuration
 @EnableWebSecurity

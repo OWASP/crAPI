@@ -46,7 +46,7 @@ import java.util.Optional;
 import java.util.Map;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 @Service
 public class ProfileServiceImpl implements ProfileService {
@@ -189,7 +189,7 @@ public class ProfileServiceImpl implements ProfileService {
     /**
      * @param videoId
      * @param request
-     * @return boolean for delete object it perform by admin
+     * @return boolean for delete object if perform by admin
      */
     @Transactional
     @Override
@@ -197,12 +197,14 @@ public class ProfileServiceImpl implements ProfileService {
         Optional<ProfileVideo> optionalProfileVideo;
         ProfileVideo profileVideo;
         optionalProfileVideo = profileVideoRepository.findById(videoId);
-        if (optionalProfileVideo.isPresent()) {
+        User user = userService.getUserFromToken(request);
+        if (optionalProfileVideo.isPresent() ) {
             profileVideo = optionalProfileVideo.get();
-            profileVideo.setVideo(null);
-            profileVideo.setVideo_name(null);
-            profileVideoRepository.save(profileVideo);
-            return new CRAPIResponse(UserMessage.VIDEO_DELETED_SUCCESS_MESSAGE,200);
+            if (profileVideo.getUser() == user) {
+                profileVideo.setUser(null);
+                profileVideoRepository.delete(profileVideo);
+                return new CRAPIResponse(UserMessage.VIDEO_DELETED_SUCCESS_MESSAGE,200);
+            }        
         }
         throw new CRAPIExceptionHandler(UserMessage.SORRY_DIDNT_GET_PROFILE,404);
     }

@@ -21,7 +21,7 @@ import lombok.Data;
 import javax.persistence.*;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 @Entity
@@ -35,6 +35,7 @@ public class Otp {
     private String otp;
     private String status;
     private int count;
+    
     @OneToOne
     private User user;
 

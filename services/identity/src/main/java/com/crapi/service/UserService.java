@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 public interface UserService {
 

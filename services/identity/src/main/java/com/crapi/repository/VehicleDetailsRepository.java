@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 @Repository
 public interface VehicleDetailsRepository extends JpaRepository<VehicleDetails, Long> {

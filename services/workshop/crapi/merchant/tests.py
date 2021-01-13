@@ -53,7 +53,7 @@ class MerchantTestCase(TestCase):
         )
         self.user = User.objects.create(
             id=2,
-            email='user@gmail.com',
+            email='user@example.com',
             number='9123456700',
             password=bcrypt.hashpw(
                 'user'.encode('utf-8'),

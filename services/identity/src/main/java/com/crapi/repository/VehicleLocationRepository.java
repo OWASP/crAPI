@@ -22,7 +22,7 @@ import org.springframework.stereotype.Repository;
 
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 @Repository
 public interface VehicleLocationRepository extends JpaRepository<VehicleLocation, Long> {

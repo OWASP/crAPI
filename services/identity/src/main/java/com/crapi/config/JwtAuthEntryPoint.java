@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 @Component
 public class JwtAuthEntryPoint implements AuthenticationEntryPoint {

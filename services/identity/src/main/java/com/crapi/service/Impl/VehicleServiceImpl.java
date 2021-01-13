@@ -40,7 +40,7 @@ import javax.transaction.Transactional;
 import java.util.*;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 @Service

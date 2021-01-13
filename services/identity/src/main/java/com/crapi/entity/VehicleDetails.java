@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 @Entity
@@ -47,11 +47,11 @@ public class VehicleDetails {
     private long year;
     private EStatus status;
 
-    @OneToOne
+    @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="vehicle_model_id")
     private VehicleModel model;
 
-    @OneToOne
+    @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name = "location_id")
     private VehicleLocation vehicleLocation;
 

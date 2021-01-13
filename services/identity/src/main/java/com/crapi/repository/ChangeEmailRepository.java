@@ -23,7 +23,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 @Repository

@@ -17,7 +17,7 @@
 package com.crapi.constant;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 public class UserMessage {
@@ -38,8 +38,8 @@ public class UserMessage {
     public static final String VEHICLE_MODEL_IS_NOT_AVAILABLE = "Sorry we don't have Vehicle model for this company. Please select other..";
     public static final String VEHICLE_SAVED_SUCCESSFULLY = "Vehicle save successfully..";
     public static final String VEHICLE_NOT_FOUND = "Failed to get Vehicles";
-    public static final String VEHICLE_DETAILS_SENT_TO_EMAIL = "Your newly purchased Vehicle Details have been sent to you email address. Check your email using the MailHog web portal. ";
-    public static final String CHANGE_EMAIL_MESSAGE = "The token has been sent to your email. Check your email using the MailHog web portal.   ";
+    public static final String VEHICLE_DETAILS_SENT_TO_EMAIL = "Your newly purchased Vehicle Details have been sent to you email address. If you have used example.com email, check your email using the MailHog web portal. ";
+    public static final String CHANGE_EMAIL_MESSAGE = "The token has been sent to your email. If you have used example.com email, check your email using the MailHog web portal.   ";
     public static final String CHANGE_EMAIL_OLD_USEREMAIL_NOT_FOUND_MESSAGE = "Sorry, we didn't find any user for ";
     public static final String INVALID_EMAIL_TOKEN = "Sorry, Token did't match";
     public static final String OLD_MAIL_DOES_NOT_BELONG = "Fail, email address parameter doesn’t belong to the user";

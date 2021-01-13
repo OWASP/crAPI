@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 public interface VehicleService {

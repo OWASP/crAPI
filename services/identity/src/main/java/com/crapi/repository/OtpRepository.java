@@ -21,7 +21,7 @@ import com.crapi.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 @Repository
 public interface OtpRepository extends JpaRepository<Otp,Long> {

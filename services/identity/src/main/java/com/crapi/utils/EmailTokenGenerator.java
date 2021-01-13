@@ -18,7 +18,7 @@ package com.crapi.utils;
 
 import java.util.Random;
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 public class EmailTokenGenerator {
     static String charsequence="abcdefghijklmnopqrstuvwxzABCDEFGHIJKLMNOPQRSTUVWXYZ";

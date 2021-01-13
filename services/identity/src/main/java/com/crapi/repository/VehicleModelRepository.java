@@ -24,7 +24,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 @Repository
 public interface VehicleModelRepository extends JpaRepository<VehicleModel,Long> {

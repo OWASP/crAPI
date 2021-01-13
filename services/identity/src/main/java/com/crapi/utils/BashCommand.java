@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 public class BashCommand {

@@ -329,7 +329,7 @@ public class VehicleServiceImplTest {
     }
 
     private User getDummyUser() {
-        User user = new User("email@gmail.com", "9798789212", "Pass", ERole.ROLE_USER);
+        User user = new User("email@example.com", "9798789212", "Pass", ERole.ROLE_USER);
         user.setId(1l);
         return user;
     }

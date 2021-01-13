@@ -35,7 +35,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 public class JwtAuthTokenFilter extends OncePerRequestFilter {
 

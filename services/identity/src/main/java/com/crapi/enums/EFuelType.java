@@ -17,7 +17,7 @@
 package com.crapi.enums;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 public enum EFuelType {

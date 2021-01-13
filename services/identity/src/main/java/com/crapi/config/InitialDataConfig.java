@@ -39,7 +39,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 @Component
 public class InitialDataConfig {
@@ -60,6 +60,9 @@ public class InitialDataConfig {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    ProfileVideoRepository profileVideoRepository;
 
     @Autowired
     VehicleService vehicleService;
@@ -83,13 +86,18 @@ public class InitialDataConfig {
     }
 
     @EventListener
-    public void addUser(ApplicationReadyEvent event){
+    public void setup(ApplicationReadyEvent event){
+
         addLocation();
         addVehicleModel();
+        addUser();
+    }
+
+    public void addUser(){
         if (CollectionUtils.isEmpty(userDetailsRepository.findAll())) {
-            boolean user1 = predefineUserData("Adam","adam007@gmail.com","9876895423");
-            boolean user2 = predefineUserData("Pogba", "pogba006@gmail.com", "9876570006");
-            boolean user3 = predefineUserData("Robot", "robot001@gmail.com", "9876570001");
+            boolean user1 = predefineUserData("Adam","adam007@example.com","9876895423");
+            boolean user2 = predefineUserData("Pogba", "pogba006@example.com", "9876570006");
+            boolean user3 = predefineUserData("Robot", "robot001@example.com", "9876570001");
             if(!user1 || !user2 || !user1){
                 logger.error("Fail to create user predefine data -> Message: {}");
             }

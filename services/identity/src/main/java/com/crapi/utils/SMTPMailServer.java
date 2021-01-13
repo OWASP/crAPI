@@ -17,6 +17,7 @@
 package com.crapi.utils;
 
 import com.crapi.config.MailConfiguration;
+import com.crapi.config.MailHogConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,13 +26,23 @@ import javax.mail.Message;
 import javax.mail.Transport;
 import javax.mail.internet.*;
 import java.util.Date;
+import javax.mail.Session;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 @Component
 public class SMTPMailServer {
     @Autowired
     MailConfiguration mailConfiguration;
+
+    @Autowired
+    MailHogConfiguration mailhogConfiguration;
+
+    private static final Logger logger = LoggerFactory.getLogger(SMTPMailServer.class);
 
     /**
      * @param sendMail
@@ -40,10 +51,35 @@ public class SMTPMailServer {
      * send mail to given email with dynamic subject and body
      */
     public void sendMail(String sendMail, String body, String subject) {
+        String mhogDomain = mailhogConfiguration.getDomain();
+        Session session = mailhogConfiguration.sendmail();
+        boolean useMailHog = false;
         try {
-            Message msg = new MimeMessage(mailConfiguration.sendmail());
+            logger.info("sendMail  mhogDomain: {}, emails: {}", mhogDomain, sendMail);
+            InternetAddress[] emails = InternetAddress.parse(sendMail);
+            if (mhogDomain != null && !mhogDomain.isEmpty()) {
+                if (mailConfiguration.getHost().trim().endsWith(mhogDomain)) {
+                    logger.info("SMTP host matches MailHog host. Using MailHog Configuration for sending emails");
+                    useMailHog = true;
+                }
+                for (InternetAddress emailAddress: emails){
+                    String email = emailAddress.toString();
+                    String domain = email.substring(email.indexOf("@") + 1).trim();
+                    logger.debug("sendMail  mhogDomain: {}, email: {}, domain: {}", mhogDomain, email, domain);
+                    if (mhogDomain.trim().equals(domain)) {
+                        logger.info("Using MailHog Configuration for sending email for domain: " + domain);
+                        useMailHog = true;
+                    }
+                }
+            }
+            if (! useMailHog) {
+                session = mailConfiguration.sendmail();
+                logger.info("Using Mail Configuration for sending email: " + sendMail);
+            }
+        
+            Message msg = new MimeMessage(session);
 
-            msg.setFrom(new InternetAddress(sendMail, false));
+            msg.setFrom(new InternetAddress(mailhogConfiguration.getFrom(), false));
 
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(sendMail));
             msg.setSubject(subject);
@@ -57,7 +93,6 @@ public class SMTPMailServer {
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
 
 }

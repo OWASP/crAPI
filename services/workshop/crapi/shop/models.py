@@ -20,7 +20,9 @@ Product and Order Models
 from django.db import models
 
 from user.models import User
-
+from extended_choices import Choices
+from django_db_cascade.fields import ForeignKey, OneToOneField
+from django_db_cascade.deletions import DB_CASCADE
 
 class Product(models.Model):
     """
@@ -44,21 +46,17 @@ class Order(models.Model):
     Order Model
     represents an order in the application
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = ForeignKey(User, DB_CASCADE)
+    product = ForeignKey(Product, DB_CASCADE)
     quantity = models.IntegerField(default=1)
     created_on = models.DateTimeField()
 
-    DELIVERED = "delivered"
-    RETURN_PENDING = "return pending"
-    RETURNED = "returned"
-
-    STATUS_CHOICES = (
-        (DELIVERED, "delivered"),
-        (RETURN_PENDING, "return pending"),
-        (RETURNED, "returned")
+    STATUS_CHOICES = Choices(
+        ("DELIVERED", "delivered", "delivered"),
+        ("RETURN_PENDING", "return pending", "return pending"),
+        ("RETURNED", "returned", "returned")
     )
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=DELIVERED)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_CHOICES.DELIVERED)
 
     class Meta:
         db_table = 'order'
@@ -86,7 +84,7 @@ class AppliedCoupon(models.Model):
     AppliedCoupon Model
     represents a mapping between coupon_code and user
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = ForeignKey(User, DB_CASCADE)
     coupon_code = models.CharField(max_length=255)
 
     class Meta:

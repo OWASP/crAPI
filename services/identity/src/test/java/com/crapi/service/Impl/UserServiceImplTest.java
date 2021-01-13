@@ -76,7 +76,7 @@ public class UserServiceImplTest {
     @Test
     public void resetPassword() {
         LoginForm loginForm = getDummyLoginForm();
-        User user = new User("email@gmail.com", "9798789212", "Pass", ERole.ROLE_USER);
+        User user = new User("email@example.com", "9798789212", "Pass", ERole.ROLE_USER);
         CRAPIResponse crapiAPIResponse = new CRAPIResponse();
         crapiAPIResponse.setMessage(UserMessage.PASSWORD_GOT_RESET);
         crapiAPIResponse.setStatus(200);
@@ -520,7 +520,7 @@ public class UserServiceImplTest {
     }
 
     private SignUpForm getDummySignUpForm() {
-        SignUpForm signUpForm = new SignUpForm(1l, "Name", "email@gmail.com", "9999999");
+        SignUpForm signUpForm = new SignUpForm(1l, "Name", "email@example.com", "9999999");
         signUpForm.setPassword("myPass");
         return signUpForm;
     }
@@ -535,7 +535,7 @@ public class UserServiceImplTest {
     }
 
     private User getDummyUser() {
-        User user = new User("email@gmail.com", "9798789212", "Pass", ERole.ROLE_USER);
+        User user = new User("email@example.com", "9798789212", "Pass", ERole.ROLE_USER);
         user.setId(1l);
         return user;
     }
@@ -544,7 +544,7 @@ public class UserServiceImplTest {
         LoginForm loginForm = new LoginForm();
         loginForm.setPassword("password");
         loginForm.setNumber("9798789212");
-        loginForm.setEmail("email@gmail.com");
+        loginForm.setEmail("email@example.com");
         return loginForm;
     }
 

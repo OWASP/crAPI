@@ -50,7 +50,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 @Service

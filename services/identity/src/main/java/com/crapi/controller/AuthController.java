@@ -31,7 +31,7 @@ import java.io.UnsupportedEncodingException;
 
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 @CrossOrigin

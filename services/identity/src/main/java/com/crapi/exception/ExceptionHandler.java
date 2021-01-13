@@ -33,7 +33,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 @ControllerAdvice
 @Slf4j

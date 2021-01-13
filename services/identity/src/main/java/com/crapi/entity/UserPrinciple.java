@@ -27,7 +27,7 @@ import java.util.Collection;
 
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 public class UserPrinciple implements UserDetails {

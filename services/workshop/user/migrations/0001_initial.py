@@ -61,7 +61,7 @@ class Migration(migrations.Migration):
                 ('fuel_type', models.BigIntegerField()),
                 ('model', models.CharField(max_length=255)),
                 ('vehicle_img', models.CharField(max_length=255, null=True)),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='user.VehicleCompany'))
+                ('vehiclecompany', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='user.VehicleCompany'))
             ],
             options={
                 'db_table': 'vehicle_model',

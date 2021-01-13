@@ -39,7 +39,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 @Service

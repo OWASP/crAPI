@@ -27,7 +27,7 @@ import java.util.Objects;
 
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 @Entity
 @Table(name="user_login")

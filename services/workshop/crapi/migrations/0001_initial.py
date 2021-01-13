@@ -17,7 +17,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-
+import django_db_cascade
 
 class Migration(migrations.Migration):
 
@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('mechanic_code', models.CharField(max_length=100, unique=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='user.User')),
+                ('user', django_db_cascade.fields.ForeignKey(on_delete=django_db_cascade.deletions.DB_CASCADE, to='user.User')),
             ],
             options={
                 'db_table': 'mechanic',
@@ -59,8 +59,8 @@ class Migration(migrations.Migration):
                 ('created_on', models.DateTimeField()),
                 ('updated_on', models.DateTimeField(null=True)),
                 ('status', models.CharField(choices=[('Pending', 'Pending'), ('Finished', 'Finished')], default='Pending', max_length=10)),
-                ('mechanic', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crapi.Mechanic')),
-                ('vehicle', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='user.Vehicle')),
+                ('mechanic', django_db_cascade.fields.ForeignKey(on_delete=django_db_cascade.deletions.DB_CASCADE, to='crapi.Mechanic')),
+                ('vehicle', django_db_cascade.fields.ForeignKey(on_delete=django_db_cascade.deletions.DB_CASCADE, to='user.Vehicle')),
             ],
             options={
                 'db_table': 'service_request',
@@ -73,8 +73,8 @@ class Migration(migrations.Migration):
                 ('quantity', models.IntegerField(default=1)),
                 ('created_on', models.DateTimeField()),
                 ('status', models.CharField(choices=[('delivered', 'delivered'), ('return pending', 'return pending'), ('returned', 'returned')], default='delivered', max_length=20)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crapi.Product')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='user.User')),
+                ('product', django_db_cascade.fields.ForeignKey(on_delete=django_db_cascade.deletions.DB_CASCADE, to='crapi.Product')),
+                ('user', django_db_cascade.fields.ForeignKey(on_delete=django_db_cascade.deletions.DB_CASCADE, to='user.User')),
             ],
             options={
                 'db_table': 'order',
@@ -85,7 +85,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('coupon_code', models.CharField(max_length=255)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='user.User')),
+                ('user', django_db_cascade.fields.ForeignKey(on_delete=django_db_cascade.deletions.DB_CASCADE, to='user.User')),
             ],
             options={
                 'db_table': 'applied_coupon',

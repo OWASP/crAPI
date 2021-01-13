@@ -22,7 +22,7 @@ import lombok.Data;
 import java.util.UUID;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 @Data

@@ -22,8 +22,9 @@ left behind.
 4. Visit `http://localhost:8888`
 
 
-**Note**: All emails are sent to mailhog service and can be checked on
+**Note**: All emails are sent to mailhog service by default and can be checked on
 `http://localhost:8025`
+You can change the smtp configuration if required however all emails with domain **example.com** will still go to mailhog.
 
 ## Kubernetes 
 
@@ -75,8 +76,9 @@ installed.
 3. Visit `http://192.168.33.20`
 
 
-**Note**: All emails are sent to mailhog service and can be checked on
+**Note**: All emails are sent to mailhog service by default and can be checked on
 `http://192.168.33.20:8025`
+You can change the smtp configuration if required however all emails with domain **example.com** will still go to mailhog.
 
 Once you're done playing with crAPI, you can remove it completely from your
 system running the following command from the repository root directory

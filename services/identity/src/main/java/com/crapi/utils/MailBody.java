@@ -23,7 +23,7 @@ import com.crapi.entity.VehicleDetails;
 import com.crapi.model.ChangeEmailForm;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 public class MailBody {
 

@@ -170,8 +170,7 @@ class OrderControlView(APIView):
             return Response({'message': messages.RESTRICTED}, status=status.HTTP_403_FORBIDDEN)
         if 'quantity' in request_data:
             order.quantity = request_data['quantity']
-        if 'status' in request_data and request_data['status'] not in [Order.DELIVERED, Order.RETURN_PENDING,
-                                                                       Order.RETURNED]:
+        if 'status' in request_data and not Order.STATUS_CHOICES.has_value(request_data['status']):
             return Response(
                 {'message': messages.INVALID_STATUS},
                 status=status.HTTP_400_BAD_REQUEST
@@ -179,7 +178,7 @@ class OrderControlView(APIView):
         user_details = UserDetails.objects.get(user=order.user)
         if 'status' in request_data and request_data['status'] != order.status:
             order.status = request_data['status']
-            if request_data['status'] == Order.RETURNED:
+            if request_data['status'] == Order.STATUS_CHOICES.RETURNED.value:
                 user_details.available_credit += float(order.quantity * order.product.price)
                 user_details.save()
         order.save()
@@ -234,19 +233,19 @@ class ReturnOrder(APIView):
         order = Order.objects.get(id=request.GET['order_id'])
         if user != order.user:
             return Response({'message': messages.RESTRICTED}, status=status.HTTP_403_FORBIDDEN)
-        if order.status == Order.RETURNED:
+        if order.status == Order.STATUS_CHOICES.RETURNED.value:
             return Response(
                 {'message': messages.ORDER_ALREADY_RETURNED},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        elif order.status == Order.RETURN_PENDING:
+        elif order.status == Order.STATUS_CHOICES.RETURN_PENDING.value:
             return Response(
                 {'message': messages.ORDER_RETURNED_PENDING},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
         qr_code_url = request.build_absolute_uri(reverse("shop-return-qr-code"))
-        order.status = Order.RETURN_PENDING
+        order.status = Order.STATUS_CHOICES.RETURN_PENDING.value
         order.save()
         serializer = OrderSerializer(order)
         return Response({

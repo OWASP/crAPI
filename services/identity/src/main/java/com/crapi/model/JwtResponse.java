@@ -19,7 +19,7 @@ package com.crapi.model;
 import lombok.Data;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 @Data
 public class JwtResponse {

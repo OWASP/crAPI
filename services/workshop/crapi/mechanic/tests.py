@@ -77,7 +77,7 @@ class MechanicSignUpTestCase(TestCase):
         )
         self.assertEqual(res.status_code, 200)
 
-        self.mechanic['email'] = 'abcd@gmail.com'
+        self.mechanic['email'] = 'abcd@example.com'
         res = self.client.post(
             '/api/mechanic/signup',
             self.mechanic,
@@ -101,7 +101,7 @@ class MechanicSignUpTestCase(TestCase):
         )
         self.assertEqual(res.status_code, 200)
 
-        self.mechanic['email'] = 'abcd@gmail.com'
+        self.mechanic['email'] = 'abcd@example.com'
         self.mechanic['mechanic_code'] = 'TRAC_MEC_4'
         res = self.client.post(
             '/api/mechanic/signup',

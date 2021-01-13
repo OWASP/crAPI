@@ -18,7 +18,7 @@ package com.crapi.utils;
 
 import org.springframework.stereotype.Component;
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 @Component
 public class OTPGenerator {

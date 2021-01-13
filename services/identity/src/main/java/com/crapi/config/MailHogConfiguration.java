@@ -29,25 +29,31 @@ import java.io.IOException;
 import java.util.Properties;
 
 @Component
-public class MailConfiguration {
+public class MailHogConfiguration {
 
-    @Value("${mail.smtp.auth}")
+    @Value("${mail.mailhog.auth}")
     private String auth;
 
-    @Value("${mail.smtp.starttls.enable}")
+    @Value("${mail.mailhog.starttls.enable}")
     private String enable;
 
-    @Value("${mail.smtp.host}")
+    @Value("${mail.mailhog.host}")
     private String host;
-    
-    @Value("${mail.smtp.port}")
+
+    @Value("${mail.mailhog.port}")
     private String port;
 
-    @Value("${mail.smtp.email}")
+    @Value("${mail.mailhog.email}")
     private String email;
 
-    @Value("${mail.smtp.password}")
+    @Value("${mail.mailhog.password}")
     private String password;
+
+    @Value("${mail.mailhog.domain}")
+    private String mhogDomain;
+
+    @Value("${mail.from}")
+    private String fromMail;
 
     /**
      * @return session with all the configuration for send Email
@@ -62,9 +68,6 @@ public class MailConfiguration {
         props.put("mail.smtp.host", host);
         props.put("mail.smtp.port", port);
 
-        if (email.isEmpty() || password.isEmpty()){
-            throw new EntityNotFoundException(ChangeEmailRequest.class,"email and Password not configure ", email+" "+password);
-        }
 
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -75,8 +78,16 @@ public class MailConfiguration {
 
     }
 
-    public String getHost(){
-        return host;
+    public String getDomain() {
+        return mhogDomain;
+    }
+
+    public String getFrom() {
+        if (fromMail != null && !fromMail.isEmpty()) {
+           return fromMail.trim();
+        } else {
+            return "no-reply@example.com";
+        }
     }
 }
 

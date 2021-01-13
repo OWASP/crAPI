@@ -24,7 +24,7 @@ import java.util.Base64;
 
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 @Entity
 @Table(name = "profile_Video")
@@ -45,9 +45,7 @@ public class ProfileVideo {
     public ProfileVideo(String video_name, User user){
         this.video_name = video_name;
         this.user = user;
-
     }
-
 
     //constructor for new object
     public ProfileVideo(String video_name,byte[] file, User user){

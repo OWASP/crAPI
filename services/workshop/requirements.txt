@@ -9,3 +9,4 @@ djangorestframework==3.11.0
 django-health-check==3.12.1
 django-extended-choices==1.3.3
 djongo==1.3.3
+django-db-cascade-2

@@ -17,7 +17,7 @@
 package com.crapi.utils;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 public class GenerateVIN {

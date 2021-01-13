@@ -26,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 public interface ProfileService {
 

@@ -23,7 +23,7 @@ import javax.persistence.*;
 import java.util.Base64;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 @Entity
@@ -39,7 +39,7 @@ public class UserDetails {
     private double available_credit;
     @Lob
     private byte[] picture;
-
+    
     @OneToOne
     private User user;
 

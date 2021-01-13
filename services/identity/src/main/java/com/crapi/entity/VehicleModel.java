@@ -23,7 +23,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 @Entity
@@ -38,7 +38,7 @@ public class VehicleModel implements Serializable {
     private EFuelType fuel_type;
     private String vehicle_img;
 
-    @OneToOne(cascade = {CascadeType.ALL})
+    @OneToOne(cascade=CascadeType.ALL)
     private VehicleCompany vehiclecompany;
 
     public VehicleModel(){}

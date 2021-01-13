@@ -20,7 +20,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 
 @Entity

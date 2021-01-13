@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 
 /**
- * @author Traceabel AI
+ * @author Traceable AI
  */
 public class ProfileValidator {
 
