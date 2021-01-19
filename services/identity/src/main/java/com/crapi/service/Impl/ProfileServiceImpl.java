@@ -200,11 +200,9 @@ public class ProfileServiceImpl implements ProfileService {
         User user = userService.getUserFromToken(request);
         if (optionalProfileVideo.isPresent() ) {
             profileVideo = optionalProfileVideo.get();
-            if (profileVideo.getUser() == user) {
-                profileVideo.setUser(null);
-                profileVideoRepository.delete(profileVideo);
-                return new CRAPIResponse(UserMessage.VIDEO_DELETED_SUCCESS_MESSAGE,200);
-            }        
+            profileVideo.setUser(null);
+            profileVideoRepository.delete(profileVideo);
+            return new CRAPIResponse(UserMessage.VIDEO_DELETED_SUCCESS_MESSAGE,200);
         }
         throw new CRAPIExceptionHandler(UserMessage.SORRY_DIDNT_GET_PROFILE,404);
     }
