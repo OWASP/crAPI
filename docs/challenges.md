@@ -1,6 +1,10 @@
 # Intro
 
-Welcome to the CRAPI challenge page.
+This is the CRAPI challenge page.
+
+CRAPI (Completely Ridiculous Application Programmer Interface) defines an API which is intentionally vulnerable to the OWASP API Top 10 vulnerabilities.  CRAPI is meant to illustrate and educate by presenting these issues for you to discover and exploit.
+
+The CRAPI challenge is for you to find and exploit as many of these vulnerabilities as you can.
 
 There are two approaches to hack CRAPI - the first is to look at it as a complete black box test, where you get no directions, but just try to understand the app from scratch and hack it.
 
