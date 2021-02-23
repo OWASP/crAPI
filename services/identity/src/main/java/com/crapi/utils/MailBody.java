@@ -61,7 +61,7 @@ public class MailBody {
                 + "<font face='calibri' style = 'font-size:15px; color:#000;'>Hi "+name
 
                 + "<font>,"
-                + "<br><font face='calibri'><p style = 'font-size:15px; color:#000;'>We are glad to have you on-board. You newly purchased vehiche details are provided below. Please add it on your crAPI dashboard.</p>"
+                + "<br><font face='calibri'><p style = 'font-size:15px; color:#000;'>We are glad to have you on-board. Your newly purchased vehiche details are provided below. Please add it on your crAPI dashboard.</p>"
                 + "<p><font face='calibri' style = 'font-size:15px;color:#000;'>Your vehicle information is <b>VIN: </font><font face='calibri' font color='#0000ff'>" + vehicleDetails.getVin() + "</font></b> and <b>Pincode: <font face='calibri' font color='#0000ff'>" + vehicleDetails.getPincode() + "</font></b></p>"
                 + "<p><font face='calibri' style = 'font-size:15px;color:#000;'>We're here to help you build a relationship with your vehicles.</font></p>"
                 + "<p><font face='calibri' style = 'font-size:15px;color:#000;'>Thank You & have a wonderful day !</font></p>"
