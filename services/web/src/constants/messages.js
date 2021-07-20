@@ -22,7 +22,7 @@ export const PHONE_NO_REQUIRED = "Please enter phone number";
 export const INVALID_PHONE = "Contact number should have only numbers and -";
 export const PASSWORD_REQUIRED = "Please enter your password";
 export const INVALID_PASSWORD =
-  "Password should contain atleast one digit, one small letter and one capital letter and should atleast contain 8 characters.";
+  "Password should contain at least one digit, one small letter and one capital letter and should at least contain 8 characters.";
 export const CONFIRM_PASSWORD = "Please confirm your password!";
 export const PASSWORD_DO_NOT_MATCH = "Passwords do not match!";
 export const OTP_REQUIRED = "Please enter the OTP!";
