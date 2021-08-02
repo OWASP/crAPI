@@ -40,7 +40,7 @@ services:
       - SMTP_AUTH=true
       - SMTP_STARTTLS=true
       - WAIT_HOSTS=postgresdb:5432,mongodb:27017
-      - WAIT_HOSTS_TIMEOUT=120
+      - WAIT_HOSTS_TIMEOUT=240
       - WAIT_SLEEP_INTERVAL=5
     depends_on:
       - postgresdb
@@ -74,7 +74,7 @@ services:
       - MONGO_DB_NAME=crapi
       - JWT_SECRET=crapi
       - WAIT_HOSTS=postgresdb:5432,mongodb:27017,crapi-identity:8080
-      - WAIT_HOSTS_TIMEOUT=120
+      - WAIT_HOSTS_TIMEOUT=240
       - WAIT_SLEEP_INTERVAL=5
       - WAIT_AFTER_HOSTS=10
     depends_on:
@@ -111,7 +111,7 @@ services:
       - JWT_SECRET=crapi
       - SECRET_KEY=crapi
       - WAIT_HOSTS=crapi-identity:8080,crapi-community:8087,mailhog:1025
-      - WAIT_HOSTS_TIMEOUT=120
+      - WAIT_HOSTS_TIMEOUT=240
       - WAIT_SLEEP_INTERVAL=5
       - WAIT_AFTER_HOSTS=10
     depends_on:
@@ -140,7 +140,7 @@ services:
       - JAVA_SERVICE=crapi-identity:8080
       - PYTHON_SERVICE=crapi-workshop:8000
       - WAIT_HOSTS=crapi-community:8087,crapi-identity:8080,crapi-workshop:8000,mailhog:1025
-      - WAIT_HOSTS_TIMEOUT=120
+      - WAIT_HOSTS_TIMEOUT=240
       - WAIT_SLEEP_INTERVAL=5
     depends_on:
       - crapi-community

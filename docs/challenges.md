@@ -2,7 +2,7 @@
 
 This is the crAPI challenge page.
 
-crAPI (Completely Ridiculous Application Programmer Interface) defines an API which is intentionally vulnerable to the OWASP API Top 10 vulnerabilities.  CRAPI is meant to illustrate and educate by presenting these issues for you to discover and exploit.
+crAPI (Completely Ridiculous Application Programmer Interface) defines an API which is intentionally vulnerable to the OWASP API Top 10 vulnerabilities. crAPI is meant to illustrate and educate by presenting these issues for you to discover and exploit.
 
 The crAPI challenge is for you to find and exploit as many of these vulnerabilities as you can.
 
@@ -88,4 +88,3 @@ After solving the "Find an API endpoint that leaks an internal property of video
 ## << 2 secret challenges >>
 
 There are two more secret challenges in crAPI, that are pretty complex, and for now we don’t share details about them, except the fact they are really cool. 
-

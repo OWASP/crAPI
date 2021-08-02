@@ -78,7 +78,7 @@ const Navbar = (props) => {
     <Header>
       <Space className="top-nav-left">
         <div className="logo-text" onClick={() => history.push("/")}>
-          CRAPI
+          crAPI
         </div>
         {isLoggedIn ? menuNavigation() : (<div/>)
         }
