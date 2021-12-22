@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-FROM python:3.8-alpine3.13 as build
+FROM python:3.8-alpine3.15 as build
 # Not using alpine based on suggestion
 # https://pythonspeed.com/articles/alpine-docker-python/
 
@@ -35,7 +35,7 @@ WORKDIR /app
 COPY ./ /app
 RUN pip install wheel && pip wheel . --wheel-dir /app/wheels
 
-FROM python:3.8-alpine
+FROM python:3.8-alpine3.15
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.7.3/wait /wait
 RUN chmod +x /wait
 COPY --from=build /app /app
