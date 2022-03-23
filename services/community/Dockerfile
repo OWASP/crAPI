@@ -41,7 +41,4 @@ COPY --from=builder /dist/main /app/main
 RUN ls -al /app
 EXPOSE 8087
 
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.7.3/wait /wait
-RUN chmod +x /wait
-
-CMD /wait && /app/main
+CMD /app/main

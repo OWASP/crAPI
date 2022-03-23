@@ -39,7 +39,4 @@ RUN echo "daemon off;" >> /usr/local/openresty/nginx/conf/nginx.conf
 EXPOSE 80
 
 
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.7.3/wait /wait
-RUN chmod +x /wait
-
-CMD /wait && /etc/nginx/nginx-wrapper.sh
+CMD /etc/nginx/nginx-wrapper.sh
