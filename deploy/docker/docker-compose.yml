@@ -193,7 +193,7 @@ services:
   mailhog:
     user: root
     container_name: mailhog
-    image: mailhog/mailhog
+    image: mailhog
     environment:
       MH_MONGO_URI: admin:crapisecretpassword@mongodb:27017
       MH_STORAGE: mongodb
