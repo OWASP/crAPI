@@ -31,9 +31,19 @@ left behind.
    ```
 
 2. Build all docker images
+
+   - Linux Machine
+
    ```
    $ deploy/docker/build-all.sh
    ```
+
+   - Windows Machine
+
+   ```
+   $ call "%cd%\deploy\docker\build-all.bat"
+   ```
+
 3. Start crAPI
    ```
    $ docker-compose -f deploy/docker/docker-compose.yml --compatibility up -d
