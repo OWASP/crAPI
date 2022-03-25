@@ -1,5 +1,4 @@
-crAPI
-=====
+# crAPI
 
 **c**ompletely **r**idiculous **API** (crAPI) will help you to understand the
 ten most critical API security risks. crAPI is vulnerable by design, but you'll
@@ -18,19 +17,28 @@ After having crAPI running, you may want to remove unnecessary docker images
 left behind.
 
 1. Clone crAPI repository
-    ```
-    $ git clone [REPOSITORY-URL]
-    ```
-2. Build all docker images
-    ```
-    $ deploy/docker/build-all.sh
-    ```
-3. Start crAPI
-    ```
-    $ docker-compose -f deploy/docker/docker-compose.yml --compatibility up -d
-    ```
-4. Visit `http://localhost:8888`
 
+   - Linux Machine
+
+   ```
+       $ git clone [REPOSITORY-URL]
+   ```
+
+   - Windows Machine
+
+   ```
+       $ git clone [REPOSITORY-URL] --config core.autocrlf=input
+   ```
+
+2. Build all docker images
+   ```
+   $ deploy/docker/build-all.sh
+   ```
+3. Start crAPI
+   ```
+   $ docker-compose -f deploy/docker/docker-compose.yml --compatibility up -d
+   ```
+4. Visit `http://localhost:8888`
 
 **Note**: All emails are sent to mailhog service by default and can be checked on
 `http://localhost:8025`
@@ -46,15 +54,14 @@ your system. You'll need to have [Vagrant] and, for example [VirtualBox]
 installed.
 
 1. Clone crAPI repository
-    ```
-    $ git clone [REPOSITORY-URL]
-    ```
+   ```
+   $ git clone [REPOSITORY-URL]
+   ```
 2. Start crAPI Virtual Machine
-    ```
-    $ cd deploy/vagrant && vagrant up
-    ```
+   ```
+   $ cd deploy/vagrant && vagrant up
+   ```
 3. Visit `http://192.168.33.20`
-
 
 **Note**: All emails are sent to mailhog service and can be checked on
 `http://192.168.33.20:8025`
@@ -72,5 +79,5 @@ Copyright (c) 2020 "Traceable AI". All rights reserved.
 
 [overview]: docs/overview.md
 [setup-k8s]: docs/setup.md#kubernetes-minikube
-[Vagrant]: https://www.vagrantup.com/downloads
-[VirtualBox]: https://www.virtualbox.org/wiki/Downloads
+[vagrant]: https://www.vagrantup.com/downloads
+[virtualbox]: https://www.virtualbox.org/wiki/Downloads
