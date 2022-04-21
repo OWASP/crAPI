@@ -12,24 +12,28 @@ on:
       - 'develop'
       - 'main'
 jobs:
-
+  build-context:
+    runs-on: ubuntu-latest
+    outputs:
+      push_image: ${{ (github.event_name == 'push' && (github.ref == 'refs/heads/main' && github.ref == 'refs/heads/develop')) || (github.event_name == 'release' && github.event.action == 'created') }}
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
   build:
+    needs: build-context
     runs-on: ubuntu-latest
     env:
-      PLATFORMS: "linux/amd64,linux/arm64,darwin/amd64,darwin/arm64,windows/amd64"
-      PUSH_IMAGE: ${{ (github.event_name == 'push' && (github.ref == 'refs/heads/main' && github.ref == 'refs/heads/develop')) || (github.event_name == 'release' && github.event.action == 'created') }}
+      PLATFORMS: "linux/amd64,linux/arm64"
     # timeout-minutes: 15
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
  
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
-
-    - run: env
-
+    - name: Env seen prerun
+      run: env
+    
     - name: Get branch name
       id: branch-name
       uses: tj-actions/branch-names@v5.2
@@ -44,14 +48,12 @@ jobs:
         echo "TAG_NAME=${{ steps.branch-name.outputs.current_branch }}" >> ${GITHUB_ENV}
         echo "TAG_LATEST=latest" >> ${GITHUB_ENV}
   
-    - name: Running on a tag branch.
+    - name: Running on a non tag branch.
       if: steps.branch-name.outputs.is_tag != 'true'
       run: |
         echo "TAG_NAME=${{ steps.branch-name.outputs.current_branch }}" >> ${GITHUB_ENV}
         echo "TAG_LATEST=${{ steps.branch-name.outputs.current_branch }}" >> ${GITHUB_ENV}
     
-    - run: env 
-
     # setup Docker build action
     - name: Set up Docker Buildx
       id: buildx
@@ -71,7 +73,7 @@ jobs:
       with:
         context: ./services/identity
         tags: crapi/crapi-identity:${{ env.TAG_LATEST }},crapi/crapi-identity:${{ env.TAG_NAME }}
-        push: ${{ jobs.build.env.PUSH_IMAGE == true }}
+        push: ${{ needs.build-context.outputs.push_image == true }}
         platforms: ${{ env.PLATFORMS }}
     
     - name: Build crapi-workshop image and push to Docker Hub
@@ -79,7 +81,7 @@ jobs:
       with:
         context: ./services/workshop
         tags: crapi/crapi-workshop:${{ env.TAG_LATEST }},crapi/crapi-workshop:${{ env.TAG_NAME }}
-        push: ${{ jobs.build.env.PUSH_IMAGE == true }}
+        push: ${{ needs.build-context.outputs.push_image == true }}
         platforms: ${{ env.PLATFORMS }}
         
     - name: Build crapi-community image and push to Docker Hub
@@ -87,7 +89,7 @@ jobs:
       with:
         context: ./services/community
         tags: crapi/crapi-community:${{ env.TAG_LATEST }},crapi/crapi-community:${{ env.TAG_NAME }}
-        push: ${{ jobs.build.env.PUSH_IMAGE == true }}
+        push: ${{ needs.build-context.outputs.push_image == true }}
         platforms: ${{ env.PLATFORMS }}
         
     - name: Build crapi-web image and push to Docker Hub
@@ -95,7 +97,7 @@ jobs:
       with:
         context: ./services/web
         tags: crapi/crapi-web:${{ env.TAG_LATEST }},crapi/crapi-web:${{ env.TAG_NAME }}
-        push: ${{ jobs.build.env.PUSH_IMAGE == true }}
+        push: ${{ needs.build-context.outputs.push_image == true }}
         platforms: ${{ env.PLATFORMS }}
     - name: Check Mailhog existence
       id: check_mailhog_exists
@@ -108,7 +110,7 @@ jobs:
       with:
         context: ./services/mailhog
         tags: crapi/mailhog:${{ env.TAG_LATEST }},crapi/mailhog:${{ env.TAG_NAME }}
-        push: ${{ jobs.build.env.PUSH_IMAGE == true }}
+        push: ${{ needs.build-context.outputs.push_image == true }}
         platforms: ${{ env.PLATFORMS }}
 
     - name: Env seen
