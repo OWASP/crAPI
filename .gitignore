@@ -1,2 +1,3 @@
 deploy/vagrant/*.log
 deploy/vagrant/.vagrant
+.secrets

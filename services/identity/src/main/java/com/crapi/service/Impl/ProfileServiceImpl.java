@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -45,9 +43,6 @@ import java.net.InetSocketAddress;
 import java.util.Optional;
 import java.util.Map;
 
-/**
- * @author Traceable AI
- */
 @Service
 public class ProfileServiceImpl implements ProfileService {
 

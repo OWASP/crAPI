@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -25,9 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.regex.Pattern;
 
 
-/**
- * @author Traceable AI
- */
 public class ProfileValidator {
 
     private static final Logger logger = LoggerFactory.getLogger(ProfileValidator.class);

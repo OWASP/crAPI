@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -27,9 +25,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
-/**
- * @author Traceable AI
- */
 
 @Entity
 @Table(name = "vehicle_details")
