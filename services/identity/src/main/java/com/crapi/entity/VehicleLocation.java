@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,9 +17,6 @@ package com.crapi.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-/**
- * @author Traceable AI
- */
 
 @Entity
 @Table(name = "vehicle_location")

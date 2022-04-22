@@ -68,8 +68,6 @@ $ cd deploy/vagrant && vagrant destroy
 
 ---
 
-Copyright (c) 2020 "Traceable AI". All rights reserved.
-
 [overview]: docs/overview.md
 [setup-k8s]: docs/setup.md#kubernetes-minikube
 [Vagrant]: https://www.vagrantup.com/downloads

@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,9 +22,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * @author Traceable AI
- */
 @Repository
 public interface VehicleDetailsRepository extends JpaRepository<VehicleDetails, Long> {
     VehicleDetails findByVin(String vin);
