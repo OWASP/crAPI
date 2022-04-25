@@ -49,6 +49,6 @@ func Run() {
 
 	server.Router = route.InitializeRoutes()
 
-	route.Run(":8087")
+	route.Run(":"+os.Getenv("SERVER_PORT"))
 
 }
