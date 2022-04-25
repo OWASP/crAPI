@@ -25,6 +25,7 @@ services:
       - DB_PASSWORD=crapisecretpassword
       - DB_HOST=postgresdb
       - DB_PORT=5432
+      - SERVER_PORT=8080
       - BLOCK_SHELL_INJECTION=false
       - JWT_SECRET=crapi
       - MAILHOG_HOST=mailhog
