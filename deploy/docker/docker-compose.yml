@@ -66,6 +66,7 @@ services:
       - DB_PASSWORD=crapisecretpassword
       - DB_HOST=postgresdb
       - DB_PORT=5432
+      - SERVER_PORT=8087
       - MONGO_DB_HOST=mongodb
       - MONGO_DB_PORT=27017
       - MONGO_DB_USER=admin
