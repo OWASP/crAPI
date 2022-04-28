@@ -1,6 +1,6 @@
 Django~=2.2.4
 django-environ==0.4.5
-psycopg2-binary==2.8.5
+psycopg2==2.8.5
 PyJWT==1.7.1
 requests==2.24.0
 django-cors-headers==3.4.0
