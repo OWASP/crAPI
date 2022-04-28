@@ -26,96 +26,95 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PLATFORMS: "linux/amd64,linux/arm64"
-    # timeout-minutes: 15
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
  
-    - name: Env seen prerun
-      run: env
-    
-    - name: Get branch name
-      id: branch-name
-      uses: tj-actions/branch-names@v5.2
-    
-    - name: Current branch name
-      run: |
-        echo "${{ steps.branch-name.outputs.current_branch }}"
-
-    - name: Running on a tag branch.
-      if: steps.branch-name.outputs.is_tag == 'true'
-      run: |
-        echo "TAG_NAME=${{ steps.branch-name.outputs.current_branch }}" >> ${GITHUB_ENV}
-        echo "TAG_LATEST=latest" >> ${GITHUB_ENV}
-  
-    - name: Running on a non tag branch.
-      if: steps.branch-name.outputs.is_tag != 'true'
-      run: |
-        echo "TAG_NAME=${{ steps.branch-name.outputs.current_branch }}" >> ${GITHUB_ENV}
-        echo "TAG_LATEST=${{ steps.branch-name.outputs.current_branch }}" >> ${GITHUB_ENV}
-    
-    # setup Docker build action
-    - name: Set up Docker Buildx
-      id: buildx
-      uses: docker/setup-buildx-action@v1.6.0
-    - name: Set up QEMU
-      id: qemu
-      uses: docker/setup-qemu-action@v1.2.0
-    
-    - name: Login to DockerHub
-      uses: docker/login-action@v1.14.1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    
-    - name: Build crapi-identity image and push to Docker Hub
-      uses: docker/build-push-action@v2.10.0
-      with:
-        context: ./services/identity
-        tags: crapi/crapi-identity:${{ env.TAG_LATEST }},crapi/crapi-identity:${{ env.TAG_NAME }}
-        push: ${{ needs.build-context.outputs.push_image }}
-        platforms: ${{ env.PLATFORMS }}
-    
-    - name: Build crapi-workshop image and push to Docker Hub
-      uses: docker/build-push-action@v2.10.0
-      with:
-        context: ./services/workshop
-        tags: crapi/crapi-workshop:${{ env.TAG_LATEST }},crapi/crapi-workshop:${{ env.TAG_NAME }}
-        push: ${{ needs.build-context.outputs.push_image }}
-        platforms: ${{ env.PLATFORMS }}
-        
-    - name: Build crapi-community image and push to Docker Hub
-      uses: docker/build-push-action@v2.10.0
-      with:
-        context: ./services/community
-        tags: crapi/crapi-community:${{ env.TAG_LATEST }},crapi/crapi-community:${{ env.TAG_NAME }}
-        push: ${{ needs.build-context.outputs.push_image }}
-        platforms: ${{ env.PLATFORMS }}
-        
-    - name: Build crapi-web image and push to Docker Hub
-      uses: docker/build-push-action@v2.10.0
-      with:
-        context: ./services/web
-        tags: crapi/crapi-web:${{ env.TAG_LATEST }},crapi/crapi-web:${{ env.TAG_NAME }}
-        push: ${{ needs.build-context.outputs.push_image }}
-        platforms: ${{ env.PLATFORMS }}
-    - name: Check Mailhog existence
-      id: check_mailhog_exists
-      uses: andstor/file-existence-action@v1
-      with:
-        files: "./services/mailhog"
-    - name: Build mailhog image and push to Docker Hub
-      if: steps.check_mailhog_exists.outputs.files_exists == 'true'
-      uses: docker/build-push-action@v2.10.0
-      with:
-        context: ./services/mailhog
-        tags: crapi/mailhog:${{ env.TAG_LATEST }},crapi/mailhog:${{ env.TAG_NAME }}
-        push: ${{ needs.build-context.outputs.push_image }}
-        platforms: ${{ env.PLATFORMS }}
-
-    - name: Env seen
-      run: env
+      - name: Env seen prerun
+        run: env
       
-    - name: Show all images built
-      run: docker images
-
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v5.2
+      
+      - name: Current branch name
+        run: |
+          echo "${{ steps.branch-name.outputs.current_branch }}"
+  
+      - name: Running on a tag branch.
+        if: steps.branch-name.outputs.is_tag == 'true'
+        run: |
+          echo "TAG_NAME=${{ steps.branch-name.outputs.current_branch }}" >> ${GITHUB_ENV}
+          echo "TAG_LATEST=latest" >> ${GITHUB_ENV}
+    
+      - name: Running on a non tag branch.
+        if: steps.branch-name.outputs.is_tag != 'true'
+        run: |
+          echo "TAG_NAME=${{ steps.branch-name.outputs.current_branch }}" >> ${GITHUB_ENV}
+          echo "TAG_LATEST=${{ steps.branch-name.outputs.current_branch }}" >> ${GITHUB_ENV}
+      
+      # setup Docker build action
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Set up QEMU
+        id: qemu
+        uses: docker/setup-qemu-action@v1
+      
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build crapi-identity image and push to Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          context: ./services/identity
+          tags: crapi/crapi-identity:${{ env.TAG_LATEST }},crapi/crapi-identity:${{ env.TAG_NAME }}
+          push: ${{ needs.build-context.outputs.push_image }}
+          platforms: ${{ env.PLATFORMS }}
+      
+      - name: Build crapi-workshop image and push to Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          context: ./services/workshop
+          tags: crapi/crapi-workshop:${{ env.TAG_LATEST }},crapi/crapi-workshop:${{ env.TAG_NAME }}
+          push: ${{ needs.build-context.outputs.push_image }}
+          platforms: ${{ env.PLATFORMS }}
+          
+      - name: Build crapi-community image and push to Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          context: ./services/community
+          tags: crapi/crapi-community:${{ env.TAG_LATEST }},crapi/crapi-community:${{ env.TAG_NAME }}
+          push: ${{ needs.build-context.outputs.push_image }}
+          platforms: ${{ env.PLATFORMS }}
+          
+      - name: Build crapi-web image and push to Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          context: ./services/web
+          tags: crapi/crapi-web:${{ env.TAG_LATEST }},crapi/crapi-web:${{ env.TAG_NAME }}
+          push: ${{ needs.build-context.outputs.push_image }}
+          platforms: ${{ env.PLATFORMS }}
+      - name: Check Mailhog existence
+        id: check_mailhog_exists
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "./services/mailhog"
+      - name: Build mailhog image and push to Docker Hub
+        if: steps.check_mailhog_exists.outputs.files_exists == 'true'
+        uses: docker/build-push-action@v2
+        with:
+          context: ./services/mailhog
+          tags: crapi/mailhog:${{ env.TAG_LATEST }},crapi/mailhog:${{ env.TAG_NAME }}
+          push: ${{ needs.build-context.outputs.push_image }}
+          platforms: ${{ env.PLATFORMS }}
+  
+      - name: Env seen
+        run: env
+        
+      - name: Show all images built
+        run: docker images
+  
