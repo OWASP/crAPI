@@ -1,3 +1,7 @@
+#!/bin/bash
+
+# Copyright 2020 Traceable, Inc.
+#
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -11,30 +15,7 @@
 # limitations under the License.
 
 
-# GoLang Build
-FROM golang:alpine AS builder
-ENV GO111MODULE=on \
-    CGO_ENABLED=0
-WORKDIR /build
-COPY ./go.mod .
-COPY ./go.sum .
-RUN go mod download
-COPY ./main.go ./main.go
-COPY ./api ./api
-RUN go mod vendor
-RUN ls -al
-RUN go build -o main .
-WORKDIR /dist
-RUN cp /build/main .
+set -x 
 
-# Main Image
-FROM alpine:3
-
-# go
-RUN mkdir /app
-RUN apk update && apk add --no-cache curl
-COPY --from=builder /dist/main /app/main
-RUN ls -al /app
-EXPOSE 8087
-
-CMD /app/main
+cd "$(dirname $0)"
+docker build -t mailhog .
