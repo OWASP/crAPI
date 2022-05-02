@@ -15,7 +15,7 @@ services:
 
   crapi-identity:
     container_name: crapi-identity
-    image: crapi-identity
+    image: crapi/crapi-identity:${VERSION:-latest}
     #ports:
     #  - "127.0.0.1:8080:8080"
     environment:
@@ -54,7 +54,7 @@ services:
 
   crapi-community:
     container_name: crapi-community
-    image: crapi-community
+    image: crapi/crapi-community:${VERSION:-latest}
     #ports:
     #  - "127.0.0.1:8087:8087"
     environment:
@@ -89,7 +89,7 @@ services:
 
   crapi-workshop:
     container_name: crapi-workshop
-    image: crapi-workshop
+    image: crapi/crapi-workshop:${VERSION:-latest}
     #ports:
     #  - "127.0.0.1:8000:8000"
     environment:
@@ -127,7 +127,7 @@ services:
 
   crapi-web:
     container_name: crapi-web
-    image: crapi-web
+    image: crapi/crapi-web:${VERSION:-latest}
     ports:
       - "127.0.0.1:8888:80"
     environment:
@@ -199,7 +199,7 @@ services:
   mailhog:
     user: root
     container_name: mailhog
-    image: mailhog
+    image: crapi/mailhog:${VERSION:-latest}
     environment:
       MH_MONGO_URI: admin:crapisecretpassword@mongodb:27017
       MH_STORAGE: mongodb
