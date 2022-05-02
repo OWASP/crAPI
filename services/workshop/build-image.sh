@@ -16,4 +16,4 @@
 
 set -x
 cd "$(dirname $0)"
-docker build -t crapi-workshop .
+docker build -t crapi/crapi-workshop:${VERSION:-latest} .
