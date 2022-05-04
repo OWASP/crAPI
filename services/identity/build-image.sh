@@ -15,4 +15,4 @@
 
 set -x
 cd "$(dirname $0)"
-docker build -t crapi-identity .
+docker build -t crapi/crapi-identity:${VERSION:-latest} .

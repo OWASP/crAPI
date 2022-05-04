@@ -18,4 +18,4 @@
 set -x 
 
 cd "$(dirname $0)"
-docker build -t mailhog .
+docker build -t crapi/mailhog:${VERSION:-latest} .
