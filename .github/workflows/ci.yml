@@ -43,17 +43,24 @@ jobs:
           echo "Target Branch: ${{ steps.branch-name.outputs.base_ref_branch }}"
           echo "Tag if exist: ${{ steps.branch-name.outputs.tag }}"
   
-      - name: Running on a tag branch.
+      - name: Running on a tag.
         if: steps.branch-name.outputs.is_tag == 'true'
         run: |
           echo "TAG_NAME=${{ steps.branch-name.outputs.tag }}" >> ${GITHUB_ENV}
           echo "TAG_LATEST=latest" >> ${GITHUB_ENV}
     
-      - name: Running on a non tag branch.
-        if: steps.branch-name.outputs.is_tag != 'true'
+      - name: Running on a branch and merge.
+        if: steps.branch-name.outputs.is_tag != 'true' && github.event_name == 'push' 
+        run: |
+          echo "TAG_NAME=${{ steps.branch-name.outputs.current_branch }}" >> ${GITHUB_ENV}
+          echo "TAG_LATEST=${{ steps.branch-name.outputs.current_branch }}" >> ${GITHUB_ENV}
+
+      - name: Running on a branch and pull req.
+        if: steps.branch-name.outputs.is_tag != 'true' && github.event_name != 'push' 
         run: |
           echo "TAG_NAME=${{ steps.branch-name.outputs.base_ref_branch }}" >> ${GITHUB_ENV}
           echo "TAG_LATEST=${{ steps.branch-name.outputs.base_ref_branch }}" >> ${GITHUB_ENV}
+ 
       
       # setup Docker build action
       - name: Set up Docker Buildx
