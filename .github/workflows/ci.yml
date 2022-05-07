@@ -128,3 +128,14 @@ jobs:
       - name: Show all images built
         run: docker images
   
+  run-postman-collection:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Pull Images From DockerHub and Start crAPI
+        run: docker-compose -f deploy/docker/docker-compose.yml --compatibility up -d
+
