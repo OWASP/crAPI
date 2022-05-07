@@ -28,4 +28,6 @@ RUN mkdir /app
 COPY --from=javabuild /app/target/user-microservices-1.0-SNAPSHOT.jar /app/user-microservices-1.0-SNAPSHOT.jar
 EXPOSE 8080
 
+ENV JAVA_TOOL_OPTIONS "-Xmx128m"
+
 CMD java -jar /app/user-microservices-1.0-SNAPSHOT.jar
