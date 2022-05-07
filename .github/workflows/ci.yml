@@ -139,3 +139,11 @@ jobs:
       - name: Pull Images From DockerHub and Start crAPI
         run: docker-compose -f deploy/docker/docker-compose.yml --compatibility up -d
 
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+
+      - name: Install newman
+        run: npm install -g newman
+
