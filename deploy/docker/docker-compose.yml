@@ -100,6 +100,7 @@ services:
       - DB_PASSWORD=crapisecretpassword
       - DB_HOST=postgresdb
       - DB_PORT=5432
+      - SERVER_PORT=${WORKSHOP_SERVER_PORT}
       - MONGO_DB_HOST=mongodb
       - MONGO_DB_PORT=27017
       - MONGO_DB_USER=admin
@@ -117,7 +118,7 @@ services:
       crapi-community:
         condition: service_healthy
     healthcheck:
-        test: curl 0.0.0.0:8000/workshop/health_check/
+        test: curl 0.0.0.0:${WORKSHOP_SERVER_PORT}/workshop/health_check/
         interval: 15s
         timeout: 15s
         retries: 15
@@ -135,7 +136,7 @@ services:
     environment:
       - GO_SERVICE=crapi-community:${COMMUNITY_SERVER_PORT}
       - JAVA_SERVICE=crapi-identity:${IDENTITY_SERVER_PORT}
-      - PYTHON_SERVICE=crapi-workshop:8000
+      - PYTHON_SERVICE=crapi-workshop:${WORKSHOP_SERVER_PORT}
     depends_on:
       crapi-community:
         condition: service_healthy
