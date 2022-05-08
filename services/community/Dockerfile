@@ -35,6 +35,7 @@ RUN mkdir /app
 RUN apk update && apk add --no-cache curl
 COPY --from=builder /dist/main /app/main
 RUN ls -al /app
-EXPOSE 8087
 
+ARG SERVER_PORT 
+EXPOSE ${SERVER_PORT}
 CMD /app/main
