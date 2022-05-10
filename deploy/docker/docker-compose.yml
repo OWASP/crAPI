@@ -134,6 +134,9 @@ services:
       - GO_SERVICE=crapi-community:8087
       - JAVA_SERVICE=crapi-identity:8080
       - PYTHON_SERVICE=crapi-workshop:8000
+      - INSTALL_TRACEABLE=false
+      - TA_ADDRESS=traceable-agent
+      - TA_SERVICE_NAME=crapi-web
     depends_on:
       crapi-community:
         condition: service_healthy
@@ -216,6 +219,15 @@ services:
         limits:
           cpus: '0.3'
           memory: 128M
+
+  traceable-agent:
+    container_name: traceable-agent
+    image: traceableai/traceable-agent
+    environment:
+      - TA_ENVIRONMENT=crapi
+      - TA_REFRESH_TOKEN=
+    profiles:
+      - traceable
 
 volumes:
   mongodb-data:

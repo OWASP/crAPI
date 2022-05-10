@@ -1,0 +1,68 @@
+server {
+  listen 80;
+  server_name _;
+  client_max_body_size 50M;
+  index index.html;
+  root /usr/share/nginx/html;
+
+  location /community/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, "://"..ngx.var.http_host, "://${GO_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  http://${GO_SERVICE};
+    proxy_set_header Host ${GO_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+    sub_filter_types application/json text/html;
+    sub_filter "://${GO_SERVICE}" "://$http_host";
+    sub_filter_once off;
+  }
+
+  location /identity/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, "://"..ngx.var.http_host, "://${JAVA_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  http://${JAVA_SERVICE};
+    proxy_set_header Host ${JAVA_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+  }
+
+  location /workshop/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, "://"..ngx.var.http_host, "://${PYTHON_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  http://${PYTHON_SERVICE};
+    proxy_set_header Host ${PYTHON_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+    sub_filter_types application/json text/html;
+    sub_filter "://${PYTHON_SERVICE}" "://$http_host";
+    sub_filter_once off;
+  }
+
+  location /images {
+    try_files $uri $uri/ =404;
+  }
+
+  location / {
+    try_files $uri /index.html =404;
+    add_header Last-Modified $date_gmt;
+    add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+    if_modified_since off;
+    expires off;
+    etag off;
+  }
+}

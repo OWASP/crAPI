@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+if [ "$INSTALL_TRACEABLE" = true ]; then
+    cp /etc/nginx/nginx.conf.template /usr/local/openresty/nginx/conf/nginx.conf
+fi
 
 envsubst '${GO_SERVICE} ${JAVA_SERVICE} ${PYTHON_SERVICE}' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
 openresty

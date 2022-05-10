@@ -1,68 +1,89 @@
-server {
-  listen 80;
-  server_name _;
-  client_max_body_size 50M;
-  index index.html;
-  root /usr/share/nginx/html;
+#user  nobody;
+worker_processes 1;
 
-  location /community/ {
-    rewrite_by_lua_block {
-      ngx.req.read_body()  -- explicitly read the req body
-      local body = ngx.req.get_body_data()
-      if body then
-        body = ngx.re.gsub(body, "://"..ngx.var.http_host, "://${GO_SERVICE}")
-        ngx.req.set_body_data(body)
-      end
-    }
-    proxy_pass  http://${GO_SERVICE};
-    proxy_set_header Host ${GO_SERVICE};
-    proxy_set_header X-Forwarded-Host $http_host;
-    sub_filter_types application/json text/html;
-    sub_filter "://${GO_SERVICE}" "://$http_host";
-    sub_filter_once off;
-  }
+# Enables the use of JIT for regular expressions to speed-up their processing.
+pcre_jit on;
 
-  location /identity/ {
-    rewrite_by_lua_block {
-      ngx.req.read_body()  -- explicitly read the req body
-      local body = ngx.req.get_body_data()
-      if body then
-        body = ngx.re.gsub(body, "://"..ngx.var.http_host, "://${JAVA_SERVICE}")
-        ngx.req.set_body_data(body)
-      end
-    }
-    proxy_pass  http://${JAVA_SERVICE};
-    proxy_set_header Host ${JAVA_SERVICE};
-    proxy_set_header X-Forwarded-Host $http_host;
-  }
+error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
 
-  location /workshop/ {
-    rewrite_by_lua_block {
-      ngx.req.read_body()  -- explicitly read the req body
-      local body = ngx.req.get_body_data()
-      if body then
-        body = ngx.re.gsub(body, "://"..ngx.var.http_host, "://${PYTHON_SERVICE}")
-        ngx.req.set_body_data(body)
-      end
-    }
-    proxy_pass  http://${PYTHON_SERVICE};
-    proxy_set_header Host ${PYTHON_SERVICE};
-    proxy_set_header X-Forwarded-Host $http_host;
-    sub_filter_types application/json text/html;
-    sub_filter "://${PYTHON_SERVICE}" "://$http_host";
-    sub_filter_once off;
-  }
+#pid        logs/nginx.pid;
 
-  location /images {
-    try_files $uri $uri/ =404;
-  }
 
-  location / {
-    try_files $uri /index.html =404;
-    add_header Last-Modified $date_gmt;
-    add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
-    if_modified_since off;
-    expires off;
-    etag off;
-  }
+events {
+    worker_connections  1024;
 }
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    # Enables or disables the use of underscores in client request header fields.
+    # When the use of underscores is disabled, request header fields whose names contain underscores are marked as invalid and become subject to the ignore_invalid_headers directive.
+    # underscores_in_headers off;
+
+    #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+    #                  '$status $body_bytes_sent "$http_referer" '
+    #                  '"$http_user_agent" "$http_x_forwarded_for"';
+
+    #access_log  logs/access.log  main;
+
+        # Log in JSON Format
+        # log_format nginxlog_json escape=json '{ "timestamp": "$time_iso8601", '
+        # '"remote_addr": "$remote_addr", '
+        #  '"body_bytes_sent": $body_bytes_sent, '
+        #  '"request_time": $request_time, '
+        #  '"response_status": $status, '
+        #  '"request": "$request", '
+        #  '"request_method": "$request_method", '
+        #  '"host": "$host",'
+        #  '"upstream_addr": "$upstream_addr",'
+        #  '"http_x_forwarded_for": "$http_x_forwarded_for",'
+        #  '"http_referrer": "$http_referer", '
+        #  '"http_user_agent": "$http_user_agent", '
+        #  '"http_version": "$server_protocol", '
+        #  '"nginx_access": true }';
+        # access_log /dev/stdout nginxlog_json;
+
+    # See Move default writable paths to a dedicated directory (#119)
+    # https://github.com/openresty/docker-openresty/issues/119
+
+    client_body_temp_path /var/run/openresty/nginx-client-body;
+    proxy_temp_path       /var/run/openresty/nginx-proxy;
+    fastcgi_temp_path     /var/run/openresty/nginx-fastcgi;
+    uwsgi_temp_path       /var/run/openresty/nginx-uwsgi;
+    scgi_temp_path        /var/run/openresty/nginx-scgi;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+
+    #gzip  on;
+
+    resolver 127.0.0.11;
+
+    lua_package_path "/etc/nginx/lua/?.lua;;";
+
+    init_by_lua_block {
+        traceable = require "traceable-plugin"
+    }
+    rewrite_by_lua_block {
+        traceable.rewrite()
+    }
+    log_by_lua_block {
+        traceable.log()
+    }
+    body_filter_by_lua_block {
+        traceable.body_filter()
+    }
+
+    include /etc/nginx/conf.d/*.conf;
+
+    # Don't reveal OpenResty version to clients.
+    # server_tokens off;
+}
+daemon off;
