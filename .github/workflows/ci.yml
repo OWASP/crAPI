@@ -8,9 +8,12 @@ on:
     tags:
       - 'v*.*.*'
   pull_request:
-    branches:
-      - 'develop'
-      - 'main'
+    paths:
+      - 'services/**'
+      - 'deploy/**'
+      - '.github/**'
+  workflow_dispatch:
+
 jobs:
   build-context:
     runs-on: ubuntu-latest
