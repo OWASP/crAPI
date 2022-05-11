@@ -147,3 +147,6 @@ jobs:
       - name: Install newman
         run: npm install -g newman
 
+      - name: Run Postman Collection
+        run: (newman run "./postman_collections/crAPI Accepted.postman_collection.json" -e ./postman_collections/Crapi.postman_environment.json) || true
+
