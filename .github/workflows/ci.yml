@@ -11,7 +11,7 @@ on:
     paths:
       - 'services/**'
       - 'deploy/**'
-      - '.github/**'
+      - '.github/workflows/**'
   workflow_dispatch:
 
 jobs:

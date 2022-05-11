@@ -23,20 +23,20 @@ Before submitting a bug, please do the following:
 ------------------------------
  
 Make sure issue you raised gets the attention it deserves: issues with missing
-information may be ignored or punted back to you, delaying a fix.  The below
+information may be ignored or punted back to you, delaying a fix. The below
 constitutes a bare minimum; more info is almost always better:
  
-* **What version of the core programming language interpreter/compiler are you
- using?** For example, Most of our services are written in Java so you what version of Java you're on?
 * **What operating system are you on?** Windows? (10? Home? Pro?)
  Mac OS X?  (10.x.x?) Linux? (Which distro? Which version of that
  distro? 32 or 64 bits?) Again, more detail is better.
-* **Are you using latest codebase and are on main branch?** Ideally, you
+* **Are you using latest codebase and which source are you using? Main or develop branch or image tag?**
+Did you build your own images or used public images? If yes what 
+Ideally, you
  followed the advice above and have ruled out (or verified that the problem
  exists in) a few different versions.
 * **How can the developers recreate the bug on their end?** If possible,
- include a copy of your code or an example repo, the command you used to invoke it, and the full
- output of your run (if applicable.)
+ include a copy of your code or an example repo, the command you used to invoke it,
+ and the full output of your run (if applicable.)
  
 ### Version control branching
 -------------------------
@@ -55,9 +55,9 @@ constitutes a bare minimum; more info is almost always better:
    * **Bug fixes** should be based on the branch named after the **oldest
      supported release line** the bug affects.
  
-       * E.g. if a feature was introduced in 1.1, the latest release line is
-         1.3, and a bug is found in that feature - make your branch based on
-         1.1.  The maintainer will then forward-port it to 1.3 and master.
+       * E.g. if a feature was introduced in v1.1, the latest release line is
+         v1.3, and a bug is found in that feature - make your branch based on
+         v1.1.  The maintainer will then forward-port it to v1.3 and master.
        * Bug fixes requiring large changes to the code or which have a chance
          of being otherwise disruptive, may need to base off of **main**
          instead. This is a judgement call -- ask the devs!
@@ -72,7 +72,6 @@ constitutes a bare minimum; more info is almost always better:
  
 ### Tests aren't optional
 ---------------------
- 
 Any bugfix that doesn't include a test proving the existence of the bug being
 fixed, may be suspect.  Ditto for new features that can't prove they actually
 work.
@@ -85,7 +84,7 @@ Writing tests before the implementation is strongly encouraged.
 ------------
  
 Here's an example workflow for a project `theproject` hosted on Github, which
-is currently in version 1.0.x. Your username is `yourname` and you're
+is currently in version v1.0.x. Your username is `yourname` and you're
 submitting a basic bugfix. (This workflow only changes slightly if the project
 is hosted at Bitbucket, self-hosted, or etc.)
  
@@ -95,10 +94,9 @@ is hosted at Bitbucket, self-hosted, or etc.)
 1. Click 'Fork' on Github, creating e.g. `yourname/theproject`.
 2. Clone your project: `git clone git@github.com:yourname/theproject`.
 3. `cd theproject`
-4. Create a branch: `git checkout -b foo-the-bars 1.0`.
+4. Create a branch: `git checkout -b foo-the-bars v1.0`.
  
 ### Making your Changes
- 
  
 1. Write tests expecting the correct/fixed functionality; make sure they fail.
 2. Hack, hack, hack.
