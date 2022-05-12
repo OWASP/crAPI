@@ -17,7 +17,7 @@ package router
 import (
 	"fmt"
 	"net/http"
-
+	"os"
 	"github.com/gorilla/mux"
 	"crapi.proj/goservice/api/config"
 	"crapi.proj/goservice/api/controllers"
@@ -57,6 +57,6 @@ func (server *Server) InitializeRoutes() *mux.Router {
 
 //
 func (server *Server) Run(addr string) {
-	fmt.Println("Listening to port 8087")
+	fmt.Println("Listening to port "+ os.Getenv("SERVER_PORT"))
 	fmt.Println(http.ListenAndServe(addr, server.Router))
 }
