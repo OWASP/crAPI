@@ -1,0 +1,2077 @@
+{
+	"info": {
+		"_postman_id": "108b5557-e108-41ad-b9c9-28811eb81b1e",
+		"name": "crAPI Accepted",
+		"description": "crAPI Training Scripts",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Signup example.com",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const {Property} = require('postman-collection');",
+							"",
+							"let name = Property.replaceSubstitutions('{{$randomFirstName}}.{{$randomLastName}}');",
+							"pm.globals.set(\"name\", name);",
+							"let newName = Property.replaceSubstitutions('{{$randomFirstName}}.{{$randomLastName}}');",
+							"pm.globals.set(\"new_name\", newName);",
+							"let email = name+\"@example.com\";",
+							"let newEmail = newName+\"@example.com\";",
+							"let pass = Property.replaceSubstitutions(\"{{$randomPassword}}\");",
+							"let phone = Property.replaceSubstitutions(\"{{$randomPhoneNumber}}\").replace(/-/g,'');",
+							"pm.globals.set(\"email\", email);",
+							"pm.globals.set(\"new_email\", newEmail);",
+							"pm.globals.set(\"password\", pass);",
+							"pm.globals.set(\"name\", name);",
+							"pm.globals.set(\"phone\", phone);",
+							"console.log(email, newEmail, pass, phone);",
+							"console.log(name );"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"{{name}}\",\"email\":\"{{email}}\",\"number\":\"{{phone}}\",\"password\":\"{{password}}\"}"
+				},
+				"url": {
+					"raw": "{{url}}/identity/api/auth/signup",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    pm.globals.set(\"token\", jsonData.token);",
+							"    var token = pm.globals.get(\"token\");",
+							"    pm.test(\"Token is set\", function () {",
+							"        pm.expect(jsonData.token).to.eql(token);",
+							"    });",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"{{email}}\",\"password\":\"{{password}}\"}"
+				},
+				"url": {
+					"raw": "{{url}}/identity/api/auth/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forgot Password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    pm.test(\"Body matches string\", function () {",
+							"        pm.expect(pm.response.text()).to.include(\"OTP Sent\");",
+							"    });",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"{{email}}\"}"
+				},
+				"url": {
+					"raw": "{{url}}/identity/api/auth/forget-password",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"auth",
+						"forget-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SearchMailOTP",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"",
+							"function dynamicSort(property) {",
+							"    var sortOrder = 1;",
+							"    if(property[0] === \"-\") {",
+							"        sortOrder = -1;",
+							"        property = property.substr(1);",
+							"    }",
+							"    return function (a,b) {",
+							"        /* next line works with strings and numbers, ",
+							"         * and you may want to customize it to your needs",
+							"         */",
+							"        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;",
+							"        return result * sortOrder;",
+							"    }",
+							"}",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    var mails = jsonData.items;",
+							"",
+							"    pm.test(\"Your test name\", function () {",
+							"        pm.expect(mails.length).to.be.gt(0);",
+							"        var mail = mails[0];",
+							"        console.log(mail);",
+							"        //mails.sort(dynamicSort(\"Created\"));",
+							"        var mail = mails[0];",
+							"        var mbody = mail['Raw']['Data'].replace(/[^a-zA-Z0-9<>:]*\\n/g, \"\");",
+							"        console.log(mail);",
+							"        var otpmatch = mbody.match(/generated otp is: ([0-9]+)/);",
+							"        console.log(otpmatch);",
+							"        var otp = otpmatch[1]",
+							"        console.log(\"OTP: \"+ otp);",
+							"        pm.globals.set(\"OTP\", otp);",
+							"    });",
+							"    ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url_mail}}/api/v2/search?kind=to&query={{email}}&limit=10",
+					"host": [
+						"{{url_mail}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"search"
+					],
+					"query": [
+						{
+							"key": "kind",
+							"value": "to"
+						},
+						{
+							"key": "query",
+							"value": "{{email}}"
+						},
+						{
+							"key": "limit",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check OTP",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{email}}\",\n    \"otp\": \"{{OTP}}\",\n    \"password\": \"{{password}}\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/identity/api/auth/v3/check-otp",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"auth",
+						"v3",
+						"check-otp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resend vehicle email",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/identity/api/v2/vehicle/resend_email",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"v2",
+						"vehicle",
+						"resend_email"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SearchMailVehicle",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"function dynamicSort(property) {",
+							"    var sortOrder = 1;",
+							"    if(property[0] === \"-\") {",
+							"        sortOrder = -1;",
+							"        property = property.substr(1);",
+							"    }",
+							"    return function (a,b) {",
+							"        /* next line works with strings and numbers, ",
+							"         * and you may want to customize it to your needs",
+							"         */",
+							"        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;",
+							"        return result * sortOrder;",
+							"    }",
+							"}",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    var mails = jsonData.items;",
+							"",
+							"    pm.test(\"Your test name\", function () {",
+							"        pm.expect(mails.length).to.be.gt(0);",
+							"        console.log(mails[0]);",
+							"        //mails.sort(dynamicSort(\"Created\"));",
+							"        console.log(mails[0]);",
+							"        var mail = mails[0];",
+							"        var mbody = mail['Raw']['Data'].replace(/[^a-zA-Z0-9<>:]*\\n/g, \"\");",
+							"        var vintext = mbody.match(/VIN(.*)Pincode/i);",
+							"        console.log(vintext);",
+							"        var VIN = vintext[1].match(/>([A-Za-z0-9]+)</)[1];",
+							"        console.log(\"VIN: \" + VIN);",
+							"        var pintext = mbody.match(/Pincode(.*)We're/);",
+							"        console.log(pintext);",
+							"        var PIN = pintext[1].match(/>([0-9]+)</)[1];",
+							"        console.log(\"PIN: \"+ PIN);",
+							"        pm.globals.set(\"VIN\", VIN);",
+							"        pm.globals.set(\"PIN\", PIN);",
+							"    });",
+							"    ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url_mail}}/api/v2/search?kind=to&query={{email}}&limit=10",
+					"host": [
+						"{{url_mail}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"search"
+					],
+					"query": [
+						{
+							"key": "kind",
+							"value": "to"
+						},
+						{
+							"key": "query",
+							"value": "{{email}}"
+						},
+						{
+							"key": "limit",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Vehicle from Mail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"vin\": \"{{VIN}}\", \"pincode\": \"{{PIN}}\"}"
+				},
+				"url": {
+					"raw": "{{url}}/identity/api/v2/vehicle/add_vehicle",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"v2",
+						"vehicle",
+						"add_vehicle"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get vehicles",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = pm.response.json();",
+							"    pm.globals.set(\"vehicle_id\", jsonData[0].uuid);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/identity/api/v2/vehicle/vehicles",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"v2",
+						"vehicle",
+						"vehicles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get recent posts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/community/api/v2/community/posts/recent",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"community",
+						"api",
+						"v2",
+						"community",
+						"posts",
+						"recent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create post ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    var order = jsonData.id;",
+							"    pm.globals.set(\"post_id\", order);",
+							"    console.log(order);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"title\":\"{{$randomLoremSentence}}\",\"content\":\"{{$randomLoremParagraph}}\"}"
+				},
+				"url": {
+					"raw": "{{url}}/community/api/v2/community/posts",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"community",
+						"api",
+						"v2",
+						"community",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/community/api/v2/community/posts/{{post_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"community",
+						"api",
+						"v2",
+						"community",
+						"posts",
+						"{{post_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"content\":\"{{$randomLoremSentence}}\"}"
+				},
+				"url": {
+					"raw": "{{url}}/community/api/v2/community/posts/{{post_id}}/comment",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"community",
+						"api",
+						"v2",
+						"community",
+						"posts",
+						"{{post_id}}",
+						"comment"
+					]
+				},
+				"description": "Post comment"
+			},
+			"response": []
+		},
+		{
+			"name": "Get vehicle location",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/identity/api/v2/vehicle/{{vehicle_id}}/location",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"v2",
+						"vehicle",
+						"{{vehicle_id}}",
+						"location"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Contact mechanic",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb25zdGVyQGRhcmt3ZWIuY29tIiwiaWF0IjoxNjA4NTQzODI0LCJleHAiOjE2MDg2MzAyMjR9.AAIvhrtstlloPf7-NNCcmhEZm-XkO1aO3x3CLns1em7ft9U77B88LpK9jIrF8C-IH32JPWVazRFo0gBIBZ9FpA"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"mechanic_code\":\"TRAC_JHN\",\"problem_details\":\"Hi Jhon\",\"vin\":\"{{VIN}}\",\"mechanic_api\":\"{{url}}/workshop/api/mechanic/receive_report\",\"repeat_request_if_failed\":false,\"number_of_repeats\":1}"
+				},
+				"url": {
+					"raw": "{{url}}/workshop/api/merchant/contact_mechanic",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"workshop",
+						"api",
+						"merchant",
+						"contact_mechanic"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = pm.response.json();",
+							"    var productId = jsonData.products[0].id;",
+							"    pm.globals.set(\"product_id\", productId);",
+							"    console.log(\"Product ID \", productId);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/workshop/api/shop/products",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"workshop",
+						"api",
+						"shop",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validate coupon",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb25zdGVyQGRhcmt3ZWIuY29tIiwiaWF0IjoxNjA4MDMxMDk5LCJleHAiOjE2MDgxMTc0OTl9.lQr14VeNm_lOmKiOIKwO6mRu_47VEU8HVWEsyBzbeaVXzIthwnTC4mNmYb0qNW2--T20_P9sOjTWtMJjKRQCJA"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"coupon_code\":\"TRAC075\"}"
+				},
+				"url": {
+					"raw": "{{url}}/community/api/v2/coupon/validate-coupon",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"community",
+						"api",
+						"v2",
+						"coupon",
+						"validate-coupon"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Apply coupon",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"coupon_code\":\"TRAC075\",\"amount\":75}"
+				},
+				"url": {
+					"raw": "{{url}}/workshop/api/shop/apply_coupon",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"workshop",
+						"api",
+						"shop",
+						"apply_coupon"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    var order = jsonData.id;",
+							"    pm.globals.set(\"order_id\", order);",
+							"    console.log(order);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"product_id\":{{product_id}},\"quantity\":1}"
+				},
+				"url": {
+					"raw": "{{url}}/workshop/api/shop/orders",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"workshop",
+						"api",
+						"shop",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/workshop/api/shop/orders/all",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"workshop",
+						"api",
+						"shop",
+						"orders",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Return order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/workshop/api/shop/orders/return_order?order_id={{order_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"workshop",
+						"api",
+						"shop",
+						"orders",
+						"return_order"
+					],
+					"query": [
+						{
+							"key": "order_id",
+							"value": "{{order_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add video",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    var video_id = jsonData.id;",
+							"    pm.globals.set(\"video_id\", video_id);",
+							"    console.log(video_id);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data; boundary=----WebKitFormBoundaryQ6RYqyYgmpjzPDZA"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "{{video_file}}"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/identity/api/v2/user/videos",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"v2",
+						"user",
+						"videos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Video",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/identity/api/v2/user/videos/{{video_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"v2",
+						"user",
+						"videos",
+						"{{video_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change Video Name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"videoName\":\"{{$randomNoun}}.mp4\"}"
+				},
+				"url": {
+					"raw": "{{url}}/identity/api/v2/user/videos/{{video_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"v2",
+						"user",
+						"videos",
+						"{{video_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Share video",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 403\", function () {",
+							"    pm.response.to.have.status(403);",
+							"    pm.expect(pm.response.text()).to.include(\"S-hould be accessed only inte-Rnally\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/identity/api/v2/user/videos/convert_video?video_id={{video_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"v2",
+						"user",
+						"videos",
+						"convert_video"
+					],
+					"query": [
+						{
+							"key": "video_id",
+							"value": "{{video_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user dashboard",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/identity/api/v2/user/dashboard",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"v2",
+						"user",
+						"dashboard"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change email",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"old_email\":\"{{email}}\",\"new_email\":\"{{new_email}}\"}"
+				},
+				"url": {
+					"raw": "{{url}}/identity/api/v2/user/change-email",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"v2",
+						"user",
+						"change-email"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SearchMailVerificationToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"",
+							"function dynamicSort(property) {",
+							"    var sortOrder = 1;",
+							"    if(property[0] === \"-\") {",
+							"        sortOrder = -1;",
+							"        property = property.substr(1);",
+							"    }",
+							"    return function (a,b) {",
+							"        /* next line works with strings and numbers, ",
+							"         * and you may want to customize it to your needs",
+							"         */",
+							"        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;",
+							"        return result * sortOrder;",
+							"    }",
+							"}",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    var mails = jsonData.items;",
+							"",
+							"    pm.test(\"Get Token\", function () {",
+							"        pm.expect(mails.length).to.be.gt(0);",
+							"        //mails.sort(dynamicSort(\"Created\"));",
+							"        var mail = mails[0];",
+							"        var mbody = mail['Raw']['Data'].replace(/[^a-zA-Z0-9<>:]*\\n/g, \"\");",
+							"        console.log(mbody);",
+							"        var tokentext = mbody.match(/token:\\s*[^\\s]+/i);",
+							"        console.log(tokentext);",
+							"        var email_token = tokentext[0].match(/>([A-Za-z0-9]+)</)[1];",
+							"        console.log(\"Token: \" + email_token);",
+							"        pm.globals.set(\"email_token\", email_token);",
+							"    });",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url_mail}}/api/v2/search?kind=to&query={{new_email}}&limit=10",
+					"host": [
+						"{{url_mail}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"search"
+					],
+					"query": [
+						{
+							"key": "kind",
+							"value": "to"
+						},
+						{
+							"key": "query",
+							"value": "{{new_email}}"
+						},
+						{
+							"key": "limit",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify email token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"old_email\": \"{{email}}\", \"new_email\":\"{{new_email}}\",\"token\":\"{{email_token}}\"}"
+				},
+				"url": {
+					"raw": "{{url}}/identity/api/v2/user/verify-email-token",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"v2",
+						"user",
+						"verify-email-token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login Back",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    pm.globals.set(\"token\", jsonData.token);",
+							"    var token = pm.globals.get(\"token\");",
+							"    pm.test(\"Token is set\", function () {",
+							"        pm.expect(jsonData.token).to.eql(token);",
+							"    });",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"{{new_email}}\",\"password\":\"{{password}}\"}"
+				},
+				"url": {
+					"raw": "{{url}}/identity/api/auth/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change email Back",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"old_email\":\"{{new_email}}\",\"new_email\":\"{{email}}\"}"
+				},
+				"url": {
+					"raw": "{{url}}/identity/api/v2/user/change-email",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"v2",
+						"user",
+						"change-email"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SearchMailVerificationToken Back",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"function dynamicSort(property) {",
+							"    var sortOrder = 1;",
+							"    if(property[0] === \"-\") {",
+							"        sortOrder = -1;",
+							"        property = property.substr(1);",
+							"    }",
+							"    return function (a,b) {",
+							"        /* next line works with strings and numbers, ",
+							"         * and you may want to customize it to your needs",
+							"         */",
+							"        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;",
+							"        return result * sortOrder;",
+							"    }",
+							"}",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    var mails = jsonData.items;",
+							"",
+							"    pm.test(\"Get Token\", function () {",
+							"        pm.expect(mails.length).to.be.gt(0);",
+							"        //mails.sort(dynamicSort(\"Created\"));",
+							"        var mail = mails[0];",
+							"        var mbody = mail['Raw']['Data'].replace(/[^a-zA-Z0-9<>:]*\\n/g, \"\");",
+							"        console.log(mbody);",
+							"        var tokentext = mbody.match(/token:\\s*[^\\s]+/i);",
+							"        console.log(tokentext);",
+							"        var email_token = tokentext[0].match(/>([A-Za-z0-9]+)</)[1];",
+							"        console.log(\"Token: \" + email_token);",
+							"        pm.globals.set(\"email_token\", email_token);",
+							"    });",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url_mail}}/api/v2/search?kind=to&query={{email}}",
+					"host": [
+						"{{url_mail}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"search"
+					],
+					"query": [
+						{
+							"key": "kind",
+							"value": "to"
+						},
+						{
+							"key": "query",
+							"value": "{{email}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify email token Back",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"old_email\": \"{{new_email}}\", \"new_email\":\"{{email}}\",\"token\":\"{{email_token}}\"}"
+				},
+				"url": {
+					"raw": "{{url}}/identity/api/v2/user/verify-email-token",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"v2",
+						"user",
+						"verify-email-token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    pm.globals.set(\"token\", jsonData.token);",
+							"    var token = pm.globals.get(\"token\");",
+							"    pm.test(\"Token is set\", function () {",
+							"        pm.expect(jsonData.token).to.eql(token);",
+							"    });",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"{{email}}\",\"password\":\"{{password}}\"}"
+				},
+				"url": {
+					"raw": "{{url}}/identity/api/auth/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"identity",
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"const {Property} = require('postman-collection');",
+					"var xff = Property.replaceSubstitutions('{{$randomIP}}');",
+					"pm.collectionVariables.set(\"X-Forwarded-For\", xff);"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "X-Forwarded-For",
+			"value": ""
+		}
+	]
+}

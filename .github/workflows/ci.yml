@@ -147,6 +147,20 @@ jobs:
   
       - name: Env seen
         run: env
+        
+      - name: Run crAPI using built images
+        run: VERSION=${{ env.TAG_NAME }} docker-compose -f deploy/docker/docker-compose.yml --compatibility up -d
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+
+      - name: Install newman
+        run: npm install -g newman
+
+      - name: Run Postman Collection
+        run: (newman run "./postman_collections/crAPI Accepted.postman_collection.json" -e ./postman_collections/Crapi.postman_environment.json) || true
 
       - name: Build crapi-identity all platforms and conditionally push to Docker Hub
         uses: docker/build-push-action@v2
@@ -199,4 +213,3 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
         
-  
