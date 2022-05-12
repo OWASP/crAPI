@@ -148,7 +148,7 @@ jobs:
       - name: Env seen
         run: env
         
-      - name: Pull Images From DockerHub and Start crAPI
+      - name: Run crAPI using built images
         run: VERSION=${{ env.TAG_NAME }} docker-compose -f deploy/docker/docker-compose.yml --compatibility up -d
 
       - name: Install Node
