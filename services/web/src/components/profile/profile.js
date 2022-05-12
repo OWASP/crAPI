@@ -154,6 +154,7 @@ const Profile = (props) => {
         <PageHeader
           className="profile-header"
           title="My Personal Video"
+          subTitle="Max File Size: 10MB"
           extra={[
             <Dropdown overlay={videoSideBar} key="drop-down">
               <div>
