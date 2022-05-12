@@ -154,7 +154,7 @@ jobs:
         with:
           context: ./services/identity
           tags: crapi/crapi-identity:${{ env.TAG_LATEST }},crapi/crapi-identity:${{ env.TAG_NAME }}
-          push: ${{ needs.build-context.outputs.push_image }}
+          push: true
           platforms: ${{ env.PLATFORMS }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -165,7 +165,7 @@ jobs:
         with:
           context: ./services/workshop
           tags: crapi/crapi-workshop:${{ env.TAG_LATEST }},crapi/crapi-workshop:${{ env.TAG_NAME }}
-          push: ${{ needs.build-context.outputs.push_image }}
+          push: true
           platforms: ${{ env.PLATFORMS }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -176,7 +176,7 @@ jobs:
         with:
           context: ./services/community
           tags: crapi/crapi-community:${{ env.TAG_LATEST }},crapi/crapi-community:${{ env.TAG_NAME }}
-          push: ${{ needs.build-context.outputs.push_image }}
+          push: true
           platforms: ${{ env.PLATFORMS }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -187,7 +187,7 @@ jobs:
         with:
           context: ./services/web
           tags: crapi/crapi-web:${{ env.TAG_LATEST }},crapi/crapi-web:${{ env.TAG_NAME }}
-          push: ${{ needs.build-context.outputs.push_image }}
+          push: true
           platforms: ${{ env.PLATFORMS }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -198,7 +198,7 @@ jobs:
         with:
           context: ./services/mailhog
           tags: crapi/mailhog:${{ env.TAG_LATEST }},crapi/mailhog:${{ env.TAG_NAME }}
-          push: ${{ needs.build-context.outputs.push_image }}
+          push: true
           platforms: ${{ env.PLATFORMS }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
