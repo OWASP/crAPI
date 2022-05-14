@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -32,9 +30,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
-/**
- * @author Traceable AI
- */
 @ControllerAdvice
 @Slf4j
 @RestController

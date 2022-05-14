@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -236,8 +234,8 @@ public class ProfileServiceImplTest {
     public void convertVideoResponseWhenNotValidSocketAddress(){
         Long videoId = Long.valueOf(2);
         MockHttpServletRequest request = getMockHttpRequest();
-        request.addHeader(HttpHeaders.HOST, "120.1.2.3:8080");
-        request.addHeader("x-forwarded-host", "120.1.2.3:8080");
+        request.addHeader(HttpHeaders.HOST, "120.1.2.3:"+ String.valueOf(System.getenv("SERVER_PORT")) );
+        request.addHeader("x-forwarded-host", "120.1.2.3:"+ String.valueOf(System.getenv("SERVER_PORT")) );
         CRAPIResponse crapiAPIResponse = profileService.convertVideo(videoId, request);
         Assertions.assertEquals(UserMessage.CONVERT_VIDEO_INTERNAL_USE_ONLY, crapiAPIResponse.getMessage());
         Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), crapiAPIResponse.getStatus());
@@ -248,7 +246,7 @@ public class ProfileServiceImplTest {
     public void convertVideoFailResponseWhenVideoIdNull(){
         Long videoId = null;
         MockHttpServletRequest request = getMockHttpRequest();
-        request.addHeader(HttpHeaders.HOST, "127.0.0.1:8080");
+        request.addHeader(HttpHeaders.HOST, "127.0.0.1:"+ String.valueOf(System.getenv("SERVER_PORT")) );
         CRAPIResponse crapiAPIResponse = profileService.convertVideo(videoId, request);
         Assertions.assertEquals(UserMessage.CONVERT_VIDEO_PARAM_IS_MISSING, crapiAPIResponse.getMessage());
         Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), crapiAPIResponse.getStatus());
@@ -259,7 +257,7 @@ public class ProfileServiceImplTest {
     public void convertVideoFailWhenVideoObjectNotFound(){
         Long videoId = Long.valueOf(2);
         MockHttpServletRequest request = getMockHttpRequest();
-        request.addHeader(HttpHeaders.HOST, "localhost:8080");
+        request.addHeader(HttpHeaders.HOST, "localhost:"+ String.valueOf(System.getenv("SERVER_PORT")) );
         Mockito.when(profileVideoRepository.findById(videoId))
                 .thenReturn(Optional.ofNullable(null));
         CRAPIResponse crapiAPIResponse = profileService.convertVideo(videoId, request);
@@ -275,7 +273,7 @@ public class ProfileServiceImplTest {
         profileVideo.setConversion_params("-v codec h264");
         Long videoId = Long.valueOf(2);
         MockHttpServletRequest request = getMockHttpRequest();
-        request.addHeader(HttpHeaders.HOST, "localhost:8080");
+        request.addHeader(HttpHeaders.HOST, "localhost:"+ String.valueOf(System.getenv("SERVER_PORT")) );
         Mockito.when(profileVideoRepository.findById(videoId))
                 .thenReturn(Optional.of(profileVideo));
         CRAPIResponse crapiAPIResponse = profileService.convertVideo(videoId, request);
@@ -290,7 +288,7 @@ public class ProfileServiceImplTest {
         ProfileVideo profileVideo = getDummyProfileVideo();
         Long videoId = Long.valueOf(2);
         MockHttpServletRequest request = getMockHttpRequest();
-        request.addHeader(HttpHeaders.HOST, "localhost:8080");
+        request.addHeader(HttpHeaders.HOST, "localhost:"+ String.valueOf(System.getenv("SERVER_PORT")) );
         Mockito.when(profileVideoRepository.findById(videoId))
                 .thenReturn(Optional.of(profileVideo));
         CRAPIResponse crapiAPIResponse = profileService.convertVideo(videoId, request);
@@ -306,7 +304,7 @@ public class ProfileServiceImplTest {
         profileVideo.setConversion_params("-v codec h264 && ping 8.8.8.8");
         Long videoId = Long.valueOf(2);
         MockHttpServletRequest request = getMockHttpRequest();
-        request.addHeader(HttpHeaders.HOST, "localhost:8080");
+        request.addHeader(HttpHeaders.HOST, "localhost:"+ String.valueOf(System.getenv("SERVER_PORT")) );
         Mockito.when(profileVideoRepository.findById(videoId))
                 .thenReturn(Optional.of(profileVideo));
         CRAPIResponse crapiAPIResponse = profileService.convertVideo(videoId, request);

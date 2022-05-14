@@ -1,5 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
@@ -60,7 +59,7 @@ export const COMMENT_NOT_ADDED = "Could not add comment";
 export const PROFILE_PIC_UPDATED = "Profile pic updated successfully";
 export const PROFILE_PIC_NOT_UPDATED = "Could not upload Picture";
 export const VIDEO_UPDATED = "Video updated successfully";
-export const VIDEO_NOT_UPDATED = "Could not change video";
+export const VIDEO_NOT_UPDATED = "Could not upload video";
 export const VIDEO_NAME_CHANGED = "Video Name Changed";
 export const VIDEO_NAME_NOT_CHANGED = "Could not change video";
 export const VIDEO_NOT_CONVERTED = "Could not convert video";

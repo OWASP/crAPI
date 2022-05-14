@@ -1,4 +1,3 @@
-# Copyright 2020 Traceable, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
@@ -39,7 +38,4 @@ RUN echo "daemon off;" >> /usr/local/openresty/nginx/conf/nginx.conf
 EXPOSE 80
 
 
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.7.3/wait /wait
-RUN chmod +x /wait
-
-CMD /wait && /etc/nginx/nginx-wrapper.sh
+CMD /etc/nginx/nginx-wrapper.sh

@@ -1,5 +1,3 @@
-# Copyright 2020 Traceable, Inc.
-#
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,12 +11,11 @@
 # limitations under the License.
 
 
-version: '3.7'
-services: 
+services:
 
   crapi-identity:
     container_name: crapi-identity
-    image: crapi-identity
+    image: crapi/crapi-identity:${VERSION:-latest}
     #ports:
     #  - "127.0.0.1:8080:8080"
     environment:
@@ -27,6 +24,7 @@ services:
       - DB_PASSWORD=crapisecretpassword
       - DB_HOST=postgresdb
       - DB_PORT=5432
+      - SERVER_PORT=${IDENTITY_SERVER_PORT:-8080}
       - BLOCK_SHELL_INJECTION=false
       - JWT_SECRET=crapi
       - MAILHOG_HOST=mailhog
@@ -39,14 +37,13 @@ services:
       - SMTP_FROM=no-reply@example.com
       - SMTP_AUTH=true
       - SMTP_STARTTLS=true
-      - WAIT_HOSTS=postgresdb:5432,mongodb:27017
-      - WAIT_HOSTS_TIMEOUT=240
-      - WAIT_SLEEP_INTERVAL=5
     depends_on:
-      - postgresdb
-      - mongodb
+      postgresdb:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
     healthcheck:
-        test: curl 0.0.0.0:8080/identity/health_check
+        test: curl 0.0.0.0:${IDENTITY_SERVER_PORT:-8080}/identity/health_check
         interval: 15s
         timeout: 15s
         retries: 15
@@ -58,7 +55,7 @@ services:
 
   crapi-community:
     container_name: crapi-community
-    image: crapi-community
+    image: crapi/crapi-community:${VERSION:-latest}
     #ports:
     #  - "127.0.0.1:8087:8087"
     environment:
@@ -67,22 +64,22 @@ services:
       - DB_PASSWORD=crapisecretpassword
       - DB_HOST=postgresdb
       - DB_PORT=5432
+      - SERVER_PORT=${COMMUNITY_SERVER_PORT:-8087}
       - MONGO_DB_HOST=mongodb
       - MONGO_DB_PORT=27017
       - MONGO_DB_USER=admin
       - MONGO_DB_PASSWORD=crapisecretpassword
       - MONGO_DB_NAME=crapi
       - JWT_SECRET=crapi
-      - WAIT_HOSTS=postgresdb:5432,mongodb:27017,crapi-identity:8080
-      - WAIT_HOSTS_TIMEOUT=240
-      - WAIT_SLEEP_INTERVAL=5
-      - WAIT_AFTER_HOSTS=10
     depends_on:
-      - postgresdb
-      - mongodb
-      - crapi-identity
+      postgresdb:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      crapi-identity:
+        condition: service_healthy
     healthcheck:
-        test: curl 0.0.0.0:8087/community/home
+        test: curl 0.0.0.0:${COMMUNITY_SERVER_PORT:-8087}/community/home
         interval: 15s
         timeout: 15s
         retries: 15
@@ -94,7 +91,7 @@ services:
 
   crapi-workshop:
     container_name: crapi-workshop
-    image: crapi-workshop
+    image: crapi/crapi-workshop:${VERSION:-latest}
     #ports:
     #  - "127.0.0.1:8000:8000"
     environment:
@@ -103,6 +100,7 @@ services:
       - DB_PASSWORD=crapisecretpassword
       - DB_HOST=postgresdb
       - DB_PORT=5432
+      - SERVER_PORT=${WORKSHOP_SERVER_PORT:-8000}
       - MONGO_DB_HOST=mongodb
       - MONGO_DB_PORT=27017
       - MONGO_DB_USER=admin
@@ -110,17 +108,17 @@ services:
       - MONGO_DB_NAME=crapi
       - JWT_SECRET=crapi
       - SECRET_KEY=crapi
-      - WAIT_HOSTS=crapi-identity:8080,crapi-community:8087,mailhog:1025
-      - WAIT_HOSTS_TIMEOUT=240
-      - WAIT_SLEEP_INTERVAL=5
-      - WAIT_AFTER_HOSTS=10
     depends_on:
-      - postgresdb
-      - mongodb
-      - crapi-identity
-      - crapi-community
+      postgresdb:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      crapi-identity:
+        condition: service_healthy
+      crapi-community:
+        condition: service_healthy
     healthcheck:
-        test: curl 0.0.0.0:8000/workshop/health_check/
+        test: curl 0.0.0.0:${WORKSHOP_SERVER_PORT:-8000}/workshop/health_check/
         interval: 15s
         timeout: 15s
         retries: 15
@@ -132,20 +130,20 @@ services:
 
   crapi-web:
     container_name: crapi-web
-    image: crapi-web
+    image: crapi/crapi-web:${VERSION:-latest}
     ports:
       - "127.0.0.1:8888:80"
     environment:
-      - GO_SERVICE=crapi-community:8087
-      - JAVA_SERVICE=crapi-identity:8080
-      - PYTHON_SERVICE=crapi-workshop:8000
-      - WAIT_HOSTS=crapi-community:8087,crapi-identity:8080,crapi-workshop:8000,mailhog:1025
-      - WAIT_HOSTS_TIMEOUT=240
-      - WAIT_SLEEP_INTERVAL=5
+      - GO_SERVICE=crapi-community:${COMMUNITY_SERVER_PORT:-8087}
+      - JAVA_SERVICE=crapi-identity:${IDENTITY_SERVER_PORT:-8080}
+      - PYTHON_SERVICE=crapi-workshop:${WORKSHOP_SERVER_PORT:-8000}
     depends_on:
-      - crapi-community
-      - crapi-identity
-      - crapi-workshop
+      crapi-community:
+        condition: service_healthy
+      crapi-identity:
+        condition: service_healthy
+      crapi-workshop:
+        condition: service_healthy
     healthcheck:
         test: curl 0.0.0.0:80/web/health
         interval: 15s
@@ -166,6 +164,11 @@ services:
       POSTGRES_DB: crapi
     #ports:
     #  - "127.0.0.1:5432:5432"
+    healthcheck:
+        test: ["CMD-SHELL", "pg_isready"]
+        interval: 15s
+        timeout: 15s
+        retries: 15
     volumes:
       - postgresql-data:/var/lib/postgresql/data/
     deploy:
@@ -182,6 +185,12 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: crapisecretpassword
     #ports:
     #  - "127.0.0.1:27017:27017"
+    healthcheck:
+        test: echo 'db.runCommand("ping").ok' | mongo mongodb:27017/test --quiet
+        interval: 15s
+        timeout: 15s
+        retries: 15
+        start_period: 20s
     volumes:
       - mongodb-data:/data/db
     deploy:
@@ -193,13 +202,18 @@ services:
   mailhog:
     user: root
     container_name: mailhog
-    image: mailhog/mailhog
+    image: crapi/mailhog:${VERSION:-latest}
     environment:
       MH_MONGO_URI: admin:crapisecretpassword@mongodb:27017
       MH_STORAGE: mongodb
     ports: 
     #  - "127.0.0.1:1025:1025" # smtp server
       - "127.0.0.1:8025:8025" # Mail ui
+    healthcheck:
+        test: ["CMD", "nc", "-z", "localhost", "8025"]
+        interval: 15s
+        timeout: 15s
+        retries: 15
     deploy:
       resources:
         limits:

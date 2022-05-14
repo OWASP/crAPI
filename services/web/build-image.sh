@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Copyright 2020 Traceable, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
@@ -18,4 +17,4 @@
 set -x 
 
 cd "$(dirname $0)"
-docker build -t crapi-web .
+docker build -t crapi/crapi-web:${VERSION:-latest} .

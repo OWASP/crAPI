@@ -1,5 +1,3 @@
-# Copyright 2020 Traceable, Inc.
-#
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -16,9 +14,7 @@
 # GoLang Build
 FROM golang:alpine AS builder
 ENV GO111MODULE=on \
-    CGO_ENABLED=0 \
-    GOOS=linux \
-    GOARCH=amd64
+    CGO_ENABLED=0
 WORKDIR /build
 COPY ./go.mod .
 COPY ./go.sum .
@@ -39,9 +35,7 @@ RUN mkdir /app
 RUN apk update && apk add --no-cache curl
 COPY --from=builder /dist/main /app/main
 RUN ls -al /app
-EXPOSE 8087
 
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.7.3/wait /wait
-RUN chmod +x /wait
-
-CMD /wait && /app/main
+ARG SERVER_PORT 
+EXPOSE ${SERVER_PORT}
+CMD /app/main

@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,9 +15,6 @@
 package com.crapi.utils;
 
 import java.util.Random;
-/**
- * @author Traceable AI
- */
 public class EmailTokenGenerator {
     static String charsequence="abcdefghijklmnopqrstuvwxzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     static String num ="0123456789";

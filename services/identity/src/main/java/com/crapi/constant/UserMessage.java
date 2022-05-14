@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,9 +14,6 @@
 
 package com.crapi.constant;
 
-/**
- * @author Traceable AI
- */
 
 public class UserMessage {
 
@@ -54,7 +49,9 @@ public class UserMessage {
     public static final String VIDEO_DELETED_SUCCESS_MESSAGE = "User video deleted successfully.";
     public static final String YOU_HAVE_VIDEO_UPLOADED = "You have already uploaded a video. Please try with change video";
 
-    public static final String CONVERT_VIDEO_INTERNAL_USE_ONLY = "Thi-S endpoint S-hould be accessed only inte-Rnally. -Fine? , endpoint_url http://crapi-identity:8080/identity/api/v2/user/videos/convert_video";
+    public static final String CONVERT_VIDEO_INTERNAL_USE_ONLY = "Thi-S endpoint S-hould be accessed only inte-Rnally. -Fine? , endpoint_url http://crapi-identity:" 
+                                                                + String.valueOf(System.getenv("SERVER_PORT")) 
+                                                                + "/identity/api/v2/user/videos/convert_video";
     public static final String CONVERT_VIDEO_INTERNAL_ERROR = "Error occured while executing.";
     public static final String CONVERT_VIDEO_CLOSE_TO_WIN_THE_GAME = "You are very close.";
     public static final String CONVERT_VIDEO_BASH_COMMAND_TRIGGERED = "Video conversion bash command triggered.";

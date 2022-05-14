@@ -1,5 +1,3 @@
-# Copyright 2020 Traceable, Inc.
-#
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -28,9 +26,10 @@ FROM openjdk:11-jre-slim-buster
 RUN apt-get -y update && apt-get -y install curl && apt-get -y clean
 RUN mkdir /app
 COPY --from=javabuild /app/target/user-microservices-1.0-SNAPSHOT.jar /app/user-microservices-1.0-SNAPSHOT.jar
-EXPOSE 8080
 
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.7.3/wait /wait
-RUN chmod +x /wait
+ARG SERVER_PORT 
+EXPOSE ${SERVER_PORT}
 
-CMD /wait && java -jar /app/user-microservices-1.0-SNAPSHOT.jar
+ENV JAVA_TOOL_OPTIONS "-Xmx128m"
+
+CMD java -jar /app/user-microservices-1.0-SNAPSHOT.jar
