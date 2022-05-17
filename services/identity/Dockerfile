@@ -26,7 +26,9 @@ FROM openjdk:11-jre-slim-buster
 RUN apt-get -y update && apt-get -y install curl && apt-get -y clean
 RUN mkdir /app
 COPY --from=javabuild /app/target/user-microservices-1.0-SNAPSHOT.jar /app/user-microservices-1.0-SNAPSHOT.jar
-EXPOSE 8080
+
+ARG SERVER_PORT 
+EXPOSE ${SERVER_PORT}
 
 ENV JAVA_TOOL_OPTIONS "-Xmx128m"
 

@@ -40,6 +40,7 @@ WORKDIR /app
 RUN apk update && apk add --no-cache postgresql-libs curl
 RUN pip install --no-index --find-links=/app/wheels -r requirements.txt
 
-EXPOSE 8000
+ARG SERVER_PORT 
+EXPOSE ${SERVER_PORT}
 
 CMD /app/runner.sh
