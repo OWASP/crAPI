@@ -51,7 +51,7 @@ services:
       resources:
         limits:
           cpus: '0.8'
-          memory: 256M
+          memory: 384M
 
   crapi-community:
     container_name: crapi-community
