@@ -70,7 +70,6 @@ jobs:
           echo "TAG_NAME=${{ steps.branch-name.outputs.base_ref_branch }}" >> ${GITHUB_ENV}
           echo "TAG_LATEST=${{ steps.branch-name.outputs.base_ref_branch }}" >> ${GITHUB_ENV}
 
-
       # setup Docker build action
       - name: Set up Docker Buildx
         id: buildx
@@ -218,3 +217,4 @@ jobs:
           platforms: ${{ env.PLATFORMS }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
