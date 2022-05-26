@@ -33,10 +33,10 @@ curl -sL https://github.com/docker/compose/releases/download/v2.5.0/docker-compo
 chmod +x /usr/local/bin/docker-compose
 ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
-# Build crAPI
-"$MOUNT_DIR/deploy/docker/build-all.sh"
+# Build crAPI 
+# "$MOUNT_DIR/deploy/docker/build-all.sh"
 
-# Install crAPI
+# Install crAPI using prebuilt images
 mkdir /opt/crapi
 
 cp "$MOUNT_DIR/deploy/docker/docker-compose.yml" /opt/crapi \
