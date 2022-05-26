@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  labels:
+    app: postgresdb
+data:
+  POSTGRES_USER: admin
+  POSTGRES_PASSWORD: crapisecretpassword
+  POSTGRES_DB: crapi
+ 

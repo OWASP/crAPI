@@ -1,0 +1,25 @@
+# Default values for crapi.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+imagePullPolicy: Never
+web:
+  image: crapi/crapi-web
+  port: 8888
+identity:
+  image: crapi/crapi-identity
+  port: 8080
+community:
+  image: crapi/crapi-community
+  port: 8087
+workshop:
+  image: crapi/crapi-workshop
+  port: 8000
+mailhog:
+  image: crapi/mailhog
+mongodb:
+  image: mongo
+  version: 4.4
+postgresdb:
+  image: postgres
+  version: 14

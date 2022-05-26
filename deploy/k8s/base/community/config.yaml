@@ -18,3 +18,4 @@ data:
     MONGO_DB_USER: admin
     MONGO_DB_PASSWORD: crapisecretpassword
     MONGO_DB_NAME: crapi
+    SERVER_PORT: "8087"

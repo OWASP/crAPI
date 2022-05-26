@@ -27,10 +27,10 @@ spec:
             - "crapi-community"
       containers:
       - name: crapi-workshop
-        image: crapi/crapi-workshop:latest
-        imagePullPolicy: Always  
+        image: {{ .Values.workshop.image }}:{{ .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}  
         ports:
-        - containerPort: 8000
+        - containerPort: {{ .Values.workshop.port }}
         envFrom:
             - configMapRef:
                 name: crapi-workshop-configmap
@@ -41,6 +41,6 @@ spec:
             cpu: 256m
         readinessProbe:
           tcpSocket:
-            port: 8000
+            port: {{ .Values.workshop.port }}
           initialDelaySeconds: 15
           periodSeconds: 10

@@ -22,8 +22,8 @@ spec:
         runAsGroup: 0
       containers:
         - name: mailhog
-          image: crapi/mailhog:latest
-          imagePullPolicy: "Always"
+          image: {{ .Values.mailhog.image }}:{{ .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
           livenessProbe:
             tcpSocket:
               port: 1025

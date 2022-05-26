@@ -26,7 +26,28 @@ left behind.
 `http://localhost:8025`
 You can change the smtp configuration if required however all emails with domain **example.com** will still go to mailhog.
 
-## Kubernetes 
+## Kubernetes
+
+### Helm
+
+1. Clone the repo
+    ```
+    git clone [REPOSITORY-URL]
+    ```
+
+2. Install the helm chart
+    ```
+    cd deploy/helm
+
+    helm install --namespace crapi crapi . --values values.yaml
+    ```
+3. If using minikube, create a tunnel to initialize the LoadBalancers
+    ```
+    minikube tunnel --alsologtostderr
+    ```
+
+crAPI should be available on the `<LOADBALANCER_IP>:8888`
+Mailhog on `<LOADBALANCER_IP>:8025`
 
 ###  Minikube
 
