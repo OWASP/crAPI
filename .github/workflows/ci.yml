@@ -18,7 +18,7 @@ jobs:
   build-context:
     runs-on: ubuntu-latest
     outputs:
-      push_image: ${{ (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')) || (github.event_name == 'release' && github.event.action == 'created') }}
+      push_image: ${{ (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')) || (github.event_name == 'release' && github.event.action == 'published') }}
     steps:
       - name: Dump GitHub context
         env:
