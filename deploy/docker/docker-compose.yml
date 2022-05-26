@@ -51,7 +51,7 @@ services:
       resources:
         limits:
           cpus: '0.8'
-          memory: 256M
+          memory: 384M
 
   crapi-community:
     container_name: crapi-community
@@ -157,7 +157,7 @@ services:
 
   postgresdb:
     container_name: postgresdb
-    image: 'postgres'
+    image: 'postgres:14'
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: crapisecretpassword
@@ -176,10 +176,10 @@ services:
         limits:
           cpus: '0.3'
           memory: 128M
-  
+
   mongodb:
     container_name: mongodb
-    image: 'mongo'
+    image: 'mongo:4.4'
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: crapisecretpassword
@@ -206,7 +206,7 @@ services:
     environment:
       MH_MONGO_URI: admin:crapisecretpassword@mongodb:27017
       MH_STORAGE: mongodb
-    ports: 
+    ports:
     #  - "127.0.0.1:1025:1025" # smtp server
       - "127.0.0.1:8025:8025" # Mail ui
     healthcheck:
