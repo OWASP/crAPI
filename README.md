@@ -88,6 +88,10 @@ $ cd deploy/vagrant && vagrant destroy
 For more deployment options visit [the setup instructions](docs/setup.md) for more details.
 ---
 
+To know more about challenges in crAPI. Visit [challenges]
+----
+
+[challenges]: docs/challenges.md
 [overview]: docs/overview.md
 [setup-k8s]: docs/setup.md#kubernetes-minikube
 [vagrant]: https://www.vagrantup.com/downloads
