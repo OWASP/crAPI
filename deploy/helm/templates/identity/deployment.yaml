@@ -21,10 +21,10 @@ spec:
             - "postgresdb"
       containers:
       - name: crapi-identity
-        image: crapi/crapi-identity:latest
-        imagePullPolicy: Always
+        image: {{ .Values.identity.image }}:{{ .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
         ports:
-        - containerPort: 8080
+        - containerPort: {{ .Values.identity.port }}
         envFrom:
             - configMapRef:
                 name: crapi-identity-configmap
@@ -35,7 +35,7 @@ spec:
             cpu: 256m
         readinessProbe:
           tcpSocket:
-            port: 8080
+            port: {{ .Values.identity.port }}
           initialDelaySeconds: 15
           periodSeconds: 10
 

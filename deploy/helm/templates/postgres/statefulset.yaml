@@ -4,7 +4,7 @@ metadata:
   name: postgresdb
 spec:
   serviceName: postgresdb
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: postgresdb
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:14
+          image: {{ .Values.postgresdb.image }}:{{ .Values.postgresdb.version }}
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 5432

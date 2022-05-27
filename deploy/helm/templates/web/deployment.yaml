@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: crapi-web
-        image: crapi/crapi-web:latest
-        imagePullPolicy: Always
+        image: {{ .Values.web.image }}:{{ .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
         ports:
         - containerPort: 80
         resources:

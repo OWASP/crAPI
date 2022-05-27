@@ -33,10 +33,10 @@ spec:
             - "crapi-identity"
       containers:
       - name: crapi-community
-        image: crapi/crapi-community:latest
-        imagePullPolicy: Always
+        image: {{ .Values.community.image }}:{{ .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
         ports:
-        - containerPort: 8087
+        - containerPort: {{ .Values.community.port }}
         envFrom:
             - configMapRef:
                 name: crapi-community-configmap

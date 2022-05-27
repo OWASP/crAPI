@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: mongodb
-          image: mongo:4.4
+          image: {{ .Values.mongodb.image }}:{{ .Values.mongodb.version }}
           imagePullPolicy: "IfNotPresent"
           envFrom:
             - configMapRef:

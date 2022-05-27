@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mailhog-configmap
+  labels:
+    app: mailhog
+data:
+  MH_MONGO_URI: admin:crapisecretpassword@mongodb:27017
+  MH_STORAGE: mongodb
