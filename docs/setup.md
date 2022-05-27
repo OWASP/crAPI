@@ -93,7 +93,7 @@ You can change the smtp configuration if required however all emails with domain
 
 ## Kubernetes
 
-### Helm
+### Using Helm Charts
 
 1. Clone the repo
     ```
@@ -111,31 +111,13 @@ You can change the smtp configuration if required however all emails with domain
     minikube tunnel --alsologtostderr
     ```
 
-crAPI should be available on the `<LOADBALANCER_IP>:8888`
-Mailhog on `<LOADBALANCER_IP>:8025`
+4. Access crAPI
 
-###  Minikube
+    crAPI should be available on the `<LOADBALANCER_IP>:8888`
+    Mailhog on `<LOADBALANCER_IP>:8025`
 
-Make sure minikube is up and running as well as the following addons:
-`storage-provisioner`, `default-storageclass`, and `registry`.
+    Or for minikube run the following command to get the URL
 
-1. Expose minikube registry to Docker
-
-    ```
-    $ docker run --rm -it --network=host alpine ash -c "apk add socat && socat TCP-LISTEN:5000,reuseaddr,fork TCP:$(minikube ip):5000"
-    ```
-2. Build Docker images and push to minikube registry
-
-    ```
-    $ deploy/k8s/minikube/build-all.sh
-    ```
-3. Bring the k8s cluster up
-
-    ```
-    $ deploy/k8s/minikube/deploy.sh
-    ```
-
-4. Run the following command to get the URLs
     ```
     crAPI URL:
     $ echo "http://$(minikube ip):30080"
