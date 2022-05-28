@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
+import org.springframework.security.authentication.BadCredentialsException;
 
 
 
@@ -48,11 +49,19 @@ public class AuthController {
      */
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginForm loginForm) throws UnsupportedEncodingException {
-        JwtResponse jwtToken = userService.authenticateUserLogin(loginForm);
-        if (jwtToken!=null && jwtToken.getToken()!=null) {
-            return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
-        }else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(jwtToken);
+        try {        
+
+            JwtResponse jwtToken = userService.authenticateUserLogin(loginForm);
+
+            if(jwtToken.getToken() != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
+            }
+            else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(jwtToken);
+            }
+
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new JwtResponse("",UserMessage.INVALID_CREDENTIALS));
         }
     }
 
@@ -148,6 +157,6 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(jwt);
     }
 
-    
+
 
 }

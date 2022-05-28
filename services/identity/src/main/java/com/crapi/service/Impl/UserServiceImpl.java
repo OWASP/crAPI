@@ -40,7 +40,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import org.springframework.security.authentication.BadCredentialsException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public JwtResponse authenticateUserLogin(LoginForm loginForm) throws UnsupportedEncodingException {
+    public JwtResponse authenticateUserLogin(LoginForm loginForm) throws UnsupportedEncodingException, BadCredentialsException {
         JwtResponse jwtResponse = new JwtResponse();
         Authentication authentication = null;
         if (loginForm.getEmail()!=null) {
@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
             updateUserToken(jwt, loginForm.getEmail());
             jwtResponse.setToken(jwt);
         }else {
-            jwtResponse.setMessage(UserMessage.INVALID_CREDENTIALS);
+            jwtResponse.setMessage(UserMessage.INTERNAL_SERVER_ERROR);
         }
 
         return jwtResponse;

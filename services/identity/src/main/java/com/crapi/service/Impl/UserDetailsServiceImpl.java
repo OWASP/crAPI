@@ -45,8 +45,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             System.out.println(user);
             return UserPrinciple.build(user);
         }catch (Exception e){
-            e.printStackTrace();
-            return null;
+            throw new UsernameNotFoundException("User does not exist with Email :" +email);
         }
 
 
