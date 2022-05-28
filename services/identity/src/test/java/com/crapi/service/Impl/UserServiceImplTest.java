@@ -41,6 +41,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.BadCredentialsException;
 
 import java.io.UnsupportedEncodingException;
 
@@ -133,9 +134,22 @@ public class UserServiceImplTest {
         Mockito.verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
     }
 
+    @Test(expected=BadCredentialsException.class)
+    @SneakyThrows
+    public void testAuthenticateUserLoginReturnInvalidCredentials() throws UnsupportedEncodingException {
+
+        LoginForm loginForm = getDummyLoginForm();
+
+        Mockito.when(authenticationManager.authenticate(Mockito.any()))
+               .thenThrow(new BadCredentialsException(Mockito.any()));
+
+        Assertions.assertEquals(userService.authenticateUserLogin(loginForm).getMessage(), UserMessage.INVALID_CREDENTIALS);
+       }
+
+
     @Test
     @SneakyThrows
-    public void testAuthenticateUserLoginReturnInvalidCredentials() {
+    public void testAuthenticateUserLoginReturnNullToken() throws UnsupportedEncodingException {
         LoginForm loginForm = getDummyLoginForm();
         Mockito.when(authenticationManager.authenticate(Mockito.any()))
                 .thenReturn(new UsernamePasswordAuthenticationToken(
@@ -143,8 +157,9 @@ public class UserServiceImplTest {
                         loginForm.getPassword()));
         Mockito.when(jwtProvider.generateJwtToken(Mockito.any()))
                 .thenReturn(null);
-        Assertions.assertEquals(userService.authenticateUserLogin(loginForm).getMessage(), UserMessage.INVALID_CREDENTIALS);
+        Assertions.assertEquals(userService.authenticateUserLogin(loginForm).getMessage(), UserMessage.INTERNAL_SERVER_ERROR);
     }
+
 
     @Test
     public void testUpdateUserToken() {
