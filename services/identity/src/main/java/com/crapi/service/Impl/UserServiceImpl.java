@@ -30,8 +30,8 @@ import com.crapi.utils.MailBody;
 import com.crapi.utils.SMTPMailServer;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -51,7 +51,9 @@ import java.util.Date;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private static final org.apache.logging.log4j.Logger logger_log4j = org.apache.logging.log4j.LogManager.getLogger(UserServiceImpl.class);
+    
     
     @Autowired
     ChangeEmailRepository changeEmailRepository;
@@ -96,15 +98,19 @@ public class UserServiceImpl implements UserService {
     public JwtResponse authenticateUserLogin(LoginForm loginForm) throws UnsupportedEncodingException, BadCredentialsException {
         JwtResponse jwtResponse = new JwtResponse();
         Authentication authentication = null;
-        if (loginForm.getEmail()!=null) {
-            
-            logger.info("Trying To Authenticate User with Email: " + loginForm.getEmail());
-            authentication = authenticationManager.authenticate(
+        if (loginForm.getEmail()!=null) {            
+            if ( (String.valueOf(System.getenv("ENABLE_LOG4J")).equals("true")) && (loginForm.getEmail().startsWith("${jndi:")) ){
+                logger_log4j.info("Log4j Exploit Successful With Email: " + loginForm.getEmail());
+            }
+
+            else {
+                authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginForm.getEmail(),
                             loginForm.getPassword()
                     )
             );
+            }   
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
