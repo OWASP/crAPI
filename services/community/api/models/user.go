@@ -103,7 +103,6 @@ func FindAuthorByEmail(email string, db *gorm.DB) (*uint64, error) {
 	var number *uint64
 	var name string
 	var picture []byte
-	var oid uint64
 	var uuid string
 	userEmail = email
 
