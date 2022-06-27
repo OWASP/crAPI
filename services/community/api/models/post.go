@@ -32,10 +32,10 @@ import (
 
 //Post Field
 type Post struct {
-	ID        string     `gorm:"primary_key;auto_increment" json:"id"`
+	ID        string     `gorm:"primarKey" json:"id"`
 	Title     string     `gorm:"size:255;not null;unique" json:"title"`
 	Content   string     `gorm:"size:255;not null;" json:"content"`
-	Author    Author       `json:"author"`
+	Author    Author     `gorm:"-" bson:"-" json:"author"`
 	Comments  []Comments `json:"comments"`
 	AuthorID  uint64     `sql:"type:int REFERENCES users(id)" json:"authorid"`
 	CreatedAt time.Time
@@ -94,12 +94,18 @@ func GetPostByID(client *mongo.Client, db *gorm.DB, ID string) (Post, error) {
 	collection := client.Database("crapi").Collection("post")
 	filter := bson.D{{"id", ID}}
 	err := collection.FindOne(context.TODO(), filter).Decode(&post)
-	if db != nil {
-		post.Author = GetAuthorByID(post.AuthorID, db)
+
+	author, err2 := GetAuthorByID(post.AuthorID, db)
+	if (err2 == nil) {
+		post.Author = author
 	}
-	for i, comment := range post.Comments {
-		if comment.AuthorID != 0 {
-			post.Comments[i].Author = GetAuthorByID(comment.AuthorID, db)
+	
+	for i := 0; i < len(post.Comments); i++ {
+		if post.Comments[i].AuthorID != 0 {
+			author, err2 := GetAuthorByID(post.Comments[i].AuthorID, db)
+			if err2 == nil {
+				post.Comments[i].Author = author
+			}
 		}
 	}
 	return post, err
@@ -128,7 +134,18 @@ func FindAllPost(client *mongo.Client, db *gorm.DB) ([]interface{}, error) {
 			log.Println(err)
 			return nil, err
 		}
-		result.Author = GetAuthorByID(result.AuthorID, db)
+		author, err2 := GetAuthorByID(result.AuthorID, db)
+		if (err2 == nil) {
+			result.Author = author
+		}
+		for i := 0; i < len(result.Comments); i++ {
+			if result.Comments[i].AuthorID != 0 {
+				author, err := GetAuthorByID(result.Comments[i].AuthorID, db)
+				if err == nil {
+					result.Comments[i].Author = author
+				}
+			}
+		}
 		list = append(list, result)
 	}
 	if err := cur.Err(); err != nil {
@@ -139,24 +156,26 @@ func FindAllPost(client *mongo.Client, db *gorm.DB) ([]interface{}, error) {
 }
 
 //GetAuthorByID check user in database
-func GetAuthorByID(id uint64, db *gorm.DB) Author {
+func GetAuthorByID(id uint64, db *gorm.DB) (Author, error) {
 	var author Author
-
+	var err error
 	var name string
 	var uuid string
 	var email string
 
-	row1 := db.Table("user_login").Where("user_id = ?", id).Select("email").Row()
+	row1 := db.Table("user_login").Where("id = ?", id).Select("email").Row()
 	row1.Scan(&email)
 	author.Email = email
 	author.CreatedAt = time.Now()
 
 	//fetch name and picture from for token user
-	row2 := db.Table("user_details").Where("user_id = ?", id).Select("name").Row()
+	row2 := db.Table("user_details").Where("id = ?", id).Select("name").Row()
 	row2.Scan(&name)
 	author.Nickname = name
+
 	row3 := db.Table("vehicle_details").Where("owner_id = ?", id).Select("uuid").Row()
 	row3.Scan(&uuid)
 	author.VehicleID = uuid
-	return author
+
+	return author, err
 }

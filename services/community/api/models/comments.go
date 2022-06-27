@@ -26,19 +26,18 @@ import (
 
 //
 type Comments struct {
-	ID        string `gorm:"primary_key;auto_increment" json:"id"`
+	ID        string `gorm:"-" bson:"-" json:"-"`
 	Content   string `gorm:"size:255;not null;" json:"content"`
 	CreatedAt time.Time
-	Author    Author `json:"author"`
-	AuthorID  uint64     `sql:"type:int REFERENCES users(id)" json:"authorid"`
+	Author    Author `gorm:"-" bson:"-" json:"author"`
+	AuthorID  uint64 `sql:"type:int REFERENCES users(id)" json:"authorid"`
 }
 
 //CommentOnPost Add comment in post by id.
 func CommentOnPost(client *mongo.Client, db *gorm.DB, postComment Comments) (Post, error) {
 	var comments Comments
-	//Comments.Author = Prepare()
 	//Take data from Database by postId
-	preData, err := GetPostByID(client, nil, postComment.ID)
+	preData, err := GetPostByID(client, db, postComment.ID)
 	updatePost := preData
 	if err != nil {
 		log.Println(err)
@@ -58,11 +57,14 @@ func CommentOnPost(client *mongo.Client, db *gorm.DB, postComment Comments) (Pos
 			log.Println(err)
 		}
 	}
-	for i, comment := range updatePost.Comments {
-		if comment.AuthorID != 0 {
-			updatePost.Comments[i].Author = GetAuthorByID(comment.AuthorID, db)
+
+	for i := 0; i < len(updatePost.Comments); i++ {
+		if updatePost.Comments[i].AuthorID != 0 {
+			author, err := GetAuthorByID(updatePost.Comments[i].AuthorID, db)
+			if err == nil {
+				updatePost.Comments[i].Author = author
+			}
 		}
 	}
-	updatePost.Author = GetAuthorByID(preData.AuthorID, db)
 	return updatePost, err
 }

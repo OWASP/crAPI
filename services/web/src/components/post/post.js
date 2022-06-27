@@ -32,10 +32,9 @@ import {
   Input,
   Modal,
 } from "antd";
-import { CommentOutlined } from "@ant-design/icons";
+import { CommentOutlined, UserOutlined } from "@ant-design/icons";
 import { COMMENT_REQUIRED } from "../../constants/messages";
 import { formatDateFromIso } from "../../utils";
-import defaultProficPic from "../../assets/default_profile_pic.png";
 
 const { Content } = Layout;
 const { Paragraph } = Typography;
@@ -56,7 +55,8 @@ const Post = (props) => {
         <Row gutter={[20, 20]}>
           <Col flex="75px">
             <Avatar
-              src={(post && post.authorid && `/identity/api/v2/avatar/${post.authorid}`) || defaultProficPic}
+              src={(post && post.authorid && `/identity/api/v2/avatar/${post.authorid}`)}
+              icon={<UserOutlined />}
               size={75}
             />
           </Col>
@@ -106,7 +106,8 @@ const Post = (props) => {
               <Row gutter={[20, 20]} className="comment-row">
                 <Col>
                   <Avatar
-                    src={(comment.authorid && `/identity/api/v2/avatar/${comment.authorid}`) || defaultProficPic}
+                    src={(comment.authorid && `/identity/api/v2/avatar/${comment.authorid}`)}
+                    icon={<UserOutlined />}
                     size="large"
                   />
                 </Col>

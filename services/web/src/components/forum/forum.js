@@ -18,9 +18,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { PageHeader, Row, Col, Layout, Descriptions, Card, Button, Avatar, Typography } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
+import { PlusOutlined, UserOutlined } from '@ant-design/icons'
 import { formatDateFromIso } from '../../utils'
-import defaultProficPic from '../../assets/default_profile_pic.png'
 
 const { Content } = Layout
 const { Meta } = Card
@@ -29,14 +28,7 @@ const { Paragraph } = Typography
 const Forum = props => {
   const { posts } = props
 
-  const renderAvatar = authorid => { 
-    return (
-    <>
-      {(authorid 
-        && <Avatar size='large' src={`/identity/api/v2/avatar/${authorid}`} />) 
-        || <Avatar src={defaultProficPic} size='large' />}
-    </>
-  )}
+  const renderAvatar = authorid => <Avatar size='large' src={`/identity/api/v2/avatar/${authorid}`} icon={<UserOutlined />} />
 
   return (
     <Layout className='page-container'>
