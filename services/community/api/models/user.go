@@ -22,6 +22,8 @@ import (
 	"github.com/badoux/checkmail"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
+	
+	"encoding/base64"
 )
 
 
@@ -30,7 +32,7 @@ var autherID uint64
 var nickname string
 var userEmail string
 
-//var picurl string
+var picurl string
 var vehicleID string
 
 //Author model
@@ -38,7 +40,7 @@ type Author struct {
 	Nickname  string    `gorm:"size:255;not null;unique" json:"nickname"`
 	Email     string    `gorm:"size:100;not null;unique" json:"email"`
 	VehicleID string    `gorm:"size:100;not null;unique" json:"vehicleid"`
-	Picurl    string    `gorm:"size:100;not null;unique" json:"profile_pic_url"`
+	Picurl    string    `gorm:"size:30000;not null;unique" json:"profile_pic_url"`
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 }
 
@@ -101,6 +103,7 @@ func FindAuthorByEmail(email string, db *gorm.DB) (*uint64, error) {
 	var number *uint64
 	var name string
 	var picture []byte
+	var oid uint64
 	var uuid string
 	userEmail = email
 
@@ -112,7 +115,17 @@ func FindAuthorByEmail(email string, db *gorm.DB) (*uint64, error) {
 	autherID = id
 	//fetch name and picture from for token user
 	row1 := db.Table("user_details").Where("user_id = ?", id).Select("name, picture").Row()
-	row1.Scan(&name, &picture)
+	row1.Scan(&name, &oid)
+
+	rows, err := db.Table("pg_largeobject").Where("loid = ?", oid).Order("pageno asc").Select("data").Rows()
+	defer rows.Close()
+	for rows.Next() {
+		var page []byte
+		rows.Scan(&page)
+		picture = append(picture, page...)
+	}
+
+	picurl = "data:image/jpeg;base64," + base64.StdEncoding.EncodeToString(picture)
 
 	nickname = name
 	row2 := db.Table("vehicle_details").Where("owner_id = ?", id).Select("uuid").Row()
