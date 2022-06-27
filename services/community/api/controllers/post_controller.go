@@ -60,7 +60,7 @@ func (s *Server) GetPostByID(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	//var autherID uint64
-	GetPost, er := models.GetPostByID(s.Client, vars["postID"])
+	GetPost, er := models.GetPostByID(s.Client, s.DB, vars["postID"])
 	if er != nil {
 		responses.ERROR(w, http.StatusBadRequest, er)
 	}
@@ -71,9 +71,7 @@ func (s *Server) GetPostByID(w http.ResponseWriter, r *http.Request) {
 
 //GetPost Vulnerabilities
 func (s *Server) GetPost(w http.ResponseWriter, r *http.Request) {
-	//post := models.Post{}
-
-	posts, err := models.FindAllPost(s.Client)
+	posts, err := models.FindAllPost(s.Client, s.DB)
 	if err != nil {
 		responses.ERROR(w, http.StatusInternalServerError, err)
 		return
@@ -105,7 +103,7 @@ func (s *Server) Comment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	comment.ID = vars["postID"]
-	postData, er := models.CommentOnPost(s.Client, comment)
+	postData, er := models.CommentOnPost(s.Client, s.DB, comment)
 	if er != nil {
 		responses.ERROR(w, http.StatusInternalServerError, er)
 		return

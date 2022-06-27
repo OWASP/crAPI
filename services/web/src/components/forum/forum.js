@@ -13,76 +13,54 @@
  * limitations under the License.
  */
 
-import "./style.css";
-import React from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import {
-  PageHeader,
-  Row,
-  Col,
-  Layout,
-  Descriptions,
-  Card,
-  Button,
-  Avatar,
-  Typography,
-} from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import { formatDateFromIso } from "../../utils";
-import defaultProficPic from "../../assets/default_profile_pic.png";
+import './style.css'
+import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { PageHeader, Row, Col, Layout, Descriptions, Card, Button, Avatar, Typography } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
+import { formatDateFromIso } from '../../utils'
+import defaultProficPic from '../../assets/default_profile_pic.png'
 
-const { Content } = Layout;
-const { Meta } = Card;
-const { Paragraph } = Typography;
+const { Content } = Layout
+const { Meta } = Card
+const { Paragraph } = Typography
 
-const Forum = (props) => {
-  const { posts } = props;
+const Forum = props => {
+  const { posts } = props
 
-  const renderAvatar = (url) => (
-    <Avatar src={url || defaultProficPic} size="large" />
-  );
+  const renderAvatar = authorid => { 
+    return (
+    <>
+      {(authorid 
+        && <Avatar size='large' src={`/identity/api/v2/avatar/${authorid}`} />) 
+        || <Avatar src={defaultProficPic} size='large' />}
+    </>
+  )}
 
   return (
-    <Layout className="page-container">
+    <Layout className='page-container'>
       <PageHeader
-        title="Forum"
-        className="page-header"
+        title='Forum'
+        className='page-header'
         extra={[
-          <Button
-            type="primary"
-            shape="round"
-            icon={<PlusOutlined />}
-            size="large"
-            key="add-coupons"
-            onClick={() => props.history.push("/new-post")}
-          >
+          <Button type='primary' shape='round' icon={<PlusOutlined />} size='large' key='add-coupons' onClick={() => props.history.push('/new-post')}>
             New Post
           </Button>,
         ]}
       />
       <Content>
         <Row gutter={[40, 40]}>
-          {posts.map((post) => (
+          {posts.map(post => (
             <Col key={post.id}>
-              <Card
-                hoverable
-                onClick={() => props.history.push(`/post?post_id=${post.id}`)}
-              >
-                <Meta
-                  avatar={renderAvatar(post.author.profile_pic_url)}
-                  title={post.title}
-                />
-                <Descriptions size="small" col={2}>
-                  <Descriptions.Item label="Posted by">
-                    {post.author.nickname}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Posted on">
-                    {formatDateFromIso(post.CreatedAt)}
-                  </Descriptions.Item>
+              <Card hoverable onClick={() => props.history.push(`/post?post_id=${post.id}`)}>
+                <Meta avatar={renderAvatar(post.authorid)} title={post.title} />
+                <Descriptions size='small' col={2}>
+                  <Descriptions.Item label='Posted by'>{post.author.nickname}</Descriptions.Item>
+                  <Descriptions.Item label='Posted on'>{formatDateFromIso(post.CreatedAt)}</Descriptions.Item>
                 </Descriptions>
-                <Typography className="post-content">
-                  {post.content.split("\n").map((para) => (
+                <Typography className='post-content'>
+                  {post.content.split('\n').map(para => (
                     <Paragraph key={para}>{para}</Paragraph>
                   ))}
                 </Typography>
@@ -92,16 +70,17 @@ const Forum = (props) => {
         </Row>
       </Content>
     </Layout>
-  );
-};
+  )
+}
 
 Forum.propTypes = {
   history: PropTypes.object,
   posts: PropTypes.array,
-};
+  accessToken: PropTypes.string,
+}
 
-const mapStateToProps = ({ communityReducer: { posts } }) => {
-  return { posts };
-};
+const mapStateToProps = ({ userReducer: { accessToken }, communityReducer: { posts } }) => {
+  return { posts, accessToken }
+}
 
-export default connect(mapStateToProps)(Forum);
+export default connect(mapStateToProps)(Forum)

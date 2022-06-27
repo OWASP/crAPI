@@ -31,6 +31,8 @@ public interface UserService {
 
     DashboardResponse getUserByRequestToken(HttpServletRequest request);
 
+    byte[] getUserAvatar(Long user_id, HttpServletRequest request);
+
     CRAPIResponse changeEmailRequest(HttpServletRequest request,ChangeEmailForm loginForm);
 
     CRAPIResponse verifyEmailToken(HttpServletRequest request,ChangeEmailForm changeEmailForm);

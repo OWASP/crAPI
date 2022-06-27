@@ -56,7 +56,7 @@ const Post = (props) => {
         <Row gutter={[20, 20]}>
           <Col flex="75px">
             <Avatar
-              src={(post && post.author.profile_pic_url) || defaultProficPic}
+              src={(post && post.authorid && `/identity/api/v2/avatar/${post.authorid}`) || defaultProficPic}
               size={75}
             />
           </Col>
@@ -106,7 +106,7 @@ const Post = (props) => {
               <Row gutter={[20, 20]} className="comment-row">
                 <Col>
                   <Avatar
-                    src={comment.author.profile_pic_url || defaultProficPic}
+                    src={(comment.authorid && `/identity/api/v2/avatar/${comment.authorid}`) || defaultProficPic}
                     size="large"
                   />
                 </Col>

@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"html"
 	"log"
-	"reflect"
 	"strings"
 	"time"
 
@@ -28,6 +27,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"github.com/jinzhu/gorm"
 )
 
 //Post Field
@@ -46,7 +46,6 @@ func (post *Post) Prepare() {
 	post.ID = shortuuid.New()
 	post.Title = html.EscapeString(strings.TrimSpace(post.Title))
 	post.Content = html.EscapeString(strings.TrimSpace(post.Content))
-	post.Author = Prepare()
 	post.AuthorID = autherID
 	post.Comments = []Comments{}
 	post.CreatedAt = time.Now()
@@ -74,7 +73,6 @@ func Prepare() Author {
 	u.Email = userEmail
 	u.VehicleID = vehicleID
 	u.CreatedAt = time.Now()
-	u.Picurl = picurl
 	return u
 }
 
@@ -91,21 +89,25 @@ func SavePost(client *mongo.Client, post Post) (Post, error) {
 }
 
 //GetPostByID fetch post by postId
-func GetPostByID(client *mongo.Client, ID string) (Post, error) {
+func GetPostByID(client *mongo.Client, db *gorm.DB, ID string) (Post, error) {
 	var post Post
-
-	//filter := bson.D{{"name", "Ash"}}
 	collection := client.Database("crapi").Collection("post")
 	filter := bson.D{{"id", ID}}
 	err := collection.FindOne(context.TODO(), filter).Decode(&post)
-
+	if db != nil {
+		post.Author = GetAuthorByID(post.AuthorID, db)
+	}
+	for i, comment := range post.Comments {
+		if comment.AuthorID != 0 {
+			post.Comments[i].Author = GetAuthorByID(comment.AuthorID, db)
+		}
+	}
 	return post, err
 
 }
 
 //FindAllPost return all recent post
-func FindAllPost(client *mongo.Client) ([]interface{}, error) {
-	post := []Post{}
+func FindAllPost(client *mongo.Client, db *gorm.DB) ([]interface{}, error) {
 
 	options := options.Find()
 	options.SetSort(bson.D{{"_id", -1}})
@@ -116,18 +118,17 @@ func FindAllPost(client *mongo.Client) ([]interface{}, error) {
 		log.Println(err)
 	}
 	fmt.Println(cur)
-	objectType := reflect.TypeOf(post).Elem()
 	var list = make([]interface{}, 0)
 	defer cur.Close(context.Background())
 	for cur.Next(context.Background()) {
-		result := reflect.New(objectType).Interface()
+		result := &Post{}
 		err := cur.Decode(result)
 
 		if err != nil {
 			log.Println(err)
 			return nil, err
 		}
-
+		result.Author = GetAuthorByID(result.AuthorID, db)
 		list = append(list, result)
 	}
 	if err := cur.Err(); err != nil {
@@ -135,4 +136,27 @@ func FindAllPost(client *mongo.Client) ([]interface{}, error) {
 	}
 
 	return list, err
+}
+
+//GetAuthorByID check user in database
+func GetAuthorByID(id uint64, db *gorm.DB) Author {
+	var author Author
+
+	var name string
+	var uuid string
+	var email string
+
+	row1 := db.Table("user_login").Where("user_id = ?", id).Select("email").Row()
+	row1.Scan(&email)
+	author.Email = email
+	author.CreatedAt = time.Now()
+
+	//fetch name and picture from for token user
+	row2 := db.Table("user_details").Where("user_id = ?", id).Select("name").Row()
+	row2.Scan(&name)
+	author.Nickname = name
+	row3 := db.Table("vehicle_details").Where("owner_id = ?", id).Select("uuid").Row()
+	row3.Scan(&uuid)
+	author.VehicleID = uuid
+	return author
 }
