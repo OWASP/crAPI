@@ -114,17 +114,8 @@ func FindAuthorByEmail(email string, db *gorm.DB) (*uint64, error) {
 
 	autherID = id
 	//fetch name and picture from for token user
-	row1 := db.Table("user_details").Where("user_id = ?", id).Select("name, picture").Row()
-	row1.Scan(&name, &oid)
-
-	rows, err := db.Table("pg_largeobject").Where("loid = ?", oid).Order("pageno asc").Select("data").Rows()
-	defer rows.Close()
-	for rows.Next() {
-		var page []byte
-		rows.Scan(&page)
-		picture = append(picture, page...)
-	}
-
+	row1 := db.Table("user_details").Where("user_id = ?", id).Select("name, lo_get(picture)").Row()
+	row1.Scan(&name, &picture)
 	picurl = "data:image/jpeg;base64," + base64.StdEncoding.EncodeToString(picture)
 
 	nickname = name
