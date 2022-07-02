@@ -38,8 +38,8 @@ const PastOrders = (props) => {
         title={`${formatDateFromIso(order.created_on)}, ${
           order.product.name
         }, $${order.product.price * order.quantity}`}
-        extra={[
-          <Button
+      />
+      <Button
             type="primary"
             shape="round"
             icon={order.status === "delivered" && <RollbackOutlined />}
@@ -49,9 +49,7 @@ const PastOrders = (props) => {
             onClick={() => props.returnOrder(order.id)}
           >
             {order.status === "delivered" ? "Return" : order.status}
-          </Button>,
-        ]}
-      />
+          </Button>
     </>
   );
 
@@ -70,7 +68,7 @@ const PastOrders = (props) => {
                 className="order-card"
                 cover={renderAvatar(order.product.image_url)}
               >
-                <Meta description={renderOrderDescription(order)} />
+                {renderOrderDescription(order)}
               </Card>
             </Col>
           ))}

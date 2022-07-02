@@ -35,8 +35,7 @@ import {
   Form,
   Input,
 } from "antd";
-import { EditOutlined, MoreOutlined, CameraOutlined } from "@ant-design/icons";
-import defaultProficPic from "../../assets/default_profile_pic.png";
+import { EditOutlined, MoreOutlined, CameraOutlined, UserOutlined } from "@ant-design/icons";
 import { VIDEO_NAME_REQUIRED } from "../../constants/messages";
 
 const { Content } = Layout;
@@ -93,8 +92,8 @@ const Profile = (props) => {
   );
   const renderProfileDescription = () => (
     <Row gutter={[60, 20]}>
-      <Col flex="200px">
-        <Badge offset={[0, 200]} count={renderChangePicButton()}>
+      <Col flex="230px">
+        <Badge offset={[20, 180]} count={renderChangePicButton()}>
           <input
             type="file"
             hidden
@@ -103,9 +102,10 @@ const Profile = (props) => {
             onChange={uploadProfilePic}
           />
           <Avatar
-            shape="square"
+            shape="circle"
             size={200}
-            src={profileData.profilePicData || defaultProficPic}
+            src={`/identity/api/v2/avatar/${userData.id}`}
+            icon={<UserOutlined />}
           />
         </Badge>
       </Col>

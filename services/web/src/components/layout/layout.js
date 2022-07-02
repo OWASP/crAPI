@@ -73,7 +73,7 @@ const AfterLogin = ({
             });
           } else {
             if (!componentRole || (componentRole && componentRole === userRole))
-              return <Component {...props} />;
+              return <Component {...props} accessToken={accessToken} />;
             if (userRole === roleTypes.ROLE_MECHANIC)
               return (
                 <Redirect

@@ -228,6 +228,20 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    @Transactional
+    public byte[] getUserAvatar(Long user_id, HttpServletRequest request) {
+      UserDetails userDetails;
+      try {
+        userDetails = userDetailsRepository.findByUser_id(user_id);
+        if (userDetails == null) return null;
+        return userDetails.getPicture();
+      } catch (Exception exception) {
+        logger.error("failed to load user by id: -> Message: %d", exception);
+        return null;
+      }
+    }
+
     /**
      * @param changeEmailForm contains old email and new email, api will send change email token to new email address.
      * @return send email to new email with random generated token.
