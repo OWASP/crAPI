@@ -10,15 +10,15 @@ server {
       ngx.req.read_body()  -- explicitly read the req body
       local body = ngx.req.get_body_data()
       if body then
-        body = ngx.re.gsub(body, "://"..ngx.var.http_host, "://${GO_SERVICE}")
+        body = ngx.re.gsub(body, "://"..ngx.var.http_host, "://${COMMUNITY_SERVICE}")
         ngx.req.set_body_data(body)
       end
     }
-    proxy_pass  http://${GO_SERVICE};
-    proxy_set_header Host ${GO_SERVICE};
+    proxy_pass  http://${COMMUNITY_SERVICE};
+    proxy_set_header Host ${COMMUNITY_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
     sub_filter_types application/json text/html;
-    sub_filter "://${GO_SERVICE}" "://$http_host";
+    sub_filter "://${COMMUNITY_SERVICE}" "://$http_host";
     sub_filter_once off;
   }
 
@@ -27,12 +27,12 @@ server {
       ngx.req.read_body()  -- explicitly read the req body
       local body = ngx.req.get_body_data()
       if body then
-        body = ngx.re.gsub(body, "://"..ngx.var.http_host, "://${JAVA_SERVICE}")
+        body = ngx.re.gsub(body, "://"..ngx.var.http_host, "://${IDENTITY_SERVICE}")
         ngx.req.set_body_data(body)
       end
     }
-    proxy_pass  http://${JAVA_SERVICE};
-    proxy_set_header Host ${JAVA_SERVICE};
+    proxy_pass  http://${IDENTITY_SERVICE};
+    proxy_set_header Host ${IDENTITY_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
   }
 
@@ -41,15 +41,15 @@ server {
       ngx.req.read_body()  -- explicitly read the req body
       local body = ngx.req.get_body_data()
       if body then
-        body = ngx.re.gsub(body, "://"..ngx.var.http_host, "://${PYTHON_SERVICE}")
+        body = ngx.re.gsub(body, "://"..ngx.var.http_host, "://${WORKSHOP_SERVICE}")
         ngx.req.set_body_data(body)
       end
     }
-    proxy_pass  http://${PYTHON_SERVICE};
-    proxy_set_header Host ${PYTHON_SERVICE};
+    proxy_pass  http://${WORKSHOP_SERVICE};
+    proxy_set_header Host ${WORKSHOP_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
     sub_filter_types application/json text/html;
-    sub_filter "://${PYTHON_SERVICE}" "://$http_host";
+    sub_filter "://${WORKSHOP_SERVICE}" "://$http_host";
     sub_filter_once off;
   }
 
