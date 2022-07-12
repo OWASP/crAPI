@@ -1,4 +1,4 @@
 @echo off
 cd /d web
-docker build -t crapi/crapi-web .
+cmd /c docker build -t crapi/crapi-web:%VERSION% .
 cd /d .\..\
