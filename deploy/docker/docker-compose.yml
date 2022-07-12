@@ -37,6 +37,7 @@ services:
       - SMTP_FROM=no-reply@example.com
       - SMTP_AUTH=true
       - SMTP_STARTTLS=true
+      - ENABLE_LOG4J=${ENABLE_LOG4J:-false}
     depends_on:
       postgresdb:
         condition: service_healthy
