@@ -52,7 +52,9 @@ import java.util.Date;
 public class UserServiceImpl implements UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-
+    private static final org.apache.logging.log4j.Logger logger_log4j = org.apache.logging.log4j.LogManager.getLogger(UserServiceImpl.class);
+    
+    
     @Autowired
     ChangeEmailRepository changeEmailRepository;
 
@@ -96,13 +98,19 @@ public class UserServiceImpl implements UserService {
     public JwtResponse authenticateUserLogin(LoginForm loginForm) throws UnsupportedEncodingException, BadCredentialsException {
         JwtResponse jwtResponse = new JwtResponse();
         Authentication authentication = null;
-        if (loginForm.getEmail()!=null) {
-            authentication = authenticationManager.authenticate(
+        if (loginForm.getEmail()!=null) {            
+            if ( (String.valueOf(System.getenv("ENABLE_LOG4J")).equals("true")) && (loginForm.getEmail().startsWith("${jndi:")) ){
+                logger_log4j.info("Log4j Exploit Successful With Email: " + loginForm.getEmail());
+            }
+
+            else {
+                authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginForm.getEmail(),
                             loginForm.getPassword()
                     )
             );
+            }   
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
