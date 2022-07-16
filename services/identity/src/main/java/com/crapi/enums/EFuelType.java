@@ -14,9 +14,8 @@
 
 package com.crapi.enums;
 
-
 public enum EFuelType {
-    CNG,
-    PETROL,
-    DIESEL
+  CNG,
+  PETROL,
+  DIESEL
 }

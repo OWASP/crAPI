@@ -14,26 +14,24 @@
 
 package com.crapi.entity;
 
-import lombok.Data;
-
-import javax.persistence.*;
 import java.io.Serializable;
-
+import javax.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "vehicle_company")
 @Data
 public class VehicleCompany implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-    private String name;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private long id;
 
-    public VehicleCompany(){}
+  private String name;
 
-    public VehicleCompany(String name){
-        this.name = name;
-    }
+  public VehicleCompany() {}
 
+  public VehicleCompany(String name) {
+    this.name = name;
+  }
 }

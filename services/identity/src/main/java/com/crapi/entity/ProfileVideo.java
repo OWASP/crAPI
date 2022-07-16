@@ -16,85 +16,84 @@ package com.crapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import javax.persistence.*;
 import java.util.Base64;
-
+import javax.persistence.*;
 
 @Entity
 @Table(name = "profile_Video")
 public class ProfileVideo {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-    private String video_name;
-    private String conversion_params="-v codec h264";
-    @Lob
-    private byte[] video;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+  private String video_name;
+  private String conversion_params = "-v codec h264";
+  @Lob private byte[] video;
 
-    public ProfileVideo(String video_name, User user){
-        this.video_name = video_name;
-        this.user = user;
-    }
+  @OneToOne
+  @JoinColumn(name = "user_id")
+  private User user;
 
-    //constructor for new object
-    public ProfileVideo(String video_name,byte[] file, User user){
-        this.video_name = video_name;
-        this.user = user;
-        this.video = file;
-    }
+  public ProfileVideo(String video_name, User user) {
+    this.video_name = video_name;
+    this.user = user;
+  }
 
-    public ProfileVideo(){}
+  // constructor for new object
+  public ProfileVideo(String video_name, byte[] file, User user) {
+    this.video_name = video_name;
+    this.user = user;
+    this.video = file;
+  }
 
-    public long getId() {
-        return id;
-    }
+  public ProfileVideo() {}
 
-    public void setId(long id) {
-        this.id = id;
-    }
+  public long getId() {
+    return id;
+  }
 
-    public String getVideo_name() {
-        return video_name;
-    }
+  public void setId(long id) {
+    this.id = id;
+  }
 
-    public void setVideo_name(String video_name) {
-        this.video_name = video_name;
-    }
+  public String getVideo_name() {
+    return video_name;
+  }
 
-    public String getConversion_params() {
-        return conversion_params;
-    }
+  public void setVideo_name(String video_name) {
+    this.video_name = video_name;
+  }
 
-    public void setConversion_params(String conversion_params) {
-        this.conversion_params = conversion_params;
-    }
+  public String getConversion_params() {
+    return conversion_params;
+  }
 
-    @JsonIgnore
-    public byte[] getVideo() {
-        return video;
-    }
+  public void setConversion_params(String conversion_params) {
+    this.conversion_params = conversion_params;
+  }
 
-    public void setVideo(byte[] video) {
-        this.video = video;
-    }
+  @JsonIgnore
+  public byte[] getVideo() {
+    return video;
+  }
 
-    @JsonIgnore
-    public User getUser() {
-        return user;
-    }
+  public void setVideo(byte[] video) {
+    this.video = video;
+  }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-    @JsonProperty("profileVideo")
-    public String getVideoBase64() {
-        // just assuming it is a jpeg. you would need to cater for different media types
-        return "data:image/jpeg;base64," + new String(Base64.getEncoder().encode(video));
-    }
+  @JsonIgnore
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+  @JsonProperty("profileVideo")
+  public String getVideoBase64() {
+    // just assuming it is a jpeg. you would need to cater for different media types
+    return "data:image/jpeg;base64," + new String(Base64.getEncoder().encode(video));
+  }
 }
