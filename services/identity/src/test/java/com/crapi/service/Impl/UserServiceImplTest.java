@@ -105,7 +105,7 @@ public class UserServiceImplTest {
     userService.getUserFromToken(getMockHttpRequest());
   }
 
-  @Test(expected = UnsupportedEncodingException.class)
+  @Test(expected = EntityNotFoundException.class)
   @SneakyThrows
   public void testGetUserFromToken() {
     User user = getDummyUser();
@@ -384,7 +384,7 @@ public class UserServiceImplTest {
   public void verifyEmailTokenFailWhenChangeEmailFormEmailNotEqualChangeEmailRequestEmail() {
     ChangeEmailRequest changeEmailRequest = getDummyChangeEmailRequest();
     User user = getDummyUser();
-    String expectedMessage = UserMessage.INVALID_EMAIL_TOKEN;
+    String expectedMessage = UserMessage.OLD_MAIL_DOES_NOT_BELONG;
     ChangeEmailForm changeEmailForm = getDummyChangeEmailForm();
     changeEmailForm.setNew_email("dummy" + changeEmailForm.getNew_email());
     Mockito.when(changeEmailRepository.findByEmailToken(Mockito.anyString()))
@@ -401,7 +401,7 @@ public class UserServiceImplTest {
     ChangeEmailRequest changeEmailRequest = getDummyChangeEmailRequest();
     User user = getDummyUser();
     user.setEmail("notequal@email.com");
-    String expectedMessage = UserMessage.INVALID_EMAIL_TOKEN;
+    String expectedMessage = UserMessage.OLD_MAIL_DOES_NOT_BELONG;
     ChangeEmailForm changeEmailForm = getDummyChangeEmailForm();
     changeEmailForm.setNew_email(changeEmailForm.getNew_email());
     Mockito.when(changeEmailRepository.findByEmailToken(Mockito.anyString()))

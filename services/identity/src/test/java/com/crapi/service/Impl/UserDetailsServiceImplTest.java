@@ -25,6 +25,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserDetailsServiceImplTest {
@@ -40,7 +41,7 @@ public class UserDetailsServiceImplTest {
     Assertions.assertNotNull(userDetails);
   }
 
-  @Test
+  @Test(expected = UsernameNotFoundException.class)
   public void loadUserByUsernameFailure() {
     User user = getDummyUser();
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenThrow(new RuntimeException());

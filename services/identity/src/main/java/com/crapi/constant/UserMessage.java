@@ -75,6 +75,7 @@ public class UserMessage {
   public static final String YOU_WON_THE_GAME = "You won the game.";
   public static final String USER_VIDEO_NAME_CHANGED = "Video name changed successfully..";
   public static final String CONVERT_VIDEO_PARAM_IS_MISSING = "Video_id param is missing";
+  public static final String ERROR_EXECUTING_STRING = "Error occured while executing.";
   public static final String VIDEO_WAS_NOT_FOUND = "video wasn’t found";
   public static final String VIDEO_NOT_FOUND = "Video not found.";
   // public static final String

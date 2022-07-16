@@ -202,7 +202,7 @@ public class ProfileServiceImplTest {
     ProfileVideo profileVideo = getDummyProfileVideo();
     Mockito.when(profileVideoRepository.findById(Mockito.anyLong()))
         .thenReturn(Optional.of(profileVideo));
-    Mockito.when(profileVideoRepository.save(Mockito.any())).thenReturn(profileVideo);
+    // Mockito.when(profileVideoRepository.save(Mockito.any())).thenReturn(profileVideo);
     CRAPIResponse crapiAPIResponse =
         profileService.deleteAdminProfileVideo(videoForm.getId(), getMockHttpRequest());
     // Mockito.verify(profileVideoRepository, Mockito.times(0)).save(Mockito.any());
@@ -259,9 +259,8 @@ public class ProfileServiceImplTest {
         HttpHeaders.HOST, "localhost:" + String.valueOf(System.getenv("SERVER_PORT")));
     Mockito.when(profileVideoRepository.findById(videoId)).thenReturn(Optional.ofNullable(null));
     CRAPIResponse crapiAPIResponse = profileService.convertVideo(videoId, request);
-    Assertions.assertEquals(
-        UserMessage.CONVERT_VIDEO_PARAM_IS_MISSING, crapiAPIResponse.getMessage());
-    Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), crapiAPIResponse.getStatus());
+    Assertions.assertEquals(UserMessage.ERROR_EXECUTING_STRING, crapiAPIResponse.getMessage());
+    Assertions.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), crapiAPIResponse.getStatus());
   }
 
   @Test
