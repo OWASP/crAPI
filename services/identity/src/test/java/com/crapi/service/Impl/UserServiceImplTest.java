@@ -134,7 +134,7 @@ public class UserServiceImplTest {
         userService.authenticateUserLogin(loginForm).getToken(), sampleJwtToken);
     Mockito.verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
   }
-  
+
   @Test(expected = BadCredentialsException.class)
   @SneakyThrows
   public void testAuthenticateUserLoginReturnInvalidCredentials()
