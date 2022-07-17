@@ -35,17 +35,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.appender.ConsoleAppender;
-import org.apache.logging.log4j.core.config.Configuration;
-import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.impl.Log4jContextFactory;
-import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +84,12 @@ public class UserServiceImpl implements UserService {
 
   @Autowired AuthenticationManager authenticationManager;
 
+  public UserServiceImpl() {
+    setFactory(log4jContextFactory);
+    LOG4J_LOGGER = LogManager.getLogger(UserService.class);
+    LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+  }
+
   @Transactional
   @Override
   public JwtResponse authenticateUserLogin(LoginForm loginForm)
@@ -97,31 +97,13 @@ public class UserServiceImpl implements UserService {
     JwtResponse jwtResponse = new JwtResponse();
     Authentication authentication = null;
     if (loginForm.getEmail() != null) {
-      setFactory(log4jContextFactory);
-
-      LOG4J_LOGGER = LogManager.getLogger(UserService.class);
-      LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-      Configuration config = ctx.getConfiguration();
-      LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
-      Map<String, Appender> appenders = loggerConfig.getAppenders();
-      ConsoleAppender cappender =
-          ConsoleAppender.newBuilder()
-              .setName("_Injected_Console_Appender_")
-              .setLayout(
-                  PatternLayout.newBuilder().withPattern("%d{ISO8601} %p [%t] %c - %m%n").build())
-              .build();
-      appenders.put("console", cappender);
-      appenders.forEach(
-          (name, appender) -> {
-            logger.info("Appender name: " + name);
-          });
-      logger.info("Config {}", config.toString());
       if (isLog4jEnabled() && (loginForm.getEmail().contains("jndi:"))) {
         logger.info("Log4j is enabled");
         logger.info(
-            "Log4j Exploit Try With Email: {} with Logger: {}",
+            "Log4j Exploit Try With Email: {} with Logger: {}, Main Logger: {}",
             loginForm.getEmail(),
-            LOG4J_LOGGER.getClass().getName());
+            LOG4J_LOGGER.getClass().getName(),
+            logger.getClass().getName());
         LOG4J_LOGGER.error("Log4j Exploit Success With Email: {}", loginForm.getEmail());
       } else {
         authentication =
