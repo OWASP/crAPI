@@ -25,3 +25,4 @@ data:
   SMTP_AUTH: "true"
   SMTP_STARTTLS: "true"
   SERVER_PORT: "{{ .Values.identity.port }}"
+  ENABLE_LOG4J: "true"

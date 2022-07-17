@@ -2,10 +2,10 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 replicaCount: 1
-imagePullPolicy: Never
+imagePullPolicy: Always
 web:
   image: crapi/crapi-web
-  port: 8888
+  port: 8880
 identity:
   image: crapi/crapi-identity
   port: 8080
@@ -19,7 +19,7 @@ mailhog:
   image: crapi/mailhog
 mongodb:
   image: mongo
-  version: 4.4
+  version: 5.0
 postgresdb:
   image: postgres
   version: 14
