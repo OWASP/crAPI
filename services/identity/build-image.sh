@@ -16,3 +16,8 @@
 set -x
 cd "$(dirname $0)"
 docker build -t crapi/crapi-identity:${VERSION:-latest} .
+retVal=$?
+if [ $retVal -ne 0 ]; then
+    echo "Error building image"
+fi
+exit $retVal

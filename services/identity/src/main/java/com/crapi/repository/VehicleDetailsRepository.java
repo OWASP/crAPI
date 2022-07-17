@@ -15,22 +15,20 @@
 package com.crapi.repository;
 
 import com.crapi.entity.VehicleDetails;
-import com.crapi.model.VehicleForm;
+import java.util.List;
+import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.UUID;
-
 @Repository
 public interface VehicleDetailsRepository extends JpaRepository<VehicleDetails, Long> {
-    VehicleDetails findByVin(String vin);
+  VehicleDetails findByVin(String vin);
 
-    VehicleDetails findByUuid(UUID uuid);
+  VehicleDetails findByUuid(UUID uuid);
 
-    List<VehicleDetails> findAllByOwner_id(Long id);
+  List<VehicleDetails> findAllByOwner_id(Long id);
 
-    VehicleDetails findByVehicleLocation_id(Long carId);
+  VehicleDetails findByVehicleLocation_id(Long carId);
 
-    VehicleDetails findByOwner_id(Long id);
+  VehicleDetails findByOwner_id(Long id);
 }

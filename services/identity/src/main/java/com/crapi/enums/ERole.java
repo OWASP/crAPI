@@ -14,12 +14,9 @@
 
 package com.crapi.enums;
 
-
 public enum ERole {
-
-    ROLE_PREDEFINE,
-    ROLE_USER,
-    ROLE_MECHANIC,
-    ROLE_ADMIN,
-    
+  ROLE_PREDEFINE,
+  ROLE_USER,
+  ROLE_MECHANIC,
+  ROLE_ADMIN,
 }

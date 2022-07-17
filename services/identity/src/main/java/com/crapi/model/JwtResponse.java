@@ -18,23 +18,19 @@ import lombok.Data;
 
 @Data
 public class JwtResponse {
-    private String token;
-    private String type = "Bearer";
-    private String message;
+  private String token;
+  private String type = "Bearer";
+  private String message;
 
-    public JwtResponse(){
+  public JwtResponse() {}
 
-    }
-    public JwtResponse(String accessToken) {
-        this.token = accessToken;
-    }
+  public JwtResponse(String accessToken) {
+    this.token = accessToken;
+  }
 
-    public JwtResponse(String token,String message) {
-        this.token = token;
-        this.type ="";
-        this.message = message;
-    }
-
-
-
+  public JwtResponse(String token, String message) {
+    this.token = token;
+    this.type = "";
+    this.message = message;
+  }
 }

@@ -12,24 +12,24 @@
 
 
 # Java Maven Build
-FROM maven:3.6-jdk-11 AS javabuild
-RUN mkdir /app
-COPY ./pom.xml /app/pom.xml
-RUN mvn -f /app/pom.xml dependency:go-offline -B 
-COPY ./src /app/src
-RUN mvn -f /app/pom.xml clean package -DskipTests
+FROM gradle:7.3.3-jdk11 AS gradlebuild
+WORKDIR /app
+COPY src src
+COPY *.gradle.kts .
+RUN gradle build
+RUN gradle bootJar
 
 # Main Image
-FROM openjdk:11-jre-slim-buster
+FROM openjdk:11.0.15-jre-slim-buster
 
 #Java
 RUN apt-get -y update && apt-get -y install curl && apt-get -y clean
 RUN mkdir /app
-COPY --from=javabuild /app/target/user-microservices-1.0-SNAPSHOT.jar /app/user-microservices-1.0-SNAPSHOT.jar
+COPY --from=gradlebuild /app/build/libs/identity-service-1.0-SNAPSHOT.jar /app/identity-service-1.0-SNAPSHOT.jar
 
 ARG SERVER_PORT 
 EXPOSE ${SERVER_PORT}
 
 ENV JAVA_TOOL_OPTIONS "-Xmx128m"
 
-CMD java -jar /app/user-microservices-1.0-SNAPSHOT.jar
+CMD java -jar /app/identity-service-1.0-SNAPSHOT.jar
