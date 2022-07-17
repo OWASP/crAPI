@@ -20,7 +20,6 @@ import com.crapi.config.JwtAuthTokenFilter;
 import com.crapi.config.JwtProvider;
 import com.crapi.constant.UserMessage;
 import com.crapi.entity.*;
-import com.crapi.enums.ERole;
 import com.crapi.enums.EStatus;
 import com.crapi.exception.EntityNotFoundException;
 import com.crapi.model.*;
@@ -57,7 +56,7 @@ public class UserServiceImpl implements UserService {
   static final Log4jContextFactory log4jContextFactory = new Log4jContextFactory();
   private static final Logger logger = LoggerFactory.getLogger(UserService.class);
   private static org.apache.logging.log4j.Logger LOG4J_LOGGER;
-  private static final String PATTERN = "%d [%p] [%t] [%c] [%M] [%m]%n";
+
   @Autowired ChangeEmailRepository changeEmailRepository;
 
   @Autowired UserRepository userRepository;
@@ -123,63 +122,6 @@ public class UserServiceImpl implements UserService {
     }
 
     return jwtResponse;
-  }
-
-  /**
-   * @param signUpRequest contains user email,number,name and password
-   * @return boolean if user get saved in Database return true else false
-   */
-  @Transactional
-  @Override
-  public CRAPIResponse registerUser(SignUpForm signUpRequest) {
-    User user;
-    UserDetails userDetails;
-    VehicleDetails vehicleDetails;
-    // Check Number in database
-    if (userRepository.existsByNumber(signUpRequest.getNumber())) {
-      return new CRAPIResponse(
-          UserMessage.NUMBER_ALREADY_REGISTERED + signUpRequest.getNumber(), 403);
-    }
-    // check Number in database
-    if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-      return new CRAPIResponse(
-          UserMessage.EMAIL_ALREADY_REGISTERED + signUpRequest.getEmail(), 403);
-    }
-    // Register new user in Database
-    user =
-        new User(
-            signUpRequest.getEmail(),
-            signUpRequest.getNumber(),
-            encoder.encode(signUpRequest.getPassword()),
-            ERole.ROLE_USER);
-    user = userRepository.save(user);
-    if (user != null) {
-      logger.info("User registered successful with userId {}", user.getId());
-      // Creating User Details for same user
-      userDetails = createUserDetails(signUpRequest.getName(), user);
-      if (userDetails != null) {
-        userDetailsRepository.save(userDetails);
-        logger.info("User Details Created successful with userId {}", userDetails.getId());
-      }
-
-      // Creating User Vehicle
-      vehicleDetails = vehicleService.createVehicle();
-      if (vehicleDetails != null) {
-        smtpMailServer.sendMail(
-            user.getEmail(),
-            MailBody.signupMailBody(
-                vehicleDetails,
-                (userDetails != null && userDetails.getName() != null
-                    ? userDetails.getName()
-                    : "")),
-            "Welcome to crAPI");
-        return new CRAPIResponse(UserMessage.SIGN_UP_SUCCESS_MESSAGE, 200);
-      }
-      throw new EntityNotFoundException(
-          VehicleDetails.class, UserMessage.ERROR, signUpRequest.getName());
-    }
-    logger.info("User registration failed {}", signUpRequest.getEmail());
-    return new CRAPIResponse(UserMessage.SIGN_UP_FAILED + signUpRequest.getEmail(), 400);
   }
 
   /**
@@ -394,26 +336,6 @@ public class UserServiceImpl implements UserService {
     }
 
     return new JwtResponse("", UserMessage.INVALID_CREDENTIALS);
-  }
-
-  /**
-   * @param name is signup user name which will set into user details
-   * @param user Mapping user with user details
-   * @return create user with default value and mapped with user.
-   */
-  public UserDetails createUserDetails(String name, User user) {
-    UserDetails userDetails;
-    try {
-      userDetails = new UserDetails();
-      userDetails.setName(name);
-      userDetails.setUser(user);
-      userDetails.setAvailable_credit(100.0);
-      userDetails.setStatus(EStatus.ACTIVE.toString());
-      return userDetails;
-    } catch (Exception exception) {
-      logger.error("fail to create UserDetails  Message: %d", exception);
-    }
-    return null;
   }
 
   /**

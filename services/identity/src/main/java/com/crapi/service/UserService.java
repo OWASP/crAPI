@@ -15,14 +15,11 @@
 package com.crapi.service;
 
 import com.crapi.entity.User;
-import com.crapi.entity.UserDetails;
 import com.crapi.model.*;
 import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
 
 public interface UserService {
-
-  CRAPIResponse registerUser(SignUpForm signUpRequest);
 
   void updateUserToken(String jwt, String email);
 
@@ -42,6 +39,4 @@ public interface UserService {
   JwtResponse loginWithEmailTokenV2(LoginWithEmailToken loginWithEmailToken);
 
   JwtResponse authenticateUserLogin(LoginForm loginForm) throws UnsupportedEncodingException;
-
-  public UserDetails createUserDetails(String name, User user);
 }

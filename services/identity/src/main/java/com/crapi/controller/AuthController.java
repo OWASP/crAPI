@@ -17,6 +17,7 @@ package com.crapi.controller;
 import com.crapi.constant.UserMessage;
 import com.crapi.model.*;
 import com.crapi.service.OtpService;
+import com.crapi.service.UserRegistrationService;
 import com.crapi.service.UserService;
 import java.io.UnsupportedEncodingException;
 import javax.validation.Valid;
@@ -32,6 +33,8 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
   @Autowired UserService userService;
+
+  @Autowired UserRegistrationService userRegistrationService;
 
   @Autowired OtpService otpService;
 
@@ -67,7 +70,7 @@ public class AuthController {
   @PostMapping("/signup")
   public ResponseEntity<CRAPIResponse> registerUser(@Valid @RequestBody SignUpForm signUpRequest) {
     // Creating user's account
-    CRAPIResponse registerUserResponse = userService.registerUser(signUpRequest);
+    CRAPIResponse registerUserResponse = userRegistrationService.registerUser(signUpRequest);
     if (registerUserResponse != null && registerUserResponse.getStatus() == 200) {
       return ResponseEntity.status(HttpStatus.OK).body(registerUserResponse);
     } else if (registerUserResponse != null && registerUserResponse.getStatus() == 403) {

