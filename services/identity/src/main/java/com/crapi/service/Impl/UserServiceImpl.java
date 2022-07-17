@@ -25,7 +25,6 @@ import com.crapi.exception.EntityNotFoundException;
 import com.crapi.model.*;
 import com.crapi.repository.*;
 import com.crapi.service.UserService;
-import com.crapi.service.VehicleService;
 import com.crapi.utils.EmailTokenGenerator;
 import com.crapi.utils.MailBody;
 import com.crapi.utils.SMTPMailServer;
@@ -76,8 +75,6 @@ public class UserServiceImpl implements UserService {
   @Autowired PasswordEncoder encoder;
 
   @Autowired JwtAuthTokenFilter jwtAuthTokenFilter;
-
-  @Autowired VehicleService vehicleService;
 
   @Autowired JwtProvider jwtProvider;
 
