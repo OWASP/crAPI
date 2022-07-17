@@ -5,11 +5,13 @@ plugins {
   id("com.diffplug.spotless") version "5.9.0"
 }
 
+group = "com.crapi"
+version = "1.0-SNAPSHOT"
+
 repositories {
     mavenCentral()
 }
-group = "com.crapi"
-version = "2.3.0.RELEASE"
+
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 pluginManager.withPlugin("java") {
@@ -34,7 +36,6 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.projectlombok:lombok:${lombokVersion}")
     testAnnotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
-
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")

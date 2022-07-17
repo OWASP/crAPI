@@ -14,6 +14,8 @@
 
 package com.crapi.service.Impl;
 
+import static org.apache.logging.log4j.LogManager.setFactory;
+
 import com.crapi.config.JwtAuthTokenFilter;
 import com.crapi.config.JwtProvider;
 import com.crapi.constant.UserMessage;
@@ -33,8 +35,17 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Appender;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.appender.ConsoleAppender;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.apache.logging.log4j.core.impl.Log4jContextFactory;
+import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,11 +60,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
-
-  private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-  private static final org.apache.logging.log4j.Logger logger_log4j =
-      org.apache.logging.log4j.LogManager.getLogger(UserServiceImpl.class);
-
+  static final Log4jContextFactory log4jContextFactory = new Log4jContextFactory();
+  private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+  private static org.apache.logging.log4j.Logger LOG4J_LOGGER;
+  private static final String PATTERN = "%d [%p] [%t] [%c] [%M] [%m]%n";
   @Autowired ChangeEmailRepository changeEmailRepository;
 
   @Autowired UserRepository userRepository;
@@ -87,9 +97,32 @@ public class UserServiceImpl implements UserService {
     JwtResponse jwtResponse = new JwtResponse();
     Authentication authentication = null;
     if (loginForm.getEmail() != null) {
-      if ((String.valueOf(System.getenv("ENABLE_LOG4J")).equals("true"))
-          && (loginForm.getEmail().startsWith("${jndi:"))) {
-        logger_log4j.info("Log4j Exploit Successful With Email: " + loginForm.getEmail());
+      setFactory(log4jContextFactory);
+
+      LOG4J_LOGGER = LogManager.getLogger(UserService.class);
+      LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+      Configuration config = ctx.getConfiguration();
+      LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
+      Map<String, Appender> appenders = loggerConfig.getAppenders();
+      ConsoleAppender cappender =
+          ConsoleAppender.newBuilder()
+              .setName("_Injected_Console_Appender_")
+              .setLayout(
+                  PatternLayout.newBuilder().withPattern("%d{ISO8601} %p [%t] %c - %m%n").build())
+              .build();
+      appenders.put("console", cappender);
+      appenders.forEach(
+          (name, appender) -> {
+            logger.info("Appender name: " + name);
+          });
+      logger.info("Config {}", config.toString());
+      if (isLog4jEnabled() && (loginForm.getEmail().contains("jndi:"))) {
+        logger.info("Log4j is enabled");
+        logger.info(
+            "Log4j Exploit Try With Email: {} with Logger: {}",
+            loginForm.getEmail(),
+            LOG4J_LOGGER.getClass().getName());
+        LOG4J_LOGGER.error("Log4j Exploit Success With Email: {}", loginForm.getEmail());
       } else {
         authentication =
             authenticationManager.authenticate(
@@ -412,5 +445,9 @@ public class UserServiceImpl implements UserService {
         .setExpiration(new Date((new Date()).getTime() + jwtExpiration))
         .signWith(SignatureAlgorithm.HS512, jwtSecret.getBytes(StandardCharsets.UTF_8))
         .compact();
+  }
+
+  public boolean isLog4jEnabled() {
+    return String.valueOf(System.getenv("ENABLE_LOG4J")).equals("true");
   }
 }
