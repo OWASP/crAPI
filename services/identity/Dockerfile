@@ -15,7 +15,7 @@
 FROM gradle:7.3.3-jdk11 AS gradlebuild
 WORKDIR /app
 COPY src src
-COPY *.gradle.kts .
+COPY *.gradle.kts ./
 RUN gradle build
 RUN gradle bootJar
 
