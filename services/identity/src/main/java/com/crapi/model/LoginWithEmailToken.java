@@ -22,10 +22,10 @@ import lombok.Data;
 public class LoginWithEmailToken {
 
   @NotBlank
-  @Size(min = 3, max = 60)
+  @Size(min = 3, max = 100)
   private String email;
 
   @NotBlank
-  @Size(min = 3, max = 60)
+  @Size(min = 3, max = 100)
   private String token;
 }
