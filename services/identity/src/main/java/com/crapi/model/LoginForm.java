@@ -22,11 +22,11 @@ import lombok.Data;
 public class LoginForm {
 
   @NotBlank
-  @Size(min = 3, max = 60)
+  @Size(min = 3, max = 100)
   private String email;
 
   @NotBlank
-  @Size(min = 4, max = 40)
+  @Size(min = 4, max = 100)
   private String password;
 
   private String number;

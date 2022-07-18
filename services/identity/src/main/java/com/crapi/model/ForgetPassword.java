@@ -24,7 +24,7 @@ import lombok.Data;
 public class ForgetPassword implements Serializable {
 
   @NotBlank
-  @Size(min = 3, max = 60)
+  @Size(min = 3, max = 100)
   @Email
   private String email;
 }
