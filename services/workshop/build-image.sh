@@ -19,6 +19,6 @@ cd "$(dirname $0)"
 docker build -t crapi/crapi-workshop:${VERSION:-latest} .
 retVal=$?
 if [ $retVal -ne 0 ]; then
-    echo "Error building image"
+    echo "Error building crapi-workshop image"
 fi
 exit $retVal

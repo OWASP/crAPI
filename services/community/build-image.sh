@@ -18,6 +18,6 @@ cd "$(dirname $0)"
 docker build -t crapi/crapi-community:${VERSION:-latest} .
 retVal=$?
 if [ $retVal -ne 0 ]; then
-    echo "Error building image"
+    echo "Error building crapi-community image"
+    exit $retVal
 fi
-exit $retVal
