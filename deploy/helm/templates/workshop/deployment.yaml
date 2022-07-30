@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crapi-workshop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crapi-workshop
+  template:
+    metadata:
+      labels:
+        app: crapi-workshop
+    spec:
+      initContainers:
+        - name: wait-for-crapi-identity
+          image: groundnuty/k8s-wait-for:v1.3
+          imagePullPolicy: Always
+          args:
+            - "service"
+            - "crapi-identity"
+        - name: wait-for-crapi-community
+          image: groundnuty/k8s-wait-for:v1.3
+          imagePullPolicy: Always
+          args:
+            - "service"
+            - "crapi-community"
+      containers:
+      - name: crapi-workshop
+        image: {{ .Values.workshop.image }}:{{ .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}  
+        ports:
+        - containerPort: {{ .Values.workshop.port }}
+        envFrom:
+            - configMapRef:
+                name: crapi-workshop-configmap
+        resources:
+          limits:
+            cpu: "256m"
+          requests:
+            cpu: 256m
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.workshop.port }}
+          initialDelaySeconds: 15
+          periodSeconds: 10

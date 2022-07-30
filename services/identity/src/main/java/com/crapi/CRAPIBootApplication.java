@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,19 +14,8 @@
 
 package com.crapi;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
-
-/**
- * @author Traceable AI
- */
 
 /*
  * Need to give path for application.properties file
@@ -40,12 +27,10 @@ import org.springframework.context.annotation.PropertySources;
 @SpringBootApplication(scanBasePackages = {"com.crapi"})
 public class CRAPIBootApplication {
 
-    public static void main(String[] args) {
+  public static void main(String[] args) {
 
-        //ConfigurableApplicationContext context = SpringApplication.run(CRAPIBootApplication.class, args);
-        SpringApplication.run(CRAPIBootApplication.class,args);
-    }
-
-
-
+    // ConfigurableApplicationContext context = SpringApplication.run(CRAPIBootApplication.class,
+    // args);
+    SpringApplication.run(CRAPIBootApplication.class, args);
+  }
 }

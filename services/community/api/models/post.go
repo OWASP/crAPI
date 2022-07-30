@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -76,6 +74,7 @@ func Prepare() Author {
 	u.Email = userEmail
 	u.VehicleID = vehicleID
 	u.CreatedAt = time.Now()
+	u.Picurl = picurl
 	return u
 }
 

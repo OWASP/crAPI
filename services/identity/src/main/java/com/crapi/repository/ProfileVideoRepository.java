@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,11 +18,7 @@ import com.crapi.entity.ProfileVideo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- * @author Traceable AI
- */
-
 @Repository
-public interface ProfileVideoRepository extends JpaRepository<ProfileVideo,Long> {
-    ProfileVideo findByUser_id(Long id);
+public interface ProfileVideoRepository extends JpaRepository<ProfileVideo, Long> {
+  ProfileVideo findByUser_id(Long id);
 }

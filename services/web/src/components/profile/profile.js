@@ -1,5 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
@@ -155,6 +154,7 @@ const Profile = (props) => {
         <PageHeader
           className="profile-header"
           title="My Personal Video"
+          subTitle="Max File Size: 10MB"
           extra={[
             <Dropdown overlay={videoSideBar} key="drop-down">
               <div>

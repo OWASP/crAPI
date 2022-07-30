@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,29 +14,24 @@
 
 package com.crapi.entity;
 
-import lombok.Data;
-
-import javax.persistence.*;
 import java.io.Serializable;
-
-/**
- * @author Traceable AI
- */
+import javax.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "vehicle_company")
 @Data
 public class VehicleCompany implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-    private String name;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private long id;
 
-    public VehicleCompany(){}
+  private String name;
 
-    public VehicleCompany(String name){
-        this.name = name;
-    }
+  public VehicleCompany() {}
 
+  public VehicleCompany(String name) {
+    this.name = name;
+  }
 }

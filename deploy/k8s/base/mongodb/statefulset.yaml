@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: mongodb
-          image: mongo
+          image: mongo:4.4
           imagePullPolicy: "IfNotPresent"
           envFrom:
             - configMapRef:

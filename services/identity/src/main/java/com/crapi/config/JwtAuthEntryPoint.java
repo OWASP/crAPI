@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,35 +14,33 @@
 
 package com.crapi.config;
 
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
-/**
- * @author Traceable AI
- */
 @Component
 public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
 
-    /**
-     * @param request
-     * @param response
-     * @param authenticationException
-     * @throws IOException
-     * @throws ServletException
-     */
-    @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authenticationException) throws IOException, ServletException {
+  /**
+   * @param request
+   * @param response
+   * @param authenticationException
+   * @throws IOException
+   * @throws ServletException
+   */
+  @Override
+  public void commence(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      AuthenticationException authenticationException)
+      throws IOException, ServletException {
 
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getOutputStream().println("{ \"error\": \"Invalid Token\" }");
-
-
-    }
+    response.setContentType("application/json");
+    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    response.getOutputStream().println("{ \"error\": \"Invalid Token\" }");
+  }
 }

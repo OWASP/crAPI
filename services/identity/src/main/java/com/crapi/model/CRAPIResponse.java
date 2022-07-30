@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,29 +16,20 @@ package com.crapi.model;
 
 import lombok.Data;
 
-/**
- * @author Traceable AI
- */
-
 @Data
 public class CRAPIResponse {
 
-    private String message;
-    private int status;
+  private String message;
+  private int status;
 
+  public CRAPIResponse() {}
 
+  public CRAPIResponse(String message) {
+    this.message = message;
+  }
 
-    public CRAPIResponse(){
-
-    }
-
-    public CRAPIResponse(String message){
-        this.message = message;
-    }
-
-    public CRAPIResponse(String message, int status){
-        this.message = message;
-        this.status = status;
-    }
-
+  public CRAPIResponse(String message, int status) {
+    this.message = message;
+    this.status = status;
+  }
 }

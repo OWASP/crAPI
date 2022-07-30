@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,25 +15,20 @@
 package com.crapi.repository;
 
 import com.crapi.entity.VehicleDetails;
-import com.crapi.model.VehicleForm;
+import java.util.List;
+import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.UUID;
-
-/**
- * @author Traceable AI
- */
 @Repository
 public interface VehicleDetailsRepository extends JpaRepository<VehicleDetails, Long> {
-    VehicleDetails findByVin(String vin);
+  VehicleDetails findByVin(String vin);
 
-    VehicleDetails findByUuid(UUID uuid);
+  VehicleDetails findByUuid(UUID uuid);
 
-    List<VehicleDetails> findAllByOwner_id(Long id);
+  List<VehicleDetails> findAllByOwner_id(Long id);
 
-    VehicleDetails findByVehicleLocation_id(Long carId);
+  VehicleDetails findByVehicleLocation_id(Long carId);
 
-    VehicleDetails findByOwner_id(Long id);
+  VehicleDetails findByOwner_id(Long id);
 }

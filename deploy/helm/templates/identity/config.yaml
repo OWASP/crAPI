@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: crapi-identity-configmap
+  labels:
+    app: crapi-identity
+data:
+  DB_HOST: postgresdb
+  DB_DRIVER: postgresql
+  JWT_SECRET: crapi #Used for creating a JWT. Can be anything 
+  DB_USER: admin
+  DB_PASSWORD: crapisecretpassword
+  DB_NAME: crapi
+  DB_PORT: "5432"
+  APP_NAME: "crapi-identity"
+  BLOCK_SHELL_INJECTION: "true"
+  MAILHOG_HOST: mailhog
+  MAILHOG_PORT: "1025"
+  MAILHOG_DOMAIN: "example.com"
+  SMTP_HOST: "smtp.example.com"
+  SMTP_PORT: "587"
+  SMTP_EMAIL: "user@example.com"
+  SMTP_PASS: "xxxxxxxxxxxxxx"
+  SMTP_FROM: "no-reply@example.com"
+  SMTP_AUTH: "true"
+  SMTP_STARTTLS: "true"
+  SERVER_PORT: "{{ .Values.identity.port }}"

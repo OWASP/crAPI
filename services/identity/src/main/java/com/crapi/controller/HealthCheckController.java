@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,22 +21,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
-import java.util.Properties;
-
 @RestController
 @CrossOrigin
 public class HealthCheckController {
 
-    @GetMapping("/identity/health_check")
-    public ResponseEntity<?> healthCheck(){
-         return  ResponseEntity.status(HttpStatus.OK).body(new CRAPIResponse("Okay",200));
-    }
+  @GetMapping("/identity/health_check")
+  public ResponseEntity<?> healthCheck() {
+    return ResponseEntity.status(HttpStatus.OK).body(new CRAPIResponse("Okay", 200));
+  }
 }

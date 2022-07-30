@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,15 +14,9 @@
 
 package com.crapi.enums;
 
-
-/**
- * @author Traceable AI
- */
 public enum ERole {
-
-    ROLE_PREDEFINE,
-    ROLE_USER,
-    ROLE_MECHANIC,
-    ROLE_ADMIN,
-    
+  ROLE_PREDEFINE,
+  ROLE_USER,
+  ROLE_MECHANIC,
+  ROLE_ADMIN,
 }

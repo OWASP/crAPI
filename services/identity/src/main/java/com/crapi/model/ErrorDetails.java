@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,13 +19,14 @@ import lombok.Data;
 @Data
 public class ErrorDetails {
 
-    private String message;
-    private String details;
-    public ErrorDetails(){}
+  private String message;
+  private String details;
 
-            public ErrorDetails( String message, String details) {
-        super();
-        this.message = message;
-        this.details = details;
-    }
+  public ErrorDetails() {}
+
+  public ErrorDetails(String message, String details) {
+    super();
+    this.message = message;
+    this.details = details;
+  }
 }

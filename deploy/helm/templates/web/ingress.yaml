@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: crapi-web
+  labels:
+    app: crapi-web
+spec:
+  ports:
+  - port: {{ .Values.web.port }}
+    targetPort: 80
+    nodePort: 30080
+    name: nginx
+  type: LoadBalancer
+  selector:
+    app: crapi-web

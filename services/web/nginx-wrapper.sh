@@ -1,6 +1,5 @@
 #!/bin/sh
 
-# Copyright 2020 Traceable, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
@@ -15,6 +14,6 @@
 # limitations under the License.
 
 
-envsubst '${GO_SERVICE} ${JAVA_SERVICE} ${PYTHON_SERVICE}' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
+envsubst '${COMMUNITY_SERVICE} ${IDENTITY_SERVICE} ${WORKSHOP_SERVICE}' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
 openresty
 exec "$@"

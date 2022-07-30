@@ -1,5 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
@@ -41,7 +40,7 @@ const Forum = (props) => {
   const { posts } = props;
 
   const renderAvatar = (url) => (
-    <Avatar src={defaultProficPic || url} size="large" />
+    <Avatar src={url || defaultProficPic} size="large" />
   );
 
   return (

@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Copyright 2020 Traceable, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
@@ -17,4 +16,9 @@
 
 set -x
 cd "$(dirname $0)"
-docker build -t crapi-workshop .
+docker build -t crapi/crapi-workshop:${VERSION:-latest} .
+retVal=$?
+if [ $retVal -ne 0 ]; then
+    echo "Error building crapi-workshop image"
+fi
+exit $retVal

@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,25 +14,20 @@
 
 package com.crapi.model;
 
-import lombok.Data;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import lombok.Data;
 
-/**
- * @author Traceable AI
- */
 @Data
 public class LoginForm {
 
-    @NotBlank
-    @Size(min=3, max = 60)
-    private String email;
+  @NotBlank
+  @Size(min = 3, max = 100)
+  private String email;
 
-    @NotBlank
-    @Size(min = 4, max = 40)
-    private String password;
+  @NotBlank
+  @Size(min = 4, max = 100)
+  private String password;
 
-    private String number;
-
+  private String number;
 }

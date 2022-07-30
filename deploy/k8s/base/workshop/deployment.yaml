@@ -27,7 +27,7 @@ spec:
             - "crapi-community"
       containers:
       - name: crapi-workshop
-        image: crapi/crapi-workshop:v1
+        image: crapi/crapi-workshop:latest
         imagePullPolicy: Always  
         ports:
         - containerPort: 8000

@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,43 +14,36 @@
 
 package com.crapi.model;
 
-import lombok.Data;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import lombok.Data;
 
-/**
- * @author Traceable AI
- */
 @Data
 public class SignUpForm {
-    private Long id;
+  private Long id;
 
-    @NotBlank
-    @Size(min = 3, max = 40)
-    private String name;
+  @NotBlank
+  @Size(min = 3, max = 100)
+  private String name;
 
-    @NotBlank
-    @Size(min = 6, max = 40)
-    private String password;
+  @NotBlank
+  @Size(min = 6, max = 100)
+  private String password;
 
-    @NotBlank
-    @Size(max = 60)
-    @Email
-    private String email;
+  @NotBlank
+  @Size(max = 100)
+  @Email
+  private String email;
 
-    @NotBlank
-    @Size(max = 15)
-    private String number;
+  @NotBlank
+  @Size(max = 15)
+  private String number;
 
-
-    public SignUpForm(Long id,String name, String email,String number){
-        this.id =id;
-        this.name = name;
-        this.email=email;
-        this.number = number;
-
-
-    }
+  public SignUpForm(Long id, String name, String email, String number) {
+    this.id = id;
+    this.name = name;
+    this.email = email;
+    this.number = number;
+  }
 }

@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,26 +18,21 @@ import com.crapi.entity.*;
 import com.crapi.model.CRAPIResponse;
 import com.crapi.model.VehicleForm;
 import com.crapi.model.VehicleLocationResponse;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.UUID;
-
-/**
- * @author Traceable AI
- */
+import javax.servlet.http.HttpServletRequest;
 
 public interface VehicleService {
 
-    boolean addVehicleDetails(VehicleForm vehicleDetails, HttpServletRequest request);
+  boolean addVehicleDetails(VehicleForm vehicleDetails, HttpServletRequest request);
 
-    VehicleDetails createVehicle();
+  VehicleDetails createVehicle();
 
-    List<VehicleDetails> getVehicleDetails(HttpServletRequest request);
+  List<VehicleDetails> getVehicleDetails(HttpServletRequest request);
 
-    VehicleLocationResponse getVehicleLocation(UUID carId);
+  VehicleLocationResponse getVehicleLocation(UUID carId);
 
-    CRAPIResponse checkVehicle(VehicleForm vehicleDetails, HttpServletRequest request);
+  CRAPIResponse checkVehicle(VehicleForm vehicleDetails, HttpServletRequest request);
 
-    CRAPIResponse sendVehicleDetails(HttpServletRequest request);
+  CRAPIResponse sendVehicleDetails(HttpServletRequest request);
 }

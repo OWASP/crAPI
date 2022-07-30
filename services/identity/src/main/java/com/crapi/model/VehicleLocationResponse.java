@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,29 +15,21 @@
 package com.crapi.model;
 
 import com.crapi.entity.VehicleLocation;
-import lombok.Data;
-
 import java.util.UUID;
-
-/**
- * @author Traceable AI
- */
+import lombok.Data;
 
 @Data
 public class VehicleLocationResponse {
 
-    private UUID carId;
-    private VehicleLocation vehicleLocation;
-    private String fullName;
+  private UUID carId;
+  private VehicleLocation vehicleLocation;
+  private String fullName;
 
-    public VehicleLocationResponse(){
+  public VehicleLocationResponse() {}
 
-    }
-
-    public VehicleLocationResponse(UUID id, String name, VehicleLocation vehicleLocation){
-        this.carId =id;
-        this.fullName = name;
-        this.vehicleLocation = vehicleLocation;
-
-    }
+  public VehicleLocationResponse(UUID id, String name, VehicleLocation vehicleLocation) {
+    this.carId = id;
+    this.fullName = name;
+    this.vehicleLocation = vehicleLocation;
+  }
 }

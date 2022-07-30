@@ -33,7 +33,7 @@ spec:
             - "crapi-identity"
       containers:
       - name: crapi-community
-        image: crapi/crapi-community:v1
+        image: crapi/crapi-community:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8087

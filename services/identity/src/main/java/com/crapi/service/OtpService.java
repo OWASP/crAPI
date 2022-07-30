@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,20 +15,17 @@
 package com.crapi.service;
 
 import com.crapi.entity.Otp;
+import com.crapi.model.CRAPIResponse;
 import com.crapi.model.ForgetPassword;
 import com.crapi.model.OtpForm;
-import com.crapi.model.CRAPIResponse;
 
-/**
- * @author Traceable AI
- */
 public interface OtpService {
 
-    boolean invalidateOtp(Otp validateOtp);
+  boolean invalidateOtp(Otp validateOtp);
 
-    CRAPIResponse generateOtp(ForgetPassword user);
+  CRAPIResponse generateOtp(ForgetPassword user);
 
-    CRAPIResponse validateOtp(OtpForm otpForm);
+  CRAPIResponse validateOtp(OtpForm otpForm);
 
-    CRAPIResponse secureValidateOtp(OtpForm otpForm);
+  CRAPIResponse secureValidateOtp(OtpForm otpForm);
 }

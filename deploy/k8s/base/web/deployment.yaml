@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: crapi-web
-        image: crapi/crapi-web:v1
+        image: crapi/crapi-web:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80

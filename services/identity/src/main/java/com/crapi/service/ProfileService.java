@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,27 +18,22 @@ import com.crapi.entity.ProfileVideo;
 import com.crapi.entity.UserDetails;
 import com.crapi.model.CRAPIResponse;
 import com.crapi.model.VideoForm;
-import org.springframework.http.HttpHeaders;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-
-/**
- * @author Traceable AI
- */
 public interface ProfileService {
 
-    UserDetails uploadProfilePicture(MultipartFile file, HttpServletRequest request);
+  UserDetails uploadProfilePicture(MultipartFile file, HttpServletRequest request);
 
-    ProfileVideo getProfileVideo(Long videoId, HttpServletRequest request);
+  ProfileVideo getProfileVideo(Long videoId, HttpServletRequest request);
 
-    ProfileVideo uploadProfileVideo(MultipartFile file,HttpServletRequest request);
+  ProfileVideo uploadProfileVideo(MultipartFile file, HttpServletRequest request);
 
-    ProfileVideo updateProfileVideo(VideoForm videoForm, HttpServletRequest request);
+  ProfileVideo updateProfileVideo(VideoForm videoForm, HttpServletRequest request);
 
-    CRAPIResponse deleteProfileVideo(Long videoId, HttpServletRequest request);
+  CRAPIResponse deleteProfileVideo(Long videoId, HttpServletRequest request);
 
-    CRAPIResponse deleteAdminProfileVideo(Long videoId, HttpServletRequest request);
+  CRAPIResponse deleteAdminProfileVideo(Long videoId, HttpServletRequest request);
 
-    CRAPIResponse convertVideo(Long videoId, HttpServletRequest request);
+  CRAPIResponse convertVideo(Long videoId, HttpServletRequest request);
 }

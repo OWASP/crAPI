@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# Copyright 2020 Traceable, Inc.
-#
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -18,7 +16,7 @@
 set -x
 set -e
 cd "$(dirname $0)"
-scripts=$(find ../../services/ -name 'build-image*')
+scripts=$(find ../../services/ -name 'build-image*.sh')
 for script in ${scripts}
 do
     echo "Executing $script"

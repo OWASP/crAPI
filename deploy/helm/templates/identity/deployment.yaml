@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crapi-identity
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crapi-identity
+  template:
+    metadata:
+      labels:
+        app: crapi-identity
+    spec:
+      initContainers:
+        - name: wait-for-postgres
+          image: groundnuty/k8s-wait-for:v1.3
+          imagePullPolicy: Always
+          args:
+            - "service"
+            - "postgresdb"
+      containers:
+      - name: crapi-identity
+        image: {{ .Values.identity.image }}:{{ .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        ports:
+        - containerPort: {{ .Values.identity.port }}
+        envFrom:
+            - configMapRef:
+                name: crapi-identity-configmap
+        resources:
+          limits:
+            cpu: "500m"
+          requests:
+            cpu: 256m
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.identity.port }}
+          initialDelaySeconds: 15
+          periodSeconds: 10
+

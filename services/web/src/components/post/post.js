@@ -1,5 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
@@ -57,7 +56,7 @@ const Post = (props) => {
         <Row gutter={[20, 20]}>
           <Col flex="75px">
             <Avatar
-              src={defaultProficPic || (post && post.author.profile_pic_url)}
+              src={(post && post.author.profile_pic_url) || defaultProficPic}
               size={75}
             />
           </Col>
@@ -107,7 +106,7 @@ const Post = (props) => {
               <Row gutter={[20, 20]} className="comment-row">
                 <Col>
                   <Avatar
-                    src={defaultProficPic || comment.author.profile_pic_url}
+                    src={comment.author.profile_pic_url || defaultProficPic}
                     size="large"
                   />
                 </Col>

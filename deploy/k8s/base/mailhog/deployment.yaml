@@ -22,8 +22,8 @@ spec:
         runAsGroup: 0
       containers:
         - name: mailhog
-          image: mailhog/mailhog
-          imagePullPolicy: "IfNotPresent"
+          image: crapi/mailhog:latest
+          imagePullPolicy: "Always"
           livenessProbe:
             tcpSocket:
               port: 1025

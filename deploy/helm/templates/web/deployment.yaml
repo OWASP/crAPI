@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crapi-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crapi-web
+  template:
+    metadata:
+      labels:
+        app: crapi-web
+    spec:
+      containers:
+      - name: crapi-web
+        image: {{ .Values.web.image }}:{{ .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: "500m"
+          requests:
+            cpu: 256m
+        envFrom:
+          - configMapRef:
+              name: crapi-web-configmap

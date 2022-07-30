@@ -21,7 +21,7 @@ spec:
             - "postgresdb"
       containers:
       - name: crapi-identity
-        image: crapi/crapi-identity:v1
+        image: crapi/crapi-identity:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

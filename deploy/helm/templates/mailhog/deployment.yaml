@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailhog
+  namespace: crapi
+spec:
+  selector:
+    matchLabels:
+      app: mailhog
+  replicas: 1
+  minReadySeconds: 10
+  progressDeadlineSeconds: 600
+  template:
+    metadata:
+      labels:
+        app: mailhog
+      annotations:
+        sidecar.traceable.ai/inject: "false"
+    spec:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+      containers:
+        - name: mailhog
+          image: {{ .Values.mailhog.image }}:{{ .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          livenessProbe:
+            tcpSocket:
+              port: 1025
+            initialDelaySeconds: 15
+            periodSeconds: 60
+          readinessProbe:
+            tcpSocket:
+              port: 1025
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          ports:
+          - containerPort: 8025
+            name: web
+            protocol: TCP
+          - containerPort: 1025
+            name: smtp
+            protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: mailhog-configmap
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1024Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi

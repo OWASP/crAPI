@@ -1,6 +1,4 @@
 /*
- * Copyright 2020 Traceable, Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,20 +14,17 @@
 
 package com.crapi.model;
 
-import lombok.Data;
-
+import java.io.Serializable;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
+import lombok.Data;
 
 @Data
 public class ForgetPassword implements Serializable {
 
-    @NotBlank
-    @Size(min=3, max = 60)
-    @Email
-   private String email;
-
-
+  @NotBlank
+  @Size(min = 3, max = 100)
+  @Email
+  private String email;
 }
