@@ -85,6 +85,10 @@ After solving the "Find an API endpoint that leaks an internal property of video
 
 ### Challenge 12 - Find a way to get free coupons without knowing the coupon code.
 
+## Unauthenticated Access
+
+### Challenge 12 - Find an endpoint that does not perform authentication checks for a user.
+
 ## << 2 secret challenges >>
 
 There are two more secret challenges in crAPI, that are pretty complex, and for now we don’t share details about them, except the fact they are really cool. 
