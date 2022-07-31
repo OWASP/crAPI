@@ -87,7 +87,7 @@ After solving the "Find an API endpoint that leaks an internal property of video
 
 ## Unauthenticated Access
 
-### Challenge 12 - Find an endpoint that does not perform authentication checks for a user.
+### Challenge 13 - Find an endpoint that does not perform authentication checks for a user.
 
 ## << 2 secret challenges >>
 
