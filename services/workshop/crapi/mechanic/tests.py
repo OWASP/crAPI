@@ -48,13 +48,13 @@ class MechanicSignUpTestCase(TestCase):
         :return: None
         """
         res = self.client.post(
-            '/api/mechanic/signup',
+            '/workshop/api/mechanic/signup',
             self.mechanic,
             content_type="application/json"
         )
         self.assertEqual(res.status_code, 200)
         res = self.client.post(
-            '/api/mechanic/signup',
+            '/workshop/api/mechanic/signup',
             self.mechanic,
             content_type="application/json"
         )
@@ -70,7 +70,7 @@ class MechanicSignUpTestCase(TestCase):
         :return: None
         """
         res = self.client.post(
-            '/api/mechanic/signup',
+            '/workshop/api/mechanic/signup',
             self.mechanic,
             content_type="application/json"
         )
@@ -78,7 +78,7 @@ class MechanicSignUpTestCase(TestCase):
 
         self.mechanic['email'] = 'abcd@example.com'
         res = self.client.post(
-            '/api/mechanic/signup',
+            '/workshop/api/mechanic/signup',
             self.mechanic,
             content_type="application/json"
         )
@@ -94,7 +94,7 @@ class MechanicSignUpTestCase(TestCase):
         :return:
         """
         res = self.client.post(
-            '/api/mechanic/signup',
+            '/workshop/api/mechanic/signup',
             self.mechanic,
             content_type="application/json"
         )
@@ -103,7 +103,7 @@ class MechanicSignUpTestCase(TestCase):
         self.mechanic['email'] = 'abcd@example.com'
         self.mechanic['mechanic_code'] = 'TRAC_MEC_4'
         res = self.client.post(
-            '/api/mechanic/signup',
+            '/workshop/api/mechanic/signup',
             self.mechanic,
             content_type="application/json"
         )
@@ -120,16 +120,16 @@ class MechanicSignUpTestCase(TestCase):
         should get a valid response(200) of the api
         :return: None
         """
-        self.client.post('/api/mechanic/signup', self.mechanic, content_type="application/json")
+        self.client.post('/workshop/api/mechanic/signup', self.mechanic, content_type="application/json")
         user = User.objects.get(email=self.mechanic['email'])
 
-        res = self.client.get('/api/mechanic')
+        res = self.client.get('/workshop/api/mechanic/')
         self.assertNotEqual(res.status_code, 200)
         self.assertEqual(res.json()['message'], messages.JWT_REQUIRED)
 
         jwt_token = get_jwt(user)
         auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + jwt_token}
-        res = self.client.get('/api/mechanic', **auth_headers)
+        res = self.client.get('/workshop/api/mechanic/', **auth_headers)
         self.assertEqual(res.status_code, 200)
 
     def test_expired_jwt_token(self):
@@ -140,15 +140,15 @@ class MechanicSignUpTestCase(TestCase):
         should get an error response saying token expired
         :return: None
         """
-        self.client.post('/api/mechanic/signup', self.mechanic, content_type="application/json")
+        self.client.post('/workshop/api/mechanic/signup', self.mechanic, content_type="application/json")
         user = User.objects.get(email=self.mechanic['email'])
 
-        res = self.client.get('/api/mechanic')
+        res = self.client.get('/workshop/api/mechanic/')
         self.assertNotEqual(res.status_code, 200)
 
         jwt_token = get_jwt(user, exp=datetime.utcnow()-timedelta(hours=3))
         auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + jwt_token}
-        res = self.client.get('/api/mechanic', **auth_headers)
+        res = self.client.get('/workshop/api/mechanic/', **auth_headers)
         self.assertNotEqual(res.status_code, 200)
         self.assertEqual(res.json()['message'], messages.TOKEN_EXPIRED)
 
@@ -160,7 +160,7 @@ class MechanicSignUpTestCase(TestCase):
         """
         del[self.mechanic['password']]
         res = self.client.post(
-            '/api/mechanic/signup',
+            '/workshop/api/mechanic/signup',
             self.mechanic,
             content_type="application/json"
         )

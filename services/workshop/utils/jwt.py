@@ -64,16 +64,19 @@ def jwt_auth_required(func):
                 return func(*args, **kwargs)
             return Response(
                 {'message': messages.JWT_REQUIRED},
-                status=status.HTTP_401_UNAUTHORIZED
+                status=status.HTTP_401_UNAUTHORIZED,
+                content_type="application/json"
             )
         except (jwt.exceptions.DecodeError, User.DoesNotExist):
             return Response(
                 {'message': messages.INVALID_TOKEN},
-                status=status.HTTP_401_UNAUTHORIZED
+                status=status.HTTP_401_UNAUTHORIZED,
+                content_type="application/json"
             )
         except jwt.exceptions.ExpiredSignatureError:
             return Response(
                 {'message': messages.TOKEN_EXPIRED},
-                status=status.HTTP_401_UNAUTHORIZED
+                status=status.HTTP_401_UNAUTHORIZED,
+                content_type="application/json"
             )
     return new_func
