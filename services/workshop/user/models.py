@@ -18,6 +18,7 @@ These tables are created by user microservices
 So fake migrations are performed on these models
 """
 from django.db import models
+from django.conf import settings
 from collections import OrderedDict
 from extended_choices import Choices
 
@@ -43,7 +44,7 @@ class User(models.Model):
 
     class Meta:
         db_table = 'user_login'
-        managed = False
+        managed = settings.IS_TESTING
 
     def __str__(self):
         return f"<User: {self.email}>"
@@ -62,7 +63,7 @@ class UserDetails(models.Model):
 
     class Meta:
         db_table = 'user_details'
-        managed = False
+        managed = settings.IS_TESTING
 
     def __str__(self):
         return f"<UserDetails: {self.user.email}>"
@@ -78,7 +79,7 @@ class VehicleCompany(models.Model):
 
     class Meta:
         db_table = 'vehicle_company'
-        managed = False
+        managed = settings.IS_TESTING
 
     def __str__(self):
         return f"<VehicleCompany: {self.name}>"
@@ -97,7 +98,7 @@ class VehicleModel(models.Model):
 
     class Meta:
         db_table = 'vehicle_model'
-        managed = False
+        managed = settings.IS_TESTING
 
     def __str__(self):
         return f"<VehicleModel: {self.model}>"
@@ -119,7 +120,7 @@ class Vehicle(models.Model):
 
     class Meta:
         db_table = 'vehicle_details'
-        managed = False
+        managed = settings.IS_TESTING
 
     def __str__(self):
         return f"<Vehicle: {self.vin}>"
