@@ -303,7 +303,7 @@ class ApplyCouponView(APIView):
                     + "'")
             row = cursor.fetchall()
 
-        if row != None:
+        if row and row != None:
             return Response(
                 {
                     'message': row[0][0] + " " + messages.COUPON_ALREADY_APPLIED,
