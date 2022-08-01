@@ -39,7 +39,7 @@ class ProductTestCase(TestCase):
         """
         self.client = Client()
         self.mechanic = get_sample_mechanic_data()
-        self.client.post('/api/mechanic/signup', self.mechanic, content_type="application/json")
+        self.client.post('/workshop/api/mechanic/signup', self.mechanic, content_type="application/json")
         self.user = User.objects.get(email=self.mechanic['email'])
         jwt_token = get_jwt(self.user)
         self.auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + jwt_token}
@@ -55,5 +55,5 @@ class ProductTestCase(TestCase):
             'price': 10,
             'image_url': 'https://4.imimg.com/data4/NI/WE/MY-19393581/ciaz-car-seat-cover-500x500.jpg',
         }
-        res = self.client.post('/api/shop/products', product_details, **self.auth_headers)
+        res = self.client.post('/workshop/api/shop/products', product_details, **self.auth_headers)
         self.assertEqual(res.status_code, 200)
