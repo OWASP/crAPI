@@ -83,7 +83,6 @@ class OrderControlView(APIView):
     """
     Order Controller View
     """
-    @jwt_auth_required
     def get(self, request, order_id=None, user=None):
         """
         order view for fetching  a particular order
@@ -98,8 +97,6 @@ class OrderControlView(APIView):
             message and corresponding status if error
         """
         order = Order.objects.get(id=order_id)
-        if user != order.user:
-            return Response({'message': messages.RESTRICTED}, status=status.HTTP_403_FORBIDDEN)
         serializer = OrderSerializer(order)
         response_data = dict(
             orders=serializer.data

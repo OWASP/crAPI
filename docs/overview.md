@@ -8,7 +8,7 @@ The crAPI application, by design, does not implement all of its functionalities 
 crAPI has a microservices architecture comprising the following services developed using different technologies: 
 
 * web: Main Ingress service
-* identiy: User and authentication endpoints
+* identity: User and authentication endpoints
 * community: Community blogs and comments endpoints
 * workshop: Vehicle workshop endpoints
 * mailhog: Mail service

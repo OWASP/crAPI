@@ -24,6 +24,7 @@ from utils.jwt import get_jwt
 from utils.sample_data import get_sample_user_data
 from user.models import User, UserDetails
 from crapi.shop.models import Coupon
+import json
 
 logger = logging.getLogger('ProductTest')
 
@@ -32,17 +33,18 @@ class ProductTestCase(TestCase):
     contains all the test cases related to Products
     Attributes:
         client: Client object used for testing
-        mechanic: sample mechanic sign up request body
-        user: dummy mechanic object
-        auth_headers: Auth headers for dummy mechanic
+        user: dummy user object
+        auth_headers: Auth headers for dummy user
+        product_id: Product Identifier of the product created
+        order_id: Order Identifier of the prder created
     """
 
     databases = '__all__'
 
     def setUp(self):
         """
-        stores a sample request body for mechanic signup
-        creates a dummy mechanic corresponding auth tokens
+        stores a sample request body for user signup
+        creates a dummy user corresponding auth tokens
         :return: None
         """
         self.client = Client()
@@ -79,7 +81,7 @@ class ProductTestCase(TestCase):
         jwt_token = get_jwt(self.user)
         self.auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + jwt_token}
 
-    def test_add_products(self):
+    def add_product(self):
         """
         creates a dummy product with add_product api with an image
         should get a valid response saying product created
@@ -91,9 +93,10 @@ class ProductTestCase(TestCase):
             'image_url': 'https://4.imimg.com/data4/NI/WE/MY-19393581/ciaz-car-seat-cover-500x500.jpg',
         }
         res = self.client.post('/workshop/api/shop/products', product_details, **self.auth_headers)
+        self.product_id = json.loads(res.content)['id']
         self.assertEqual(res.status_code, 200)
 
-    def test_apply_coupon(self):
+    def apply_coupon(self):
         """
         applies a coupon to the dummy user using apply_coupon api
         should get a valid response saying coupon applied
@@ -162,4 +165,33 @@ class ProductTestCase(TestCase):
             res.json()['message'],
             self.user.number + ' ' + messages.COUPON_ALREADY_APPLIED
         )
+
+    def create_order(self):
+        """
+        creates an order using the product_id from the previous test.
+        should get a valid response saying product created
+        :return: order details 
+        """
+        order_details = {
+            "product_id":  str(self.product_id),
+            "quantity": 1
+          
+        }
+        res = self.client.post('/workshop/api/shop/orders', order_details, content_type='application/json', **self.auth_headers)
+        self.order_id = json.loads(res.content)['id']
+        self.assertEqual(res.status_code, 200)
+
+    def test_unauthenticated_get_order(self):
+        """
+        retrieves the order based on order id.
+        should get a valid response saying order retrieved.
+        :return: order details 
+        """
+        self.add_product()
+        self.apply_coupon()
+        self.create_order()
+        res = self.client.get('/workshop/api/shop/orders/' + str(self.order_id))
+        self.assertEqual(res.status_code, 200)    
+
+
 
