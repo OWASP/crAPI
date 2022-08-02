@@ -33,8 +33,8 @@ def get_sample_mechanic_data():
 
 def get_sample_user_data():
     """
-    gives mechanic data which can be used for testing
-    :return: sample mechanic object
+    gives user data which can be used for testing
+    :return: sample user object
     """
     return {
         "name": "TestUser",

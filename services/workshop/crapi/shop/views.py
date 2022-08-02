@@ -316,7 +316,7 @@ class ApplyCouponView(APIView):
         except ObjectDoesNotExist as e:
             log_error(request.path, request.data, 400, e)
             return Response(
-                {'message': "Coupon not found"},
+                {'message': messages.COUPON_NOT_FOUND},
                 status=status.HTTP_400_BAD_REQUEST
             )
 

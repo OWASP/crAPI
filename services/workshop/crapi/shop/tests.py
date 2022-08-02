@@ -15,6 +15,7 @@
 """
 contains all the test cases related to shop management
 """
+import logging
 import bcrypt
 from django.test import TestCase, Client
 from django.utils import timezone
@@ -23,6 +24,8 @@ from utils.jwt import get_jwt
 from utils.sample_data import get_sample_user_data
 from user.models import User, UserDetails
 from crapi.shop.models import Coupon
+
+logger = logging.getLogger('ProductTest')
 
 class ProductTestCase(TestCase):
     """
@@ -47,6 +50,11 @@ class ProductTestCase(TestCase):
         self.coupon = Coupon.objects.using('mongodb').create(
             coupon_code = 'TRAC075',
             amount = 75
+        )
+
+        self.coupon = Coupon.objects.using('mongodb').create(
+            coupon_code = 'TRAC100',
+            amount = 100
         )
 
         user_data = get_sample_user_data()
@@ -96,5 +104,62 @@ class ProductTestCase(TestCase):
             'amount': 75
         }
         res = self.client.post('/workshop/api/shop/apply_coupon', data=coupon_details, content_type='application/json', **self.auth_headers)
+        logger.info(res.json())
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.json()['message'], messages.COUPON_APPLIED)
+
+    def test_apply_coupon_twice(self):
+        """
+        applies a coupon twice to the dummy user using apply_coupon api
+        should get a error response saying coupon already applied
+        :return: None
+        """
+        coupon_details = {
+            'coupon_code': 'TRAC100',
+            'amount': 100
+        }
+        res = self.client.post('/workshop/api/shop/apply_coupon', data=coupon_details, content_type='application/json', **self.auth_headers)
+        res = self.client.post('/workshop/api/shop/apply_coupon', data=coupon_details, content_type='application/json', **self.auth_headers)
+        logger.info(res.json())
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(
+            res.json()['message'],
+            coupon_details['coupon_code'] + ' ' + messages.COUPON_ALREADY_APPLIED
+        )
+
+    def test_invalid_coupon(self):
+        """
+        applies an invalid coupon to the dummy user using apply_coupon api
+        should get a valid response saying coupon is invalid
+        :return: None
+        """
+        coupon_details = {
+            'coupon_code': 'TRAC105',
+            'amount': 75
+        }
+        res = self.client.post('/workshop/api/shop/apply_coupon', data=coupon_details, content_type='application/json', **self.auth_headers)
+        logger.info(res.json())
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(
+            res.json()['message'],
+            messages.COUPON_NOT_FOUND
+        )
+
+    def test_sql_injection(self):
+        """
+        applies a SQLI query to the  apply_coupon api
+        should get a valid response and a message that proves SQLI successfully exploited
+        :return: None
+        """
+        coupon_details = {
+            'coupon_code': "'; SELECT number FROM user_login WHERE email='" + self.user.email,
+            'amount': 75
+        }
+        res = self.client.post('/workshop/api/shop/apply_coupon', data=coupon_details, content_type='application/json', **self.auth_headers)
+        logger.info(res.json())
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(
+            res.json()['message'],
+            self.user.number + ' ' + messages.COUPON_ALREADY_APPLIED
+        )
+
