@@ -81,7 +81,7 @@ class ProductTestCase(TestCase):
         jwt_token = get_jwt(self.user)
         self.auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + jwt_token}
 
-    def Test_add_products(self):
+    def add_product(self):
         """
         creates a dummy product with add_product api with an image
         should get a valid response saying product created
@@ -96,7 +96,7 @@ class ProductTestCase(TestCase):
         self.product_id = json.loads(res.content)['id']
         self.assertEqual(res.status_code, 200)
 
-    def Test_apply_coupon(self):
+    def apply_coupon(self):
         """
         applies a coupon to the dummy user using apply_coupon api
         should get a valid response saying coupon applied
@@ -166,7 +166,7 @@ class ProductTestCase(TestCase):
             self.user.number + ' ' + messages.COUPON_ALREADY_APPLIED
         )
 
-    def Test_create_order(self):
+    def create_order(self):
         """
         creates an order using the product_id from the previous test.
         should get a valid response saying product created
@@ -181,20 +181,17 @@ class ProductTestCase(TestCase):
         self.order_id = json.loads(res.content)['id']
         self.assertEqual(res.status_code, 200)
 
-    def Test_unauthenticated_get_order(self):
+    def test_unauthenticated_get_order(self):
         """
         retrieves the order based on order id.
         should get a valid response saying order retrieved.
         :return: order details 
         """
-        
+        self.add_product()
+        self.apply_coupon()
+        self.create_order()
         res = self.client.get('/workshop/api/shop/orders/' + str(self.order_id))
         self.assertEqual(res.status_code, 200)    
 
-    def test_shop(self):
-        self.Test_add_products()
-        self.Test_apply_coupon()
-        self.Test_create_order()
-        self.Test_unauthenticated_get_order()
 
 
