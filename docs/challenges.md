@@ -85,9 +85,13 @@ After solving the "Find an API endpoint that leaks an internal property of video
 
 ### Challenge 12 - Find a way to get free coupons without knowing the coupon code.
 
+## SQL Injection
+
+### Challenge 13 - Find a way to redeem a coupon that you have already claimed by modifying the database
+
 ## Unauthenticated Access
 
-### Challenge 13 - Find an endpoint that does not perform authentication checks for a user.
+### Challenge 14 - Find an endpoint that does not perform authentication checks for a user.
 
 ## << 2 secret challenges >>
 

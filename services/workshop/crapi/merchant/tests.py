@@ -21,7 +21,7 @@ from django.utils import timezone
 from utils.jwt import get_jwt
 from utils.sample_data import get_sample_mechanic_data
 from utils import messages
-from user.models import User, Vehicle
+from user.models import User, Vehicle, VehicleModel, VehicleCompany
 
 
 class MerchantTestCase(TestCase):
@@ -46,7 +46,7 @@ class MerchantTestCase(TestCase):
         self.client = Client()
         self.mechanic = get_sample_mechanic_data()
         self.client.post(
-            '/api/mechanic/signup',
+            '/workshop/api/mechanic/signup',
             self.mechanic,
             content_type="application/json"
         )
@@ -67,12 +67,24 @@ class MerchantTestCase(TestCase):
         mechanic_jwt_token = get_jwt(User.objects.get(email=self.mechanic['email']))
         self.mechanic_auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + mechanic_jwt_token}
 
+        self.vehicle_company = VehicleCompany.objects.create(
+            name='RandomCompany'
+        )
+
+        self.vehicle_model = VehicleModel.objects.create(
+            fuel_type='1',
+            model='NewModel',
+            vehicle_img='Image',
+            vehiclecompany=self.vehicle_company
+        )
+
         self.vehicle = Vehicle.objects.create(
             pincode='1234',
             vin='9NFXO86WBWA082766',
             year='2020',
             status='ACTIVE',
-            owner=self.user
+            owner=self.user,
+            vehicle_model=self.vehicle_model
         )
         self.contact_mechanic_request_body = {
             'mechanic_api': 'https://www.google.com',
@@ -91,7 +103,7 @@ class MerchantTestCase(TestCase):
         """
         self.contact_mechanic_request_body['number_of_repeats'] = 110
         res = self.client.post(
-            '/api/merchant/contact_mechanic',
+            '/workshop/api/merchant/contact_mechanic',
             self.contact_mechanic_request_body,
             **self.user_auth_headers,
             content_type="application/json"
@@ -108,7 +120,7 @@ class MerchantTestCase(TestCase):
         self.contact_mechanic_request_body['mechanic_api'] = \
             'https://jsonplaceholder.typicode.com/post'
         res = self.client.post(
-            '/api/merchant/contact_mechanic',
+            '/workshop/api/merchant/contact_mechanic',
             self.contact_mechanic_request_body,
             **self.user_auth_headers,
             content_type="application/json"
@@ -122,7 +134,7 @@ class MerchantTestCase(TestCase):
         :return: None
         """
         res = self.client.post(
-            '/api/merchant/contact_mechanic',
+            '/workshop/api/merchant/contact_mechanic',
             self.contact_mechanic_request_body,
             **self.user_auth_headers,
             content_type="application/json"
@@ -138,7 +150,7 @@ class MerchantTestCase(TestCase):
         """
         del self.contact_mechanic_request_body['repeat_request_if_failed']
         res = self.client.post(
-            '/api/merchant/contact_mechanic',
+            '/workshop/api/merchant/contact_mechanic',
             self.contact_mechanic_request_body,
             **self.user_auth_headers,
             content_type="application/json"
@@ -159,7 +171,7 @@ class MerchantTestCase(TestCase):
         :return: None
         """
         res = self.client.get(
-            '/api/mechanic/receive_report',
+            '/workshop/api/mechanic/receive_report',
             self.contact_mechanic_request_body,
             **self.user_auth_headers,
             content_type="application/json"
@@ -188,7 +200,7 @@ class MerchantTestCase(TestCase):
         )
 
         service_requests = self.client.get(
-            '/api/mechanic/service_requests',
+            '/workshop/api/mechanic/service_requests',
             **self.mechanic_auth_headers,
             content_type="application/json"
         )

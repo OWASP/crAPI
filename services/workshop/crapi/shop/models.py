@@ -17,6 +17,7 @@ Models related to Shop
 Product and Order Models
 """
 from django.db import models
+from django.conf import settings
 
 from user.models import User
 from extended_choices import Choices
@@ -73,7 +74,7 @@ class Coupon(models.Model):
 
     class Meta:
         db_table = 'coupons'
-        managed=False
+        managed = settings.IS_TESTING
 
     def __str__(self):
         return f"{self.coupon_code} - {self.amount}"

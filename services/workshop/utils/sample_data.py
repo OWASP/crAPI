@@ -30,3 +30,15 @@ def get_sample_mechanic_data():
         "number": "9123456708",
         "password": "admin",
     }
+
+def get_sample_user_data():
+    """
+    gives user data which can be used for testing
+    :return: sample user object
+    """
+    return {
+        "name": "TestUser",
+        "email": "test@crapi.com",
+        "number": "9123456708",
+        "password": "password",
+    }
