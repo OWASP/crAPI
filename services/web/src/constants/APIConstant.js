@@ -51,6 +51,7 @@ export const requestURLS = {
   GET_SERVICES: "api/mechanic/service_requests",
   BUY_PRODUCT: "api/shop/orders",
   GET_ORDERS: "api/shop/orders/all",
+  GET_ORDER_BY_ID: "api/shop/orders/<orderId>",
   RETURN_ORDER: "api/shop/orders/return_order",
   APPLY_COUPON: "api/shop/apply_coupon",
   ADD_NEW_POST: "api/v2/community/posts",

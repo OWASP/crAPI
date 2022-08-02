@@ -13,7 +13,7 @@ data:
   DB_NAME: crapi
   DB_PORT: "5432"
   APP_NAME: "crapi-identity"
-  BLOCK_SHELL_INJECTION: "true"
+  BLOCK_SHELL_INJECTION: "{{ .Values.block_shell_injection }}"
   MAILHOG_HOST: mailhog
   MAILHOG_PORT: "1025"
   MAILHOG_DOMAIN: "example.com"
@@ -25,3 +25,4 @@ data:
   SMTP_AUTH: "true"
   SMTP_STARTTLS: "true"
   SERVER_PORT: "{{ .Values.identity.port }}"
+  ENABLE_LOG4J: "{{ .Values.enable_log4j }}"

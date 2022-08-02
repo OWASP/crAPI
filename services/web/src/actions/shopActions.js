@@ -40,6 +40,17 @@ export const getOrdersAction = ({ callback, accessToken }) => {
   };
 };
 
+
+export const getOrderByIdAction = ({ callback, accessToken, orderId }) => {
+  return {
+    type: actionTypes.GET_ORDER_BY_ID,
+    accessToken,
+    callback,
+    orderId
+  };
+};
+
+
 export const returnOrderAction = ({ callback, accessToken, ...data }) => {
   return {
     type: actionTypes.RETURN_ORDER,

@@ -38,6 +38,14 @@ const profileReducer = (state = initialData, action) => {
         ...state,
         pastOrders: action.payload.orders,
       };
+    case actionTypes.FETCHED_ORDER:
+      return {
+        ...state,
+        pastOrders: state.pastOrders.map((order) =>
+          order.id === action.payload.orderId ? action.payload.order : order
+        ),
+        order: action.payload.order,
+      };
     case actionTypes.ORDER_RETURNED:
       return {
         ...state,
