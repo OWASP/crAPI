@@ -178,6 +178,10 @@ DATABASES = {
             'username': get_env_value('MONGO_DB_USER'),
             'password': get_env_value('MONGO_DB_PASSWORD'),
             'authSource': 'admin'
+        },
+        'TEST': {
+            'NAME': 'test_crapi_mongo',
+            'USER': get_env_value('MONGO_DB_USER')
         }
     }
 }
