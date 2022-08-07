@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-envsubst '${COMMUNITY_SERVICE} ${IDENTITY_SERVICE} ${WORKSHOP_SERVICE}' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
+echo "Starting as user $(whoami)"
+envsubst '${COMMUNITY_SERVICE} ${IDENTITY_SERVICE} ${WORKSHOP_SERVICE}' < /etc/nginx/conf.d/crapi.conf.template > /etc/nginx/conf.d/default.conf
 openresty
 exec "$@"
