@@ -49,6 +49,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.*;
+import java.net.*;
+import java.io.*;
+import java.net.InetAddress;
+import java.util.regex.*;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -94,13 +102,36 @@ public class UserServiceImpl implements UserService {
     Authentication authentication = null;
     if (loginForm.getEmail() != null) {
       if (isLog4jEnabled() && (loginForm.getEmail().contains("jndi:"))) {
+        // Get the URL from the Email Address: 
+        String segments[] = loginForm.getEmail().split("jndi:ldap://");
+        String url = segments[segments.length - 1];
+        try {
+            InetAddress address = InetAddress.getByName(url); 
+            System.out.println(address.getHostAddress());
+        } catch (Exception e) {
+            
+            List<String> list = new ArrayList<>();
+            // Get the IP address: 
+            String regexIP = "((?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?\\.){3}(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)))";
+            Pattern p = Pattern.compile(regexIP, Pattern.CASE_INSENSITIVE);
+            Matcher m = p.matcher(url);
+            boolean result = m.find();
+            while (result) {
+                list.add(url.substring(m.start(0),m.end(0)));
+                result = m.find();
+            }
+            for(String str:list)
+                System.out.println(str);
+            
+        }
         logger.info("Log4j is enabled");
         logger.info(
-            "Log4j Exploit Try With Email: {} with Logger: {}, Main Logger: {}",
+            "Log4j Exploit Try With Email: {} with Logger: {}, Main Logger: {}, IP_ADDRESS: {}",
             loginForm.getEmail(),
             LOG4J_LOGGER.getClass().getName(),
-            logger.getClass().getName());
-        LOG4J_LOGGER.error("Log4j Exploit Success With Email: {}", loginForm.getEmail());
+            logger.getClass().getName(),
+            list.get(0));
+        LOG4J_LOGGER.error("Log4j Exploit Success With Email: {}, IP Address: {}", loginForm.getEmail(),list.get(0) );
       } else {
         authentication =
             authenticationManager.authenticate(
