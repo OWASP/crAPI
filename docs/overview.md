@@ -18,13 +18,13 @@ crAPI has a microservices architecture comprising the following services develop
 [0]: ./challenges.md
 
 
-For deployment options, visit [the setup instructions](docs/setup.md).
+For deployment options, visit [the setup instructions](setup.md).
 ---
 
 To know more about challenges in crAPI, visit [challenges].
 ----
 
-[challenges]: docs/challenges.md
+[challenges]: challenges.md
 [overview]: docs/overview.md
 [setup-k8s]: docs/setup.md#kubernetes-minikube
 [vagrant]: https://www.vagrantup.com/downloads
