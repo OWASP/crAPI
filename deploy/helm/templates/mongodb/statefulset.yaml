@@ -17,6 +17,8 @@ spec:
         - name: mongodb
           image: {{ .Values.mongodb.image }}:{{ .Values.mongodb.version }}
           imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: {{ .Values.mongodb.port }}
           envFrom:
             - configMapRef:
                 name: mongodb-config

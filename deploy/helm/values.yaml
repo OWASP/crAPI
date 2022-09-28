@@ -7,23 +7,89 @@ imagePullPolicy: Always
 enable_log4j: false
 block_shell_injection: true
 
+waitForK8sResources:
+  image: groundnuty/k8s-wait-for:v1.3
+
 web:
   image: crapi/crapi-web
   port: 8880
+
 identity:
   image: crapi/crapi-identity
   port: 8080
+  service:
+    name: crapi-identity
+
 community:
+  name: crapi-community
   image: crapi/crapi-community
   port: 8087
+  replicaCount: 1
+  service:
+    name: crapi-community
+    labels:
+      app: crapi-community
+  config:
+    name: crapi-community-configmap
+    labels:
+      app: crapi-community
+    postgresDbDriver: postgres
+    mongoDbDriver: mongodb
+    jwtSecret: crapi
+  resources:
+    limits:
+      cpu: "500m"
+    requests:
+      cpu: 256m
+  deploymentLabels:
+    app: crapi-community
+  podLabels:
+    app: crapi-community
+  deploymentSelectorMatchLabels:
+    app: crapi-community
+  serviceSelectorLabels:
+    app: crapi-community
+
 workshop:
   image: crapi/crapi-workshop
   port: 8000
+
 mailhog:
   image: crapi/mailhog
+
 mongodb:
   image: mongo
   version: 5.0
+  port: 27017
+  service:
+    name: mongodb
+    labels:
+      app: mongodb
+  config:
+    name: mongodb-config
+    labels:
+      app: mongodb
+    mongoUser: admin
+    mongoPassword: crapisecretpassword
+    mongoDbName: crapi
+  serviceSelectorLabels:
+    app: mongodb
+
 postgresdb:
   image: postgres
   version: 14
+  port: 5432
+  service:
+    name: postgresdb
+    labels:
+      app: postgresdb
+  config:
+    name: postgres-config
+    labels:
+      app: postgresdb
+    postgresUser: admin
+    postgresPassword: crapisecretpassword
+    postgresDbName: crapi
+  serviceSelectorLabels:
+    app: postgresdb
+

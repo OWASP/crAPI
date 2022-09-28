@@ -18,7 +18,7 @@ spec:
           image: {{ .Values.postgresdb.image }}:{{ .Values.postgresdb.version }}
           imagePullPolicy: "IfNotPresent"
           ports:
-            - containerPort: 5432
+            - containerPort: {{ .Values.postgresdb.port }}
           envFrom:
             - configMapRef:
                 name: postgres-config
