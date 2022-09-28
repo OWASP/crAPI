@@ -58,8 +58,46 @@ workshop:
   port: 8000
 
 mailhog:
+  name: mailhog
   image: crapi/mailhog
   imagePullPolicy: Always
+  webPort: 8025
+  smtpPort: 1025
+  replicaCount: 1
+  minReadySeconds: 10
+  progressDeadlineSeconds: 600
+  namespace: crapi
+  smtpService:
+    name: mailhog
+    labels:
+      app: mailhog
+  webService:
+    name: mailhog-web
+    labels:
+      app: mailhog
+    nodePort: 30025
+  config:
+    name: mailhog-configmap
+    labels:
+      app: mailhog
+    mailhogStorage: mongodb
+  resources:
+    limits:
+      cpu: "1"
+      memory: 1024Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
+  deploymentLabels:
+    app: mailhog
+  podLabels:
+    app: mailhog
+  podAnnotations:
+    sidecar.traceable.ai/inject: "false"
+  deploymentSelectorMatchLabels:
+    app: mailhog
+  serviceSelectorLabels:
+    app: mailhog
 
 mongodb:
   name: mongodb
@@ -79,6 +117,7 @@ mongodb:
     mongoUser: admin
     mongoPassword: crapisecretpassword
     mongoDbName: crapi
+    mongoUri: "admin:crapisecretpassword@mongodb:27017"
   pvc:
     name: mongodb-pv-claim
     labels:

@@ -1,9 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mailhog-configmap
+  name: {{ .Values.mailhog.config.name }}
   labels:
-    app: mailhog
+    release: {{ .Release.name }}
+    {{- toYaml .Values.mailhog.config.labels | nindent 4 }}
 data:
-  MH_MONGO_URI: admin:crapisecretpassword@mongodb:27017
-  MH_STORAGE: mongodb
+  MH_MONGO_URI: {{ .Values.mongodb.config.mongoUri }}
+  MH_STORAGE: {{ .Values.mailhog.config.mailhogStorage }}
