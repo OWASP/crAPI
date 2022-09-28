@@ -23,7 +23,7 @@ spec:
       containers:
         - name: mailhog
           image: {{ .Values.mailhog.image }}:{{ .Chart.AppVersion }}
-          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          imagePullPolicy: {{ .Values.mailhog.imagePullPolicy }}
           livenessProbe:
             tcpSocket:
               port: 1025

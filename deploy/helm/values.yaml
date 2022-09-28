@@ -1,21 +1,22 @@
 # Default values for crapi.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-replicaCount: 1
-imagePullPolicy: Always
 
 enable_log4j: false
 block_shell_injection: true
 
 waitForK8sResources:
   image: groundnuty/k8s-wait-for:v1.3
+  imagePullPolicy: IfNotPresent
 
 web:
   image: crapi/crapi-web
+  imagePullPolicy: Always
   port: 8880
 
 identity:
   image: crapi/crapi-identity
+  imagePullPolicy: Always
   port: 8080
   service:
     name: crapi-identity
@@ -23,6 +24,7 @@ identity:
 community:
   name: crapi-community
   image: crapi/crapi-community
+  imagePullPolicy: Always
   port: 8087
   replicaCount: 1
   service:
@@ -52,15 +54,20 @@ community:
 
 workshop:
   image: crapi/crapi-workshop
+  imagePullPolicy: Always
   port: 8000
 
 mailhog:
   image: crapi/mailhog
+  imagePullPolicy: Always
 
 mongodb:
+  name: mongodb
   image: mongo
   version: 5.0
+  imagePullPolicy: IfNotPresent
   port: 27017
+  replicaCount: 1
   service:
     name: mongodb
     labels:
@@ -72,13 +79,29 @@ mongodb:
     mongoUser: admin
     mongoPassword: crapisecretpassword
     mongoDbName: crapi
+  pvc:
+    name: mongodb-pv-claim
+    labels:
+      app: mongodb
+    resources:
+      requests:
+        storage: 1000Mi
   serviceSelectorLabels:
+    app: mongodb
+  podLabels:
+    app: mongodb
+  statefulsetLabels:
+    app: mongodb
+  statefulsetSelectorMatchLabels:
     app: mongodb
 
 postgresdb:
+  name: postgresdb
   image: postgres
   version: 14
+  imagePullPolicy: IfNotPresent
   port: 5432
+  replicaCount: 1
   service:
     name: postgresdb
     labels:
@@ -90,6 +113,18 @@ postgresdb:
     postgresUser: admin
     postgresPassword: crapisecretpassword
     postgresDbName: crapi
+  pvc:
+    name: postgres-pv-claim
+    labels:
+      app: postgresdb
+    resources:
+      requests:
+        storage: 1000Mi
   serviceSelectorLabels:
     app: postgresdb
-
+  podLabels:
+    app: postgresdb
+  statefulsetLabels:
+    app: postgresdb
+  statefulsetSelectorMatchLabels:
+    app: postgresdb

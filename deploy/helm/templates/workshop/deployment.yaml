@@ -28,7 +28,7 @@ spec:
       containers:
       - name: crapi-workshop
         image: {{ .Values.workshop.image }}:{{ .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.imagePullPolicy }}  
+        imagePullPolicy: {{ .Values.workshop.imagePullPolicy }}
         ports:
         - containerPort: {{ .Values.workshop.port }}
         envFrom:

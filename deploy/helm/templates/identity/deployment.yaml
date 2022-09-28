@@ -22,7 +22,7 @@ spec:
       containers:
       - name: crapi-identity
         image: {{ .Values.identity.image }}:{{ .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        imagePullPolicy: {{ .Values.identity.imagePullPolicy }}
         ports:
         - containerPort: {{ .Values.identity.port }}
         envFrom:
