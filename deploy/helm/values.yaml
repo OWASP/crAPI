@@ -9,9 +9,34 @@ waitForK8sResources:
   imagePullPolicy: IfNotPresent
 
 web:
+  name: crapi-web
   image: crapi/crapi-web
   imagePullPolicy: Always
-  port: 8880
+  replicaCount: 1
+  port: 80
+  service:
+    name: crapi-web
+    labels:
+      app: crapi-web
+    port: 8880
+    nodePort: 30080
+  config:
+    name: crapi-web-configmap
+    labels:
+      app: crapi-identity
+  resources:
+    limits:
+      cpu: "500m"
+    requests:
+      cpu: 256m
+  deploymentLabels:
+    app: crapi-web
+  podLabels:
+    app: crapi-web
+  deploymentSelectorMatchLabels:
+    app: crapi-web
+  serviceSelectorLabels:
+    app: crapi-web
 
 identity:
   name: crapi-identity
@@ -24,7 +49,7 @@ identity:
     labels:
       app: crapi-identity
   config:
-    name: crapi-identity-k-configmap
+    name: crapi-identity-configmap
     labels:
       app: crapi-identity
     enableLog4j: false
@@ -87,6 +112,8 @@ workshop:
   image: crapi/crapi-workshop
   imagePullPolicy: Always
   port: 8000
+  service:
+    name: crapi-workshop
 
 mailhog:
   name: mailhog
