@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.mailhog.config.name }}
   labels:
-    release: {{ .Release.name }}
+    release: {{ .Release.Name }}
     {{- toYaml .Values.mailhog.config.labels | nindent 4 }}
 data:
   MH_MONGO_URI: {{ .Values.mongodb.config.mongoUri }}

@@ -2,8 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-enable_log4j: false
-block_shell_injection: true
+jwtSecret: crapi
 
 waitForK8sResources:
   image: groundnuty/k8s-wait-for:v1.3
@@ -15,11 +14,44 @@ web:
   port: 8880
 
 identity:
+  name: crapi-identity
   image: crapi/crapi-identity
   imagePullPolicy: Always
   port: 8080
+  replicaCount: 1
   service:
     name: crapi-identity
+    labels:
+      app: crapi-identity
+  config:
+    name: crapi-identity-k-configmap
+    labels:
+      app: crapi-identity
+    enableLog4j: false
+    blockShellInjection: true
+    postgresDbDriver: postgresql
+    appName: "crapi-identity"
+    mailhogDomain: "example.com"
+    smtpHost: "smtp.example.com"
+    smtpPort: 587
+    smtpEmail: "user@example.com"
+    smtpPass: "xxxxxxxxxxxxxx"
+    smtpFrom: "no-reply@example.com"
+    smtpAuth: true
+    smtpStartTLS: true
+  resources:
+    limits:
+      cpu: "500m"
+    requests:
+      cpu: 256m
+  deploymentLabels:
+    app: crapi-identity
+  podLabels:
+    app: crapi-identity
+  deploymentSelectorMatchLabels:
+    app: crapi-identity
+  serviceSelectorLabels:
+    app: crapi-identity
 
 community:
   name: crapi-community
@@ -37,7 +69,6 @@ community:
       app: crapi-community
     postgresDbDriver: postgres
     mongoDbDriver: mongodb
-    jwtSecret: crapi
   resources:
     limits:
       cpu: "500m"

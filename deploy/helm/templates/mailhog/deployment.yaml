@@ -34,12 +34,12 @@ spec:
           imagePullPolicy: {{ .Values.mailhog.imagePullPolicy }}
           livenessProbe:
             tcpSocket:
-              port: 1025
+              port: {{ .Values.mailhog.smtpPort }}
             initialDelaySeconds: 15
             periodSeconds: 60
           readinessProbe:
             tcpSocket:
-              port: 1025
+              port: {{ .Values.mailhog.smtpPort }}
             initialDelaySeconds: 15
             periodSeconds: 20
           ports:
