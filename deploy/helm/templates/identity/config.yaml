@@ -13,7 +13,7 @@ data:
   BLOCK_SHELL_INJECTION: {{ .Values.identity.config.blockShellInjection | quote }}
   ENABLE_LOG4J: {{ .Values.identity.config.enableLog4j | quote }}
   DB_HOST: {{ .Values.postgresdb.service.name }}
-  DB_DRIVER: {{ .Values.postgresdb.config.postgresDbDriver }}
+  DB_DRIVER: {{ .Values.identity.config.postgresDbDriver }}
   DB_USER: {{ .Values.postgresdb.config.postgresUser }}
   DB_PASSWORD: {{ .Values.postgresdb.config.postgresPassword }}
   DB_NAME: {{ .Values.postgresdb.config.postgresDbName }}

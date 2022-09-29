@@ -48,7 +48,7 @@ spec:
             - containerPort: {{ .Values.community.port }}
           envFrom:
             - configMapRef:
-              name: {{ .Values.community.config.name }}
+                name: {{ .Values.community.config.name }}
           {{- if .Values.community.resources }}
           resources:
             {{- toYaml .Values.community.resources | nindent 12 }}

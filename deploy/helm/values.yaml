@@ -167,9 +167,9 @@ mailhog:
     limits:
       cpu: "1"
       memory: 1024Mi
-      requests:
-        cpu: 50m
-        memory: 64Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
   deploymentLabels:
     app: mailhog
   podLabels:
