@@ -109,11 +109,35 @@ community:
     app: crapi-community
 
 workshop:
+  name: crapi-workshop
   image: crapi/crapi-workshop
   imagePullPolicy: Always
   port: 8000
+  replicaCount: 1
   service:
     name: crapi-workshop
+    labels:
+      app: crapi-workshop
+  config:
+    name: crapi-workshop-configmap
+    labels:
+      app: crapi-workshop
+    postgresDbDriver: postgres
+    mongoDbDriver: mongodb
+    secretKey: crapi
+  resources:
+    limits:
+      cpu: "256m"
+    requests:
+      cpu: 256m
+  deploymentLabels:
+    app: crapi-workshop
+  podLabels:
+    app: crapi-workshop
+  deploymentSelectorMatchLabels:
+    app: crapi-workshop
+  serviceSelectorLabels:
+    app: crapi-workshop
 
 mailhog:
   name: mailhog
