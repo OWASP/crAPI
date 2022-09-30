@@ -1,28 +1,31 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: crapi-identity-configmap
+  name: {{ .Values.identity.config.name }}
   labels:
-    app: crapi-identity
+    release: {{ .Release.Name }}
+    {{- with .Values.identity.config.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 data:
-  DB_HOST: postgresdb
-  DB_DRIVER: postgresql
-  JWT_SECRET: crapi #Used for creating a JWT. Can be anything 
-  DB_USER: admin
-  DB_PASSWORD: crapisecretpassword
-  DB_NAME: crapi
-  DB_PORT: "5432"
-  APP_NAME: "crapi-identity"
-  BLOCK_SHELL_INJECTION: "{{ .Values.block_shell_injection }}"
-  MAILHOG_HOST: mailhog
-  MAILHOG_PORT: "1025"
-  MAILHOG_DOMAIN: "example.com"
-  SMTP_HOST: "smtp.example.com"
-  SMTP_PORT: "587"
-  SMTP_EMAIL: "user@example.com"
-  SMTP_PASS: "xxxxxxxxxxxxxx"
-  SMTP_FROM: "no-reply@example.com"
-  SMTP_AUTH: "true"
-  SMTP_STARTTLS: "true"
-  SERVER_PORT: "{{ .Values.identity.port }}"
-  ENABLE_LOG4J: "{{ .Values.enable_log4j }}"
+  JWT_SECRET: {{ .Values.jwtSecret }} #Used for creating a JWT. Can be anything
+  APP_NAME: {{ .Values.identity.config.appName }}
+  BLOCK_SHELL_INJECTION: {{ .Values.identity.config.blockShellInjection | quote }}
+  ENABLE_LOG4J: {{ .Values.identity.config.enableLog4j | quote }}
+  DB_HOST: {{ .Values.postgresdb.service.name }}
+  DB_DRIVER: {{ .Values.identity.config.postgresDbDriver }}
+  DB_USER: {{ .Values.postgresdb.config.postgresUser }}
+  DB_PASSWORD: {{ .Values.postgresdb.config.postgresPassword }}
+  DB_NAME: {{ .Values.postgresdb.config.postgresDbName }}
+  DB_PORT: {{ .Values.postgresdb.port | quote }}
+  MAILHOG_HOST: {{ .Values.mailhog.smtpService.name }}
+  MAILHOG_PORT: {{ .Values.mailhog.smtpPort | quote }}
+  MAILHOG_DOMAIN: {{ .Values.identity.config.mailhogDomain }}
+  SMTP_HOST: {{ .Values.identity.config.smtpHost}}
+  SMTP_PORT: {{ .Values.identity.config.smtpPort | quote }}
+  SMTP_EMAIL: {{ .Values.identity.config.smtpEmail }}
+  SMTP_PASS: {{ .Values.identity.config.smtpPass }}
+  SMTP_FROM: {{ .Values.identity.config.smtpFrom }}
+  SMTP_AUTH: {{ .Values.identity.config.smtpAuth | quote }}
+  SMTP_STARTTLS: {{ .Values.identity.config.smtpStartTLS | quote }}
+  SERVER_PORT: {{ .Values.identity.port | quote }}

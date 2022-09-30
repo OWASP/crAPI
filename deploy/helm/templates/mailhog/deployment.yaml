@@ -1,53 +1,58 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mailhog
-  namespace: crapi
+  name: {{ .Values.mailhog.name }}
+  namespace: {{ .Values.mailhog.namespace }}
+  labels:
+    release: {{ .Release.Name }}
+    {{- with .Values.mailhog.deploymentLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   selector:
     matchLabels:
-      app: mailhog
-  replicas: 1
-  minReadySeconds: 10
-  progressDeadlineSeconds: 600
+      {{- toYaml .Values.mailhog.deploymentSelectorMatchLabels | nindent 6 }}
+  replicas: {{ .Values.mailhog.replicaCount }}
+  minReadySeconds: {{ .Values.mailhog.minReadySeconds }}
+  progressDeadlineSeconds: {{ .Values.mailhog.progressDeadlineSeconds }}
   template:
     metadata:
       labels:
-        app: mailhog
+        release: {{ .Release.Name }}
+        {{- with .Values.mailhog.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       annotations:
-        sidecar.traceable.ai/inject: "false"
+        {{- toYaml .Values.mailhog.podAnnotations | nindent 8 }}
     spec:
       securityContext:
         runAsUser: 0
         runAsGroup: 0
       containers:
-        - name: mailhog
+        - name: {{ .Values.mailhog.name }}
           image: {{ .Values.mailhog.image }}:{{ .Chart.AppVersion }}
-          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          imagePullPolicy: {{ .Values.mailhog.imagePullPolicy }}
           livenessProbe:
             tcpSocket:
-              port: 1025
+              port: {{ .Values.mailhog.smtpPort }}
             initialDelaySeconds: 15
             periodSeconds: 60
           readinessProbe:
             tcpSocket:
-              port: 1025
+              port: {{ .Values.mailhog.smtpPort }}
             initialDelaySeconds: 15
             periodSeconds: 20
           ports:
-          - containerPort: 8025
+          - containerPort: {{ .Values.mailhog.webPort }}
             name: web
             protocol: TCP
-          - containerPort: 1025
+          - containerPort: {{ .Values.mailhog.smtpPort }}
             name: smtp
             protocol: TCP
           envFrom:
             - configMapRef:
-                name: mailhog-configmap
+                name: {{ .Values.mailhog.config.name }}
+          {{- if .Values.mailhog.resources }}
           resources:
-            limits:
-              cpu: "1"
-              memory: 1024Mi
-            requests:
-              cpu: 50m
-              memory: 64Mi
+            {{- toYaml .Values.mailhog.resources | nindent 12 }}
+          {{- end }}
