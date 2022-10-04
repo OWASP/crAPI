@@ -1,27 +1,33 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgresdb
+  name: {{ .Values.postgresdb.name }}
+  labels:
+    release: {{ .Release.Name }}
+    {{- with .Values.postgresdb.statefulsetLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
-  serviceName: postgresdb
-  replicas: {{ .Values.replicaCount }}
+  serviceName: {{ .Values.postgresdb.service.name }}
+  replicas: {{ .Values.postgresdb.replicaCount }}
   selector:
     matchLabels:
-      app: postgresdb
+      {{- toYaml .Values.postgresdb.statefulsetSelectorMatchLabels | nindent 6 }}
   template:
     metadata:
       labels:
-        app: postgresdb
+        release: {{ .Release.Name }}
+        {{- toYaml .Values.postgresdb.podLabels | nindent 8 }}
     spec:
       containers:
-        - name: postgres
+        - name: {{ .Values.postgresdb.name }}
           image: {{ .Values.postgresdb.image }}:{{ .Values.postgresdb.version }}
-          imagePullPolicy: "IfNotPresent"
+          imagePullPolicy: {{ .Values.postgresdb.imagePullPolicy }}
           ports:
-            - containerPort: 5432
+            - containerPort: {{ .Values.postgresdb.port }}
           envFrom:
             - configMapRef:
-                name: postgres-config
+                name: {{ .Values.postgresdb.config.name }}
  
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
@@ -30,4 +36,4 @@ spec:
       volumes:
         - name: postgres-data
           persistentVolumeClaim:
-            claimName: postgres-pv-claim
+            claimName: {{ .Values.postgresdb.pvc.name }}

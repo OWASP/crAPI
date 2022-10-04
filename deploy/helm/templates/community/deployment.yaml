@@ -1,47 +1,55 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: crapi-community
+  name: {{ .Values.community.name }}
+  labels:
+    release: {{ .Release.Name }}
+    {{- with .Values.community.deploymentLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+
 spec:
-  replicas: 1
+  replicas: {{ .Values.community.replicaCount }}
   selector:
     matchLabels:
-      app: crapi-community
+      {{- toYaml .Values.community.deploymentSelectorMatchLabels | nindent 6 }}
   template:
     metadata:
       labels:
-        app: crapi-community
+        release: {{ .Release.Name }}
+        {{- with .Values.community.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       initContainers:
         - name: wait-for-postgres
-          image: groundnuty/k8s-wait-for:v1.3
-          imagePullPolicy: Always
+          image: {{ .Values.waitForK8sResources.image }}
+          imagePullPolicy: {{ .Values.waitForK8sResources.imagePullPolicy }}
           args:
             - "service"
-            - "postgresdb"
+            - {{ .Values.postgresdb.service.name | quote }}
         - name: wait-for-mongo
-          image: groundnuty/k8s-wait-for:v1.3
-          imagePullPolicy: Always
+          image: {{ .Values.waitForK8sResources.image }}
+          imagePullPolicy: {{ .Values.waitForK8sResources.imagePullPolicy }}
           args:
             - "service"
-            - "mongodb"
+            - {{ .Values.mongodb.service.name | quote }}
         - name: wait-for-java
-          image: groundnuty/k8s-wait-for:v1.3
-          imagePullPolicy: Always
+          image: {{ .Values.waitForK8sResources.image }}
+          imagePullPolicy: {{ .Values.waitForK8sResources.imagePullPolicy }}
           args:
             - "service"
-            - "crapi-identity"
+            - {{ .Values.identity.service.name | quote }}
       containers:
-      - name: crapi-community
-        image: {{ .Values.community.image }}:{{ .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.imagePullPolicy }}
-        ports:
-        - containerPort: {{ .Values.community.port }}
-        envFrom:
+        - name: {{ .Values.community.name }}
+          image: {{ .Values.community.image }}:{{ .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.community.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.community.port }}
+          envFrom:
             - configMapRef:
-                name: crapi-community-configmap
-        resources:
-          limits:
-            cpu: "500m"
-          requests:
-            cpu: 256m
+                name: {{ .Values.community.config.name }}
+          {{- if .Values.community.resources }}
+          resources:
+            {{- toYaml .Values.community.resources | nindent 12 }}
+          {{- end }}

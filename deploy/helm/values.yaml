@@ -1,29 +1,251 @@
 # Default values for crapi.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-replicaCount: 1
-imagePullPolicy: Always
 
-enable_log4j: false
-block_shell_injection: true
+jwtSecret: crapi
+
+waitForK8sResources:
+  image: groundnuty/k8s-wait-for:v1.3
+  imagePullPolicy: IfNotPresent
 
 web:
+  name: crapi-web
   image: crapi/crapi-web
-  port: 8880
+  imagePullPolicy: Always
+  replicaCount: 1
+  port: 80
+  service:
+    name: crapi-web
+    labels:
+      app: crapi-web
+    port: 8880
+    nodePort: 30080
+  config:
+    name: crapi-web-configmap
+    labels:
+      app: crapi-identity
+  resources:
+    limits:
+      cpu: "500m"
+    requests:
+      cpu: 256m
+  deploymentLabels:
+    app: crapi-web
+  podLabels:
+    app: crapi-web
+  deploymentSelectorMatchLabels:
+    app: crapi-web
+  serviceSelectorLabels:
+    app: crapi-web
+
 identity:
+  name: crapi-identity
   image: crapi/crapi-identity
+  imagePullPolicy: Always
   port: 8080
+  replicaCount: 1
+  service:
+    name: crapi-identity
+    labels:
+      app: crapi-identity
+  config:
+    name: crapi-identity-configmap
+    labels:
+      app: crapi-identity
+    enableLog4j: false
+    blockShellInjection: true
+    postgresDbDriver: postgresql
+    appName: "crapi-identity"
+    mailhogDomain: "example.com"
+    smtpHost: "smtp.example.com"
+    smtpPort: 587
+    smtpEmail: "user@example.com"
+    smtpPass: "xxxxxxxxxxxxxx"
+    smtpFrom: "no-reply@example.com"
+    smtpAuth: true
+    smtpStartTLS: true
+  resources:
+    limits:
+      cpu: "500m"
+    requests:
+      cpu: 256m
+  deploymentLabels:
+    app: crapi-identity
+  podLabels:
+    app: crapi-identity
+  deploymentSelectorMatchLabels:
+    app: crapi-identity
+  serviceSelectorLabels:
+    app: crapi-identity
+
 community:
+  name: crapi-community
   image: crapi/crapi-community
+  imagePullPolicy: Always
   port: 8087
+  replicaCount: 1
+  service:
+    name: crapi-community
+    labels:
+      app: crapi-community
+  config:
+    name: crapi-community-configmap
+    labels:
+      app: crapi-community
+    postgresDbDriver: postgres
+    mongoDbDriver: mongodb
+  resources:
+    limits:
+      cpu: "500m"
+    requests:
+      cpu: 256m
+  deploymentLabels:
+    app: crapi-community
+  podLabels:
+    app: crapi-community
+  deploymentSelectorMatchLabels:
+    app: crapi-community
+  serviceSelectorLabels:
+    app: crapi-community
+
 workshop:
+  name: crapi-workshop
   image: crapi/crapi-workshop
+  imagePullPolicy: Always
   port: 8000
+  replicaCount: 1
+  service:
+    name: crapi-workshop
+    labels:
+      app: crapi-workshop
+  config:
+    name: crapi-workshop-configmap
+    labels:
+      app: crapi-workshop
+    postgresDbDriver: postgres
+    mongoDbDriver: mongodb
+    secretKey: crapi
+  resources:
+    limits:
+      cpu: "256m"
+    requests:
+      cpu: 256m
+  deploymentLabels:
+    app: crapi-workshop
+  podLabels:
+    app: crapi-workshop
+  deploymentSelectorMatchLabels:
+    app: crapi-workshop
+  serviceSelectorLabels:
+    app: crapi-workshop
+
 mailhog:
+  name: mailhog
   image: crapi/mailhog
+  imagePullPolicy: Always
+  webPort: 8025
+  smtpPort: 1025
+  replicaCount: 1
+  minReadySeconds: 10
+  progressDeadlineSeconds: 600
+  namespace: crapi
+  smtpService:
+    name: mailhog
+    labels:
+      app: mailhog
+  webService:
+    name: mailhog-web
+    labels:
+      app: mailhog
+    nodePort: 30025
+  config:
+    name: mailhog-configmap
+    labels:
+      app: mailhog
+    mailhogStorage: mongodb
+  resources:
+    limits:
+      cpu: "1"
+      memory: 1024Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+  deploymentLabels:
+    app: mailhog
+  podLabels:
+    app: mailhog
+  podAnnotations:
+    sidecar.traceable.ai/inject: "false"
+  deploymentSelectorMatchLabels:
+    app: mailhog
+  serviceSelectorLabels:
+    app: mailhog
+
 mongodb:
+  name: mongodb
   image: mongo
   version: 5.0
+  imagePullPolicy: IfNotPresent
+  port: 27017
+  replicaCount: 1
+  service:
+    name: mongodb
+    labels:
+      app: mongodb
+  config:
+    name: mongodb-config
+    labels:
+      app: mongodb
+    mongoUser: admin
+    mongoPassword: crapisecretpassword
+    mongoDbName: crapi
+    mongoUri: "admin:crapisecretpassword@mongodb:27017"
+  pvc:
+    name: mongodb-pv-claim
+    labels:
+      app: mongodb
+    resources:
+      requests:
+        storage: 1000Mi
+  serviceSelectorLabels:
+    app: mongodb
+  podLabels:
+    app: mongodb
+  statefulsetLabels:
+    app: mongodb
+  statefulsetSelectorMatchLabels:
+    app: mongodb
+
 postgresdb:
+  name: postgresdb
   image: postgres
   version: 14
+  imagePullPolicy: IfNotPresent
+  port: 5432
+  replicaCount: 1
+  service:
+    name: postgresdb
+    labels:
+      app: postgresdb
+  config:
+    name: postgres-config
+    labels:
+      app: postgresdb
+    postgresUser: admin
+    postgresPassword: crapisecretpassword
+    postgresDbName: crapi
+  pvc:
+    name: postgres-pv-claim
+    labels:
+      app: postgresdb
+    resources:
+      requests:
+        storage: 1000Mi
+  serviceSelectorLabels:
+    app: postgresdb
+  podLabels:
+    app: postgresdb
+  statefulsetLabels:
+    app: postgresdb
+  statefulsetSelectorMatchLabels:
+    app: postgresdb

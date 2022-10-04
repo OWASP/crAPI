@@ -1,12 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: crapi-workshop
+  name: {{ .Values.workshop.service.name }}
   labels:
-    app: crapi-workshop
+    release: {{ .Release.Name }}
+    {{- with .Values.workshop.service.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   ports:
   - port: {{ .Values.workshop.port }}
     name: python
   selector:
-    app: crapi-workshop
+    {{- toYaml .Values.workshop.serviceSelectorLabels | nindent 4 }}
