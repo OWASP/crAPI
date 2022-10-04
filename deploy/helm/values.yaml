@@ -23,7 +23,7 @@ web:
   config:
     name: crapi-web-configmap
     labels:
-      app: crapi-identity
+      app: crapi-web
   resources:
     limits:
       cpu: "500m"
