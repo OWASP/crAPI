@@ -8,7 +8,7 @@ metadata:
 spec:
   ports:
   - port: {{ .Values.web.service.port }}
-    targetPort: {{ .Values.web.port }}
+    targetPort: 80
     nodePort: {{ .Values.web.service.nodePort }}
     name: nginx
   type: LoadBalancer
