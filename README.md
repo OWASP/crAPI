@@ -12,7 +12,7 @@ know more about crAPI, please check [crAPI's overview][overview].
 
 ### Docker
 
-You'll need to have Docker and docker-compose installed and running on your host system. Also, the version of docker-compose should be `1.27.0` and above. Check your docker-compose version using:
+You'll need to have Docker and docker-compose installed and running on your host system. Also, the version of docker-compose should be `1.27.0` or above. Check your docker-compose version using:
 ```
 docker-compose version
 ```
