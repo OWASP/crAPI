@@ -1,11 +1,13 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: postgres-config
+  name: {{ .Values.postgresdb.config.name }}
   labels:
-    app: postgresdb
+    release: {{ .Release.Name }}
+    {{- with .Values.postgresdb.config.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 data:
-  POSTGRES_USER: admin
-  POSTGRES_PASSWORD: crapisecretpassword
-  POSTGRES_DB: crapi
- 
+  POSTGRES_USER: {{ .Values.postgresdb.config.postgresUser }}
+  POSTGRES_PASSWORD: {{ .Values.postgresdb.config.postgresPassword }}
+  POSTGRES_DB: {{ .Values.postgresdb.config.postgresDbName }}

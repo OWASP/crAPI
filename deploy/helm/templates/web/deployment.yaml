@@ -1,28 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: crapi-web
+  name: {{ .Values.web.name }}
+  labels:
+    release: {{ .Release.Name }}
+    {{- toYaml .Values.web.deploymentLabels | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.web.replicaCount }}
   selector:
     matchLabels:
-      app: crapi-web
+      {{- with .Values.web.deploymentSelectorMatchLabels }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
   template:
     metadata:
       labels:
-        app: crapi-web
+        release: {{ .Release.Name }}
+        {{- toYaml .Values.web.podLabels | nindent 8 }}
     spec:
       containers:
-      - name: crapi-web
-        image: {{ .Values.web.image }}:{{ .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.imagePullPolicy }}
-        ports:
-        - containerPort: 80
-        resources:
-          limits:
-            cpu: "500m"
-          requests:
-            cpu: 256m
-        envFrom:
-          - configMapRef:
-              name: crapi-web-configmap
+        - name: {{ .Values.web.name }}
+          image: {{ .Values.web.image }}:{{ .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.web.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.web.port }}
+          {{- if .Values.web.resources }}
+          resources:
+            {{- toYaml .Values.web.resources | nindent 12 }}
+          {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.web.config.name }}
