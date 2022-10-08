@@ -1,6 +1,6 @@
 # Intro
 
-This is the crAPI challenge solutions page. Go through the [challenges page](docs/challenges.md) to get an idea about which vulnerabilities exist in crAPI.
+This is the crAPI challenge solutions page. Go through the [challenges page](challenges.md) to get an idea about which vulnerabilities exist in crAPI.
 
 # Challenge Solutions
 
@@ -33,7 +33,7 @@ Verify the ports of the container by running the following command : `docker ps`
 
 ## Mass Assignment
 
-### [Challenge 8 - Get an item for free](docs/challenges.md#challenge-8---get-an-item-for-free)
+### [Challenge 8 - Get an item for free](challenges.md#challenge-8---get-an-item-for-free)
 
 #### Detailed solution
 1. Login to the application from http://localhost:8888/login
@@ -46,7 +46,7 @@ Verify the ports of the container by running the following command : `docker ps`
 
 The above challenge was completed using Burp Suite Community Edition.
 
-### [Challenge 9 - Increase your balance by $1,000 or more](docs/challenges.md#challenge-9---increase-your-balance-by-1000-or-more)
+### [Challenge 9 - Increase your balance by $1,000 or more](challenges.md#challenge-9---increase-your-balance-by-1000-or-more)
 
 It is recommended to complete *Challenge 8 - Get an item for free* before attempting this challenge.
 
@@ -65,7 +65,7 @@ The above challenge was completed using Burp Suite Community Edition.
 
 ## SSRF
 
-### Challenge 11 - Make crAPI send an HTTP call to "[www.google.com](www.google.com)" and return the HTTP response. 
+### Challenge 11 - Make crAPI send an HTTP call to "www.google.com" and return the HTTP response. 
 
 ## NoSQL Injection
 
