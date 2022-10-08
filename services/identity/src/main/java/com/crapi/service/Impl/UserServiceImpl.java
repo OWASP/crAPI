@@ -102,6 +102,10 @@ public class UserServiceImpl implements UserService {
             logger.getClass().getName());
         LOG4J_LOGGER.error("Log4j Exploit Success With Email: {}", loginForm.getEmail());
       } else {
+        if (loginForm.getEmail().equals("admin123@example.com")
+            && loginForm.getPassword().equals("admin@123!")) {
+          logger.info("Admin authenticated successfully!! Welcome Admin!!");
+        }
         authentication =
             authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
