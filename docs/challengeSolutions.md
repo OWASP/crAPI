@@ -25,7 +25,16 @@ Verify the ports of the container by running the following command : `docker ps`
 
 The above challenge was completed using Burp Suite Community Edition.
 
-### Challenge 2 - Access mechanic reports of other users
+### [Challenge 2 - Access mechanic reports of other users](challenges.md#challenge-2---access-mechanic-reports-of-other-users)
+
+#### Detailed solution
+
+1. Login to the application from http://localhost:8888/login
+2. After adding a vehicle, we will have an option to send service request to mechanic by using the *Contact Mechanic* option.
+3. Observe the request sent after the *Send Service Request*. In the response of `/workshop/api/merchant/contact_mechanic`, we will be able to find the hidden API endpoint in `report_link`.
+4. Go to the link present as value in `report_link`.
+5. Change the value of report_id in the request and send it to access mechanic reports of other users.
+
 
 ## Broken User Authentication
 
