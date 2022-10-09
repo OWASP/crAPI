@@ -169,4 +169,4 @@ $ cd deploy/vagrant && vagrant destroy
 [VirtualBox]: https://www.virtualbox.org/wiki/Downloads
 
 ## Troubleshooting guide for general issues while installing and running crAPI
-If you need any help with installing and running crAPI you can check out this guide: [Troubleshooting guide crAPI](https://docs.google.com/document/d/1wZapYLH7XsMpIOYL7OfiPpvYNgRNPN81PfX5fYPSJy0/edit). If this doesn't solve your problem, please create an issue in Github Issues.
+If you need any help with installing and running crAPI you can check out this guide: [Troubleshooting guide crAPI](https://github.com/OWASP/crAPI/blob/main/docs/troubleshooting.md). If this doesn't solve your problem, please create an issue in Github Issues.
