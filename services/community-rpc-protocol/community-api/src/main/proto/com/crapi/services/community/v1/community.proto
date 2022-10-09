@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+
+package com.crapi.services.community.v1;
+
+message Post {
+  string id = 1;
+  string title = 2;
+  string content = 3;
+  string author = 4;
+  repeated string comments = 5;
+  string author_id = 6;
+  string created_at = 7;
+}
+
+message Coupon {
+  string  coupon_code = 1;
+  string	amount = 2;
+  string	created_at = 3;
+}
+
+message User {
+  string id =1;
+  string nickname = 2;
+  string email = 3;
+  string vehicle_id = 4;
+  string picurl = 5;
+  string created_at = 6;
+}
+
+message Comment {
+  string id = 1;
+  string content = 2;
+  string created_at = 3;
+  string author = 4;
+}

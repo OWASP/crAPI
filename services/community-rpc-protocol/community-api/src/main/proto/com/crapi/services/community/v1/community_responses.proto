@@ -1,0 +1,73 @@
+syntax = "proto3";
+import "com/crapi/services/community/v1/community.proto";
+
+option java_multiple_files = true;
+
+package com.crapi.services.community.v1;
+
+message CreatePostResponse {
+  bool success = 1;
+}
+
+message UpdatePostResponse {
+  bool success = 1;
+}
+
+message GetPostsResponse {
+  repeated Post posts = 1;
+}
+
+message DeletePostsResponse {
+  repeated Post deleted_posts = 1;
+}
+
+message CreateCouponResponse {
+  bool success = 1;
+}
+
+message UpdateCouponResponse {
+  bool success = 1;
+}
+
+// Gives all coupons if empty array is passed.
+message GetCouponsResponse {
+  repeated Coupon coupons = 1;
+}
+
+message DeleteCouponsResponse {
+  repeated Coupon deleted_coupons = 1;
+}
+
+message CreateCommentResponse {
+  bool success = 1;
+}
+
+message UpdateCommentResponse {
+ bool success = 1;
+}
+
+// Gives all posts if empty array is passed.
+message GetCommentsResponse {
+  repeated Comment comments = 1;
+}
+
+message DeleteCommentsResponse {
+  repeated Comment deleted_comments = 1;
+}
+
+message CreateUserResponse {
+  bool success = 1;
+}
+
+message UpdateUserResponse {
+  bool success = 1;
+}
+
+// Gives all posts if empty array is passed.
+message GetUsersResponse {
+  repeated User users = 1;
+}
+
+message DeleteUsersResponse {
+  repeated User deleted_users = 1;
+}

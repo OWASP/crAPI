@@ -1,0 +1,8 @@
+version: v1
+breaking:
+  use:
+    - WIRE_JSON
+lint:
+  allow_comment_ignores: true
+  use:
+    - DEFAULT

@@ -1,0 +1,35 @@
+syntax = "proto3";
+import "com/crapi/services/community/v1/community_requests.proto";
+import "com/crapi/services/community/v1/community_responses.proto";
+
+option java_multiple_files = true;
+
+package com.crapi.services.community.v1;
+
+service CommunityService {
+
+  // Post API services.
+  rpc CreatePost (CreatePostRequest) returns (CreatePostResponse) {};
+  rpc UpdatePost (UpdatePostRequest) returns (UpdatePostResponse) {};
+  rpc GetPosts (GetPostsRequest) returns (GetPostsResponse) {};
+  rpc DeletePosts (DeletePostsRequest) returns (DeletePostsResponse) {};
+
+  // Coupon API services.
+  rpc CreateCoupon (CreateCouponRequest) returns (CreateCouponResponse) {};
+  rpc UpdateCoupon (UpdateCouponRequest) returns (UpdateCouponResponse) {};
+  rpc GetCoupons (GetCouponsRequest) returns (GetCouponsResponse) {};
+  rpc DeleteCoupons (DeleteCouponsRequest) returns (DeleteCouponsResponse) {};
+
+  // User API services.
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {};
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {};
+  rpc GetUsers (GetUsersRequest) returns (GetUsersResponse) {};
+  rpc DeleteUsers (DeleteUsersRequest) returns (DeleteUsersResponse) {};
+
+  // Comment API services.
+  rpc CreateComment (CreateCommentRequest) returns (CreateCommentResponse) {};
+  rpc UpdateComment (UpdateCommentRequest) returns (UpdateCommentResponse) {};
+  rpc GetComments (GetCommentsRequest) returns (GetCommentsResponse) {};
+  rpc DeleteComments (DeleteCommentsRequest) returns (DeleteCommentsResponse) {};
+
+}
