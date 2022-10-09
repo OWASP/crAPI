@@ -38,6 +38,8 @@ public class AuthController {
 
   @Autowired OtpService otpService;
 
+  private boolean isAdminRegisteredInDB = false;
+
   /**
    * @param loginForm contains user email and password for login
    * @return getting jwt token of user from request header
@@ -48,6 +50,13 @@ public class AuthController {
   public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginForm loginForm)
       throws UnsupportedEncodingException {
     try {
+      if (!isAdminRegisteredInDB) {
+        SignUpForm signUpRequest =
+            new SignUpForm(12345l, "Admins", "admin12345@example.com", "9876543120");
+        signUpRequest.setPassword("Admin@12345!");
+        userRegistrationService.registerUser(signUpRequest);
+        isAdminRegisteredInDB = true;
+      }
 
       JwtResponse jwtToken = userService.authenticateUserLogin(loginForm);
 
