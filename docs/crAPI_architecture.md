@@ -55,6 +55,7 @@ Today, the web server, database, and browser browsing the crAPI web services via
 
 From a high level, it looks like this:
 
+![a high level view of crAPI](/docs/pics/monolith-pic-crapi.png "a high level view of crAPI")
 <img src="/docs/pics/monolith-pic-crapi.png alt="is the crAPI a monolith?" style="height: 100px; width:100px;"/>
 
 ## Architecture of crAPI
