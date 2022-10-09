@@ -55,7 +55,7 @@ Today, the web server, database, and browser browsing the crAPI web services via
 
 From a high level, it looks like this:
 
-![a high level view of crAPI](/docs/pics/monolith-pic-crapi.png "a high level view of crAPI")
+![a high level view of crAPI](/docs/images/monolith-pic-crapi.png "a high level view of crAPI")
 
 
 ## Architecture of crAPI
@@ -63,7 +63,7 @@ From a high level, it looks like this:
 On a high level, the crAPI architecture is as below and consists of below components
 
 
-![the crAPI architecture](/docs/pics/crapi-architecture.png "the crAPI architecture")
+![the crAPI architecture](/docs/images/crapi-architecture.png "the crAPI architecture")
 
 
  - **Web**
