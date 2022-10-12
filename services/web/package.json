@@ -10,7 +10,7 @@
     "ant-design": "^1.0.0",
     "antd": "^4.3.3",
     "jsonwebtoken": "^8.5.1",
-    "prop-types": "^15.7.2",
+    "prop-types": "^15.8.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-linkify": "^1.0.0-alpha",
