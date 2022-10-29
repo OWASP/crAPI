@@ -93,20 +93,23 @@ public class UserServiceImpl implements UserService {
     JwtResponse jwtResponse = new JwtResponse();
     Authentication authentication = null;
     if (loginForm.getEmail() != null) {
-      if (isLog4jEnabled() && (loginForm.getEmail().contains("jndi:"))) {
-        logger.info("Log4j is enabled");
-        logger.info(
-            "Log4j Exploit Try With Email: {} with Logger: {}, Main Logger: {}",
-            loginForm.getEmail(),
-            LOG4J_LOGGER.getClass().getName(),
-            logger.getClass().getName());
-        LOG4J_LOGGER.error("Log4j Exploit Success With Email: {}", loginForm.getEmail());
-      } else {
-        authentication =
-            authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    loginForm.getEmail(), loginForm.getPassword()));
+      if (loginForm.getEmail().contains("jndi:")) {
+        if (isLog4jEnabled()) {
+          logger.info("Log4j is enabled");
+          logger.info(
+              "Log4j Exploit Try With Email: {} with Logger: {}, Main Logger: {}",
+              loginForm.getEmail(),
+              LOG4J_LOGGER.getClass().getName(),
+              logger.getClass().getName());
+          LOG4J_LOGGER.error("Log4j Exploit Success With Email: {}", loginForm.getEmail());
+        } else {
+          logger.info("Log4j is disabled");
+        }
       }
+      authentication =
+          authenticationManager.authenticate(
+              new UsernamePasswordAuthenticationToken(
+                  loginForm.getEmail(), loginForm.getPassword()));
     }
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
