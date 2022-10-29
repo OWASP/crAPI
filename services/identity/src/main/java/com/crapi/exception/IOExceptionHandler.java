@@ -21,7 +21,7 @@ import org.springframework.util.StringUtils;
 
 public class IOExceptionHandler extends RuntimeException {
 
-  public IOExceptionHandler(Class clazz, String... searchParamsMap) {
+  public IOExceptionHandler(Class clazz, Object... searchParamsMap) {
     super(
         IOExceptionHandler.generateMessage(
             clazz.getSimpleName(), toMap(String.class, String.class, searchParamsMap)));
