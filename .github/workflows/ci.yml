@@ -171,7 +171,7 @@ jobs:
         run: npm install -g newman
 
       - name: Run Postman Collection
-        run: (newman run "./postman_collections/crAPI.postman_collection.json" -e ./postman_collections/crAPI.postman_environment.json) || true
+        run: (newman run "./postman_collections/crAPI.postman_collection.json" -e ./postman_collections/crAPI.postman_environment.json --verbose) || true
 
       - name: Build crapi-identity all platforms and conditionally push to Docker Hub
         uses: docker/build-push-action@v2
