@@ -77,28 +77,37 @@ public class InitialDataConfig {
 
   public void addUser() {
     if (CollectionUtils.isEmpty(userDetailsRepository.findAll())) {
-      boolean user1 = predefineUserData("Adam", "adam007@example.com", "9876895423");
-      boolean user2 = predefineUserData("Pogba", "pogba006@example.com", "9876570006");
-      boolean user3 = predefineUserData("Robot", "robot001@example.com", "9876570001");
-      if (!user1 || !user2 || !user1) {
+      boolean user1 =
+          predefineUserData(
+              "Adam", "adam007@example.com", "adam007!123", "9876895423", ERole.ROLE_PREDEFINE);
+      boolean user2 =
+          predefineUserData(
+              "Pogba", "pogba006@example.com", "pogba006!123", "9876570006", ERole.ROLE_PREDEFINE);
+      boolean user3 =
+          predefineUserData(
+              "Robot", "robot001@example.com", "robot001!123", "9876570001", ERole.ROLE_PREDEFINE);
+      boolean user4 =
+          predefineUserData(
+              "Admin", "admin@example.com", "Admin!123", "9010203040", ERole.ROLE_ADMIN);
+      if (!user1 || !user2 || !user3) {
         logger.error("Fail to create user predefine data -> Message: {}");
       }
     }
   }
 
-  public boolean predefineUserData(String name, String email, String number) {
+  public boolean predefineUserData(
+      String name, String email, String password, String number, ERole role) {
     UserData userData = new UserData();
     VehicleDetails vehicleDetails = null;
     UserDetails userDetails = null;
     try {
-
-      User loginForm = new User(email, number, encoder.encode(name), ERole.ROLE_PREDEFINE);
-      loginForm = userRepository.save(loginForm);
-      userDetails = userData.getPredefineUser(name, loginForm);
+      User user = new User(email, number, encoder.encode(password), role);
+      user = userRepository.save(user);
+      userDetails = userData.getPredefineUser(name, user);
       userDetailsRepository.save(userDetails);
       vehicleDetails = vehicleService.createVehicle();
       if (vehicleDetails != null) {
-        vehicleDetails.setOwner(loginForm);
+        vehicleDetails.setOwner(user);
         vehicleDetailsRepository.save(vehicleDetails);
         return true;
       }

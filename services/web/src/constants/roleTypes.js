@@ -16,6 +16,7 @@
 const roleTypes = {
   ROLE_USER: "ROLE_USER",
   ROLE_MECHANIC: "ROLE_MECHANIC",
+  ROLE_ADMIN: "ROLE_ADMIN"
 };
 
 export default roleTypes;
