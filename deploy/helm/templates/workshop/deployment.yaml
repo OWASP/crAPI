@@ -36,7 +36,7 @@ spec:
       containers:
         - name: {{ .Values.workshop.name }}
           image: {{ .Values.workshop.image }}:{{ .Chart.AppVersion }}
-          imagePullPolicy: {{ .Values.workshop.imagePullPolicy }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
           ports:
             - containerPort: {{ .Values.workshop.port }}
           envFrom:

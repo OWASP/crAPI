@@ -266,7 +266,7 @@ public class ProfileServiceImplTest {
   @Test
   @DisplayName("convertVideoSuccessWithConvertVideoBashCommandTriggered")
   public void convertVideoSuccessWithConvertVideoBashCommandTriggered() {
-    ReflectionTestUtils.setField(profileService, "block_shell_injections", true);
+    ReflectionTestUtils.setField(profileService, "enable_shell_injection", false);
     ProfileVideo profileVideo = getDummyProfileVideo();
     profileVideo.setConversion_params("-v codec h264");
     Long videoId = Long.valueOf(2);
@@ -283,7 +283,7 @@ public class ProfileServiceImplTest {
   @Test
   @DisplayName("convertVideoSuccessWithWonGame")
   public void convertVideoSuccessWithWonGame() {
-    ReflectionTestUtils.setField(profileService, "block_shell_injections", true);
+    ReflectionTestUtils.setField(profileService, "enable_shell_injection", false);
     ProfileVideo profileVideo = getDummyProfileVideo();
     Long videoId = Long.valueOf(2);
     MockHttpServletRequest request = getMockHttpRequest();
@@ -298,7 +298,7 @@ public class ProfileServiceImplTest {
   @Test
   @DisplayName("convertVideoSuccessWithVideoConversion")
   public void convertVideoSuccessWithVideoConversion() {
-    ReflectionTestUtils.setField(profileService, "block_shell_injections", true);
+    ReflectionTestUtils.setField(profileService, "enable_shell_injection", false);
     ProfileVideo profileVideo = getDummyProfileVideo();
     profileVideo.setConversion_params("-v codec h264 && ping 8.8.8.8");
     Long videoId = Long.valueOf(2);

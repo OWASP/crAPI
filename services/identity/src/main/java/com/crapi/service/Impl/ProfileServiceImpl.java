@@ -49,8 +49,8 @@ public class ProfileServiceImpl implements ProfileService {
   @Autowired ProfileVideoRepository profileVideoRepository;
   @Autowired UserDetailsRepository userDetailsRepository;
 
-  @Value("${app.block_shell_injections}")
-  private boolean block_shell_injections;
+  @Value("${app.enable_shell_injection}")
+  private boolean enable_shell_injection;
 
   @Value("${app.service.name}")
   private String serviceName;
@@ -221,7 +221,7 @@ public class ProfileServiceImpl implements ProfileService {
       if (xForwardedHost == null) {
         if (videoId != null && videoId > 0) {
           Optional<ProfileVideo> optionalProfileVideo = profileVideoRepository.findById(videoId);
-          if (optionalProfileVideo.isPresent() && block_shell_injections) {
+          if (optionalProfileVideo.isPresent() && !enable_shell_injection) {
             profileVideo = optionalProfileVideo.get();
             if (ProfileValidator.checkContains(profileVideo.getConversion_params())) {
               return new CRAPIResponse(UserMessage.CONVERSION_VIDEO_OK, 200);
@@ -235,7 +235,7 @@ public class ProfileServiceImpl implements ProfileService {
             }
             return new CRAPIResponse(UserMessage.CONVERT_VIDEO_INTERNAL_ERROR, 500);
           } else if (optionalProfileVideo.isPresent()
-              && !block_shell_injections
+              && enable_shell_injection
               && optionalProfileVideo.get().getConversion_params() != null) {
             profileVideo = optionalProfileVideo.get();
             return new CRAPIResponse(

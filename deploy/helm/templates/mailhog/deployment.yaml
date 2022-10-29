@@ -31,7 +31,7 @@ spec:
       containers:
         - name: {{ .Values.mailhog.name }}
           image: {{ .Values.mailhog.image }}:{{ .Chart.AppVersion }}
-          imagePullPolicy: {{ .Values.mailhog.imagePullPolicy }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
           livenessProbe:
             tcpSocket:
               port: {{ .Values.mailhog.smtpPort }}

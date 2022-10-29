@@ -21,7 +21,7 @@ spec:
       containers:
         - name: {{ .Values.web.name }}
           image: {{ .Values.web.image }}:{{ .Chart.AppVersion }}
-          imagePullPolicy: {{ .Values.web.imagePullPolicy }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
           ports:
             - containerPort: {{ .Values.web.port }}
           {{- if .Values.web.resources }}

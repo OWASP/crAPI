@@ -3,6 +3,9 @@
 # Declare variables to be passed into your templates.
 
 jwtSecret: crapi
+enableLog4j: false
+enableShellInjection: true
+imagePullPolicy: Always
 
 waitForK8sResources:
   image: groundnuty/k8s-wait-for:v1.3
@@ -11,7 +14,6 @@ waitForK8sResources:
 web:
   name: crapi-web
   image: crapi/crapi-web
-  imagePullPolicy: Always
   replicaCount: 1
   port: 80
   service:
@@ -41,7 +43,6 @@ web:
 identity:
   name: crapi-identity
   image: crapi/crapi-identity
-  imagePullPolicy: Always
   port: 8080
   replicaCount: 1
   service:
@@ -52,8 +53,6 @@ identity:
     name: crapi-identity-configmap
     labels:
       app: crapi-identity
-    enableLog4j: false
-    blockShellInjection: true
     postgresDbDriver: postgresql
     appName: "crapi-identity"
     mailhogDomain: "example.com"
@@ -81,7 +80,6 @@ identity:
 community:
   name: crapi-community
   image: crapi/crapi-community
-  imagePullPolicy: Always
   port: 8087
   replicaCount: 1
   service:
@@ -111,7 +109,6 @@ community:
 workshop:
   name: crapi-workshop
   image: crapi/crapi-workshop
-  imagePullPolicy: Always
   port: 8000
   replicaCount: 1
   service:
@@ -142,7 +139,6 @@ workshop:
 mailhog:
   name: mailhog
   image: crapi/mailhog
-  imagePullPolicy: Always
   webPort: 8025
   smtpPort: 1025
   replicaCount: 1

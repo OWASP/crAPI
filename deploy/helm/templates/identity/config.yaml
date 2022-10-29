@@ -10,8 +10,8 @@ metadata:
 data:
   JWT_SECRET: {{ .Values.jwtSecret }} #Used for creating a JWT. Can be anything
   APP_NAME: {{ .Values.identity.config.appName }}
-  BLOCK_SHELL_INJECTION: {{ .Values.identity.config.blockShellInjection | quote }}
-  ENABLE_LOG4J: {{ .Values.identity.config.enableLog4j | quote }}
+  ENABLE_SHELL_INJECTION: {{ .Values.enableShellInjection | quote }}
+  ENABLE_LOG4J: {{ .Values.enableLog4j | quote }}
   DB_HOST: {{ .Values.postgresdb.service.name }}
   DB_DRIVER: {{ .Values.identity.config.postgresDbDriver }}
   DB_USER: {{ .Values.postgresdb.config.postgresUser }}
