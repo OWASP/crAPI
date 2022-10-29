@@ -89,7 +89,7 @@ public class InitialDataConfig {
       boolean user4 =
           predefineUserData(
               "Admin", "admin@example.com", "Admin!123", "9010203040", ERole.ROLE_ADMIN);
-      if (!user1 || !user2 || !user3) {
+      if (!user1 || !user2 || !user3 || !user4) {
         logger.error("Fail to create user predefine data -> Message: {}");
       }
     }
