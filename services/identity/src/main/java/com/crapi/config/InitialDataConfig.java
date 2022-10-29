@@ -86,11 +86,13 @@ public class InitialDataConfig {
       boolean user3 =
           predefineUserData(
               "Robot", "robot001@example.com", "robot001!123", "9876570001", ERole.ROLE_PREDEFINE);
-      boolean user4 =
+      boolean userTest =
           predefineUserData(
+              "Robot", "test@example.com", "Test!123", "9876540001", ERole.ROLE_USER);
+      boolean userAdmin = predefineUserData(
               "Admin", "admin@example.com", "Admin!123", "9010203040", ERole.ROLE_ADMIN);
-      if (!user1 || !user2 || !user3 || !user4) {
-        logger.error("Fail to create user predefine data -> Message: {}");
+      if (!user1 || !user2 || !user3 || !userTest || !userAdmin) {
+        logger.error("Fail to create predefined users");
       }
     }
   }
