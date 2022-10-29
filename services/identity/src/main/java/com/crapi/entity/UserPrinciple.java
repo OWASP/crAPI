@@ -14,6 +14,7 @@
 
 package com.crapi.entity;
 
+import com.crapi.enums.ERole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,20 +34,24 @@ public class UserPrinciple implements UserDetails {
 
   @JsonIgnore private String password;
 
+  private ERole role;
+
   private GrantedAuthority authorities;
 
-  public UserPrinciple(Long id, String email, String password, GrantedAuthority authorities) {
+  public UserPrinciple(
+      Long id, String email, String password, ERole role, GrantedAuthority authorities) {
     this.id = id;
-    this.name = name;
+    this.name = email;
     this.email = email;
+    this.role = role;
     this.password = password;
     this.authorities = authorities;
   }
 
   public static UserPrinciple build(User user) {
     GrantedAuthority authorities = new SimpleGrantedAuthority(user.getRole().toString());
-
-    return new UserPrinciple(user.getId(), user.getEmail(), user.getPassword(), authorities);
+    return new UserPrinciple(
+        user.getId(), user.getEmail(), user.getPassword(), user.getRole(), authorities);
   }
 
   @Override
@@ -83,5 +88,9 @@ public class UserPrinciple implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  public ERole getRole() {
+    return role;
   }
 }
