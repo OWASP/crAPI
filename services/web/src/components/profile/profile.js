@@ -76,9 +76,9 @@ const Profile = (props) => {
         <Menu.Item key="3">Share Video with Community</Menu.Item>
       </Menu>
     ) : (
-      <Menu onClick={(key) => takeVideoAction(key)}>
-        <Menu.Item key="1">Upload Video</Menu.Item>
-      </Menu>
+      <div className="upload-video-button">
+      <Button className="button" type="text" onClick={() => videoInputRef.current.click()}>Upload Video</Button>
+      </div>
     );
   };
 
