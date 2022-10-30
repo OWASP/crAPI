@@ -20,7 +20,6 @@ web:
     name: crapi-web
     labels:
       app: crapi-web
-    port: 8880
     nodePort: 30080
   config:
     name: crapi-web-configmap
