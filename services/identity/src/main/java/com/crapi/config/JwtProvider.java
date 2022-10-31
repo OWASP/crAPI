@@ -14,7 +14,7 @@
 
 package com.crapi.config;
 
-import com.crapi.entity.UserPrinciple;
+import com.crapi.entity.User;
 import io.jsonwebtoken.*;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -22,7 +22,6 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -37,15 +36,13 @@ public class JwtProvider {
   private int jwtExpiration;
 
   /**
-   * @param authentication
+   * @param user
    * @return generated token with expire date
    */
-  public String generateJwtToken(Authentication authentication) {
-
-    UserPrinciple userPrincipal = (UserPrinciple) authentication.getPrincipal();
+  public String generateJwtToken(User user) {
     return Jwts.builder()
-        .setSubject((userPrincipal.getUsername()))
-        .claim("role", userPrincipal.getRole().getName())
+        .setSubject((user.getEmail()))
+        .claim("role", user.getRole().getName())
         .setIssuedAt(new Date())
         .setExpiration(new Date((new Date()).getTime() + jwtExpiration))
         .signWith(SignatureAlgorithm.HS512, jwtSecret.getBytes(StandardCharsets.UTF_8))

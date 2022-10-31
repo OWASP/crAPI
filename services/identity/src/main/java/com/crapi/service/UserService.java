@@ -26,7 +26,7 @@ public interface UserService {
   CRAPIResponse resetPassword(LoginForm loginForm, HttpServletRequest request)
       throws UnsupportedEncodingException;
 
-  CRAPIResponse verifyJwtToken(JwtTokenForm verifyTokenForm);
+  CRAPIResponse verifyJwtToken(String token);
 
   DashboardResponse getUserByRequestToken(HttpServletRequest request);
 

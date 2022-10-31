@@ -88,7 +88,7 @@ public class AuthController {
   public ResponseEntity<CRAPIResponse> verifyJwtToken(
       @Valid @RequestBody JwtTokenForm verifyTokenRequest) {
     // Creating user's account
-    CRAPIResponse verifyTokenResponse = userService.verifyJwtToken(verifyTokenRequest);
+    CRAPIResponse verifyTokenResponse = userService.verifyJwtToken(verifyTokenRequest.getToken());
     if (verifyTokenResponse != null && verifyTokenResponse.getStatus() == 200) {
       return ResponseEntity.status(HttpStatus.OK).body(verifyTokenResponse);
     } else {
