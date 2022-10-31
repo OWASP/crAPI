@@ -125,6 +125,21 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
+   * @param verifyTokenRequest contains JWT token to be verified
+   * @return boolean with token valid or not
+   */
+  @Transactional
+  @Override
+  public CRAPIResponse verifyJwtToken(JwtTokenForm verifyTokenRequest) {
+    boolean validToken = jwtProvider.validateJwtToken(verifyTokenRequest.getToken());
+    if (validToken) {
+      return new CRAPIResponse(UserMessage.VALID_JWT_TOKEN, 200);
+    }
+
+    return new CRAPIResponse(UserMessage.INVALID_JWT_TOKEN, 400);
+  }
+
+  /**
    * @param jwt update token in database
    * @param email by email user details and update token
    */

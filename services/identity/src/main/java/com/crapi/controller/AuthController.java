@@ -81,6 +81,22 @@ public class AuthController {
   }
 
   /**
+   * @param tokenForm contains jwt token
+   * @return success and failure message after token authentication.
+   */
+  @PostMapping("/verify")
+  public ResponseEntity<CRAPIResponse> verifyJwtToken(
+      @Valid @RequestBody JwtTokenForm verifyTokenRequest) {
+    // Creating user's account
+    CRAPIResponse verifyTokenResponse = userService.verifyJwtToken(verifyTokenRequest);
+    if (verifyTokenResponse != null && verifyTokenResponse.getStatus() == 200) {
+      return ResponseEntity.status(HttpStatus.OK).body(verifyTokenResponse);
+    } else {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(verifyTokenResponse);
+    }
+  }
+
+  /**
    * @param forgetPassword contains user email for which user want to generate otp
    * @return success and failure message after generating otp and sent the otp to the register
    *     email.

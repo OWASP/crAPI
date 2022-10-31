@@ -50,6 +50,8 @@ public class UserMessage {
       "Your Email changed successful. Please login with updated email. ";
   public static final String VEHICLE_ALREADY_CREATED = "Sorry, This Vehicle is already added.";
   public static final String LOGIN_WITH_EMAIL_TOKEN = "Successfully logged in with email token.";
+  public static final String VALID_JWT_TOKEN = "The token is a valid JWT token";
+  public static final String INVALID_JWT_TOKEN = "The token is not a valid JWT token";
   public static final String TOKEN_VERIFICATION_FAILOLD =
       "Our security team made us remove the \"Login with token\" feature because it's not secure enough. It's not available after API version 2.7";
   public static final String TOKEN_VERIFICATION_MISSING = "Missing data. Field is null: ";
