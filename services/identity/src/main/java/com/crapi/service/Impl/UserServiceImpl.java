@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService {
       return new CRAPIResponse(UserMessage.VALID_JWT_TOKEN, 200);
     }
 
-    return new CRAPIResponse(UserMessage.INVALID_JWT_TOKEN, 400);
+    return new CRAPIResponse(UserMessage.INVALID_JWT_TOKEN, 401);
   }
 
   /**

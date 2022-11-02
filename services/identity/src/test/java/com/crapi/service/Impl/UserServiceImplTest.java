@@ -459,7 +459,7 @@ public class UserServiceImplTest {
   public void testJwtTokenVerifyWithInvalidToken() {
     String dummyJwt = "dummyJwt";
     CRAPIResponse crapiResponse = userService.verifyJwtToken(dummyJwt);
-    Assertions.assertEquals(400, crapiResponse.getStatus());
+    Assertions.assertEquals(401, crapiResponse.getStatus());
     Assertions.assertEquals(UserMessage.INVALID_JWT_TOKEN, crapiResponse.getMessage());
   }
 
