@@ -23,7 +23,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-  "io"
 
 	"crapi.proj/goservice/api/models"
 	jwt "github.com/dgrijalva/jwt-go"
