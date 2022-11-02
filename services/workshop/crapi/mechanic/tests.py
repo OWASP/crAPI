@@ -150,7 +150,7 @@ class MechanicSignUpTestCase(TestCase):
         auth_headers = {'HTTP_AUTHORIZATION': 'Bearer ' + jwt_token}
         res = self.client.get('/workshop/api/mechanic/', **auth_headers)
         self.assertNotEqual(res.status_code, 200)
-        self.assertEqual(res.json()['message'], messages.TOKEN_EXPIRED)
+        self.assertEqual(res.json()['message'], messages.INVALID_TOKEN)
 
     def test_bad_request(self):
         """

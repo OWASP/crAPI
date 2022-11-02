@@ -224,3 +224,5 @@ STATIC_URL = '/static/'
 
 JWT_SECRET = get_env_value('JWT_SECRET')
 
+IDENTITY_URL = 'http://{}/identity/api/auth/verify'.format(get_env_value('IDENTITY_SERVICE'))
+
