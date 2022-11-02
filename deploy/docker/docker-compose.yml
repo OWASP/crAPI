@@ -72,7 +72,6 @@ services:
       - MONGO_DB_USER=admin
       - MONGO_DB_PASSWORD=crapisecretpassword
       - MONGO_DB_NAME=crapi
-      - JWT_SECRET=crapi
     depends_on:
       postgresdb:
         condition: service_healthy
@@ -109,7 +108,6 @@ services:
       - MONGO_DB_USER=admin
       - MONGO_DB_PASSWORD=crapisecretpassword
       - MONGO_DB_NAME=crapi
-      - JWT_SECRET=crapi
       - SECRET_KEY=crapi
     depends_on:
       postgresdb:

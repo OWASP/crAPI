@@ -8,7 +8,6 @@ data:
     IDENTITY_SERVICE: crapi-identity:8080
     DB_HOST: postgresdb
     DB_DRIVER: postgres
-    JWT_SECRET: crapi
     DB_USER: admin
     DB_PASSWORD: crapisecretpassword
     DB_NAME: crapi

@@ -10,7 +10,6 @@ data:
     SECRET_KEY: {{ .Values.workshop.config.secretKey }}
     DB_HOST: {{ .Values.postgresdb.service.name }}
     DB_DRIVER: {{ .Values.workshop.config.postgresDbDriver }}
-    JWT_SECRET: {{ .Values.jwtSecret }}
     DB_USER: {{ .Values.postgresdb.config.postgresUser }}
     DB_PASSWORD: {{ .Values.postgresdb.config.postgresPassword }}
     DB_NAME: {{ .Values.postgresdb.config.postgresDbName }}
