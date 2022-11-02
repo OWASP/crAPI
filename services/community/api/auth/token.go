@@ -17,8 +17,8 @@ package auth
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
-  "errors"
 	"log"
 	"net/http"
 	"os"
@@ -51,18 +51,18 @@ func ExtractToken(r *http.Request) string {
 //If token is valid we extract username from token Claims.
 //Then check that username in postgres database.
 func ExtractTokenID(r *http.Request, db *gorm.DB) (uint32, error) {
-  tokenVerifyURL := fmt.Sprintf("http://%s/identity/api/auth/verify", os.Getenv("IDENTITY_SERVICE"))
+	tokenVerifyURL := fmt.Sprintf("http://%s/identity/api/auth/verify", os.Getenv("IDENTITY_SERVICE"))
 	tokenString := ExtractToken(r)
 	tokenJSON, err := json.Marshal(Token{Token: tokenString})
 	if err != nil {
-    log.Printf(err.Error())
+		log.Printf(err.Error())
 		return 0, err
 	}
 
 	resp, err := http.Post(tokenVerifyURL, "application/json",
 		bytes.NewBuffer(tokenJSON))
 	if err != nil {
-    log.Printf(err.Error())
+		log.Printf(err.Error())
 		return 0, err
 	}
 
@@ -70,7 +70,7 @@ func ExtractTokenID(r *http.Request, db *gorm.DB) (uint32, error) {
 	token, _, err := new(jwt.Parser).ParseUnverified(tokenString, jwt.MapClaims{})
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if err != nil {
-    log.Printf(err.Error())
+		log.Printf(err.Error())
 		return 0, err
 	}
 
