@@ -5,6 +5,7 @@ metadata:
   labels:
     app: crapi-community
 data:
+    IDENTITY_SERVICE: crapi-identity:8080
     DB_HOST: postgresdb
     DB_DRIVER: postgres
     JWT_SECRET: crapi

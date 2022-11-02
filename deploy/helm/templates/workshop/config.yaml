@@ -6,6 +6,7 @@ metadata:
     release: {{ .Release.Name }}
     {{- toYaml .Values.workshop.config.labels | nindent 4 }}
 data:
+    IDENTITY_SERVICE: {{ .Values.identity.service.name }}:{{ .Values.identity.port }}
     SECRET_KEY: {{ .Values.workshop.config.secretKey }}
     DB_HOST: {{ .Values.postgresdb.service.name }}
     DB_DRIVER: {{ .Values.workshop.config.postgresDbDriver }}
