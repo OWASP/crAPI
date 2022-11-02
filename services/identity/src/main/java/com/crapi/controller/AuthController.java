@@ -91,6 +91,8 @@ public class AuthController {
     CRAPIResponse verifyTokenResponse = userService.verifyJwtToken(verifyTokenRequest.getToken());
     if (verifyTokenResponse != null && verifyTokenResponse.getStatus() == 200) {
       return ResponseEntity.status(HttpStatus.OK).body(verifyTokenResponse);
+    } else if (verifyTokenResponse != null && verifyTokenResponse.getStatus() == 400) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(verifyTokenResponse);
     } else {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(verifyTokenResponse);
     }
