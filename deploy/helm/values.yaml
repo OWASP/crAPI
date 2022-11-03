@@ -48,6 +48,11 @@ identity:
     name: crapi-identity
     labels:
       app: crapi-identity
+  jwtKeySecret:
+    name: jwt-key-secret
+    file: keys/private.pem
+    labels:
+      app: crapi-identity
   config:
     name: crapi-identity-configmap
     labels:
