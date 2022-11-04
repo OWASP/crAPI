@@ -14,12 +14,14 @@
 
 package com.crapi.controller;
 
+import com.crapi.config.JwtProvider;
 import com.crapi.constant.UserMessage;
 import com.crapi.model.*;
 import com.crapi.service.OtpService;
 import com.crapi.service.UserRegistrationService;
 import com.crapi.service.UserService;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +39,8 @@ public class AuthController {
   @Autowired UserRegistrationService userRegistrationService;
 
   @Autowired OtpService otpService;
+
+  @Autowired JwtProvider jwtProvider;
 
   /**
    * @param loginForm contains user email and password for login
@@ -87,7 +91,6 @@ public class AuthController {
   @PostMapping("/verify")
   public ResponseEntity<CRAPIResponse> verifyJwtToken(
       @Valid @RequestBody JwtTokenForm verifyTokenRequest) {
-    // Creating user's account
     CRAPIResponse verifyTokenResponse = userService.verifyJwtToken(verifyTokenRequest.getToken());
     if (verifyTokenResponse != null && verifyTokenResponse.getStatus() == 200) {
       return ResponseEntity.status(HttpStatus.OK).body(verifyTokenResponse);
@@ -96,6 +99,11 @@ public class AuthController {
     } else {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(verifyTokenResponse);
     }
+  }
+
+  @GetMapping("/jwks.json")
+  public ResponseEntity<Map<String, Object>> verifyJwtToken() {
+    return ResponseEntity.status(HttpStatus.OK).body(jwtProvider.getPublicJwk());
   }
 
   /**

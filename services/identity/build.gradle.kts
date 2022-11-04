@@ -46,6 +46,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation:${springBootVersion}") 
     testImplementation("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
     implementation("io.jsonwebtoken:jjwt:0.9.1")
+    implementation("com.nimbusds:nimbus-jose-jwt:9.25.6")
     implementation("javax.validation:validation-api:2.0.1.Final")
     implementation("org.postgresql:postgresql:runtime")
     implementation("org.postgresql:postgresql:42.4.0")

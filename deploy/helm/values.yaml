@@ -50,7 +50,7 @@ identity:
       app: crapi-identity
   jwtKeySecret:
     name: jwt-key-secret
-    file: keys/private.pem
+    file: keys/jwks.json
     labels:
       app: crapi-identity
   config:

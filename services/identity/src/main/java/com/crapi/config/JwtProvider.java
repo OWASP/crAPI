@@ -15,17 +15,18 @@
 package com.crapi.config;
 
 import com.crapi.entity.User;
+import com.google.gson.Gson;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
 import io.jsonwebtoken.*;
-import java.security.KeyFactory;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
-import java.util.Date;
+import java.text.ParseException;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,25 +42,27 @@ public class JwtProvider {
 
   private KeyPair keyPair;
 
-  public JwtProvider(
-      @Value("${app.jwtPrivateKey}") String privateKey,
-      @Value("${app.jwtPublicKey}") String publicKey) {
+  private Map<String, Object> publicJwk;
+
+  public JwtProvider(@Value("${app.jwksJson}") String jwksJson) {
     try {
       Base64.Decoder decoder = Base64.getDecoder();
-      byte[] publicBytes = decoder.decode(publicKey);
-      byte[] privateBytes = decoder.decode(privateKey);
+      InputStream jwksStream = new ByteArrayInputStream(decoder.decode(jwksJson));
+      List<JWK> keys = JWKSet.load(jwksStream).getKeys();
+      if (keys.size() != 1 || !Objects.equals(keys.get(0).getAlgorithm().getName(), "RS256")) {
+        throw new RuntimeException("Invalid JWKS key passed!!!");
+      }
 
-      X509EncodedKeySpec X509publicKey = new X509EncodedKeySpec(publicBytes);
-      PKCS8EncodedKeySpec PKCS8privateKey = new PKCS8EncodedKeySpec(privateBytes);
-
-      KeyFactory kf = KeyFactory.getInstance("RSA");
-      RSAPublicKey rsaPubKey = (RSAPublicKey) kf.generatePublic(X509publicKey);
-      RSAPrivateKey rsaPrivKey = (RSAPrivateKey) kf.generatePrivate(PKCS8privateKey);
-
-      this.keyPair = new KeyPair(rsaPubKey, rsaPrivKey);
-    } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+      RSAKey rsaKey = keys.get(0).toRSAKey();
+      this.keyPair = rsaKey.toKeyPair();
+      this.publicJwk = rsaKey.toPublicJWK().toJSONObject();
+    } catch (IOException | ParseException | JOSEException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public Map<String, Object> getPublicJwk() {
+    return this.publicJwk;
   }
 
   /**
