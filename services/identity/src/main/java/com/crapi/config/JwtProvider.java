@@ -16,6 +16,7 @@ package com.crapi.config;
 
 import com.crapi.entity.User;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -42,27 +43,29 @@ public class JwtProvider {
 
   private KeyPair keyPair;
 
-  private Map<String, Object> publicJwk;
+  private Map<String, Object> publicJwkSet;
 
   public JwtProvider(@Value("${app.jwksJson}") String jwksJson) {
     try {
       Base64.Decoder decoder = Base64.getDecoder();
       InputStream jwksStream = new ByteArrayInputStream(decoder.decode(jwksJson));
-      List<JWK> keys = JWKSet.load(jwksStream).getKeys();
+      JWKSet jwkSet = JWKSet.load(jwksStream);
+      List<JWK> keys = jwkSet.getKeys();
       if (keys.size() != 1 || !Objects.equals(keys.get(0).getAlgorithm().getName(), "RS256")) {
         throw new RuntimeException("Invalid JWKS key passed!!!");
       }
 
       RSAKey rsaKey = keys.get(0).toRSAKey();
       this.keyPair = rsaKey.toKeyPair();
-      this.publicJwk = rsaKey.toPublicJWK().toJSONObject();
+      this.publicJwkSet = jwkSet.toJSONObject();
     } catch (IOException | ParseException | JOSEException e) {
       throw new RuntimeException(e);
     }
   }
 
-  public Map<String, Object> getPublicJwk() {
-    return this.publicJwk;
+  public String getPublicJwk() {
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    return gson.toJson(this.publicJwkSet);
   }
 
   /**

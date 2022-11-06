@@ -21,7 +21,6 @@ import com.crapi.service.OtpService;
 import com.crapi.service.UserRegistrationService;
 import com.crapi.service.UserService;
 import java.io.UnsupportedEncodingException;
-import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -85,7 +84,7 @@ public class AuthController {
   }
 
   /**
-   * @param tokenForm contains jwt token
+   * @param verifyTokenRequest contains jwt token
    * @return success and failure message after token authentication.
    */
   @PostMapping("/verify")
@@ -102,7 +101,7 @@ public class AuthController {
   }
 
   @GetMapping("/jwks.json")
-  public ResponseEntity<Map<String, Object>> verifyJwtToken() {
+  public ResponseEntity<String> verifyJwtToken() {
     return ResponseEntity.status(HttpStatus.OK).body(jwtProvider.getPublicJwk());
   }
 
