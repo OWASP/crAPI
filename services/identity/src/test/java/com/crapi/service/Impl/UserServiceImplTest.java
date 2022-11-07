@@ -39,6 +39,7 @@ import com.crapi.repository.UserRepository;
 import com.crapi.service.VehicleService;
 import com.crapi.utils.SMTPMailServer;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.LogEvent;
@@ -106,8 +107,7 @@ public class UserServiceImplTest {
   }
 
   @Test(expected = EntityNotFoundException.class)
-  public void testGetUserFromTokenThrowsExceptionWhenUserNotFound()
-      throws UnsupportedEncodingException {
+  public void testGetUserFromTokenThrowsExceptionWhenUserNotFound() throws ParseException {
     Mockito.when(jwtAuthTokenFilter.getUserFromToken(Mockito.any())).thenReturn(null);
     userService.getUserFromToken(getMockHttpRequest());
   }
@@ -118,8 +118,8 @@ public class UserServiceImplTest {
     User user = getDummyUser();
     try {
       Mockito.when(jwtAuthTokenFilter.getUserFromToken(Mockito.any())).thenReturn(user.getEmail());
-    } catch (UnsupportedEncodingException e) {
-      logger.error("UnsupportedEncodingException");
+    } catch (ParseException e) {
+      logger.error("ParseException");
     }
     Assertions.assertEquals(userService.getUserFromToken(getMockHttpRequest()), user);
     Mockito.when(userRepository.findByEmail(Mockito.any())).thenReturn(user);
@@ -204,7 +204,7 @@ public class UserServiceImplTest {
     User user = getDummyUser();
     UserDetails userDetails = getDummyUserDetails();
     ProfileVideo profileVideo = getDummyProfileVideo();
-    Mockito.doReturn(user).when(userService).getUserFromToken(Mockito.any());
+    Mockito.doReturn(user).when(userService).getUserFromTokenWithoutValidation(Mockito.any());
     userDetailsRepository.findByUser_id(user.getId());
     Mockito.when(userDetailsRepository.findByUser_id(Mockito.anyLong())).thenReturn(userDetails);
     Mockito.when(profileVideoRepository.findByUser_id(Mockito.anyLong()))
@@ -220,7 +220,7 @@ public class UserServiceImplTest {
   public void getUserByRequestTokenRequestSuccessFullWhenUserDetailsNull() {
     User user = getDummyUser();
     ProfileVideo profileVideo = getDummyProfileVideo();
-    Mockito.doReturn(user).when(userService).getUserFromToken(Mockito.any());
+    Mockito.doReturn(user).when(userService).getUserFromTokenWithoutValidation(Mockito.any());
     userDetailsRepository.findByUser_id(user.getId());
     Mockito.when(userDetailsRepository.findByUser_id(Mockito.anyLong())).thenReturn(null);
     Mockito.when(profileVideoRepository.findByUser_id(Mockito.anyLong()))
@@ -237,7 +237,7 @@ public class UserServiceImplTest {
   public void getUserByRequestTokenRequestSuccessFullWhenProfileVideoNull() {
     User user = getDummyUser();
     UserDetails userDetails = getDummyUserDetails();
-    Mockito.doReturn(user).when(userService).getUserFromToken(Mockito.any());
+    Mockito.doReturn(user).when(userService).getUserFromTokenWithoutValidation(Mockito.any());
     userDetailsRepository.findByUser_id(user.getId());
     Mockito.when(userDetailsRepository.findByUser_id(Mockito.anyLong())).thenReturn(userDetails);
     Mockito.when(profileVideoRepository.findByUser_id(Mockito.anyLong())).thenReturn(null);

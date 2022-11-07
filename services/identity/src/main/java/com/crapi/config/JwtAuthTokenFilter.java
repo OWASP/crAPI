@@ -17,7 +17,7 @@ package com.crapi.config;
 import com.crapi.enums.EStatus;
 import com.crapi.service.Impl.UserDetailsServiceImpl;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -87,8 +87,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
    * @return return username from HttpServletRequest if request have token we are returning username
    *     from request token
    */
-  public String getUserFromToken(HttpServletRequest request) throws UnsupportedEncodingException {
-
+  public String getUserFromToken(HttpServletRequest request) throws ParseException {
     String jwt = getJwt(request);
     if (jwt != null && tokenProvider.validateJwtToken(jwt)) {
       String username = tokenProvider.getUserNameFromJwtToken(jwt);
