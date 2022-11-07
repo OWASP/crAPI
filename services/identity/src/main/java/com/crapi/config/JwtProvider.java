@@ -21,6 +21,7 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jwt.JWTParser;
 import io.jsonwebtoken.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -86,12 +87,8 @@ public class JwtProvider {
    * @param token
    * @return username from JWT Token
    */
-  public String getUserNameFromJwtToken(String token) {
-    return Jwts.parser()
-        .setSigningKey(this.keyPair.getPublic())
-        .parseClaimsJws(token)
-        .getBody()
-        .getSubject();
+  public String getUserNameFromJwtToken(String token) throws ParseException {
+    return JWTParser.parse(token).getJWTClaimsSet().getSubject();
   }
 
   /**
@@ -112,8 +109,6 @@ public class JwtProvider {
       logger.error("Unsupported JWT token -> Message: %d", e);
     } catch (IllegalArgumentException e) {
       logger.error("JWT claims string is empty -> Message: %d", e);
-      //    } catch (UnsupportedEncodingException e) {
-      //      logger.error("Unable to convert into byte -> Message: %d", e);
     }
 
     return false;

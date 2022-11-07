@@ -28,7 +28,7 @@ import com.crapi.service.UserService;
 import com.crapi.utils.EmailTokenGenerator;
 import com.crapi.utils.MailBody;
 import com.crapi.utils.SMTPMailServer;
-import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
@@ -77,8 +77,7 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public JwtResponse authenticateUserLogin(LoginForm loginForm)
-      throws UnsupportedEncodingException, BadCredentialsException {
+  public JwtResponse authenticateUserLogin(LoginForm loginForm) throws BadCredentialsException {
     JwtResponse jwtResponse = new JwtResponse();
     Authentication authentication = null;
     if (loginForm.getEmail() != null) {
@@ -115,7 +114,7 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
-   * @param verifyTokenRequest contains JWT token to be verified
+   * @param token contains JWT token to be verified
    * @return boolean with token valid or not
    */
   @Transactional
@@ -172,7 +171,9 @@ public class UserServiceImpl implements UserService {
     DashboardResponse dashboardResponse;
     ProfileVideo profileVideo;
     try {
-      user = getUserFromToken(request);
+      // Invalid Signature vulnerability
+      // Not Checking the validity of the token for this request
+      user = getUserFromTokenWithoutValidation(request);
       userDetails = userDetailsRepository.findByUser_id(user.getId());
       profileVideo = profileVideoRepository.findByUser_id(user.getId());
       dashboardResponse =
@@ -297,9 +298,31 @@ public class UserServiceImpl implements UserService {
       } else {
         throw new EntityNotFoundException(User.class, "userEmail", username);
       }
-    } catch (UnsupportedEncodingException exception) {
+    } catch (ParseException exception) {
       logger.error("fail to get username from token -> Message:%d", exception);
       throw new EntityNotFoundException(User.class, "userEmail", username);
+    }
+  }
+
+  @Transactional
+  @Override
+  public User getUserFromTokenWithoutValidation(HttpServletRequest request) {
+    User user = null;
+    try {
+      String jwt = jwtAuthTokenFilter.getJwt(request);
+      String username = jwtProvider.getUserNameFromJwtToken(jwt);
+      if (username != null && !username.equalsIgnoreCase(EStatus.INVALID.toString())) {
+        user = userRepository.findByEmail(username);
+      }
+
+      if (user != null) {
+        return user;
+      } else {
+        throw new EntityNotFoundException(User.class, "userEmail", username);
+      }
+    } catch (ParseException exception) {
+      logger.error("fail to get username from token -> Message:%d", exception);
+      throw new EntityNotFoundException(User.class, "userEmail");
     }
   }
 
@@ -319,7 +342,7 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
-   * @param loginWithEmailTokenV2 contains user email and email change token, which allow user login
+   * @param loginWithEmailToken contains user email and email change token, which allow user login
    *     with email token
    * @return check user and token and return jwt token for user.
    */
