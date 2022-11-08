@@ -102,7 +102,7 @@ public class AuthController {
 
   @GetMapping("/jwks.json")
   public ResponseEntity<String> verifyJwtToken() {
-    return ResponseEntity.status(HttpStatus.OK).body(jwtProvider.getPublicJwk());
+    return ResponseEntity.status(HttpStatus.OK).body(jwtProvider.getPublicJwkSet());
   }
 
   /**
