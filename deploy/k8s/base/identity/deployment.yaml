@@ -19,23 +19,31 @@ spec:
           args:
             - "service"
             - "postgresdb"
+      volumes:
+        - name: jwt-key-secret
+          secret:
+            secretName: jwt-key-secret
       containers:
-      - name: crapi-identity
-        image: crapi/crapi-identity:latest
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 8080
-        envFrom:
-            - configMapRef:
-                name: crapi-identity-configmap
-        resources:
-          limits:
-            cpu: "500m"
-          requests:
-            cpu: 256m
-        readinessProbe:
-          tcpSocket:
-            port: 8080
-          initialDelaySeconds: 15
-          periodSeconds: 10
+        - name: crapi-identity
+          image: crapi/crapi-identity:latest
+          volumeMounts:
+            - mountPath: "/.keys"
+              name: jwt-key-secret
+              readOnly: true
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8080
+          envFrom:
+              - configMapRef:
+                  name: crapi-identity-configmap
+          resources:
+            limits:
+              cpu: "500m"
+            requests:
+              cpu: 256m
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
 

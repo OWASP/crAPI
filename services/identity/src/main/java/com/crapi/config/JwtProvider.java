@@ -14,15 +14,23 @@
 
 package com.crapi.config;
 
-import com.crapi.entity.UserPrinciple;
+import com.crapi.entity.User;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
 import io.jsonwebtoken.*;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyPair;
+import java.text.ParseException;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,25 +38,47 @@ public class JwtProvider {
 
   private static final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
 
-  @Value("${app.jwtSecret}")
-  private String jwtSecret;
-
   @Value("${app.jwtExpiration}")
   private int jwtExpiration;
 
+  private KeyPair keyPair;
+
+  private Map<String, Object> publicJwkSet;
+
+  public JwtProvider(@Value("${app.jwksJson}") String jwksJson) {
+    try {
+      Base64.Decoder decoder = Base64.getDecoder();
+      InputStream jwksStream = new ByteArrayInputStream(decoder.decode(jwksJson));
+      JWKSet jwkSet = JWKSet.load(jwksStream);
+      List<JWK> keys = jwkSet.getKeys();
+      if (keys.size() != 1 || !Objects.equals(keys.get(0).getAlgorithm().getName(), "RS256")) {
+        throw new RuntimeException("Invalid JWKS key passed!!!");
+      }
+
+      RSAKey rsaKey = keys.get(0).toRSAKey();
+      this.keyPair = rsaKey.toKeyPair();
+      this.publicJwkSet = jwkSet.toJSONObject();
+    } catch (IOException | ParseException | JOSEException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public String getPublicJwk() {
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    return gson.toJson(this.publicJwkSet);
+  }
+
   /**
-   * @param authentication
+   * @param user
    * @return generated token with expire date
    */
-  public String generateJwtToken(Authentication authentication) {
-
-    UserPrinciple userPrincipal = (UserPrinciple) authentication.getPrincipal();
+  public String generateJwtToken(User user) {
     return Jwts.builder()
-        .setSubject((userPrincipal.getUsername()))
-        .claim("role", userPrincipal.getRole().getName())
+        .setSubject((user.getEmail()))
+        .claim("role", user.getRole().getName())
         .setIssuedAt(new Date())
         .setExpiration(new Date((new Date()).getTime() + jwtExpiration))
-        .signWith(SignatureAlgorithm.HS512, jwtSecret.getBytes(StandardCharsets.UTF_8))
+        .signWith(SignatureAlgorithm.RS256, this.keyPair.getPrivate())
         .compact();
   }
 
@@ -58,7 +88,7 @@ public class JwtProvider {
    */
   public String getUserNameFromJwtToken(String token) {
     return Jwts.parser()
-        .setSigningKey(jwtSecret.getBytes(StandardCharsets.UTF_8))
+        .setSigningKey(this.keyPair.getPublic())
         .parseClaimsJws(token)
         .getBody()
         .getSubject();
@@ -70,7 +100,7 @@ public class JwtProvider {
    */
   public boolean validateJwtToken(String authToken) {
     try {
-      Jwts.parser().setSigningKey(jwtSecret.getBytes("utf-8")).parseClaimsJws(authToken);
+      Jwts.parser().setSigningKey(this.keyPair.getPublic()).parseClaimsJws(authToken);
       return true;
     } catch (SignatureException e) {
       logger.error("Invalid JWT signature -> Message: %d ", e);
@@ -82,8 +112,8 @@ public class JwtProvider {
       logger.error("Unsupported JWT token -> Message: %d", e);
     } catch (IllegalArgumentException e) {
       logger.error("JWT claims string is empty -> Message: %d", e);
-    } catch (UnsupportedEncodingException e) {
-      logger.error("Unable to convert into byte -> Message: %d", e);
+      //    } catch (UnsupportedEncodingException e) {
+      //      logger.error("Unable to convert into byte -> Message: %d", e);
     }
 
     return false;

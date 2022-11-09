@@ -28,11 +28,7 @@ import com.crapi.service.UserService;
 import com.crapi.utils.EmailTokenGenerator;
 import com.crapi.utils.MailBody;
 import com.crapi.utils.SMTPMailServer;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
@@ -41,7 +37,6 @@ import org.apache.logging.log4j.core.impl.Log4jContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -59,12 +54,6 @@ public class UserServiceImpl implements UserService {
   @Autowired ChangeEmailRepository changeEmailRepository;
 
   @Autowired UserRepository userRepository;
-
-  @Value("${app.jwtSecret}")
-  private String jwtSecret;
-
-  @Value("${app.jwtExpiration}")
-  private int jwtExpiration;
 
   @Autowired SMTPMailServer smtpMailServer;
 
@@ -113,7 +102,8 @@ public class UserServiceImpl implements UserService {
     }
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
-    String jwt = jwtProvider.generateJwtToken(authentication);
+    User user = userRepository.findByEmail(loginForm.getEmail());
+    String jwt = jwtProvider.generateJwtToken(user);
     if (jwt != null) {
       updateUserToken(jwt, loginForm.getEmail());
       jwtResponse.setToken(jwt);
@@ -122,6 +112,21 @@ public class UserServiceImpl implements UserService {
     }
 
     return jwtResponse;
+  }
+
+  /**
+   * @param verifyTokenRequest contains JWT token to be verified
+   * @return boolean with token valid or not
+   */
+  @Transactional
+  @Override
+  public CRAPIResponse verifyJwtToken(String token) {
+    boolean validToken = jwtProvider.validateJwtToken(token);
+    if (validToken) {
+      return new CRAPIResponse(UserMessage.VALID_JWT_TOKEN, 200);
+    }
+
+    return new CRAPIResponse(UserMessage.INVALID_JWT_TOKEN, 401);
   }
 
   /**
@@ -329,26 +334,13 @@ public class UserServiceImpl implements UserService {
     if (changeEmailRequest != null
         && user != null
         && changeEmailRequest.getOldEmail().equalsIgnoreCase(user.getEmail())) {
-      jwt = generateJWTToken(user);
+      jwt = jwtProvider.generateJwtToken(user);
       if (jwt != null) {
         return new JwtResponse(jwt);
       }
     }
 
     return new JwtResponse("", UserMessage.INVALID_CREDENTIALS);
-  }
-
-  /**
-   * @param user Generate token according to user email
-   * @return token for given user
-   */
-  public String generateJWTToken(User user) {
-    return Jwts.builder()
-        .setSubject((user.getEmail()))
-        .setIssuedAt(new Date())
-        .setExpiration(new Date((new Date()).getTime() + jwtExpiration))
-        .signWith(SignatureAlgorithm.HS512, jwtSecret.getBytes(StandardCharsets.UTF_8))
-        .compact();
   }
 
   public boolean isLog4jEnabled() {

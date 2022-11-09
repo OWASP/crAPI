@@ -25,10 +25,18 @@ spec:
           args:
             - "service"
             - {{ .Values.postgresdb.service.name | quote }}
+      volumes:
+        - name: jwt-key-secret
+          secret:
+            secretName: {{ .Values.identity.jwtKeySecret.name }}
       containers:
         - name: {{ .Values.identity.name }}
           image: {{ .Values.identity.image }}:{{ .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
+          volumeMounts:
+            - mountPath: "/.keys"
+              name: jwt-key-secret
+              readOnly: true
           ports:
           - containerPort: {{ .Values.identity.port }}
           envFrom:

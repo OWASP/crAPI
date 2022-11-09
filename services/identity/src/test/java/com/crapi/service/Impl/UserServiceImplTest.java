@@ -393,7 +393,7 @@ public class UserServiceImplTest {
     Mockito.when(changeEmailRepository.findByEmailToken(loginWithEmailToken.getToken()))
         .thenReturn(changeEmailRequest);
     Mockito.when(userRepository.findByEmail(loginWithEmailToken.getEmail())).thenReturn(user);
-    Mockito.doReturn(generatedJwt).when(userService).generateJWTToken(Mockito.any(User.class));
+    Mockito.doReturn(generatedJwt).when(jwtProvider).generateJwtToken(Mockito.any(User.class));
     Assertions.assertEquals(
         userService.loginWithEmailTokenV2(loginWithEmailToken).getToken(), generatedJwt);
   }
@@ -444,6 +444,23 @@ public class UserServiceImplTest {
     JwtResponse jwtResponse = userService.loginWithEmailTokenV2(loginWithEmailToken);
     Assertions.assertEquals("", jwtResponse.getToken());
     Assertions.assertEquals(expectedMessage, jwtResponse.getMessage());
+  }
+
+  @Test
+  public void testJwtTokenVerifyWithValidToken() {
+    String dummyJwt = "dummyJwt";
+    Mockito.when(jwtProvider.validateJwtToken(Mockito.any())).thenReturn(true);
+    CRAPIResponse crapiResponse = userService.verifyJwtToken(dummyJwt);
+    Assertions.assertEquals(200, crapiResponse.getStatus());
+    Assertions.assertEquals(UserMessage.VALID_JWT_TOKEN, crapiResponse.getMessage());
+  }
+
+  @Test
+  public void testJwtTokenVerifyWithInvalidToken() {
+    String dummyJwt = "dummyJwt";
+    CRAPIResponse crapiResponse = userService.verifyJwtToken(dummyJwt);
+    Assertions.assertEquals(401, crapiResponse.getStatus());
+    Assertions.assertEquals(UserMessage.INVALID_JWT_TOKEN, crapiResponse.getMessage());
   }
 
   private LoginWithEmailToken getDummyLoginWithEmailToken() {

@@ -14,8 +14,11 @@
 # Java Maven Build
 FROM gradle:7.3.3-jdk11 AS gradlebuild
 WORKDIR /app
-COPY src src
 COPY *.gradle.kts ./
+# Only download dependencies
+# Eat the expected build failure since no source code has been copied yet
+RUN gradle clean build --no-daemon > /dev/null 2>&1 || true
+COPY src src
 RUN gradle build
 RUN gradle bootJar
 
@@ -32,4 +35,5 @@ EXPOSE ${SERVER_PORT}
 
 ENV JAVA_TOOL_OPTIONS "-Xmx128m"
 
-CMD java -jar /app/identity-service-1.0-SNAPSHOT.jar
+COPY entrypoint.sh /entrypoint.sh
+CMD [ "/entrypoint.sh"]

@@ -15,17 +15,23 @@
 package auth
 
 import (
+	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	"crapi.proj/goservice/api/models"
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
 )
+
+type Token struct {
+	Token string `json:"token"`
+}
 
 //ExtractToken return token from Authorization Bearer
 func ExtractToken(r *http.Request) string {
@@ -45,19 +51,30 @@ func ExtractToken(r *http.Request) string {
 //If token is valid we extract username from token Claims.
 //Then check that username in postgres database.
 func ExtractTokenID(r *http.Request, db *gorm.DB) (uint32, error) {
-
+	tokenVerifyURL := fmt.Sprintf("http://%s/identity/api/auth/verify", os.Getenv("IDENTITY_SERVICE"))
 	tokenString := ExtractToken(r)
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-		}
-		return []byte(os.Getenv("JWT_SECRET")), nil
-	})
+	tokenJSON, err := json.Marshal(Token{Token: tokenString})
 	if err != nil {
+		log.Printf(err.Error())
 		return 0, err
 	}
+
+	resp, err := http.Post(tokenVerifyURL, "application/json",
+		bytes.NewBuffer(tokenJSON))
+	if err != nil {
+		log.Printf(err.Error())
+		return 0, err
+	}
+
+	tokenValid := resp.StatusCode == 200
+	token, _, err := new(jwt.Parser).ParseUnverified(tokenString, jwt.MapClaims{})
 	claims, ok := token.Claims.(jwt.MapClaims)
-	if ok && token.Valid {
+	if err != nil {
+		log.Printf(err.Error())
+		return 0, err
+	}
+
+	if ok && tokenValid {
 		name := claims["sub"]
 		if name != nil {
 			//converting name interface to string
@@ -69,7 +86,8 @@ func ExtractTokenID(r *http.Request, db *gorm.DB) (uint32, error) {
 		var uid uint32
 		return uint32(uid), nil
 	}
-	return 0, nil
+
+	return 0, errors.New("Unauthorized")
 }
 
 //CheckTokenInDB call FindUserByEmail and check that email in postgres database

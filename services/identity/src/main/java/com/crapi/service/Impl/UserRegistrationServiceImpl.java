@@ -29,7 +29,6 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,12 +37,6 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   private static final Logger logger = LoggerFactory.getLogger(UserRegistrationServiceImpl.class);
 
   @Autowired UserRepository userRepository;
-
-  @Value("${app.jwtSecret}")
-  private String jwtSecret;
-
-  @Value("${app.jwtExpiration}")
-  private int jwtExpiration;
 
   @Autowired SMTPMailServer smtpMailServer;
 

@@ -222,5 +222,6 @@ USE_L10N = True
 
 STATIC_URL = '/static/'
 
-JWT_SECRET = get_env_value('JWT_SECRET')
+IDENTITY_VERIFY = 'http://{}/identity/api/auth/verify'.format(get_env_value('IDENTITY_SERVICE'))
+IDENTITY_LOGIN = 'http://{}/identity/api/auth/login'.format(get_env_value('IDENTITY_SERVICE'))
 

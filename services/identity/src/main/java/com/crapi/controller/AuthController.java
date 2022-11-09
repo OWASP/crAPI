@@ -14,6 +14,7 @@
 
 package com.crapi.controller;
 
+import com.crapi.config.JwtProvider;
 import com.crapi.constant.UserMessage;
 import com.crapi.model.*;
 import com.crapi.service.OtpService;
@@ -37,6 +38,8 @@ public class AuthController {
   @Autowired UserRegistrationService userRegistrationService;
 
   @Autowired OtpService otpService;
+
+  @Autowired JwtProvider jwtProvider;
 
   /**
    * @param loginForm contains user email and password for login
@@ -78,6 +81,28 @@ public class AuthController {
     } else {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(registerUserResponse);
     }
+  }
+
+  /**
+   * @param verifyTokenRequest contains jwt token
+   * @return success and failure message after token authentication.
+   */
+  @PostMapping("/verify")
+  public ResponseEntity<CRAPIResponse> verifyJwtToken(
+      @Valid @RequestBody JwtTokenForm verifyTokenRequest) {
+    CRAPIResponse verifyTokenResponse = userService.verifyJwtToken(verifyTokenRequest.getToken());
+    if (verifyTokenResponse != null && verifyTokenResponse.getStatus() == 200) {
+      return ResponseEntity.status(HttpStatus.OK).body(verifyTokenResponse);
+    } else if (verifyTokenResponse != null && verifyTokenResponse.getStatus() == 401) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(verifyTokenResponse);
+    } else {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(verifyTokenResponse);
+    }
+  }
+
+  @GetMapping("/jwks.json")
+  public ResponseEntity<String> verifyJwtToken() {
+    return ResponseEntity.status(HttpStatus.OK).body(jwtProvider.getPublicJwk());
   }
 
   /**
