@@ -79,7 +79,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .csrf()
         .disable()
         .authorizeRequests()
-        .antMatchers("/identity/api/auth/**", "/identity/health_check")
+        .antMatchers(
+            "/identity/api/auth/**", "/identity/health_check", "/identity/api/v2/user/dashboard")
         .permitAll()
         .anyRequest()
         .authenticated()

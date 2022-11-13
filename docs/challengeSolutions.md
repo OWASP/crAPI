@@ -102,4 +102,32 @@ The above challenge was completed using Burp Suite Community Edition.
 
 ### Challenge 14 - Find an endpoint that does not perform authentication checks for a user.
 
+## JWT Vulnerabilities
+
+## [Challenge 15 - Find a way to forge valid JWT Tokens](challenges.md#challenge-15---find-a-way-to-forge-valid-jwt-tokens)
+
+#### Detailed Solution
+
+##### crAPI is vulnerable to to the following JWT Vulnerabilities
+1. JWT Algorithm Confusion Vulnerability
+   - crAPI uses RS256 JWT Algorithm by default
+   - Public Key to verify JWT is available at http://localhost:8888/.well-known/jwks.json
+   - Convert the public key to base64 encoded form and use it as a secret to create a JWT in HS256 Algorithm
+   - This JWT will be accepted as a valid JWT Token by crAPI
+2. Invalid Signature Vulnerability
+   - User Dashboard API is not validating JWT signature
+   - Create a JWT with `sub` header set to a different user's email
+   - With the above JWT you will be able to extract user data from user dashboard API endpoint
+3. JKU Misuse Vulnerability
+   - crAPI will verify JWT token with any public key that is pointed to by the `jku` JWT header
+   - Create your own public/private key pair and sign a JWT in RS256 Algorithm
+   - Host the public key somewhere in JWK format
+   - Pass the public key URL in `jku` header of the JWT with appropriate `kid` header
+   - This JWT will be accepted as a valid JWT Token by crAPI
+4. KID Path Traversal Vulnerability
+   - Set the `kid` header of JWT to `../../../../../../dev/null`
+   - Create a custom JWT in HS256 algorithm with secret as `AA==`
+     - `AA==` is the Base64 encoded form of Hex null byte `00`
+   - This JWT will be accepted as a valid JWT Token by crAPI
+
 ## << 2 secret challenges >>

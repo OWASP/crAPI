@@ -17,14 +17,20 @@ package com.crapi.config;
 import com.crapi.entity.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jwt.JWTParser;
+import com.nimbusds.jwt.SignedJWT;
 import io.jsonwebtoken.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.text.ParseException;
 import java.util.*;
@@ -43,6 +49,8 @@ public class JwtProvider {
 
   private KeyPair keyPair;
 
+  private RSAKey publicRSAKey;
+
   private Map<String, Object> publicJwkSet;
 
   public JwtProvider(@Value("${app.jwksJson}") String jwksJson) {
@@ -56,6 +64,7 @@ public class JwtProvider {
       }
 
       RSAKey rsaKey = keys.get(0).toRSAKey();
+      this.publicRSAKey = rsaKey.toPublicJWK();
       this.keyPair = rsaKey.toKeyPair();
       this.publicJwkSet = jwkSet.toJSONObject();
     } catch (IOException | ParseException | JOSEException e) {
@@ -63,7 +72,7 @@ public class JwtProvider {
     }
   }
 
-  public String getPublicJwk() {
+  public String getPublicJwkSet() {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     return gson.toJson(this.publicJwkSet);
   }
@@ -86,12 +95,45 @@ public class JwtProvider {
    * @param token
    * @return username from JWT Token
    */
-  public String getUserNameFromJwtToken(String token) {
-    return Jwts.parser()
-        .setSigningKey(this.keyPair.getPublic())
-        .parseClaimsJws(token)
-        .getBody()
-        .getSubject();
+  public String getUserNameFromJwtToken(String token) throws ParseException {
+    // Parse without verifying token signature
+    return JWTParser.parse(token).getJWTClaimsSet().getSubject();
+  }
+
+  // Load RSA Public Key for JKU header if present
+  private RSAKey getKeyFromJkuHeader(JWSHeader header) {
+    try {
+      URI jku = header.getJWKURL();
+      if (jku != null) {
+        URLConnection connection = jku.toURL().openConnection();
+        JWKSet jwkSet = JWKSet.load(connection.getInputStream());
+        logger.info("JWKSet from URL : " + jwkSet.toString(false));
+        JWK key = jwkSet.getKeyByKeyId(header.getKeyID());
+        if (key != null && Objects.equals(key.getAlgorithm().getName(), "RS256")) {
+          return key.toRSAKey().toPublicJWK();
+        }
+      }
+    } catch (IOException | ParseException e) {
+      return null;
+    }
+
+    return null;
+  }
+
+  // Construct secret for JWT Verification through HS256 (vulnerability)
+  private String getJwtSecret(JWSHeader header) throws JOSEException {
+    // defaultSecret is RSA Public Key as String
+    // Algorithm Confusion Attack
+    Base64.Encoder encoder = Base64.getEncoder();
+    String defaultSecret = encoder.encodeToString(this.publicRSAKey.toPublicKey().getEncoded());
+
+    // Check if KID header is pointing to /dev/null file
+    String kid = header.getKeyID();
+    if (kid != null && kid.contains("/dev/null")) {
+      return "AA==";
+    }
+
+    return defaultSecret;
   }
 
   /**
@@ -100,20 +142,36 @@ public class JwtProvider {
    */
   public boolean validateJwtToken(String authToken) {
     try {
-      Jwts.parser().setSigningKey(this.keyPair.getPublic()).parseClaimsJws(authToken);
-      return true;
-    } catch (SignatureException e) {
-      logger.error("Invalid JWT signature -> Message: %d ", e);
-    } catch (MalformedJwtException e) {
-      logger.error("Invalid JWT token -> Message: %d", e);
-    } catch (ExpiredJwtException e) {
-      logger.error("Expired JWT token -> Message: %d", e);
-    } catch (UnsupportedJwtException e) {
-      logger.error("Unsupported JWT token -> Message: %d", e);
-    } catch (IllegalArgumentException e) {
-      logger.error("JWT claims string is empty -> Message: %d", e);
-      //    } catch (UnsupportedEncodingException e) {
-      //      logger.error("Unable to convert into byte -> Message: %d", e);
+      SignedJWT signedJWT = SignedJWT.parse(authToken);
+      JWSHeader header = signedJWT.getHeader();
+      Algorithm alg = header.getAlgorithm();
+
+      // JWT Algorithm confusion vulnerability
+      logger.info("Algorithm: " + alg.getName());
+      if (Objects.equals(alg.getName(), "HS256")) {
+        String secret = getJwtSecret(header);
+        logger.info("JWT Secret: " + secret);
+        Jwts.parser()
+            .setSigningKey(secret.getBytes(StandardCharsets.UTF_8))
+            .parseClaimsJws(authToken);
+        return true;
+      } else {
+        RSAKey verificationKey = getKeyFromJkuHeader(header);
+        JWSVerifier verifier;
+        if (verificationKey == null) {
+          verifier = new RSASSAVerifier(this.publicRSAKey);
+        } else {
+          logger.info("Key from JKU: " + verificationKey.toJSONString());
+          verifier = new RSASSAVerifier(verificationKey);
+        }
+
+        return signedJWT.verify(verifier);
+      }
+
+    } catch (ParseException e) {
+      logger.error("Could not parse JWT Token -> Message: %d", e);
+    } catch (JOSEException e) {
+      logger.error("RSA JWK Extraction failed -> Message: %d", e);
     }
 
     return false;
