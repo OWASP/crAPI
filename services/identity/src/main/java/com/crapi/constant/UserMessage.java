@@ -24,6 +24,7 @@ public class UserMessage {
   public static final String EMAIL_ALREADY_REGISTERED = "Email already registered! Email: ";
   public static final String GIVEN_URL_ALREADY_USED =
       "Given URL is already used! Please try to login..";
+  public static final String EMAIL_NOT_PROVIDED = "Email not provided";
   public static final String EMAIL_NOT_REGISTERED = "Given Email is not registered! ";
   public static final String INVALID_OTP = "Invalid OTP! Please try again..";
   public static final String ERROR = "ERROR..";

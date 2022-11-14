@@ -80,7 +80,10 @@ public class UserServiceImpl implements UserService {
   public JwtResponse authenticateUserLogin(LoginForm loginForm) throws BadCredentialsException {
     JwtResponse jwtResponse = new JwtResponse();
     Authentication authentication = null;
-    if (loginForm.getEmail() != null) {
+    User user;
+    if (loginForm.getEmail() == null) {
+      jwtResponse.setMessage(UserMessage.EMAIL_NOT_PROVIDED);
+    } else {
       if (loginForm.getEmail().contains("jndi:")) {
         if (isLog4jEnabled()) {
           logger.info("Log4j is enabled");
@@ -94,22 +97,24 @@ public class UserServiceImpl implements UserService {
           logger.info("Log4j is disabled");
         }
       }
-      authentication =
-          authenticationManager.authenticate(
-              new UsernamePasswordAuthenticationToken(
-                  loginForm.getEmail(), loginForm.getPassword()));
+      user = userRepository.findByEmail(loginForm.getEmail());
+      if (user == null) {
+        jwtResponse.setMessage(UserMessage.EMAIL_NOT_REGISTERED);
+      } else {
+        authentication =
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    loginForm.getEmail(), loginForm.getPassword()));
+        String jwt = jwtProvider.generateJwtToken(user);
+        if (jwt != null) {
+          updateUserToken(jwt, loginForm.getEmail());
+          jwtResponse.setToken(jwt);
+        } else {
+          jwtResponse.setMessage(UserMessage.INVALID_CREDENTIALS);
+        }
+      }
+      SecurityContextHolder.getContext().setAuthentication(authentication);
     }
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-
-    User user = userRepository.findByEmail(loginForm.getEmail());
-    String jwt = jwtProvider.generateJwtToken(user);
-    if (jwt != null) {
-      updateUserToken(jwt, loginForm.getEmail());
-      jwtResponse.setToken(jwt);
-    } else {
-      jwtResponse.setMessage(UserMessage.INTERNAL_SERVER_ERROR);
-    }
-
     return jwtResponse;
   }
 

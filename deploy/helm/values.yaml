@@ -206,7 +206,7 @@ mongodb:
       app: mongodb
     resources:
       requests:
-        storage: 1000Mi
+        storage: 1Gi
   serviceSelectorLabels:
     app: mongodb
   podLabels:
@@ -240,7 +240,7 @@ postgresdb:
       app: postgresdb
     resources:
       requests:
-        storage: 1000Mi
+        storage: 1Gi
   serviceSelectorLabels:
     app: postgresdb
   podLabels:

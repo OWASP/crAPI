@@ -58,7 +58,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -160,31 +159,50 @@ public class UserServiceImplTest {
     Mockito.verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
   }
 
-  @Test(expected = BadCredentialsException.class)
+  @Test
   @SneakyThrows
-  public void testAuthenticateUserLoginReturnInvalidCredentials()
+  public void testAuthenticateUserLoginReturnInvalidCredentialsNoPassword()
       throws UnsupportedEncodingException {
 
-    LoginForm loginForm = getDummyLoginForm();
-
-    Mockito.when(authenticationManager.authenticate(Mockito.any()))
-        .thenThrow(new BadCredentialsException(Mockito.any()));
+    LoginForm loginForm = getDummyLoginFormWithoutPassword();
 
     Assertions.assertEquals(
-        userService.authenticateUserLogin(loginForm).getMessage(), UserMessage.INVALID_CREDENTIALS);
+        userService.authenticateUserLogin(loginForm).getMessage(),
+        UserMessage.EMAIL_NOT_REGISTERED);
+  }
+
+  @Test
+  @SneakyThrows
+  public void testAuthenticateUserLoginReturnInvalidCredentialsNoEmail()
+      throws UnsupportedEncodingException {
+
+    LoginForm loginForm = getDummyLoginFormByEmail(null);
+
+    Assertions.assertEquals(
+        userService.authenticateUserLogin(loginForm).getMessage(), UserMessage.EMAIL_NOT_PROVIDED);
+  }
+
+  @Test
+  @SneakyThrows
+  public void testAuthenticateUserLoginInvalidEmail() throws UnsupportedEncodingException {
+    LoginForm loginForm = getDummyLoginForm();
+    Assertions.assertEquals(
+        userService.authenticateUserLogin(loginForm).getMessage(),
+        UserMessage.EMAIL_NOT_REGISTERED);
   }
 
   @Test
   @SneakyThrows
   public void testAuthenticateUserLoginReturnNullToken() throws UnsupportedEncodingException {
+    User user = getDummyUser();
     LoginForm loginForm = getDummyLoginForm();
     Mockito.when(authenticationManager.authenticate(Mockito.any()))
         .thenReturn(
             new UsernamePasswordAuthenticationToken(loginForm.getEmail(), loginForm.getPassword()));
+    Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(user);
     Mockito.when(jwtProvider.generateJwtToken(Mockito.any())).thenReturn(null);
     Assertions.assertEquals(
-        userService.authenticateUserLogin(loginForm).getMessage(),
-        UserMessage.INTERNAL_SERVER_ERROR);
+        userService.authenticateUserLogin(loginForm).getMessage(), UserMessage.INVALID_CREDENTIALS);
   }
 
   @Test
@@ -533,6 +551,14 @@ public class UserServiceImplTest {
     loginForm.setPassword("password");
     loginForm.setNumber("9798789212");
     loginForm.setEmail(email);
+    return loginForm;
+  }
+
+  private LoginForm getDummyLoginFormWithoutPassword() {
+    LoginForm loginForm = new LoginForm();
+    loginForm.setPassword("password");
+    loginForm.setNumber("9798789212");
+    loginForm.setEmail("email@example.com");
     return loginForm;
   }
 
