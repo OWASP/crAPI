@@ -1,12 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgresdb
+  name: {{ .Values.postgresdb.service.name }}
   labels:
-    app: postgresdb
+    release: {{ .Release.Name }}
+    {{- with .Values.postgresdb.service.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   ports:
-  - port: 5432
+  - port: {{ .Values.postgresdb.port }}
     name: postgres
   selector:
-    app: postgresdb
+    {{- toYaml .Values.postgresdb.serviceSelectorLabels | nindent 4 }}

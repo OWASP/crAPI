@@ -36,6 +36,7 @@ import roleTypes from "../../constants/roleTypes";
 import ProfileContainer from "../../containers/profile/profile";
 import ShopContainer from "../../containers/shop/shop";
 import PastOrdersContainer from "../../containers/pastOrders/pastOrders";
+import OrderContainer from "../../containers/order/order";
 import ForumContainer from "../../containers/forum/forum";
 import NewPostContainer from "../../containers/newPost/newPost";
 import PostContainer from "../../containers/post/post";
@@ -262,6 +263,15 @@ const StyledComp = connect(
             <AfterLogin
               path="/past-orders"
               component={PastOrdersContainer}
+              isLoggedIn={props.isLoggedIn}
+              componentRole={roleTypes.ROLE_USER}
+              userRole={props.role}
+              accessToken={props.accessToken}
+              logOutUser={props.logOutUser}
+            />
+            <AfterLogin
+              path="/orders"
+              component={OrderContainer}
               isLoggedIn={props.isLoggedIn}
               componentRole={roleTypes.ROLE_USER}
               userRole={props.role}

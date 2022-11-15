@@ -16,7 +16,6 @@ package api
 
 import (
 	"log"
-
 	"os"
 
 	"github.com/gorilla/mux"

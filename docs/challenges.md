@@ -85,6 +85,20 @@ After solving the "Find an API endpoint that leaks an internal property of video
 
 ### Challenge 12 - Find a way to get free coupons without knowing the coupon code.
 
+## SQL Injection
+
+### Challenge 13 - Find a way to redeem a coupon that you have already claimed by modifying the database
+
+## Unauthenticated Access
+
+### Challenge 14 - Find an endpoint that does not perform authentication checks for a user.
+
+## JWT Vulnerabilities
+
+### Challenge 15 - Find a way to forge valid JWT Tokens
+
+JWT Authentication in crAPI is vulnerable to various attacks. Find any one way to forge a valid JWT token and get full access to the platform.
+
 ## << 2 secret challenges >>
 
 There are two more secret challenges in crAPI, that are pretty complex, and for now we don’t share details about them, except the fact they are really cool. 

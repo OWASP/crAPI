@@ -79,19 +79,21 @@ const Navbar = (props) => {
         <div className="logo-text" onClick={() => history.push("/")}>
           crAPI
         </div>
-        {isLoggedIn ? menuNavigation() : (<div/>)
+        {isLoggedIn ? menuNavigation() : (<div />)
         }
       </Space>
       {isLoggedIn ? (
         <Space className="top-nav-right">
           <div>{`Good Morning, ${name}!`}</div>
-          <Avatar
-            src={profilePicData || defaultProficPic}
-            className="avatar"
-            size="large"
-            onClick={() => history.push("/my-profile")}
-          />
-          <Dropdown overlay={menuSidebar()}  placement="bottomRight">
+          <div className="avatarContainer">
+            <Avatar
+              src={profilePicData || defaultProficPic}
+              className="avatar"
+              size="large"
+              onClick={() => history.push("/my-profile")}
+            />
+          </div>
+          <Dropdown overlay={menuSidebar()} placement="bottomRight">
             <div className="nav-items">
               <DownOutlined />
             </div>

@@ -16,6 +16,7 @@
 contains views related to Shop APIs
 """
 import logging
+from django.db import connection
 from django.utils import timezone
 from django.http import FileResponse
 from django.urls import reverse
@@ -82,7 +83,6 @@ class OrderControlView(APIView):
     """
     Order Controller View
     """
-    @jwt_auth_required
     def get(self, request, order_id=None, user=None):
         """
         order view for fetching  a particular order
@@ -97,8 +97,6 @@ class OrderControlView(APIView):
             message and corresponding status if error
         """
         order = Order.objects.get(id=order_id)
-        if user != order.user:
-            return Response({'message': messages.RESTRICTED}, status=status.HTTP_403_FORBIDDEN)
         serializer = OrderSerializer(order)
         response_data = dict(
             orders=serializer.data
@@ -293,16 +291,32 @@ class ApplyCouponView(APIView):
         if not serializer.is_valid():
             log_error(request.path, request.data, 400, serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT coupon_code from applied_coupon WHERE user_id = "\
+                    + str(user.id)\
+                    + " AND coupon_code = '"\
+                    + coupon_request_body['coupon_code']\
+                    + "'")
+            row = cursor.fetchall()
+
+        if row and row != None:
+            return Response(
+                {
+                    'message': row[0][0] + " " + messages.COUPON_ALREADY_APPLIED,
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         try:
             coupon = Coupon.objects.using('mongodb').get(coupon_code=coupon_request_body['coupon_code'])
         except ObjectDoesNotExist as e:
             log_error(request.path, request.data, 400, e)
-            return Response({'message': "Coupon not found"}, status=status.HTTP_400_BAD_REQUEST)
-        if AppliedCoupon.objects.filter(user=user, coupon_code=coupon_request_body['coupon_code']).first():
             return Response(
-                {'message': messages.COUPON_ALREADY_APPLIED},
+                {'message': messages.COUPON_NOT_FOUND},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
         AppliedCoupon.objects.create(
             user=user,
             coupon_code=coupon_request_body['coupon_code']

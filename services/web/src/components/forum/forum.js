@@ -40,7 +40,7 @@ const Forum = (props) => {
   const { posts } = props;
 
   const renderAvatar = (url) => (
-    <Avatar src={defaultProficPic || url} size="large" />
+    <Avatar src={url || defaultProficPic} size="large" />
   );
 
   return (

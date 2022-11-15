@@ -66,6 +66,7 @@ export const VIDEO_NOT_CONVERTED = "Could not convert video";
 export const NO_PRODUCTS = "Could not get product details";
 export const PRODUCT_NOT_BOUGHT = "Try again after sometime...";
 export const NO_ORDERS = "Could not get orders";
+export const NO_ORDER = "Could not get order";
 export const ORDER_NOT_RETURNED = "Could not return order";
 export const INVALID_COUPON_CODE = "Invalid Coupon Code";
 export const COUPON_APPLIED = "Coupon applied";

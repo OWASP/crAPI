@@ -13,7 +13,8 @@ data:
   DB_NAME: crapi
   DB_PORT: "5432"
   APP_NAME: "crapi-identity"
-  BLOCK_SHELL_INJECTION: "true"
+  ENABLE_SHELL_INJECTION: "false"
+  ENABLE_LOG4J: "true"
   MAILHOG_HOST: mailhog
   MAILHOG_PORT: "1025"
   MAILHOG_DOMAIN: "example.com"

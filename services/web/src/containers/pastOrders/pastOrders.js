@@ -22,7 +22,6 @@ import { getOrdersAction, returnOrderAction } from "../../actions/shopActions";
 import PastOrders from "../../components/pastOrders/pastOrders";
 import responseTypes from "../../constants/responseTypes";
 import { FAILURE_MESSAGE } from "../../constants/messages";
-
 const PastOrdersContainer = (props) => {
   const { history, accessToken, getOrders, returnOrder } = props;
 
@@ -62,7 +61,7 @@ const PastOrdersContainer = (props) => {
     };
     returnOrder({ callback, accessToken, orderId });
   };
-
+  
   return <PastOrders history={history} returnOrder={handleReturnOrder} />;
 };
 

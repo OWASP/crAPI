@@ -1,4 +1,4 @@
 @echo off
 cd /d community
-docker build -t crapi/crapi-community .
+cmd /c docker build -t crapi/crapi-community:%VERSION% .
 cd /d .\..\

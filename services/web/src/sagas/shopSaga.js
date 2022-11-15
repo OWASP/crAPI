@@ -20,6 +20,7 @@ import responseTypes from "../constants/responseTypes";
 import {
   NO_PRODUCTS,
   PRODUCT_NOT_BOUGHT,
+  NO_ORDER,
   NO_ORDERS,
   ORDER_NOT_RETURNED,
   INVALID_COUPON_CODE,
@@ -156,6 +157,49 @@ export function* getOrders(param) {
 }
 
 /**
+ * Get an order details
+ * @param { accessToken, callback, orderId } param
+ * accessToken: access token of the user
+ * callback : callback method
+ * orderId: id of the order to be returned
+ */
+export function* getOrderById(param) {
+  const { accessToken, callback, orderId } = param;
+  let recievedResponse = {};
+  try {
+    yield put({ type: actionTypes.FETCHING_DATA });
+    const getUrl =
+      APIService.PYTHON_MICRO_SERVICES + requestURLS.GET_ORDER_BY_ID;
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    };
+    const ResponseJson = yield fetch(getUrl.replace("<orderId>", orderId), {
+      headers,
+      method: "GET",
+    }).then((response) => {
+      recievedResponse = response;
+      return response.json();
+    });
+
+    yield put({ type: actionTypes.FETCHED_DATA, payload: recievedResponse });
+    if (recievedResponse.ok) {
+      yield put({
+        type: actionTypes.FETCHED_ORDER,
+        payload: { orderId: orderId, order: ResponseJson.orders },
+      });
+      callback(responseTypes.SUCCESS, ResponseJson.orders);
+    } else {
+      callback(responseTypes.FAILURE, ResponseJson.message);
+    }
+  } catch (e) {
+    yield put({ type: actionTypes.FETCHED_DATA, payload: recievedResponse });
+    callback(responseTypes.FAILURE, NO_ORDER);
+  }
+}
+
+
+/**
  * return an order
  * @param { accessToken, callback, orderId } param
  * accessToken: access token of the user
@@ -262,6 +306,7 @@ export function* shopActionWatcher() {
   yield takeLatest(actionTypes.GET_PRODUCTS, getProducts);
   yield takeLatest(actionTypes.BUY_PRODUCT, buyProduct);
   yield takeLatest(actionTypes.GET_ORDERS, getOrders);
+  yield takeLatest(actionTypes.GET_ORDER_BY_ID, getOrderById);
   yield takeLatest(actionTypes.RETURN_ORDER, returnOrder);
   yield takeLatest(actionTypes.APPLY_COUPON, applyCoupon);
 }

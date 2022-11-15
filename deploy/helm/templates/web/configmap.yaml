@@ -1,17 +1,11 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: crapi-web-configmap
+  name: {{ .Values.web.config.name }}
   labels:
-    app: crapi-web
-data: 
-  COMMUNITY_SERVICE: "crapi-community:{{ .Values.community.port }}"
-  IDENTITY_SERVICE: "crapi-identity:{{ .Values.identity.port }}"
-  WORKSHOP_SERVICE: "crapi-workshop:{{ .Values.workshop.port }}"
-  DB_NAME: crapi
-  DB_USER: admin
-  DB_PASSWORD: crapisecretpassword
-  DB_HOST: postgresdb
-  DB_PORT: "5432"
-  JWT_SECRET: crapi
-  SECRET_KEY: crapi
+    release: {{ .Release.Name }}
+    {{- toYaml .Values.web.config.labels | nindent 4 }}
+data:
+  COMMUNITY_SERVICE: {{ .Values.community.service.name }}:{{ .Values.community.port }}
+  IDENTITY_SERVICE: {{ .Values.identity.service.name }}:{{ .Values.identity.port }}
+  WORKSHOP_SERVICE: {{ .Values.workshop.service.name }}:{{ .Values.workshop.port }}

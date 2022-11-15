@@ -1,16 +1,13 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
- 
 metadata:
   name: mongodb-pv-claim
   labels:
     app: mongo
- 
 spec:
   #storageClassName: local-path
   accessModes:
-    - ReadWriteOnce
- 
+    - ReadWriteOnce 
   resources:
     requests:
       storage: 1000Mi

@@ -1,41 +1,53 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: crapi-identity
+  name: {{ .Values.identity.name }}
+  labels:
+    release: {{ .Release.Name }}
+    {{- toYaml .Values.identity.deploymentLabels | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.identity.replicaCount }}
   selector:
     matchLabels:
-      app: crapi-identity
+      {{- with .Values.identity.deploymentSelectorMatchLabels }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
   template:
     metadata:
       labels:
-        app: crapi-identity
+        release: {{ .Release.Name }}
+        {{- toYaml .Values.identity.podLabels | nindent 8 }}
     spec:
       initContainers:
         - name: wait-for-postgres
-          image: groundnuty/k8s-wait-for:v1.3
-          imagePullPolicy: Always
+          image: {{ .Values.waitForK8sResources.image }}
+          imagePullPolicy: {{ .Values.waitForK8sResources.imagePullPolicy }}
           args:
             - "service"
-            - "postgresdb"
+            - {{ .Values.postgresdb.service.name | quote }}
+      volumes:
+        - name: jwt-key-secret
+          secret:
+            secretName: {{ .Values.identity.jwtKeySecret.name }}
       containers:
-      - name: crapi-identity
-        image: {{ .Values.identity.image }}:{{ .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.imagePullPolicy }}
-        ports:
-        - containerPort: {{ .Values.identity.port }}
-        envFrom:
-            - configMapRef:
-                name: crapi-identity-configmap
-        resources:
-          limits:
-            cpu: "500m"
-          requests:
-            cpu: 256m
-        readinessProbe:
-          tcpSocket:
-            port: {{ .Values.identity.port }}
-          initialDelaySeconds: 15
-          periodSeconds: 10
-
+        - name: {{ .Values.identity.name }}
+          image: {{ .Values.identity.image }}:{{ .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          volumeMounts:
+            - mountPath: "/.keys"
+              name: jwt-key-secret
+              readOnly: true
+          ports:
+          - containerPort: {{ .Values.identity.port }}
+          envFrom:
+              - configMapRef:
+                  name: {{ .Values.identity.config.name }}
+          {{- if .Values.identity.resources }}
+          resources:
+            {{- toYaml .Values.identity.resources | nindent 12 }}
+          {{- end }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.identity.port }}
+            initialDelaySeconds: 15
+            periodSeconds: 10

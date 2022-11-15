@@ -14,34 +14,33 @@
 
 package com.crapi.service;
 
-import com.crapi.entity.UserDetails;
-import com.crapi.model.*;
 import com.crapi.entity.User;
-
-import javax.servlet.http.HttpServletRequest;
+import com.crapi.model.*;
 import java.io.UnsupportedEncodingException;
+import javax.servlet.http.HttpServletRequest;
 
 public interface UserService {
 
-    CRAPIResponse registerUser(SignUpForm signUpRequest);
+  void updateUserToken(String jwt, String email);
 
-    void updateUserToken(String jwt, String email);
+  CRAPIResponse resetPassword(LoginForm loginForm, HttpServletRequest request)
+      throws UnsupportedEncodingException;
 
-    CRAPIResponse resetPassword(LoginForm loginForm, HttpServletRequest request) throws UnsupportedEncodingException;
+  CRAPIResponse verifyJwtToken(String token);
 
-    DashboardResponse getUserByRequestToken(HttpServletRequest request);
+  DashboardResponse getUserByRequestToken(HttpServletRequest request);
 
-    CRAPIResponse changeEmailRequest(HttpServletRequest request,ChangeEmailForm loginForm);
+  CRAPIResponse changeEmailRequest(HttpServletRequest request, ChangeEmailForm loginForm);
 
-    CRAPIResponse verifyEmailToken(HttpServletRequest request,ChangeEmailForm changeEmailForm);
+  CRAPIResponse verifyEmailToken(HttpServletRequest request, ChangeEmailForm changeEmailForm);
 
-    User getUserFromToken(HttpServletRequest request);
+  User getUserFromToken(HttpServletRequest request);
 
-    CRAPIResponse loginWithEmailToken(LoginWithEmailToken loginWithEmailToken);
+  User getUserFromTokenWithoutValidation(HttpServletRequest request);
 
-    JwtResponse loginWithEmailTokenV2(LoginWithEmailToken loginWithEmailToken);
+  CRAPIResponse loginWithEmailToken(LoginWithEmailToken loginWithEmailToken);
 
-    JwtResponse authenticateUserLogin(LoginForm loginForm) throws UnsupportedEncodingException;
+  JwtResponse loginWithEmailTokenV2(LoginWithEmailToken loginWithEmailToken);
 
-    public UserDetails createUserDetails(String name, User user);
+  JwtResponse authenticateUserLogin(LoginForm loginForm) throws UnsupportedEncodingException;
 }

@@ -1,15 +1,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: crapi-web
+  name: {{ .Values.web.service.name }}
   labels:
-    app: crapi-web
+    release: {{ .Release.Name }}
+    {{- toYaml .Values.web.service.labels | nindent 4 }}
 spec:
   ports:
   - port: {{ .Values.web.port }}
     targetPort: 80
-    nodePort: 30080
+    nodePort: {{ .Values.web.service.nodePort }}
     name: nginx
   type: LoadBalancer
   selector:
-    app: crapi-web
+    {{- toYaml .Values.web.serviceSelectorLabels | nindent 4 }}

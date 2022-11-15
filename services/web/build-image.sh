@@ -18,3 +18,8 @@ set -x
 
 cd "$(dirname $0)"
 docker build -t crapi/crapi-web:${VERSION:-latest} .
+retVal=$?
+if [ $retVal -ne 0 ]; then
+    echo "Error building crapi-web image"
+    exit $retVal
+fi

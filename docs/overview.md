@@ -8,7 +8,7 @@ The crAPI application, by design, does not implement all of its functionalities 
 crAPI has a microservices architecture comprising the following services developed using different technologies: 
 
 * web: Main Ingress service
-* identiy: User and authentication endpoints
+* identity: User and authentication endpoints
 * community: Community blogs and comments endpoints
 * workshop: Vehicle workshop endpoints
 * mailhog: Mail service
@@ -18,13 +18,13 @@ crAPI has a microservices architecture comprising the following services develop
 [0]: ./challenges.md
 
 
-For deployment options, visit [the setup instructions](docs/setup.md).
+For deployment options, visit [the setup instructions](setup.md).
 ---
 
 To know more about challenges in crAPI, visit [challenges].
 ----
 
-[challenges]: docs/challenges.md
+[challenges]: challenges.md
 [overview]: docs/overview.md
 [setup-k8s]: docs/setup.md#kubernetes-minikube
 [vagrant]: https://www.vagrantup.com/downloads

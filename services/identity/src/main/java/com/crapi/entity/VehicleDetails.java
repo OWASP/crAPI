@@ -13,60 +13,52 @@
  */
 
 package com.crapi.entity;
+
 import com.crapi.enums.EStatus;
-import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
-import org.hibernate.type.UUIDBinaryType;
-
-import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.UUID;
-
+import javax.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "vehicle_details")
 @Data
 public class VehicleDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private long id;
 
-    @Column(name = "uuid", updatable = false, nullable = false, unique=true)
-    private UUID uuid = UUID.randomUUID();
-    private String pincode;
-    private String vin;
-    private long year;
-    private EStatus status;
+  @Column(name = "uuid", updatable = false, nullable = false, unique = true)
+  private UUID uuid = UUID.randomUUID();
 
-    @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name="vehicle_model_id")
-    private VehicleModel model;
+  private String pincode;
+  private String vin;
+  private long year;
+  private EStatus status;
 
-    @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name = "location_id")
-    private VehicleLocation vehicleLocation;
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "vehicle_model_id")
+  private VehicleModel model;
 
-    @ManyToOne
-    @JoinColumn(name="owner_id")
-    private User owner;
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "location_id")
+  private VehicleLocation vehicleLocation;
 
-    public VehicleDetails(String pincode,String vin){
+  @ManyToOne
+  @JoinColumn(name = "owner_id")
+  private User owner;
 
-        this.pincode = pincode;
-        this.vin = vin;
-        this.status=EStatus.ACTIVE;
-        this.year = LocalDate.now().getYear();
+  public VehicleDetails(String pincode, String vin) {
 
-    }
-    public VehicleDetails(){
+    this.pincode = pincode;
+    this.vin = vin;
+    this.status = EStatus.ACTIVE;
+    this.year = LocalDate.now().getYear();
+  }
 
-    }
+  public VehicleDetails() {}
 
-    //vehicle brand, model, year, VIN, pin code, owner_id
-
+  // vehicle brand, model, year, VIN, pin code, owner_id
 
 }

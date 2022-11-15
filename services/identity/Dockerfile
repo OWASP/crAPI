@@ -12,24 +12,28 @@
 
 
 # Java Maven Build
-FROM maven:3.6-jdk-11 AS javabuild
-RUN mkdir /app
-COPY ./pom.xml /app/pom.xml
-RUN mvn -f /app/pom.xml dependency:go-offline -B 
-COPY ./src /app/src
-RUN mvn -f /app/pom.xml clean package -DskipTests
+FROM gradle:7.3.3-jdk11 AS gradlebuild
+WORKDIR /app
+COPY *.gradle.kts ./
+# Only download dependencies
+# Eat the expected build failure since no source code has been copied yet
+RUN gradle clean build --no-daemon > /dev/null 2>&1 || true
+COPY src src
+RUN gradle build
+RUN gradle bootJar
 
 # Main Image
-FROM openjdk:11-jre-slim-buster
+FROM openjdk:11.0.15-jre-slim-buster
 
 #Java
 RUN apt-get -y update && apt-get -y install curl && apt-get -y clean
 RUN mkdir /app
-COPY --from=javabuild /app/target/user-microservices-1.0-SNAPSHOT.jar /app/user-microservices-1.0-SNAPSHOT.jar
+COPY --from=gradlebuild /app/build/libs/identity-service-1.0-SNAPSHOT.jar /app/identity-service-1.0-SNAPSHOT.jar
 
 ARG SERVER_PORT 
 EXPOSE ${SERVER_PORT}
 
 ENV JAVA_TOOL_OPTIONS "-Xmx128m"
 
-CMD java -jar /app/user-microservices-1.0-SNAPSHOT.jar
+COPY entrypoint.sh /entrypoint.sh
+CMD [ "/entrypoint.sh"]

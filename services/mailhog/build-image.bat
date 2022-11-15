@@ -1,4 +1,4 @@
 @echo off
 cd /d mailhog
-docker build -t crapi/crapi-mailhog .
+cmd /c docker build -t crapi/mailhog:%VERSION% .
 cd /d .\..\

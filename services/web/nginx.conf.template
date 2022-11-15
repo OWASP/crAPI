@@ -57,6 +57,10 @@ server {
     try_files $uri $uri/ =404;
   }
 
+  location /.well-known/jwks.json {
+    proxy_pass http://${IDENTITY_SERVICE}/identity/api/auth/jwks.json;
+  }
+
   location / {
     try_files $uri /index.html =404;
     add_header Last-Modified $date_gmt;

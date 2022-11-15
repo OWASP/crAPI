@@ -24,3 +24,17 @@
   color: black;
   font-size: x-large;
 }
+
+.upload-video-button{
+  width: 100%;
+  height: 100%;
+  min-width: 900px;
+  align-items: center;
+  justify-content: center;
+  display:flex;
+  margin-top: 40px;
+  
+}
+.button{
+    align-items: center;
+}
