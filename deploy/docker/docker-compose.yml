@@ -19,7 +19,7 @@ services:
     #ports:
     #  - "127.0.0.1:8080:8080"
     volumes:
-      - ./.keys:/.keys
+      - ./keys:/keys
     environment:
       - DB_NAME=crapi
       - DB_USER=admin

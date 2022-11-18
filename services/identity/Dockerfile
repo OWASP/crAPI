@@ -35,5 +35,6 @@ EXPOSE ${SERVER_PORT}
 
 ENV JAVA_TOOL_OPTIONS "-Xmx128m"
 
+COPY jwks.json default_jwks.json
 COPY entrypoint.sh /entrypoint.sh
 CMD [ "/entrypoint.sh"]
