@@ -39,6 +39,12 @@ The above challenge was completed using Burp Suite Community Edition.
 ## Broken User Authentication
 
 ### Challenge 3 - Reset the password of a different user
+#### Detailed solution
+
+1. Click the Forgot Password and you'll found the forgotpassword endpoint (http://127.0.0.1:8888).
+2. You may enumerate accounts using the server's HTTP response, and if ther server are given account doesn't exist, you'll get a through discrepency of error messages with existing account.
+3. Once you've located the desired account, you can log in with your own account (I will call it as User A) and use the forgot password normally and visiting MailHog at http://127.0.0.1:8025/# to get the OTP of User A.
+4. Used your otp from User A at the endpoint /identity/api/auth/v3/check-otp  and change target email address with new password.
 
 ## Excessive Data Exposure
 
