@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import React from "react";
 
 export const PASSWORD_INFO =
   "Password must be of length 8-16 characters having one lower case, one upper case and one numeric character.";
@@ -20,8 +21,13 @@ export const EMAIL_REQUIRED = "Please enter a valid email!";
 export const PHONE_NO_REQUIRED = "Please enter phone number";
 export const INVALID_PHONE = "Contact number should have only numbers and -";
 export const PASSWORD_REQUIRED = "Please enter your password";
-export const INVALID_PASSWORD =
-  "Password should contain at least one digit, one small letter and one capital letter and should at least contain 8 characters.";
+export const INVALID_PASSWORD = (
+  <>
+  Password should contain at least one digit, one small letter, one capital letter and one special character.<br />
+  Should be at least contain 8 characters and maximum 16 characters.<br />
+  Allowed special characters are #$@!%&*?
+  </>
+);
 export const CONFIRM_PASSWORD = "Please confirm your password!";
 export const PASSWORD_DO_NOT_MATCH = "Passwords do not match!";
 export const OTP_REQUIRED = "Please enter the OTP!";
