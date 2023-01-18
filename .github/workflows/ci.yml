@@ -99,8 +99,8 @@ jobs:
           push: false
           load: true
           platforms: linux/amd64
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=identity-service
+          cache-to: type=gha,mode=max,scope=identity-service
 
       - name: Build crapi-workshop image
         uses: docker/build-push-action@v2
@@ -110,8 +110,8 @@ jobs:
           push: false
           load: true
           platforms: linux/amd64
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=workshop-service
+          cache-to: type=gha,mode=max,scope=workshop-service
 
       - name: Build crapi-community image
         uses: docker/build-push-action@v2
@@ -121,8 +121,8 @@ jobs:
           push: false
           load: true
           platforms: linux/amd64
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=community-service
+          cache-to: type=gha,mode=max,scope=community-service
 
       - name: Build crapi-web image
         uses: docker/build-push-action@v2
@@ -132,8 +132,8 @@ jobs:
           push: false
           load: true
           platforms: linux/amd64
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=web-service
+          cache-to: type=gha,mode=max,scope=web-service
 
       - name: Check Mailhog existence
         id: check_mailhog_exists
@@ -150,8 +150,8 @@ jobs:
           push: false
           load: true
           platforms: linux/amd64
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=mailhog-service
+          cache-to: type=gha,mode=max,scope=mailhog-service
 
       - name: Show all images built
         run: docker images
@@ -180,8 +180,8 @@ jobs:
           tags: crapi/crapi-identity:${{ env.TAG_LATEST }},crapi/crapi-identity:${{ env.TAG_NAME }}
           push: ${{ needs.build-context.outputs.push_image }}
           platforms: ${{ env.PLATFORMS }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=identity-service
+          cache-to: type=gha,mode=max,scope=identity-service
 
       - name: Build crapi-workshop all platforms and conditionally push to Docker Hub
         uses: docker/build-push-action@v2
@@ -190,8 +190,8 @@ jobs:
           tags: crapi/crapi-workshop:${{ env.TAG_LATEST }},crapi/crapi-workshop:${{ env.TAG_NAME }}
           push: ${{ needs.build-context.outputs.push_image }}
           platforms: ${{ env.PLATFORMS }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=workshop-service
+          cache-to: type=gha,mode=max,scope=workshop-service
 
       - name: Build crapi-community all platforms and conditionally push to Docker Hub
         uses: docker/build-push-action@v2
@@ -200,8 +200,8 @@ jobs:
           tags: crapi/crapi-community:${{ env.TAG_LATEST }},crapi/crapi-community:${{ env.TAG_NAME }}
           push: ${{ needs.build-context.outputs.push_image }}
           platforms: ${{ env.PLATFORMS }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=community-service
+          cache-to: type=gha,mode=max,scope=community-service
 
       - name: Build crapi-web all platforms and conditionally push to Docker Hub
         uses: docker/build-push-action@v2
@@ -210,8 +210,8 @@ jobs:
           tags: crapi/crapi-web:${{ env.TAG_LATEST }},crapi/crapi-web:${{ env.TAG_NAME }}
           push: ${{ needs.build-context.outputs.push_image }}
           platforms: ${{ env.PLATFORMS }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=web-service
+          cache-to: type=gha,mode=max,scope=web-service
 
       - name: Build mailhog all platforms and conditionally push to Docker Hub
         if: steps.check_mailhog_exists.outputs.files_exists == 'true'
@@ -221,6 +221,6 @@ jobs:
           tags: crapi/mailhog:${{ env.TAG_LATEST }},crapi/mailhog:${{ env.TAG_NAME }}
           push: ${{ needs.build-context.outputs.push_image }}
           platforms: ${{ env.PLATFORMS }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=mailhog-service
+          cache-to: type=gha,mode=max,scope=mailhog-service
 
