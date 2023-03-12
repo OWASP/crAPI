@@ -38,21 +38,58 @@ The above challenge was completed using Burp Suite Community Edition.
 
 ## Broken User Authentication
 
-### Challenge 3 - Reset the password of a different user
+### [Challenge 3 - Reset the password of a different user](challenges.md#challenge-3---Reset-the-password-of-a-different-user)
+
+#### Detailed solution
+
+1. Go to the login page and click on forgot password and you will be brought to http://127.0.0.1:8888/forgot-password.
+2. Enter **Email** of the user you are targeting for password reset.
+3. Enter **OTP** and **New Password** and capture the request in burp proxy, the endpoint would be /identity/api/auth/v3/check-otp.
+4. Send the request to **Intruder** and change _v3_ to _v2_ in `/identity/api/auth/v3/check-otp` as v3 have protections for rate limiting.
+5. select otp as payload to bruteforce and load https://raw.githubusercontent.com/danielmiessler/SecLists/master/Fuzzing/4-digits-0000-9999.txt as wordlist.
+6. start the attack and soon you would see a request with a differnt length containg message "OTP Verified".
+7. Now you can login with the new password from http://localhost:8888/login
+   
 
 ## Excessive Data Exposure
 
-### Challenge 4 - Find an API endpoint that leaks sensitive information of other users
+### [Challenge 4 - Find an API endpoint that leaks sensitive information of other users](challenges.md#challenge-4---Find-an-API-endpoint-that-leaks-sensitive-information-of-other-users)
 
-### Challenge 5 - Find an API endpoint that leaks an internal property of a video
+#### Detailed solution
+
+1. Login to the application from http://localhost:8888/login
+2. Click *Community* in the navbar to visit http://localhost:8888/forum
+3. Now go to Proxy tab on burp and open HTTP history and open the recent request to http://localhost:8888/forum
+4. You would see excessive details in response like email and vehicleid.
+
+### [Challenge 5 - Find an API endpoint that leaks an internal property of a video](challenges.md#challenge-5---Find-an-API-endpoint-that-leaks-an-internal-property-of-a-video)
+
+#### Detailed solution
+
+1. Login to the application from http://localhost:8888/login
+2. Click *Profile Icon* in the navbar to visit http://127.0.0.1:8888/my-profile
+3. Upload a video in "My Personal Video" section.
+4. Click on the 3 dots in front of "My Personal Video" and select the "Change Video Name" option. Chnage the video name to anything.
+5. Now you should see this request in HTTP History, the endpoint would be like /identity/api/v2/user/videos/{VIDEO_ID}
+6. In the response of this request you would get excessive details about the video like conversion_params.
 
 ## Rate Limiting
 
-### Challenge 6 - Perform a layer 7 DoS using ‘contact mechanic’ feature
+### [Challenge 6 - Perform a layer 7 DoS using ‘contact mechanic’ feature](challenges.md#challenge-6---Perform-a-layer-7-DoS-using-‘contact-mechanic’-feature)
+
+### Detailed solution
+
+1. Login to the application from http://localhost:8888/login
+2. After adding a vehicle, we will have an option to send service request to mechanic by using the *Contact Mechanic* option.
+3. Observe the request sent after the *Send Service Request*. It would be on the endpoint of `/workshop/api/merchant/contact_mechanic`, In the request change the value of `repeat_request_if_failed` to true and `number_of_repeats` to 100000.
 
 ## BFLA 
 
-### Challenge 7 - Delete a video of another user
+### [Challenge 7 - Delete a video of another user](challenges.md#challenge-7---Delete-a-video-of-another-user)
+
+### Detailed solution
+
+
 
 ## Mass Assignment
 
