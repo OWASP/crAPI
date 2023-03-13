@@ -42,13 +42,13 @@ The above challenge was completed using Burp Suite Community Edition.
 
 #### Detailed solution
 
-1. Go to the login page and click on forgot password and you will be brought to http://127.0.0.1:8888/forgot-password.
+1. Go to the login page http://localhost:8888/login and click on forgot password and you will be brought to http://127.0.0.1:8888/forgot-password.
 2. Enter **Email** of the user you are targeting for password reset.
 3. Enter **OTP** and **New Password** and capture the request in burp proxy, the endpoint would be /identity/api/auth/v3/check-otp.
-4. Send the request to **Intruder** and change _v3_ to _v2_ in `/identity/api/auth/v3/check-otp` as v3 have protections for rate limiting.
-5. select otp as payload to bruteforce and load https://raw.githubusercontent.com/danielmiessler/SecLists/master/Fuzzing/4-digits-0000-9999.txt as wordlist.
-6. start the attack and soon you would see a request with a differnt length containg message "OTP Verified".
-7. Now you can login with the new password from http://localhost:8888/login
+4. Send the request to **Intruder** and change _v3_ to _v2_ in `/identity/api/auth/v3/check-otp` as v3 has a rate-limit set.
+5. select the value of otp parameter as payload and load https://raw.githubusercontent.com/danielmiessler/SecLists/master/Fuzzing/4-digits-0000-9999.txt as wordlist.
+6. start the attack and soon you would see a request with a different length containing message "OTP Verified".
+7. Now you can login with the new password on http://localhost:8888/login
    
 
 ## Excessive Data Exposure
@@ -59,7 +59,7 @@ The above challenge was completed using Burp Suite Community Edition.
 
 1. Login to the application from http://localhost:8888/login
 2. Click *Community* in the navbar to visit http://localhost:8888/forum
-3. Now go to Proxy tab on burp and open HTTP history and open the recent request to http://localhost:8888/forum
+3. Observer the reponse of http://localhost:8888/forum in burp, the endpoint would be /community/api/v2/community/posts/recent
 4. You would see excessive details in response like email and vehicleid.
 
 ### [Challenge 5 - Find an API endpoint that leaks an internal property of a video](challenges.md#challenge-5---Find-an-API-endpoint-that-leaks-an-internal-property-of-a-video)
@@ -69,19 +69,21 @@ The above challenge was completed using Burp Suite Community Edition.
 1. Login to the application from http://localhost:8888/login
 2. Click *Profile Icon* in the navbar to visit http://127.0.0.1:8888/my-profile
 3. Upload a video in "My Personal Video" section.
-4. Click on the 3 dots in front of "My Personal Video" and select the "Change Video Name" option. Chnage the video name to anything.
-5. Now you should see this request in HTTP History, the endpoint would be like /identity/api/v2/user/videos/{VIDEO_ID}
-6. In the response of this request you would get excessive details about the video like conversion_params.
+4. Click on the 3 dots in front of "My Personal Video" and select "Change Video Name" option. Change the video name to anything.
+5. Observer the response of "Change Video Name" in burp, the endpoint would be like `/identity/api/v2/user/videos/{VIDEO_ID}`
+6. You would see excessive details about the video like **conversion_params**.
 
 ## Rate Limiting
 
-### [Challenge 6 - Perform a layer 7 DoS using ‘contact mechanic’ feature](challenges.md#challenge-6---Perform-a-layer-7-DoS-using-‘contact-mechanic’-feature)
+### [Challenge 6 - Perform a layer 7 DoS using ‘contact mechanic’ feature](challenges.md#challenge-6---Perform-a-layer-7-DoS-using-contact-mechanic-feature)
 
 ### Detailed solution
 
 1. Login to the application from http://localhost:8888/login
 2. After adding a vehicle, we will have an option to send service request to mechanic by using the *Contact Mechanic* option.
-3. Observe the request sent after the *Send Service Request*. It would be on the endpoint of `/workshop/api/merchant/contact_mechanic`, In the request change the value of `repeat_request_if_failed` to true and `number_of_repeats` to 100000.
+3. Observe the request sent after the *Send Service Request*. It would be on the endpoint of `/workshop/api/merchant/contact_mechanic`.
+4. In the request change the value of `repeat_request_if_failed` to **true** and `number_of_repeats` to **1000** and send the request.
+5. You will get `Service unavailable. Seems like you caused layer 7 DoS :)` in response.
 
 ## BFLA 
 
@@ -93,9 +95,9 @@ The above challenge was completed using Burp Suite Community Edition.
 2. Click *Profile Icon* in the navbar to visit http://127.0.0.1:8888/my-profile
 3. Upload a video in "My Personal Video" section.
 4. Click on the 3 dots in front of "My Personal Video" and select the "Change Video Name" option. Chnage the video name to anything.
-5. Now you should see this request in HTTP History, the endpoint would be like /identity/api/v2/user/videos/{VIDEO_ID}
-6. Send this request to **Repeater**, change request method from PUT to DELETE.
-7. Also, change `user` in /identity/api/v2/user/videos/{VIDEO_ID} to `admin`, it should look like this /identity/api/v2/admin/videos/{VIDEO_ID}.
+5. Observer the request of "Change Video Name" in burp, the endpoint would be like `/identity/api/v2/user/videos/{VIDEO_ID}`
+6. Change request method from `PUT` to `DELETE` and change `user` in /identity/api/v2/user/videos/{VIDEO_ID} to `admin`, it should look like this `/identity/api/v2/admin/videos/{VIDEO_ID}`.
+7. Now send the request and you will get a message saying `User video deleted successfully`.
 
 ## Mass Assignment
 
@@ -107,28 +109,28 @@ The above challenge was completed using Burp Suite Community Edition.
 3. There is an initial available balance of $100. Try to order the *Seat* item for $10 from the shop by using the *Buy* button and observe the request sent.
 4. On observing the POST request `/workshop/api/shop/orders`, it can be observed that `credit` has been reduced by $10 and the current available balance is $90.
 5. On `http://127.0.0.1:8888/shop` click on `Past Orders`. you will brought to `http://127.0.0.1:8888/past-orders`.
-6. Then click on `Order Details` of the the seat you ordered. Endpoint would be http://127.0.0.1:8888/orders?order_id={ORDER_ID}.
-7. Send this request to **Repeater**, send this request and you should see `status` is set to `delivered` in the reponse.
-8. Change the request method from **GET** to **PUT** in request and add `{"status":"returned"}` as the data of request.
-9. You would see status value changed in response from `delivered` to `returned` and your credit will increase by 10.
-
-The above challenge was completed using Burp Suite Community Edition.
+6. Then click on `Order Details` of the the seat you ordered. Endpoint would be `/orders?order_id={ORDER_ID}`.
+7. Observer the response of `Order Details` in burp, you should see `status` is set to `delivered` in the reponse.
+8. Change the request method from `GET` to `PUT` in request and add `{"status":"returned"}` as the data of request, now send the request.
+9. You would see status value changed from `delivered` to `returned` and your credit will increase by 10.
 
 ### [Challenge 9 - Increase your balance by $1,000 or more](challenges.md#challenge-9---increase-your-balance-by-1000-or-more)
 
 #### Detailed solution
+
+##### Method 1
 
 1. Login to the application from http://localhost:8888/login
 2. Click *Shop* in the navbar to visit http://localhost:8888/shop
 3. There is an initial available balance of $100. Try to order the *Seat* item for $10 from the shop by using the *Buy* button and observe the request sent.
 4. On observing the POST request `/workshop/api/shop/orders`, it can be observed that `credit` has been reduced by $10 and the current available balance is $90.
 5. On `http://127.0.0.1:8888/shop` click on `Past Orders`. you will brought to `http://127.0.0.1:8888/past-orders`.
-6. Then click on `Order Details` of the the seat you ordered. Endpoint would be http://127.0.0.1:8888/orders?order_id={ORDER_ID}.
-7. Send this request to **Repeater**, send this request and you should see `status` is set to `delivered` in the reponse and `quantity` is set to 1.
-8. Change the request method from **GET** to **PUT** in request and add `{"status":"returned","quantity":"100"}` as the data of request.
+6. Then click on `Order Details` of the the seat you ordered. Endpoint would be `/orders?order_id={ORDER_ID}`.
+7. Observer the response of `Order Details` in burp, you should see `status` is set to `delivered` in the reponse and `quantity` is set to `1`.
+8. Change the request method from `GET` to `PUT` in request and add `{"status":"returned","quantity":"100"}` as the data of request, now send the request.
 9. You would see status value and quantity changed in response and your credit will increase by 1000.
 
-### This can also be done using this method - 
+##### Method 2
 
 1. Login to the application from http://localhost:8888/login
 2. Click *Shop* in the navbar to visit http://localhost:8888/shop
@@ -145,33 +147,35 @@ The above challenge was completed using Burp Suite Community Edition.
 1. Login to the application from http://localhost:8888/login
 2. Click *Profile Icon* in the navbar to visit http://127.0.0.1:8888/my-profile
 3. Upload a video in "My Personal Video" section.
-4. Click on the 3 dots in front of "My Personal Video" and select the "Change Video Name" option. Chnage the video name to anything.
-5. Now you should see this request in HTTP History, the endpoint would be like /identity/api/v2/user/videos/{VIDEO_ID}
-6. Add `"conversion_params":"-v codec h264 && whoami"` in the JSON data being sent to the server.
+4. Click on the 3 dots in front of "My Personal Video" and select "Change Video Name" option. Change the video name to anything.
+5. Observer the request of "Change Video Name" in burp, the endpoint would be like `/identity/api/v2/user/videos/{VIDEO_ID}`
+6. Add `"conversion_params":"-v codec h264 && whoami"` in the JSON data of the request and send the request.
 7. In the reponse you will see `conversion_params` value changed to `-v codec h264 && whoami`.
 
 ## SSRF
 
-### [Challenge 11 - Make crAPI send an HTTP call to https://www.google.com and return the HTTP response.](challenges.md#challenge-11---Make-crAPI-send-an-HTTP-call-to-https://www.google.com-and-return-the-HTTP-response.)
+### [Challenge 11 - Make crAPI send an HTTP call to https://www.google.com and return the HTTP response.](challenges.md#challenge-11---make-crapi-send-an-http-call-to-wwwgooglecom-and-return-the-http-response)
 
 #### Detailed solution
 
 1. Login to the application from http://localhost:8888/login
 2. After adding a vehicle, we will have an option to send service request to mechanic by using the *Contact Mechanic* option.
 3. Observe the request sent after the *Send Service Request*. In the request of `/workshop/api/merchant/contact_mechanic` we are sending the `mechanic_api` to server.
-4. Send the request to **Repeater** and change the value of `mechanic_api` to http://google.com and send the request, you would see the HTTP response of google.com in response.
+4. Change the value of `mechanic_api` to https://google.com in the request and send the request.
+5. You will see the response of https://google.com inside the response of `/workshop/api/merchant/contact_mechanic`.
 
 ## NoSQL Injection
 
-### [Challenge 12 - Find a way to get free coupons without knowing the coupon code.](challenges.md#challenge-12---Find-a-way-to-get-free-coupons-without-knowing-the-coupon-code.)
+### [Challenge 12 - Find a way to get free coupons without knowing the coupon code.](challenges.md#challenge-12---Find-a-way-to-get-free-coupons-without-knowing-the-coupon-code)
 
 #### Detailed solution
 
 1. Login to the application from http://localhost:8888/login
 2. Click *Shop* in the navbar to visit http://localhost:8888/shop
 3. Click *Add Coupons* button and enter any random string as coupon and click on **validate**.
-4. Open the latest request to `/community/api/v2/coupon/validate-coupon` in HTTP history and send it to `Repeater`.
-5. Now change the value of `coupon_code` in JSON data to `{"$ne": null}`. You would get the coupon code in response.
+4. Observer the last request sent to `/community/api/v2/coupon/validate-coupon` endpoint.
+5. Change the value of `coupon_code` inside JSON data to `{"$ne": null}` and send the request.
+6. You will get the coupon code in response.
 
 ## SQL Injection
 
@@ -182,24 +186,27 @@ The above challenge was completed using Burp Suite Community Edition.
 1. Login to the application from http://localhost:8888/login
 2. Click *Shop* in the navbar to visit http://localhost:8888/shop
 3. Click *Add Coupons* button and enter a valid coupon code and click on **validate**.
-4. Open the latest request to `/workshop/api/shop/apply_coupon` in HTTP history and send it to `Repeater`.
-5. Now change the value of `coupon_code` in JSON data to `';SELECT current_database();--`. You would would see the current database name in response.
+4. Observer the last request sent to `/workshop/api/shop/apply_coupon` endpoint.
+5. Change the value of `coupon_code` inside JSON data to `';SELECT current_database();--` and send the request. 
+6. You would see the current database name in response.
 
 ## Unauthenticated Access
 
-### [Challenge 14 - Find an endpoint that does not perform authentication checks for a user.](challenges.md#challenge-14---Find-an-endpoint-that-does-not-perform-authentication-checks-for-a-user.)
+### [Challenge 14 - Find an endpoint that does not perform authentication checks for a user.](challenges.md#challenge-14---Find-an-endpoint-that-does-not-perform-authentication-checks-for-a-user)
 
 #### Detailed solution
+
+##### First Endpoint 
 
 1. Login to the application from http://localhost:8888/login
 2. Click *Shop* in the navbar to visit http://localhost:8888/shop
 3. Oder the *Seat* item for $10 from the shop by using the *Buy* button.
 4. On `http://127.0.0.1:8888/shop` click on `Past Orders`. you will brought to `http://127.0.0.1:8888/past-orders`.
-5. Then click on `Order Details` of the the seat you ordered. Endpoint would be http://127.0.0.1:8888/orders?order_id={ORDER_ID}.
-6. Send this request to **Repeater**, and remove the Authorization header from the request and still you will be able to see the deatils of the order.
-7. You can change the value of `order_id` in http://127.0.0.1:8888/orders?order_id={ORDER_ID} to view other users order deatils without Authorization.
+5. Then click on `Order Details` of the the seat you ordered. Endpoint would be Endpoint would be `/orders?order_id={ORDER_ID}`.
+6. Observer the request of `Order Details` in burp, remove the Authorization header from the request and send the request.
+7. You will be able to see the details of the order. You can change the value of `order_id` in http://127.0.0.1:8888/orders?order_id={ORDER_ID} to view other users order deatils without Authorization.
 
-### There is one more endpoint where we can get Unauthenticated Access
+##### Second Endpoint
 
 1. Login to the application from http://localhost:8888/login
 2. After adding a vehicle, we will have an option to send service request to mechanic by using the *Contact Mechanic* option.
@@ -213,7 +220,7 @@ The above challenge was completed using Burp Suite Community Edition.
 
 #### Detailed Solution
 
-##### crAPI is vulnerable to to the following JWT Vulnerabilities
+##### crAPI is vulnerable to the following JWT Vulnerabilities
 1. JWT Algorithm Confusion Vulnerability
    - crAPI uses RS256 JWT Algorithm by default
    - Public Key to verify JWT is available at http://localhost:8888/.well-known/jwks.json
