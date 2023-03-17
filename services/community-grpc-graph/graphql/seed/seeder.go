@@ -20,8 +20,8 @@ import (
 	"os"
 	"time"
 
-	pb "crapi.community/graphql.grpc/grpc/community-api/src/main/proto/com/crapi/services/community/stub/proto"
 	"crapi.community/graphql.grpc/grpc/models"
+	pb "crapi.community/graphql.grpc/grpc/proto"
 	"github.com/jinzhu/gorm"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
