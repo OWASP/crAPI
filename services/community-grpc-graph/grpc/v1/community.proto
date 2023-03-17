@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option go_package = "/proto";
+
+import "google/protobuf/timestamp.proto";
+
+package com.crapi.services.community.v1;
+
+message Post {
+  string id = 1;
+  string title = 2;
+  string content = 3;
+  User author = 4;
+  repeated Comment comments = 5;
+  string author_id = 6;
+  google.protobuf.Timestamp created_at = 7;
+}
+
+message Coupon {
+  string  coupon_code = 1;
+  string	amount = 2;
+  google.protobuf.Timestamp	created_at = 3;
+}
+
+message User {
+  string nickname = 1;
+  string email = 2;
+  string vehicle_id = 3;
+  string picurl = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+message Comment {
+  string id = 1;
+  string content = 2;
+  google.protobuf.Timestamp created_at = 3;
+  User author = 4;
+}
+
+message GetAllPost {}
