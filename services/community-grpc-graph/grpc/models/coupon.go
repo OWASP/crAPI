@@ -23,7 +23,7 @@ import (
 	"strings"
 	"time"
 
-	"crapi.community/graphql.grpc/graph/model"
+	"crapi.community/graphql.grpc/graphql/model"
 
 	pb "crapi.community/graphql.grpc/grpc/community-api/src/main/proto/com/crapi/services/community/stub/proto"
 
