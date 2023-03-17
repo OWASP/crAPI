@@ -16,9 +16,9 @@ import (
 	"os"
 	"time"
 
-	"crapi.community/graphql.grpc/graph/auth"
-	"crapi.community/graphql.grpc/graph/config"
-	"crapi.community/graphql.grpc/graph/model"
+	"crapi.community/graphql.grpc/graphql/auth"
+	"crapi.community/graphql.grpc/graphql/config"
+	"crapi.community/graphql.grpc/graphql/model"
 	pb "crapi.community/graphql.grpc/grpc/community-api/src/main/proto/com/crapi/services/community/stub/proto"
 	"crapi.community/graphql.grpc/grpc/models"
 	"google.golang.org/grpc"
