@@ -17,16 +17,28 @@ ENV GO111MODULE=on \
     CGO_ENABLED=0
 WORKDIR /build
 COPY ./go.mod .
+RUN go mod download
+RUN go mod tidy
 COPY ./graphql ./graphql
 COPY ./grpc ./grpc
 COPY ./graphql/server.go ./main.go
+RUN go get -d google.golang.org/grpc
 RUN go get github.com/99designs/gqlgen
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+RUN apk add --no-cache protobuf
+RUN apk add protobuf-dev
+RUN ls -l
+RUN protoc -I /build/grpc/v1/ community.proto --go_out=/build/grpc/ --go-grpc_out=/build/grpc
+RUN protoc -I /build/grpc/v1/ community_requests.proto --go_out=/build/grpc/ --go-grpc_out=/build/grpc
+RUN protoc -I /build/grpc/v1/ community_responses.proto --go_out=/build/grpc/ --go-grpc_out=/build/grpc
+RUN protoc -I /build/grpc/v1/ community_service.proto --go_out=/build/grpc/ --go-grpc_out=/build/grpc
+RUN cd /build/graphql
 RUN go run github.com/99designs/gqlgen init
 RUN go run github.com/99designs/gqlgen generate
+RUN cd ../../
 RUN go mod tidy
-RUN go mod download
 RUN go mod vendor
-RUN 
 RUN ls -al
 RUN go build -o main .
 WORKDIR /dist

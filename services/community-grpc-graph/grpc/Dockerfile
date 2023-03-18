@@ -24,6 +24,7 @@ RUN go mod download
 RUN cp /build/grpc/main/main.go .
 RUN go mod vendor
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+RUN apt-get install protobuf-compiler
 RUN protoc -I /build/grpc/v1/ community.proto --go_out=/build/grpc/ --go-grpc_out=/build/grpc
 RUN protoc -I /build/grpc/v1/ community_requests.proto --go_out=/build/grpc/ --go-grpc_out=/build/grpc
 RUN protoc -I /build/grpc/v1/ community_responses.proto --go_out=/build/grpc/ --go-grpc_out=/build/grpc
