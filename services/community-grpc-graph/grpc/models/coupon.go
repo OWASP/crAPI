@@ -25,7 +25,7 @@ import (
 
 	"crapi.community/graphql.grpc/graphql/model"
 
-	pb "crapi.community/graphql.grpc/grpc/community-api/src/main/proto/com/crapi/services/community/stub/proto"
+	pb "crapi.community/graphql.grpc/grpc/proto"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
