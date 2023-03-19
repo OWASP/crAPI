@@ -118,7 +118,7 @@ services:
         condition: service_healthy
       crapi-identity:
         condition: service_healthy
-      crapi-community:
+      crapi-community-graphql:
         condition: service_healthy
     healthcheck:
         test: curl 0.0.0.0:${WORKSHOP_SERVER_PORT:-8000}/workshop/health_check/
@@ -141,7 +141,7 @@ services:
       - IDENTITY_SERVICE=crapi-identity:${IDENTITY_SERVER_PORT:-8080}
       - WORKSHOP_SERVICE=crapi-workshop:${WORKSHOP_SERVER_PORT:-8000}
     depends_on:
-      crapi-community:
+      crapi-community-graphql:
         condition: service_healthy
       crapi-identity:
         condition: service_healthy
@@ -196,6 +196,79 @@ services:
         start_period: 20s
     volumes:
       - mongodb-data:/data/db
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 128M
+
+  crapi-community-graphql:
+    container_name: crapi-community-graphql
+    image: crapi/crapi-community/graphql-server:${VERSION:-latest}
+    # ports:
+    #  - "8087:8087"
+    environment:
+      - GRPC-SERVICE=crapi-community-grpc:${COMMUNITY_GRPC_SERVER_PORT:-9090}
+      - IDENTITY_SERVICE=crapi-identity:${IDENTITY_SERVER_PORT:-8080}
+      - DB_NAME=crapi
+      - DB_USER=admin
+      - DB_PASSWORD=crapisecretpassword
+      - DB_HOST=postgresdb
+      - DB_PORT=5432
+      - SERVER_PORT=${COMMUNITY_GRAPHQL_SERVER_PORT:-8087}
+      - MONGO_DB_HOST=mongodb
+      - MONGO_DB_PORT=27017
+      - MONGO_DB_USER=admin
+      - MONGO_DB_PASSWORD=crapisecretpassword
+      - MONGO_DB_NAME=crapi
+    depends_on:
+      postgresdb:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      crapi-identity:
+        condition: service_healthy
+    healthcheck:
+        test: curl 0.0.0.0:${COMMUNITY_GRAPHQL_SERVER_PORT:-8087}/health
+        interval: 15s
+        timeout: 15s
+        retries: 15
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 128M
+
+  crapi-community-grpc:
+    container_name: crapi-community-grpc
+    image: crapi/crapi-community/grpc-server:${VERSION:-latest}
+    # ports:
+    #  - "9090:9090"
+    environment:
+      - IDENTITY_SERVICE=crapi-identity:${IDENTITY_SERVER_PORT:-8080}
+      - DB_NAME=crapi
+      - DB_USER=admin
+      - DB_PASSWORD=crapisecretpassword
+      - DB_HOST=postgresdb
+      - DB_PORT=5432
+      - SERVER_PORT=${COMMUNITY_GRPC_SERVER_PORT:-9090}
+      - MONGO_DB_HOST=mongodb
+      - MONGO_DB_PORT=27017
+      - MONGO_DB_USER=admin
+      - MONGO_DB_PASSWORD=crapisecretpassword
+      - MONGO_DB_NAME=crapi
+    depends_on:
+      postgresdb:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      crapi-community-graphql:
+        condition: service_healthy
+    healthcheck:
+        test: curl 0.0.0.0:${COMMUNITY_GRAPHQL_SERVER_PORT:-8087}/health
+        interval: 15s
+        timeout: 15s
+        retries: 15
     deploy:
       resources:
         limits:

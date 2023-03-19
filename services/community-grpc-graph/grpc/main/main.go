@@ -6,9 +6,9 @@ import (
 	"net"
 	"os"
 
-	"crapi.community/graphql.grpc/graphql/config"
-	"crapi.community/graphql.grpc/graphql/model"
-	"crapi.community/graphql.grpc/graphql/seed"
+	"crapi.community/graphql.grpc/graph/config"
+	"crapi.community/graphql.grpc/graph/model"
+	"crapi.community/graphql.grpc/graph/seed"
 	"crapi.community/graphql.grpc/grpc/models"
 
 	pb "crapi.community/graphql.grpc/grpc/proto"

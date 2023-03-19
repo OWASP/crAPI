@@ -6,7 +6,7 @@ import (
 
 	"crapi.community/graphql.grpc/grpc/models"
 
-	"crapi.community/graphql.grpc/graphql/model"
+	"crapi.community/graphql.grpc/graph/model"
 	pb "crapi.community/graphql.grpc/grpc/proto"
 
 	"google.golang.org/grpc"

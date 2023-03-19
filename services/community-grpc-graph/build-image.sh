@@ -16,7 +16,7 @@
 set -x
 cd "$(dirname $0)"
 # docker build -t crapi/crapi-community:${VERSION:-latest} .
-docker build -t crapi/crapi-community/graphql-server:${VERSION:-latest} -f graphql/Dockerfile . && docker build -t crapi/crapi-community/grpc-server:${VERSION:-latest} -f grpc/Dockerfile .
+docker build -t crapi/crapi-community/graphql-server:${VERSION:-latest} -f graph/Dockerfile . && docker build -t crapi/crapi-community/grpc-server:${VERSION:-latest} -f grpc/Dockerfile .
 retVal=$?
 if [ $retVal -ne 0 ]; then
     echo "Error building crapi-community image"

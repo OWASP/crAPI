@@ -19,17 +19,18 @@ WORKDIR /build
 COPY ./go.mod .
 COPY ./graph ./graph
 COPY ./grpc ./grpc
-RUN go mod tidy
-RUN go mod download
 RUN cp /build/grpc/main/main.go .
-RUN go mod vendor
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-RUN apt-get install protobuf-compiler
+RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+RUN apk add --no-cache protobuf
+RUN apk add protobuf-dev
 RUN protoc -I /build/grpc/v1/ community.proto --go_out=/build/grpc/ --go-grpc_out=/build/grpc
 RUN protoc -I /build/grpc/v1/ community_requests.proto --go_out=/build/grpc/ --go-grpc_out=/build/grpc
 RUN protoc -I /build/grpc/v1/ community_responses.proto --go_out=/build/grpc/ --go-grpc_out=/build/grpc
 RUN protoc -I /build/grpc/v1/ community_service.proto --go_out=/build/grpc/ --go-grpc_out=/build/grpc
-RUN ls -al
+RUN go mod tidy
+RUN go mod download
+RUN go mod vendor
 RUN go build -o main .
 WORKDIR /dist
 RUN cp /build/main .
@@ -38,11 +39,6 @@ RUN cp /build/main .
 FROM alpine:3
 
 # go
-ENV MONGO_DB_HOST=localhost
-ENV MONGO_DB_PASSWORD=root
-ENV MONGO_DB_PORT=27017
-ENV MONGO_DB_USER=root
-ENV MONGO_DB_NAME=crapi
 RUN mkdir /app
 RUN apk update && apk add --no-cache curl
 COPY --from=builder /dist/main /app/main

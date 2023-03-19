@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"os"
 
-	graph "crapi.community/graphql.grpc/graphql"
-	"crapi.community/graphql.grpc/graphql/auth"
-	"crapi.community/graphql.grpc/graphql/config"
+	"crapi.community/graphql.grpc/graph"
+	"crapi.community/graphql.grpc/graph/auth"
+	"crapi.community/graphql.grpc/graph/config"
 	"crapi.community/graphql.grpc/grpc/responses"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"

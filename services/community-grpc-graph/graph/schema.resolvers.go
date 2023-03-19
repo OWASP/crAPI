@@ -12,13 +12,11 @@ import (
 	"context"
 	"errors"
 	"log"
-	"net/http"
 	"os"
 	"time"
 
-	"crapi.community/graphql.grpc/graphql/auth"
-	"crapi.community/graphql.grpc/graphql/config"
-	"crapi.community/graphql.grpc/graphql/model"
+	"crapi.community/graphql.grpc/graph/config"
+	"crapi.community/graphql.grpc/graph/model"
 	"crapi.community/graphql.grpc/grpc/models"
 	pb "crapi.community/graphql.grpc/grpc/proto"
 	"google.golang.org/grpc"
@@ -59,29 +57,6 @@ func (r *mutationResolver) CreatePost(ctx context.Context, input model.PostInput
 	return &ret, nil
 }
 
-// UpdatePost is the resolver for the UpdatePost field.
-func (r *mutationResolver) UpdatePost(ctx context.Context, id string, input model.PostInput) (bool, error) {
-	post := models.PrepareUpdatePost(input)
-	res, err := UpdatePost(os.Getenv("GRPC-SERVICE"), id, post)
-
-	if err != nil {
-		log.Println("Error while updating post....%v", err)
-		return false, err
-	}
-	return res, nil
-}
-
-// DeletePost is the resolver for the DeletePost field.
-func (r *mutationResolver) DeletePost(ctx context.Context, postsID []string) ([]string, error) {
-	res, err := DeletePost(os.Getenv("GRPC-SERVICE"), postsID)
-
-	if err != nil {
-		log.Println("Error while deleting post ..... %v", err)
-		return []string{}, err
-	}
-	return res, err
-}
-
 // CreateCoupon is the resolver for the CreateCoupon field.
 func (r *mutationResolver) CreateCoupon(ctx context.Context, input model.CouponInput) (*model.Coupon, error) {
 	coupon := models.PrepareNewCoupon(input)
@@ -112,28 +87,6 @@ func (r *mutationResolver) CreateCoupon(ctx context.Context, input model.CouponI
 		return &model.Coupon{}, err
 	}
 	return &coupon, nil
-}
-
-// UpdateCoupon is the resolver for the UpdateCoupon field.
-func (r *mutationResolver) UpdateCoupon(ctx context.Context, id string, input model.CouponInput) (bool, error) {
-	res, err := UpdateCoupon(os.Getenv("GRPC-SERVICE"), id, input)
-
-	if err != nil {
-		log.Println("Error while Updating Coupon by graphQL ..... %v", err)
-		return false, err
-	}
-	return res, nil
-}
-
-// DeleteCoupon is the resolver for the DeleteCoupon field.
-func (r *mutationResolver) DeleteCoupon(ctx context.Context, coupons []string) ([]string, error) {
-	res, err := DeleteCoupon(os.Getenv("GRPC-SERVICE"), coupons)
-
-	if err != nil {
-		log.Println("Error while deleting post ..... %v", err)
-		return []string{}, err
-	}
-	return res, err
 }
 
 // AddComment is the resolver for the AddComment field.
@@ -249,29 +202,6 @@ func (r *queryResolver) GetAllPosts(ctx context.Context, limit int) ([]*model.Po
 		retPost = append(retPost, &convertedP)
 	}
 	return retPost, nil
-}
-
-// GetCoupons is the resolver for the GetCoupons field.
-func (r *queryResolver) GetCoupons(ctx context.Context, codes []string) ([]*model.Coupon, error) {
-	req := ctx.Value("request").(*http.Request)
-	_, err := auth.ExtractTokenID(req, server.DB)
-	if err != nil {
-		log.Fatalln("Unauthorized")
-		return nil, err
-	}
-
-	Coupons := GetCoupon(os.Getenv("GRPC-SERVICE"), codes)
-
-	ret := []*model.Coupon{}
-	for i := 0; i < len(Coupons.Coupons); i++ {
-		c := model.Coupon{
-			CouponCode: Coupons.Coupons[i].CouponCode,
-			Amount:     Coupons.Coupons[i].Amount,
-			CreatedAt:  models.Convert_to_Time(Coupons.Coupons[i].CreatedAt),
-		}
-		ret = append(ret, &c)
-	}
-	return ret, nil
 }
 
 // ValidateCoupon is the resolver for the ValidateCoupon field.

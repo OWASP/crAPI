@@ -28,7 +28,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 
-	"crapi.community/graphql.grpc/graphql/model"
+	"crapi.community/graphql.grpc/graph/model"
 	pb "crapi.community/graphql.grpc/grpc/proto"
 
 	"go.mongodb.org/mongo-driver/bson"

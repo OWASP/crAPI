@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"crapi.community/graphql.grpc/graphql/model"
+	"crapi.community/graphql.grpc/graph/model"
 
 	pb "crapi.community/graphql.grpc/grpc/proto"
 

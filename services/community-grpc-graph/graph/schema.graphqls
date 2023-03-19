@@ -54,12 +54,13 @@ type Comment {
 input CommentInput {
   id: String!
   content: String!
+  # created_at: String
+  # author: UserInput!
 }
 
 type Query {
   GetPosts(ids: [String!]!): [Post!]!
   GetAllPosts(limit:Int!): [Post!]
-  GetCoupons(codes: [String!]!): [Coupon!]!
   ValidateCoupon(code: String!): Coupon!
 }
 
