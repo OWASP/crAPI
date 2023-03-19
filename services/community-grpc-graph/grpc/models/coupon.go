@@ -73,7 +73,21 @@ func ValidateCoupon(client *mongo.Client, couponCode string) (*model.Coupon, err
 func SaveCoupon(client *mongo.Client, coupon *pb.Coupon) (*pb.CreateCouponResponse, error) {
 
 	collection := client.Database(os.Getenv("MONGO_DB_NAME")).Collection("coupons")
-	_, err := collection.InsertOne(context.TODO(), coupon)
+	// Modify the BSON document to replace "couponcode" with "coupon_code"
+	doc, err := bson.Marshal(coupon)
+	if err != nil {
+		println("Error while marshaling coupon into BSON document")
+		fmt.Println(err)
+	}
+	var result bson.M
+	err = bson.Unmarshal(doc, &result)
+	if err != nil {
+		println("Error while unmarshaling BSON document")
+		fmt.Println(err)
+	}
+	result["coupon_code"] = result["couponcode"]
+	delete(result, "couponcode")
+	_, err = collection.InsertOne(context.TODO(), result)
 	if err != nil {
 		println("Error while inserting coupon into collection")
 		fmt.Println(err)
