@@ -38,14 +38,42 @@ export function* getPosts(param) {
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
 
-    const getUrl = APIService.GO_MICRO_SERVICES + requestURLS.GET_POSTS;
+    const getUrl = APIService.GO_MICRO_SERVICES + 'query'
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     };
     const ResponseJson = yield fetch(getUrl, {
       headers,
-      method: "GET",
+      method: "POST",
+      body: JSON.stringify({query: `query GetAllPosts {
+        GetAllPosts (limit:10) {
+          id
+          title
+          content
+          author{
+              nickname
+              email
+              vehicleid
+              profile_pic_url
+              created_at
+          }
+          comments{
+              id
+              content
+              CreatedAt
+              author{
+                  email
+                  vehicleid
+                  nickname
+                  profile_pic_url
+                  created_at
+              }
+          }
+          authorid
+          CreatedAt
+        }}`,      
+      })
     }).then((response) => {
       recievedResponse = response;
       return response.json();
@@ -55,7 +83,7 @@ export function* getPosts(param) {
     if (recievedResponse.ok) {
       yield put({
         type: actionTypes.FETCHED_POSTS,
-        payload: ResponseJson,
+        payload: ResponseJson["data"]["GetAllPosts"],
       });
       callback(responseTypes.SUCCESS, ResponseJson);
     } else {
@@ -79,14 +107,46 @@ export function* getPostById(param) {
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
     
-    const getUrl = APIService.GO_MICRO_SERVICES + requestURLS.GET_POST_BY_ID;
+    const getUrl = APIService.GO_MICRO_SERVICES + 'query'
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     };
     const ResponseJson = yield fetch(getUrl.replace("<postId>", postId), {
       headers,
-      method: "GET",
+      method: "POST",
+      body: JSON.stringify({
+        query: `query GetPostbyId ($ids:[String!]!) {
+        GetPosts(ids:$ids){
+          id
+          title
+          content
+          author{
+              nickname
+              email
+              vehicleid
+              profile_pic_url
+              created_at
+          }
+          comments{
+              id
+              content
+              CreatedAt
+              author{
+                  email
+                  vehicleid
+                  nickname
+                  profile_pic_url
+                  created_at
+              }
+          }
+          authorid
+          CreatedAt
+        }}`,
+        variables: {
+          ids: [postId]
+        },
+      })
     }).then((response) => {
       recievedResponse = response;
       return response.json();
@@ -96,7 +156,7 @@ export function* getPostById(param) {
     if (recievedResponse.ok) {
       yield put({
         type: actionTypes.FETCHED_POST,
-        payload: { postId, post: ResponseJson },
+        payload: { postId, post: ResponseJson['data']['GetPosts'][0] },
       });
       callback(responseTypes.SUCCESS, ResponseJson);
     } else {
@@ -120,8 +180,9 @@ export function* addPost(param) {
   const { accessToken, callback, post } = param;
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    
-    const postUrl = APIService.GO_MICRO_SERVICES + requestURLS.ADD_NEW_POST;
+    console.log("Post-> title: ", post)
+    console.log("post -> content : ", post.content)
+    const postUrl = APIService.GO_MICRO_SERVICES + 'query';
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -129,7 +190,42 @@ export function* addPost(param) {
     yield fetch(postUrl, {
       headers,
       method: "POST",
-      body: JSON.stringify(post),
+      body: JSON.stringify({
+        query: `mutation CreatePost($title:String!, $content:String!) {
+        CreatePost(input:{
+          title: $title
+          content: $content
+        }) {
+          id
+          title
+          content
+          author{
+              nickname
+              email
+              vehicleid
+              profile_pic_url
+              created_at
+          }
+          comments{
+              id
+              content
+              CreatedAt
+              author{
+                  email
+                  vehicleid
+                  nickname
+                  profile_pic_url
+                  created_at
+              }
+          }
+          authorid
+          CreatedAt
+        }}`,
+      variables: {
+        title: post.title, 
+        content: post.content,
+      },
+    }),
     }).then((response) => {
       recievedResponse = response;
       return response.json();
@@ -160,7 +256,7 @@ export function* addComment(param) {
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
 
-    const postUrl = APIService.GO_MICRO_SERVICES + requestURLS.ADD_COMMENT;
+    const postUrl = APIService.GO_MICRO_SERVICES + 'query'
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -168,7 +264,42 @@ export function* addComment(param) {
     const JsonResponse = yield fetch(postUrl.replace("<postId>", postId), {
       headers,
       method: "POST",
-      body: JSON.stringify({ content: comment }),
+      body: JSON.stringify({
+        query: `mutation AddComment ($postId:String!, $content:String!) {
+        AddComment (input:{
+          id: $postId
+          content: $content
+        }){
+            id
+            title
+            content
+            author{
+                nickname
+                email
+                vehicleid
+                profile_pic_url
+                created_at
+            }
+            comments{
+                id
+                content
+                CreatedAt
+                author{
+                    email
+                    vehicleid
+                    nickname
+                    profile_pic_url
+                    created_at
+                }
+            }
+            authorid
+            CreatedAt
+          }}`,
+      variables: {
+        postId: postId,
+        content: comment,
+      },
+    }),
     }).then((response) => {
       recievedResponse = response;
       return response.json();
@@ -178,7 +309,7 @@ export function* addComment(param) {
     if (recievedResponse.ok) {
       yield put({
         type: actionTypes.FETCHED_POST,
-        payload: { postId, post: JsonResponse },
+        payload: { postId, post: JsonResponse["data"]["AddComment"] },
       });
       callback(responseTypes.SUCCESS, COMMENT_ADDED);
     } else {

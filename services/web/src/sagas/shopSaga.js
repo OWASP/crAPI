@@ -253,7 +253,7 @@ export function* applyCoupon(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    let postUrl = APIService.GO_MICRO_SERVICES + requestURLS.VALIDATE_COUPON;
+    let postUrl = APIService.GO_MICRO_SERVICES + 'query';
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -261,9 +261,23 @@ export function* applyCoupon(param) {
     const CouponJson = yield fetch(postUrl, {
       headers,
       method: "POST",
-      body: JSON.stringify({ coupon_code: couponCode }),
+      body: JSON.stringify({ 
+        query: 
+        `query ValidateCoupon ($code: String!) {
+          ValidateCoupon (code:$code){
+            coupon_code
+            amount
+            CreatedAt
+          } 
+        }`,
+        variables: {
+          code: couponCode,
+        },
+    }),
     }).then((response) => {
       recievedResponse = response;
+      // console.log("Recevied response -> ", recievedResponse)
+      // console.log("received resp -> ", recievedResponse.json())
       if (recievedResponse.ok) return response.json();
       return response;
     });
@@ -277,8 +291,8 @@ export function* applyCoupon(param) {
         headers,
         method: "POST",
         body: JSON.stringify({
-          coupon_code: CouponJson.coupon_code,
-          amount: parseFloat(CouponJson.amount),
+          coupon_code: CouponJson["data"]["ValidateCoupon"].coupon_code,
+          amount: parseFloat(CouponJson["data"]["ValidateCoupon"].amount),
         }),
       }).then((response) => {
         recievedResponse = response;
