@@ -24,7 +24,7 @@ import (
 	"os"
 	"strings"
 
-	"crapi.proj/goservice/api/models"
+	"crapi.community/graphql.grpc/grpc/models"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
 )
