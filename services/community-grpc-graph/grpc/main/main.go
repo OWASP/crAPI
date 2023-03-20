@@ -8,8 +8,8 @@ import (
 
 	"crapi.community/graphql.grpc/graph/config"
 	"crapi.community/graphql.grpc/graph/model"
-	"crapi.community/graphql.grpc/graph/seed"
 	"crapi.community/graphql.grpc/grpc/models"
+	"crapi.community/graphql.grpc/grpc/seed"
 
 	pb "crapi.community/graphql.grpc/grpc/proto"
 
@@ -159,22 +159,6 @@ func (s *server) CreateCoupon(ctx context.Context, in *pb.CreateCouponRequest) (
 	return response, nil
 }
 
-func (s *server) UpdateCoupon(ctx context.Context, in *pb.UpdateCouponRequest) (*pb.UpdateCouponResponse, error) {
-	couponcode := in.GetCouponCode()
-
-	_, err := models.UpdateCoupon(mongoClient, in.GetUpdatedCoupon(), couponcode)
-
-	if err != nil {
-		log.Println("Could not update the coupon in DB")
-		return nil, err
-	}
-
-	res := &pb.UpdateCouponResponse{
-		Success: true,
-	}
-	return res, nil
-}
-
 func (s *server) GetCoupons(ctx context.Context, in *pb.GetCouponsRequest) (*pb.GetCouponsResponse, error) {
 	couponcodes := in.CouponCodes
 
@@ -185,17 +169,6 @@ func (s *server) GetCoupons(ctx context.Context, in *pb.GetCouponsRequest) (*pb.
 	}
 
 	return getCoupons, err
-}
-
-func (s *server) DeleteCoupons(ctx context.Context, in *pb.DeleteCouponsRequest) (*pb.DeleteCouponsResponse, error) {
-	couponcodes := in.CouponCodes
-
-	DeleteCoupons, err := models.DeleteCoupons(mongoClient, couponcodes)
-	if err != nil {
-		log.Println("DeleteCoupons failed!! %v", err)
-		return nil, err
-	}
-	return DeleteCoupons, err
 }
 
 func ValidateCoupon(client *mongo.Client, couponCode string) (*model.Coupon, error) {

@@ -276,8 +276,6 @@ export function* applyCoupon(param) {
     }),
     }).then((response) => {
       recievedResponse = response;
-      // console.log("Recevied response -> ", recievedResponse)
-      // console.log("received resp -> ", recievedResponse.json())
       if (recievedResponse.ok) return response.json();
       return response;
     });
