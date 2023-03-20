@@ -7,13 +7,11 @@ import (
 	"os"
 
 	"crapi.community/graphql.grpc/graph/config"
-	"crapi.community/graphql.grpc/graph/model"
 	"crapi.community/graphql.grpc/grpc/models"
 	"crapi.community/graphql.grpc/grpc/seed"
 
 	pb "crapi.community/graphql.grpc/grpc/proto"
 
-	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -42,21 +40,6 @@ func (s *server) CreatePost(ctx context.Context, in *pb.CreatePostRequest) (*pb.
 	return response, nil
 }
 
-func (s *server) UpdatePost(ctx context.Context, in *pb.UpdatePostRequest) (*pb.UpdatePostResponse, error) {
-	id := in.GetId()
-
-	_, err := models.UpdatePost(mongoClient, in.GetUpdatedPost(), id)
-
-	if err != nil {
-		log.Println("Could not update the data in DB")
-		return nil, err
-	}
-	res := &pb.UpdatePostResponse{
-		Success: true,
-	}
-	return res, nil
-}
-
 func (s *server) GetPosts(ctx context.Context, in *pb.GetPostsRequest) (*pb.GetPostsResponse, error) {
 	ids := in.Ids
 
@@ -80,69 +63,6 @@ func (s *server) GetAllPosts(ctx context.Context, in *pb.GetAllPostRequest) (*pb
 	return &pb.GetPostsResponse{
 		Posts: pbPost,
 	}, nil
-}
-
-func (s *server) DeletePosts(ctx context.Context, in *pb.DeletePostsRequest) (*pb.DeletePostsResponse, error) {
-	ids := in.Ids
-	for i := 0; i < len(ids); i++ {
-		print(ids[i], " ")
-	}
-
-	DeletePosts, err := models.DeletePosts(mongoClient, ids)
-	if err != nil {
-		log.Println("DeletePosts failed!! %v", err)
-		return nil, err
-	}
-	return DeletePosts, err
-}
-
-func (s *server) CreateUser(ctx context.Context, in *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
-	user := in.GetUser()
-
-	_, err := models.SaveUser(mongoClient, user)
-	if err != nil {
-		log.Println("Can not save user to mysql, %v", err)
-		return nil, err
-	}
-	response := &pb.CreateUserResponse{
-		Success: true,
-	}
-	return response, nil
-}
-
-func (s *server) UpdateUser(ctx context.Context, in *pb.UpdateUserRequest) (*pb.UpdateUserResponse, error) {
-	id := in.GetId()
-	_, err := models.UpdateUser(mongoClient, in.GetUpdatedUser(), id)
-
-	if err != nil {
-		log.Println("Could not update the user in DB")
-		return nil, err
-	}
-	res := &pb.UpdateUserResponse{
-		Success: true,
-	}
-	return res, nil
-}
-
-func (s *server) GetUsers(ctx context.Context, in *pb.GetUsersRequest) (*pb.GetUsersResponse, error) {
-	ids := in.Ids
-	getUsers, err := models.GetUsers(mongoClient, ids)
-	if err != nil {
-		log.Println("GetUsers failed!! %v", err)
-		return nil, err
-	}
-	return getUsers, err
-}
-
-func (s *server) DeleteUsers(ctx context.Context, in *pb.DeleteUsersRequest) (*pb.DeleteUsersResponse, error) {
-	ids := in.Ids
-
-	DeleteUsers, err := models.DeleteUsers(mongoClient, ids)
-	if err != nil {
-		log.Println("DeleteUsers failed!! %v", err)
-		return nil, err
-	}
-	return DeleteUsers, err
 }
 
 func (s *server) CreateCoupon(ctx context.Context, in *pb.CreateCouponRequest) (*pb.CreateCouponResponse, error) {
@@ -171,11 +91,6 @@ func (s *server) GetCoupons(ctx context.Context, in *pb.GetCouponsRequest) (*pb.
 	return getCoupons, err
 }
 
-func ValidateCoupon(client *mongo.Client, couponCode string) (*model.Coupon, error) {
-	res, err := models.ValidateCoupon(client, couponCode)
-	return res, err
-}
-
 func (s *server) CreateComment(ctx context.Context, in *pb.CreateCommentRequest) (*pb.CreateCommentResponse, error) {
 	comment := in.GetComment()
 	id := []string{comment.GetId()}
@@ -196,46 +111,6 @@ func (s *server) CreateComment(ctx context.Context, in *pb.CreateCommentRequest)
 	return &pb.CreateCommentResponse{
 		Success: true,
 	}, nil
-}
-
-// Not implemented the right way! Since its not used in application, so, will do it later when i have bandwidth
-func (s *server) UpdateComment(ctx context.Context, in *pb.UpdateCommentRequest) (*pb.UpdateCommentResponse, error) {
-	id := in.GetId()
-
-	_, err := models.UpdateComment(mongoClient, in.GetUpdatedComment(), id)
-
-	if err != nil {
-		log.Println("Could not update the comment in DB")
-		return nil, err
-	}
-	res := &pb.UpdateCommentResponse{
-		Success: true,
-	}
-	return res, nil
-}
-
-// Not implemented the right way! Since its not used in application, so, will do it later when i have bandwidth
-func (s *server) GetComments(ctx context.Context, in *pb.GetCommentsRequest) (*pb.GetCommentsResponse, error) {
-	ids := in.Ids
-
-	getComment, err := models.GetComments(mongoClient, ids)
-	if err != nil {
-		log.Println("GetComment failed!! %v", err)
-		return nil, err
-	}
-	return getComment, err
-}
-
-// Not implemented the right way! Since its not used in application, so, will do it later when i have bandwidth
-func (s *server) DeleteComments(ctx context.Context, in *pb.DeleteCommentsRequest) (*pb.DeleteCommentsResponse, error) {
-	ids := in.Ids
-
-	deleteComment, err := models.DeleteComments(mongoClient, ids)
-	if err != nil {
-		log.Println("DeleteComment failed!! %v", err)
-		return nil, err
-	}
-	return deleteComment, err
 }
 
 func main() {

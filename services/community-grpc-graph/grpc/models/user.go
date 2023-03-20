@@ -15,12 +15,9 @@
 package models
 
 import (
-	"context"
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"log"
-	"os"
 	"strings"
 	"time"
 
@@ -30,10 +27,6 @@ import (
 
 	"crapi.community/graphql.grpc/graph/model"
 	pb "crapi.community/graphql.grpc/grpc/proto"
-
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var autherID uint64
@@ -137,84 +130,4 @@ func FindAuthorByEmail(email string, db *gorm.DB) (*uint64, error) {
 	row2.Scan(&uuid)
 	vehicleID = uuid
 	return number, err
-}
-
-// SaveUser persits data into database
-func SaveUser(client *mongo.Client, user *pb.User) (*pb.CreateUserResponse, error) {
-
-	collection := client.Database(os.Getenv("MONGO_DB_NAME")).Collection("user")
-	_, err := collection.InsertOne(context.TODO(), user)
-	if err != nil {
-		println("Error while inserting user into collection")
-		fmt.Println(err)
-	}
-
-	res := &pb.CreateUserResponse{
-		Success: true,
-	}
-	return res, err
-}
-
-// Update user persisting into database
-func UpdateUser(client *mongo.Client, user *pb.User, id string) (*pb.UpdateUserResponse, error) {
-	collection := client.Database(os.Getenv("MONGO_DB_NAME")).Collection("user")
-
-	opts := options.Update().SetUpsert(true)
-	filter := bson.D{{"id", id}}
-	update := bson.D{{"$set", user}}
-
-	_, err := collection.UpdateOne(context.TODO(), filter, update, opts)
-	if err != nil {
-		println("Error while updating by id")
-		fmt.Println(err)
-	}
-
-	res := &pb.UpdateUserResponse{
-		Success: true,
-	}
-	return res, nil
-}
-
-// Get an array of all users having matching id
-func GetUsers(client *mongo.Client, in []string) (*pb.GetUsersResponse, error) {
-	collection := client.Database(os.Getenv("MONGO_DB_NAME")).Collection("user")
-	var users [](*pb.User)
-	for i := 0; i < len(in); i++ {
-		filter := bson.D{{"id", in[i]}}
-		var result *pb.User
-		err := collection.FindOne(context.TODO(), filter).Decode(&result)
-		if err != nil {
-			log.Println("Fetching documents from collection failed, %v", err)
-		} else {
-			users = append(users, result)
-		}
-	}
-	res := &pb.GetUsersResponse{
-		Users: users,
-	}
-	return res, nil
-}
-
-// Get an array of all deleted users having matching id
-func DeleteUsers(client *mongo.Client, in []string) (*pb.DeleteUsersResponse, error) {
-	collection := client.Database(os.Getenv("MONGO_DB_NAME")).Collection("user")
-	var users [](*pb.User)
-	for i := 0; i < len(in); i++ {
-		filter := bson.D{{"id", in[i]}}
-		var result *pb.User
-		err_get := collection.FindOne(context.TODO(), filter).Decode(&result)
-		if err_get != nil {
-			log.Println(("Getting user by id failed"))
-		}
-		_, err := collection.DeleteOne(context.TODO(), filter)
-		if err != nil {
-			log.Println("Deleting documents from collection failed, %v", err)
-		} else {
-			users = append(users, result)
-		}
-	}
-	res := &pb.DeleteUsersResponse{
-		DeletedUsers: users,
-	}
-	return res, nil
 }

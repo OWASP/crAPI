@@ -180,26 +180,6 @@ func SavePost(client *mongo.Client, post *pb.Post) (*pb.CreatePostResponse, erro
 	return res, nil
 }
 
-// Update posts persisting into database
-func UpdatePost(client *mongo.Client, post *pb.Post, id string) (*pb.UpdatePostResponse, error) {
-	collection := client.Database(os.Getenv("MONGO_DB_NAME")).Collection("post")
-
-	opts := options.Update().SetUpsert(true)
-	filter := bson.D{{"id", id}}
-	update := bson.D{{"$set", post}}
-
-	_, err := collection.UpdateOne(context.TODO(), filter, update, opts)
-	if err != nil {
-		println("Error while updating by id")
-		fmt.Println(err)
-	}
-
-	res := &pb.UpdatePostResponse{
-		Success: true,
-	}
-	return res, nil
-}
-
 // Get an array of all posts having matching id
 func GetPosts(client *mongo.Client, in []string) (*pb.GetPostsResponse, error) {
 	collection := client.Database(os.Getenv("MONGO_DB_NAME")).Collection("post")
@@ -249,29 +229,4 @@ func GetAllPosts(client *mongo.Client, NoOfPosts int) ([]*pb.Post, error) {
 		}
 	}
 	return posts, nil
-}
-
-// Get an array of all deleted posts having matching id
-func DeletePosts(client *mongo.Client, in []string) (*pb.DeletePostsResponse, error) {
-	collection := client.Database(os.Getenv("MONGO_DB_NAME")).Collection("post")
-	var posts [](*pb.Post)
-	for i := 0; i < len(in); i++ {
-		filter := bson.D{{"id", in[i]}}
-		var result *pb.Post
-		err_get := collection.FindOne(context.TODO(), filter).Decode(&result)
-		if err_get != nil {
-			println("Cannot delete post with " + in[i] + "..... Does not exist in DataBase")
-			continue
-		}
-		_, err := collection.DeleteOne(context.TODO(), filter)
-		if err != nil {
-			log.Println("Deleting documents from collection failed, %v", err)
-		} else {
-			posts = append(posts, result)
-		}
-	}
-	res := &pb.DeletePostsResponse{
-		DeletedPosts: posts,
-	}
-	return res, nil
 }

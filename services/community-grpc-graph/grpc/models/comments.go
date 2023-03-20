@@ -24,7 +24,6 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func SaveComment(client *mongo.Client, comment *pb.Comment) (*pb.CreateCommentResponse, error) {
@@ -37,25 +36,6 @@ func SaveComment(client *mongo.Client, comment *pb.Comment) (*pb.CreateCommentRe
 	}
 
 	res := &pb.CreateCommentResponse{
-		Success: true,
-	}
-	return res, nil
-}
-
-func UpdateComment(client *mongo.Client, comment *pb.Comment, id string) (*pb.UpdateCommentResponse, error) {
-	collection := client.Database(os.Getenv("MONGO_DB_NAME")).Collection("comment")
-
-	opts := options.Update().SetUpsert(true)
-	filter := bson.D{{"id", id}}
-	update := bson.D{{"$set", comment}}
-
-	_, err := collection.UpdateOne(context.TODO(), filter, update, opts)
-	if err != nil {
-		println("Error while updating comment by id")
-		fmt.Println(err)
-	}
-
-	res := &pb.UpdateCommentResponse{
 		Success: true,
 	}
 	return res, nil
@@ -77,30 +57,6 @@ func GetComments(client *mongo.Client, in []string) (*pb.GetCommentsResponse, er
 	}
 	res := &pb.GetCommentsResponse{
 		Comments: comments,
-	}
-	return res, nil
-}
-
-func DeleteComments(client *mongo.Client, in []string) (*pb.DeleteCommentsResponse, error) {
-	collection := client.Database(os.Getenv("MONGO_DB_NAME")).Collection("comment")
-	var comments [](*pb.Comment)
-	for i := 0; i < len(in); i++ {
-		filter := bson.D{{"id", in[i]}}
-		var comment *pb.Comment
-		err_get := collection.FindOne(context.TODO(), filter).Decode(&comment)
-		if err_get != nil {
-			log.Println("Failed to get the comment from collection")
-		}
-		_, err := collection.DeleteOne(context.TODO(), filter)
-		if err != nil {
-			log.Println("Fetching documents from collection failed, %v", err)
-			return nil, err
-		} else {
-			comments = append(comments, comment)
-		}
-	}
-	res := &pb.DeleteCommentsResponse{
-		DeletedComments: comments,
 	}
 	return res, nil
 }

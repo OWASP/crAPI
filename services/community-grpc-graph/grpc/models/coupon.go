@@ -50,24 +50,6 @@ func PrepareUpdatedCoupon(coupon model.CouponInput) model.Coupon {
 	return *uc
 }
 
-// Validate coupon
-func ValidateCoupon(client *mongo.Client, couponCode string) (*model.Coupon, error) {
-	collection := client.Database(os.Getenv("MONGO_DB_NAME")).Collection("coupons")
-	filter := bson.D{{"coupon_code", couponCode}}
-	var result *pb.Coupon
-	err := collection.FindOne(context.TODO(), filter).Decode(&result)
-	if err != nil {
-		log.Println("Fetching documents from collection failed, %v", err)
-		return nil, err
-	}
-
-	return &model.Coupon{
-		CouponCode: result.GetCouponCode(),
-		Amount:     result.GetAmount(),
-		CreatedAt:  Convert_to_Time(result.GetCreatedAt()),
-	}, nil
-}
-
 // SaveCoupon persits data into database
 func SaveCoupon(client *mongo.Client, coupon *pb.Coupon) (*pb.CreateCouponResponse, error) {
 
