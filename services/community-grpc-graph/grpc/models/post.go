@@ -198,3 +198,23 @@ func GetAllPosts(client *mongo.Client, NoOfPosts int) ([]*pb.Post, error) {
 	}
 	return posts, nil
 }
+
+// Update posts persisting into database
+func UpdatePost(client *mongo.Client, post *pb.Post, id string) (*pb.UpdatePostResponse, error) {
+	collection := client.Database(os.Getenv("MONGO_DB_NAME")).Collection("post")
+
+	opts := options.Update().SetUpsert(true)
+	filter := bson.D{{"id", id}}
+	update := bson.D{{"$set", post}}
+
+	_, err := collection.UpdateOne(context.TODO(), filter, update, opts)
+	if err != nil {
+		println("Error while updating by id")
+		fmt.Println(err)
+	}
+
+	res := &pb.UpdatePostResponse{
+		Success: true,
+	}
+	return res, nil
+}

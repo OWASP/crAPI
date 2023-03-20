@@ -40,6 +40,22 @@ func (s *server) CreatePost(ctx context.Context, in *pb.CreatePostRequest) (*pb.
 	return response, nil
 }
 
+// This function is used to add comment to post
+func (s *server) UpdatePost(ctx context.Context, in *pb.UpdatePostRequest) (*pb.UpdatePostResponse, error) {
+	id := in.GetId()
+
+	_, err := models.UpdatePost(mongoClient, in.GetUpdatedPost(), id)
+
+	if err != nil {
+		log.Println("Could not update the data in DB")
+		return nil, err
+	}
+	res := &pb.UpdatePostResponse{
+		Success: true,
+	}
+	return res, nil
+}
+
 func (s *server) GetPosts(ctx context.Context, in *pb.GetPostsRequest) (*pb.GetPostsResponse, error) {
 	ids := in.Ids
 
