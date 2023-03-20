@@ -40,16 +40,6 @@ func PrepareNewCoupon(coupon model.CouponInput) model.Coupon {
 	return Coupon
 }
 
-func PrepareUpdatedCoupon(coupon model.CouponInput) model.Coupon {
-	// using pointers and reference for handling a warning
-	uc := &model.Coupon{
-		CouponCode: coupon.CouponCode,
-		Amount:     coupon.Amount,
-		CreatedAt:  time.Now(),
-	}
-	return *uc
-}
-
 // SaveCoupon persits data into database
 func SaveCoupon(client *mongo.Client, coupon *pb.Coupon) (*pb.CreateCouponResponse, error) {
 

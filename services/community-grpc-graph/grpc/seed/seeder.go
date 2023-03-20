@@ -86,11 +86,7 @@ func LoadMongoData(mongoClient *mongo.Client, db *gorm.DB) {
 			}
 			result["coupon_code"] = result["couponcode"]
 			delete(result, "couponcode")
-			println("Addin transformed coupon_code to db ==== ")
 			_, err = collection.InsertOne(context.TODO(), result)
-			// couponData, err := collection.InsertOne(context.TODO(), coupons[i])
-			println("adding a coupon ...")
-			// fmt.Println(couponData, err)
 		}
 	}
 	postCollection := mongoClient.Database(os.Getenv("MONGO_DB_NAME")).Collection("post")

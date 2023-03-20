@@ -118,7 +118,6 @@ func main() {
 	if err != nil {
 		log.Printf("Fatal error! Did not connect %v", err)
 	}
-	log.Printf("Worked! Server listening at %v", lis.Addr())
 
 	mongoClient = serv.InitializeMongo("mongodb", os.Getenv("MONGO_DB_USER"), os.Getenv("MONGO_DB_PASSWORD"), os.Getenv("MONGO_DB_PORT"), os.Getenv("MONGO_DB_HOST"))
 	DB = serv.Initialize("postgres", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_PORT"), os.Getenv("DB_HOST"), os.Getenv("DB_NAME"))
@@ -138,6 +137,4 @@ func main() {
 	if err != nil {
 		log.Printf("Cannot start server")
 	}
-
-	log.Printf("Wohoo! sERVER started too! serving at %v", grpcServer.GetServiceInfo())
 }

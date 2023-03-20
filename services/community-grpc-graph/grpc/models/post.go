@@ -23,14 +23,6 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// func StringToTimestamp(str string) *timestamppb.Timestamp {
-// 	ts, err := time.Parse(time.RFC3339, str)
-// 	if err != nil {
-// 		return nil
-// 	}
-// 	return timestamppb.New(ts)
-// }
-
 func PrepareNewPost(post model.Post) model.Post {
 	post = model.Post{
 		ID:        shortuuid.New(),
@@ -50,19 +42,6 @@ func Convert_to_Time(time *timestamppb.Timestamp) time.Time {
 		// we consider this will never happen, since we always have the time.Time in post
 	}
 	return t
-}
-func PrepareUpdatePost(post model.PostInput) model.Post {
-	// used pointer and reference to handle a warning
-	p := &model.Post{
-		ID:        shortuuid.New(),
-		Title:     html.EscapeString(strings.TrimSpace(post.Title)),
-		Content:   html.EscapeString(strings.TrimSpace(post.Content)),
-		Author:    PrepareUser(),
-		Comments:  []*model.Comment{},
-		Authorid:  strconv.FormatUint(autherID, 10),
-		CreatedAt: time.Now(),
-	}
-	return *p
 }
 
 func Convert_Graph_pb_post(post model.Post) *pb.Post {
@@ -152,17 +131,6 @@ func Validate(post *pb.CreatePostRequest) error {
 	}
 	return nil
 }
-
-// // Prepare initialize Field
-// func PrepareAuth() Author {
-// 	var u Author
-// 	u.Nickname = nickname
-// 	u.Email = userEmail
-// 	u.VehicleID = vehicleID
-// 	u.CreatedAt = time.Now()
-// 	u.Picurl = picurl
-// 	return u
-// }
 
 // SavePost persits data into database
 func SavePost(client *mongo.Client, post *pb.Post) (*pb.CreatePostResponse, error) {
