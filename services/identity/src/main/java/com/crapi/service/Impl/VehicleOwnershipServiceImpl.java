@@ -14,7 +14,6 @@
 
 package com.crapi.service.Impl;
 
-import com.crapi.entity.*;
 import com.crapi.model.VehicleOwnership;
 import com.crapi.repository.*;
 import com.crapi.service.UserService;
@@ -34,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -58,24 +58,27 @@ public class VehicleOwnershipServiceImpl implements VehicleOwnershipService {
   @Value("${api.egress.url}")
   private String apiEgressURL;
 
+  @Value("${api.egress.username}")
+  private String apiEgressUsername;
+
+  @Value("${api.egress.password}")
+  private String apiEgressPassword;
+
   public RestTemplate restTemplate()
       throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+    RestTemplateBuilder builder = new RestTemplateBuilder();
     TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
-
     SSLContext sslContext =
         org.apache.http.ssl.SSLContexts.custom()
             .loadTrustMaterial(null, acceptingTrustStrategy)
             .build();
-
     SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
-
     CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
+    builder.requestFactory(() -> new HttpComponentsClientHttpRequestFactory(httpClient));
 
-    HttpComponentsClientHttpRequestFactory requestFactory =
-        new HttpComponentsClientHttpRequestFactory();
-
-    requestFactory.setHttpClient(httpClient);
-    RestTemplate restTemplate = new RestTemplate(requestFactory);
+    // Add basic auth header
+    builder.basicAuthentication(apiEgressUsername, apiEgressPassword);
+    RestTemplate restTemplate = builder.build();
     return restTemplate;
   }
 
