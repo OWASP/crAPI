@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: crapi-community
+  name: egress-service
   labels:
-    app: crapi-community
+    app: egress-service
 spec:
   ports:
   - port: 8087
     name: go
   selector:
-    app: crapi-community
+    app: egress-service
