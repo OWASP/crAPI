@@ -6,6 +6,8 @@ jwtSecret: crapi
 enableLog4j: false
 enableShellInjection: true
 imagePullPolicy: Always
+egressServiceUrl: https://api.crapi.io
+egressServiceInstall: true
 
 waitForK8sResources:
   image: groundnuty/k8s-wait-for:v1.3
@@ -250,25 +252,25 @@ postgresdb:
   statefulsetSelectorMatchLabels:
     app: postgresdb
 
-api-external:
-  name: api-external
-  image: crapi/api-external
+egress-service:
+  name: egress-service
+  image: crapi/egress-service
   port: 443
   replicaCount: 1
   service:
     name: api.crapi.io
     labels:
-      app: api-external
+      app: egress-service
   resources:
     limits:
       cpu: "100m"
     requests:
       cpu: 50m
   deploymentLabels:
-    app: api-external
+    app: egress-service
   podLabels:
-    app: api-external
+    app: egress-service
   deploymentSelectorMatchLabels:
-    app: api-external
+    app: egress-service
   serviceSelectorLabels:
-    app: api-external
+    app: egress-service

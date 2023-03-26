@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crapi-community
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crapi-community
+  template:
+    metadata:
+      labels:
+        app: crapi-community
+    spec:
+      initContainers:
+        - name: wait-for-postgres
+          image: groundnuty/k8s-wait-for:v1.3
+          imagePullPolicy: Always
+          args:
+            - "service"
+            - "postgresdb"
+        - name: wait-for-mongo
+          image: groundnuty/k8s-wait-for:v1.3
+          imagePullPolicy: Always
+          args:
+            - "service"
+            - "mongodb"
+        - name: wait-for-java
+          image: groundnuty/k8s-wait-for:v1.3
+          imagePullPolicy: Always
+          args:
+            - "service"
+            - "crapi-identity"
+      containers:
+      - name: crapi-community
+        image: crapi/crapi-community:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8087
+        envFrom:
+            - configMapRef:
+                name: crapi-community-configmap
+        resources:
+          limits:
+            cpu: "500m"
+          requests:
+            cpu: 256m

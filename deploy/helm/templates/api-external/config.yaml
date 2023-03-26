@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ .Values.workshoapi-external.config.name }}
-  labels:
-    release: {{ .Release.Name }}
-    {{- toYaml .Values.api-external.config.labels | nindent 4 }}
-data:
-    SERVER_PORT: {{ .Values.api-external.port | quote }}

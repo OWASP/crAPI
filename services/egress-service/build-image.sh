@@ -15,7 +15,7 @@
 
 set -x
 cd "$(dirname $0)"
-docker build -t crapi/api-external:${VERSION:-latest} .
+docker build -t crapi/egress-service:${VERSION:-latest} .
 retVal=$?
 if [ $retVal -ne 0 ]; then
     echo "Error building crapi-ownership-external image"

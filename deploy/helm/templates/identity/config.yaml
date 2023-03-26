@@ -29,3 +29,4 @@ data:
   SMTP_AUTH: {{ .Values.identity.config.smtpAuth | quote }}
   SMTP_STARTTLS: {{ .Values.identity.config.smtpStartTLS | quote }}
   SERVER_PORT: {{ .Values.identity.port | quote }}
+  EGRESS_API_SERVICE_URL: {{ .Values.egressServiceUrl}}

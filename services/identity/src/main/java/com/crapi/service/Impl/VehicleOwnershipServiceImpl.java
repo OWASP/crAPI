@@ -33,6 +33,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -53,6 +54,9 @@ public class VehicleOwnershipServiceImpl implements VehicleOwnershipService {
   @Autowired UserService userService;
 
   @Autowired SMTPMailServer smtpMailServer;
+
+  @Value("${api.egress.url}")
+  private String apiEgressURL;
 
   public RestTemplate restTemplate()
       throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
@@ -85,9 +89,9 @@ public class VehicleOwnershipServiceImpl implements VehicleOwnershipService {
       logger.info("Getting vehicle ownership details for vin: " + vin);
       // get vehicle ownership from crapi. vin query param is required
       RestTemplate restTemplate = restTemplate();
+      String ownershipUrl = apiEgressURL + "/vin/ownership?vin=" + vin;
       VehicleOwnership[] vehicleOwnerships =
-          restTemplate.getForObject(
-              "https://api.crapi.io:9443/vin/ownership?vin=" + vin, VehicleOwnership[].class);
+          restTemplate.getForObject(ownershipUrl, VehicleOwnership[].class);
       if (vehicleOwnerships == null) {
         logger.error("Fail to get vehicle ownerships");
         return List.of();

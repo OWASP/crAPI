@@ -40,6 +40,7 @@ services:
       - SMTP_AUTH=true
       - SMTP_STARTTLS=true
       - ENABLE_LOG4J=${ENABLE_LOG4J:-false}
+      - EGRESS_API_SERVICE_URL=https://api.crapi.io
     depends_on:
       postgresdb:
         condition: service_healthy
@@ -225,7 +226,7 @@ services:
 
   api.crapi.io:
     container_name: api.crapi.io
-    image: crapi/api-external:${VERSION:-latest}
+    image: crapi/egress-service:${VERSION:-latest}
     ports:
       - "127.0.0.1:8443:443" # https
     healthcheck:
