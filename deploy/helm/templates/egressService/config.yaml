@@ -1,0 +1,11 @@
+{{ if .Values.egressServiceInstall }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.egressService.config.name }}
+  labels:
+    release: {{ .Release.Name }}
+    {{- toYaml .Values.egressService.config.labels | nindent 4 }}
+data:
+    SERVER_PORT: {{ .Values.egressService.port | quote }}
+{{ end }}

@@ -252,25 +252,25 @@ postgresdb:
   statefulsetSelectorMatchLabels:
     app: postgresdb
 
-egress-service:
-  name: egress-service
-  image: crapi/egress-service
+egressService:
+  name: egressService
+  image: crapi/egressService
   port: 443
   replicaCount: 1
   service:
     name: "api.crapi.io"
     labels:
-      app: egress-service
+      app: egressService
   resources:
     limits:
       cpu: "100m"
     requests:
       cpu: 50m
   deploymentLabels:
-    app: egress-service
+    app: egressService
   podLabels:
-    app: egress-service
+    app: egressService
   deploymentSelectorMatchLabels:
-    app: egress-service
+    app: egressService
   serviceSelectorLabels:
-    app: egress-service
+    app: egressService
