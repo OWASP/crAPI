@@ -135,6 +135,18 @@ jobs:
           cache-from: type=gha,scope=web-service
           cache-to: type=gha,mode=max,scope=web-service
 
+      - name: Build api-external image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./services/api-external
+          tags: crapi/api-external:${{ env.TAG_LATEST }},crapi/api-external:${{ env.TAG_NAME }}
+          push: false
+          load: true
+          platforms: linux/amd64
+          cache-from: type=gha,scope=api-external-service
+          cache-to: type=gha,mode=max,scope=api-external-service
+
+
       - name: Check Mailhog existence
         id: check_mailhog_exists
         uses: andstor/file-existence-action@v1

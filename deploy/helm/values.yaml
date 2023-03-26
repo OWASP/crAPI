@@ -249,3 +249,26 @@ postgresdb:
     app: postgresdb
   statefulsetSelectorMatchLabels:
     app: postgresdb
+
+api-external:
+  name: api-external
+  image: crapi/api-external
+  port: 443
+  replicaCount: 1
+  service:
+    name: api.crapi.io
+    labels:
+      app: api-external
+  resources:
+    limits:
+      cpu: "100m"
+    requests:
+      cpu: 50m
+  deploymentLabels:
+    app: api-external
+  podLabels:
+    app: api-external
+  deploymentSelectorMatchLabels:
+    app: api-external
+  serviceSelectorLabels:
+    app: api-external

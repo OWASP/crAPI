@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.api-external.name }}
+  labels:
+    release: {{ .Release.Name }}
+    {{- with .Values.api-external.deploymentLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.api-external.replicaCount }}
+  selector:
+    matchLabels:
+      {{- toYaml .Values.api-external.deploymentSelectorMatchLabels | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        release: {{ .Release.Name }}
+        {{- with .Values.api-external.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+        - name: {{ .Values.api-external.name }}
+          image: {{ .Values.api-external.image }}:{{ .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.api-external.port }}
+          {{- if .Values.api-external.resources }}
+          resources:
+            {{- toYaml .Values.api-external.resources | nindent 12 }}
+          {{- end }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.api-external.port }}
+            initialDelaySeconds: 15
+            periodSeconds: 10

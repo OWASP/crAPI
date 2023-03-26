@@ -135,7 +135,7 @@ services:
     container_name: crapi-web
     image: crapi/crapi-web:${VERSION:-latest}
     ports:
-      - "127.0.0.1:8888:80"
+      - "0.0.0.0:8888:80"
     environment:
       - COMMUNITY_SERVICE=crapi-community:${COMMUNITY_SERVER_PORT:-8087}
       - IDENTITY_SERVICE=crapi-identity:${IDENTITY_SERVER_PORT:-8080}
@@ -165,8 +165,8 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: crapisecretpassword
       POSTGRES_DB: crapi
-    #ports:
-    #  - "127.0.0.1:5432:5432"
+    ports:
+      - "127.0.0.1:5432:5432"
     healthcheck:
         test: ["CMD-SHELL", "pg_isready"]
         interval: 15s
@@ -186,8 +186,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: crapisecretpassword
-    #ports:
-    #  - "127.0.0.1:27017:27017"
+    ports:
+      - "127.0.0.1:27017:27017"
     healthcheck:
         test: echo 'db.runCommand("ping").ok' | mongo mongodb:27017/test --quiet
         interval: 15s
@@ -211,7 +211,7 @@ services:
       MH_STORAGE: mongodb
     ports:
     #  - "127.0.0.1:1025:1025" # smtp server
-      - "127.0.0.1:8025:8025" # Mail ui
+      - "0.0.0.0:8025:8025" # Mail ui
     healthcheck:
         test: ["CMD", "nc", "-z", "localhost", "8025"]
         interval: 15s
@@ -222,6 +222,22 @@ services:
         limits:
           cpus: '0.3'
           memory: 128M
+
+  api.crapi.io:
+    container_name: api.crapi.io
+    image: crapi/api-external:${VERSION:-latest}
+    ports:
+      - "127.0.0.1:8443:443" # https
+    healthcheck:
+        test: curl -vk 0.0.0.0:443
+        interval: 15s
+        timeout: 15s
+        retries: 15
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 50M
 
 volumes:
   mongodb-data:
