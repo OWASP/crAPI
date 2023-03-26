@@ -258,7 +258,7 @@ egress-service:
   port: 443
   replicaCount: 1
   service:
-    name: api.crapi.io
+    name: "api.crapi.io"
     labels:
       app: egress-service
   resources:
