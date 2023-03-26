@@ -261,6 +261,10 @@ egressService:
     name: "api.crapi.io"
     labels:
       app: egress-service
+  config:
+    name: egress-service
+    labels:
+      app: egress-service
   resources:
     limits:
       cpu: "100m"
