@@ -33,6 +33,15 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 }
 
 func GetOwners(w http.ResponseWriter, r *http.Request) {
+	user, pass, ok := r.BasicAuth()
+	if !ok {
+		http.Error(w, "Bad Request.", 400)
+		return
+	}
+	if !checkCreds(user, pass) {
+		http.Error(w, "Unauthorized.", 401)
+		return
+	}
 	vin := r.URL.Query().Get("vin")
 	if vin == "" {
 		http.Error(w, "vin param is required", http.StatusBadRequest)
@@ -65,6 +74,13 @@ func GetOwners(w http.ResponseWriter, r *http.Request) {
 	}
 	response, _ := json.Marshal(owners)
 	w.Write(response)
+}
+
+func checkCreds(user string, pass string) bool {
+	if user == "vendorcrapi" && pass == "Pa$$4Vendor_1" {
+		return true
+	}
+	return false
 }
 
 func main() {
