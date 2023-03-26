@@ -253,24 +253,24 @@ postgresdb:
     app: postgresdb
 
 egressService:
-  name: egressService
-  image: crapi/egressService
+  name: egress-service
+  image: crapi/egress-service
   port: 443
   replicaCount: 1
   service:
     name: "api.crapi.io"
     labels:
-      app: egressService
+      app: egress-service
   resources:
     limits:
       cpu: "100m"
     requests:
       cpu: 50m
   deploymentLabels:
-    app: egressService
+    app: egress-service
   podLabels:
-    app: egressService
+    app: egress-service
   deploymentSelectorMatchLabels:
-    app: egressService
+    app: egress-service
   serviceSelectorLabels:
-    app: egressService
+    app: egress-service
