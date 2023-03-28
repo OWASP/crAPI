@@ -135,7 +135,7 @@ func GetPayMentInfo(w http.ResponseWriter, r *http.Request) {
 	payment_res.OrderId = p_req.Order.OrderId
 	payment_res.PaidOn = p_req.Order.CreatedOn
 	payment_card := fake.Payment()
-	payment_res.CardExpiry = fmt.Sprintf("%02d/%04d", fake.IntBetween(0, 12), fake.IntBetween(time.Now().Year()+1, 2030))
+	payment_res.CardExpiry = fmt.Sprintf("%02d/%04d", fake.IntBetween(1, 12), fake.IntBetween(time.Now().Year()+1, 2030))
 	payment_res.CardNumber = maskLeft(payment_card.CreditCardNumber())
 	payment_res.CardOwnerName = strings.ReplaceAll(p_req.User.Name, ".", " ")
 	payment_res.CardType = payment_card.CreditCardType()
