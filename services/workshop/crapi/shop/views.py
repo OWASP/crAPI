@@ -113,17 +113,18 @@ class OrderControlView(APIView):
             gateway_endpoint = settings.API_GATEWAY_URL + "/v1/payment"
             gateway_credential = basic_auth(settings.API_GATEWAY_USERNAME, settings.API_GATEWAY_PASSWORD)
             logging.debug(gateway_endpoint)
+            data = {
+            }
+            data['user'] = user_dict
+            data['order'] = order_serializer.data
+            data['amount'] = float(order.product.price) * int(order.quantity)
             payment_response = requests.post(
                 gateway_endpoint,
                 headers={
                     "Authorization": gateway_credential, 
                     "Content-Type": "application/json"
                     },
-                json={
-                    'user': user_dict,
-                    'order': order_serializer.data,
-                    'amount': order.product.price * order.quantity,
-                },
+                json=data,
                 verify=False
             )
             if payment_response.status_code == 200:
@@ -132,7 +133,7 @@ class OrderControlView(APIView):
                 logging.error("Payment response error, {}: {}".format(payment_response.status_code, payment_response.content))
             logging.debug("payment response: {}".format(payment))
         except Exception as e:
-            logging.error(e)
+            logging.error(e, exc_info=True)
         response_data = dict(
             order=order_serializer.data,
             payment=payment

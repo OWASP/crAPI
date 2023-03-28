@@ -112,6 +112,7 @@ services:
       - MONGO_DB_PASSWORD=crapisecretpassword
       - MONGO_DB_NAME=crapi
       - SECRET_KEY=crapi
+      - API_GATEWAY_URL=https://api.crapi.io
     depends_on:
       postgresdb:
         condition: service_healthy
