@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: egress-service
+  name: gateway-service
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: egress-service
+      app: gateway-service
   template:
     metadata:
       labels:
-        app: egress-service
+        app: gateway-service
     spec:
       containers:
-      - name: egress-service
-        image: crapi/egress-service:latest
+      - name: gateway-service
+        image: crapi/gateway-service:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8087

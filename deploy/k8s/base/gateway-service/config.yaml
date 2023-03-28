@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: egress-service-configmap
+  name: gateway-service-configmap
   labels:
-    app: egress-service
+    app: gateway-service
 data:
     SERVER_PORT: "443"

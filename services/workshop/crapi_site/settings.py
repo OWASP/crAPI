@@ -54,6 +54,10 @@ DEBUG = os.environ.get('DEBUG', False)
 
 ALLOWED_HOSTS = ['*']
 
+API_GATEWAY_URL = get_env_value('API_GATEWAY_URL')
+API_GATEWAY_USERNAME = "vendorcrapi"
+API_GATEWAY_PASSWORD = "Pa$$4Vendor_1"
+
 # Application definition
 
 INSTALLED_APPS = [

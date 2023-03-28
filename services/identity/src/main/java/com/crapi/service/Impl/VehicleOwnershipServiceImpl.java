@@ -55,14 +55,14 @@ public class VehicleOwnershipServiceImpl implements VehicleOwnershipService {
 
   @Autowired SMTPMailServer smtpMailServer;
 
-  @Value("${api.egress.url}")
-  private String apiEgressURL;
+  @Value("${api.gateway.url}")
+  private String apiGatewayURL;
 
-  @Value("${api.egress.username}")
-  private String apiEgressUsername;
+  @Value("${api.gateway.username}")
+  private String apiGatewayUsername;
 
-  @Value("${api.egress.password}")
-  private String apiEgressPassword;
+  @Value("${api.gateway.password}")
+  private String apiGatewayPassword;
 
   public RestTemplate restTemplate()
       throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
@@ -77,7 +77,7 @@ public class VehicleOwnershipServiceImpl implements VehicleOwnershipService {
     builder.requestFactory(() -> new HttpComponentsClientHttpRequestFactory(httpClient));
 
     // Add basic auth header
-    builder.basicAuthentication(apiEgressUsername, apiEgressPassword);
+    builder.basicAuthentication(apiGatewayUsername, apiGatewayPassword);
     RestTemplate restTemplate = builder.build();
     return restTemplate;
   }
@@ -92,7 +92,7 @@ public class VehicleOwnershipServiceImpl implements VehicleOwnershipService {
       logger.info("Getting vehicle ownership details for vin: " + vin);
       // get vehicle ownership from crapi. vin query param is required
       RestTemplate restTemplate = restTemplate();
-      String ownershipUrl = apiEgressURL + "/vin/ownership?vin=" + vin;
+      String ownershipUrl = apiGatewayURL + "/v1/vin/ownership?vin=" + vin;
       VehicleOwnership[] vehicleOwnerships =
           restTemplate.getForObject(ownershipUrl, VehicleOwnership[].class);
       if (vehicleOwnerships == null) {

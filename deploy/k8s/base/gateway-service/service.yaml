@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: egress-service
+  name: gateway-service
   labels:
-    app: egress-service
+    app: gateway-service
 spec:
   ports:
   - port: 8087
     name: go
   selector:
-    app: egress-service
+    app: gateway-service
