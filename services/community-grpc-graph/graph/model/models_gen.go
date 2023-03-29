@@ -34,7 +34,7 @@ type Post struct {
 	Title     string     `json:"title"`
 	Content   string     `json:"content"`
 	Author    *User      `json:"author"`
-	Comments  []*Comment `json:"comments"`
+	Comments  []*Comment `json:"comments,omitempty"`
 	Authorid  string     `json:"authorid"`
 	CreatedAt time.Time  `json:"CreatedAt"`
 }
@@ -57,5 +57,5 @@ type UserInput struct {
 	Email         string     `json:"email"`
 	VehicleID     string     `json:"vehicle_id"`
 	ProfilePicURL string     `json:"profile_pic_url"`
-	CreatedAt     *time.Time `json:"created_at"`
+	CreatedAt     *time.Time `json:"created_at,omitempty"`
 }

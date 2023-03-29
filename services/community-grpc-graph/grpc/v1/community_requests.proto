@@ -42,6 +42,10 @@ message DeleteCouponsRequest {
   repeated string coupon_codes = 1;
 }
 
+message ValidateCouponRequest {
+  string coupon_code = 1;
+}
+
 message CreateCommentRequest {
   Comment comment = 1;
 }

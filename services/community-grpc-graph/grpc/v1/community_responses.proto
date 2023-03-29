@@ -39,6 +39,10 @@ message DeleteCouponsResponse {
   repeated Coupon deleted_coupons = 1;
 }
 
+message ValidateCouponResponse {
+  Coupon coupon = 1;
+}
+
 message CreateCommentResponse {
   bool success = 1;
 }

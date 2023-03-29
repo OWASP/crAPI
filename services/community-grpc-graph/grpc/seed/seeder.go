@@ -73,20 +73,8 @@ func LoadMongoData(mongoClient *mongo.Client, db *gorm.DB) {
 	if err != nil {
 		println("There is no existing data in coupons")
 		for i, _ := range coupons {
-			doc, err := bson.Marshal(coupons[i])
-			if err != nil {
-				println("Error while marshaling coupon into BSON document")
-				fmt.Println(err)
-			}
-			var result bson.M
-			err = bson.Unmarshal(doc, &result)
-			if err != nil {
-				println("Error while unmarshaling BSON document")
-				fmt.Println(err)
-			}
-			result["coupon_code"] = result["couponcode"]
-			delete(result, "couponcode")
-			_, err = collection.InsertOne(context.TODO(), result)
+			couponData, err := collection.InsertOne(context.TODO(), coupons[i])
+			fmt.Println(couponData, err)
 		}
 	}
 	postCollection := mongoClient.Database(os.Getenv("MONGO_DB_NAME")).Collection("post")

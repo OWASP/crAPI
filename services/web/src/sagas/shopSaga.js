@@ -263,16 +263,15 @@ export function* applyCoupon(param) {
       method: "POST",
       body: JSON.stringify({ 
         query: 
-        `query ValidateCoupon ($code: String!) {
-          ValidateCoupon (code:$code){
-            coupon_code
-            amount
-            CreatedAt
-          } 
-        }`,
-        variables: {
-          code: couponCode,
-        },
+        `query ValidateCoupon { 
+          ValidateCoupon(
+            code:"{\\"coupon_code\\":\\"${couponCode}\\"}"
+            ) { 
+              coupon_code 
+              amount 
+              CreatedAt 
+            } 
+          }`,
     }),
     }).then((response) => {
       recievedResponse = response;
@@ -284,6 +283,7 @@ export function* applyCoupon(param) {
       yield put({ type: actionTypes.FETCHED_DATA, payload: recievedResponse });
       callback(responseTypes.FAILURE, INVALID_COUPON_CODE);
     } else {
+      console.log("Coupon was found and is ", CouponJson)
       postUrl = APIService.PYTHON_MICRO_SERVICES + requestURLS.APPLY_COUPON;
       const ResponseJson = yield fetch(postUrl, {
         headers,

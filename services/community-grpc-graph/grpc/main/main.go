@@ -95,6 +95,11 @@ func (s *server) CreateCoupon(ctx context.Context, in *pb.CreateCouponRequest) (
 	return response, nil
 }
 
+func (s *server) ValidateCoupon(ctx context.Context, in *pb.ValidateCouponRequest) (*pb.ValidateCouponResponse, error) {
+	res, err := models.ValidateCoupon(mongoClient, in)
+	return res, err
+}
+
 func (s *server) GetCoupons(ctx context.Context, in *pb.GetCouponsRequest) (*pb.GetCouponsResponse, error) {
 	couponcodes := in.CouponCodes
 

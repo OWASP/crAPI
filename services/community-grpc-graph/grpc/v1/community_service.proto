@@ -21,6 +21,7 @@ service CommunityService {
   rpc UpdateCoupon (UpdateCouponRequest) returns (UpdateCouponResponse) {};
   rpc GetCoupons (GetCouponsRequest) returns (GetCouponsResponse) {};
   rpc DeleteCoupons (DeleteCouponsRequest) returns (DeleteCouponsResponse) {};
+  rpc ValidateCoupon (ValidateCouponRequest) returns (ValidateCouponResponse) {};
 
   // User API services.
   rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {};

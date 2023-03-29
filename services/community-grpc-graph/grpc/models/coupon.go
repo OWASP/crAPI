@@ -16,6 +16,7 @@ package models
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"html"
 	"log"
@@ -44,21 +45,7 @@ func PrepareNewCoupon(coupon model.CouponInput) model.Coupon {
 func SaveCoupon(client *mongo.Client, coupon *pb.Coupon) (*pb.CreateCouponResponse, error) {
 
 	collection := client.Database(os.Getenv("MONGO_DB_NAME")).Collection("coupons")
-	// Modify the BSON document to replace "couponcode" with "coupon_code"
-	doc, err := bson.Marshal(coupon)
-	if err != nil {
-		println("Error while marshaling coupon into BSON document")
-		fmt.Println(err)
-	}
-	var result bson.M
-	err = bson.Unmarshal(doc, &result)
-	if err != nil {
-		println("Error while unmarshaling BSON document")
-		fmt.Println(err)
-	}
-	result["coupon_code"] = result["couponcode"]
-	delete(result, "couponcode")
-	_, err = collection.InsertOne(context.TODO(), result)
+	_, err := collection.InsertOne(context.TODO(), coupon)
 	if err != nil {
 		println("Error while inserting coupon into collection")
 		fmt.Println(err)
@@ -89,4 +76,21 @@ func GetCoupons(client *mongo.Client, in []string) (*pb.GetCouponsResponse, erro
 		Coupons: coupons,
 	}
 	return res, nil
+}
+
+// Validate coupon
+func ValidateCoupon(client *mongo.Client, code *pb.ValidateCouponRequest) (*pb.ValidateCouponResponse, error) {
+	collection := client.Database(os.Getenv("MONGO_DB_NAME")).Collection("coupons")
+	jsonBody := fmt.Sprintf("{\"coupon_code\": %s}", code.GetCouponCode())
+	var bsonMap bson.M
+	err := json.Unmarshal([]byte(jsonBody), &bsonMap)
+	var result *pb.Coupon
+	err = collection.FindOne(context.TODO(), bsonMap).Decode(&result)
+	if err != nil {
+		log.Println("Fetching documents from collection failed, %v", err)
+		return nil, err
+	}
+	return &pb.ValidateCouponResponse{
+		Coupon: result,
+	}, nil
 }

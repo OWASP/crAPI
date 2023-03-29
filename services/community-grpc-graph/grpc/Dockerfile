@@ -22,12 +22,15 @@ COPY ./grpc ./grpc
 RUN cp /build/grpc/main/main.go .
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+RUN go get github.com/favadi/protoc-go-inject-tag
+RUN go install github.com/favadi/protoc-go-inject-tag
 RUN apk add --no-cache protobuf
 RUN apk add protobuf-dev
 RUN protoc -I /build/grpc/v1/ community.proto --go_out=/build/grpc/ --go-grpc_out=/build/grpc
 RUN protoc -I /build/grpc/v1/ community_requests.proto --go_out=/build/grpc/ --go-grpc_out=/build/grpc
 RUN protoc -I /build/grpc/v1/ community_responses.proto --go_out=/build/grpc/ --go-grpc_out=/build/grpc
 RUN protoc -I /build/grpc/v1/ community_service.proto --go_out=/build/grpc/ --go-grpc_out=/build/grpc
+RUN protoc-go-inject-tag -input=/build/grpc/proto/*.pb.go
 RUN go mod tidy
 RUN go mod download
 RUN go mod vendor
