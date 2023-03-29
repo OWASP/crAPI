@@ -1,0 +1,39 @@
+{{ if .Values.apiGatewayServiceInstall }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.apiGatewayService.name }}
+  labels:
+    release: {{ .Release.Name }}
+    {{- with .Values.apiGatewayService.deploymentLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.apiGatewayService.replicaCount }}
+  selector:
+    matchLabels:
+      {{- toYaml .Values.apiGatewayService.deploymentSelectorMatchLabels | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        release: {{ .Release.Name }}
+        {{- with .Values.apiGatewayService.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+        - name: {{ .Values.apiGatewayService.name }}
+          image: {{ .Values.apiGatewayService.image }}:{{ .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.apiGatewayService.port }}
+          {{- if .Values.apiGatewayService.resources }}
+          resources:
+            {{- toYaml .Values.apiGatewayService.resources | nindent 12 }}
+          {{- end }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.apiGatewayService.port }}
+            initialDelaySeconds: 15
+            periodSeconds: 10
+{{ end }}

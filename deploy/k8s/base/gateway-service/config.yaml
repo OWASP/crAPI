@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-service-configmap
+  labels:
+    app: gateway-service
+data:
+    SERVER_PORT: "443"
