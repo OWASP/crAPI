@@ -79,17 +79,23 @@ func GetCoupons(client *mongo.Client, in []string) (*pb.GetCouponsResponse, erro
 }
 
 // Validate coupon
-func ValidateCoupon(client *mongo.Client, code *pb.ValidateCouponRequest) (*pb.ValidateCouponResponse, error) {
+func ValidateCoupon(client *mongo.Client, jsoncode *pb.ValidateCouponRequest) (*pb.ValidateCouponResponse, error) {
 	collection := client.Database(os.Getenv("MONGO_DB_NAME")).Collection("coupons")
-	jsonBody := fmt.Sprintf("{\"coupon_code\": %s}", code.GetCouponCode())
-	var bsonMap bson.M
-	err := json.Unmarshal([]byte(jsonBody), &bsonMap)
+	jsonBody := fmt.Sprintf("{\"coupon_code\": \"%s\"}", jsoncode.GetCouponCode())
+	if json.Valid([]byte(jsoncode.GetCouponCode())) {
+		jsonBody = fmt.Sprintf("{\"coupon_code\": %s}", jsoncode.GetCouponCode())
+	}
+	var jBsonMap bson.M
+	json.Unmarshal([]byte(jsonBody), &jBsonMap)
+	fmt.Println(jBsonMap)
+	log.Println("BsonMAp- ", jBsonMap)
 	var result *pb.Coupon
-	err = collection.FindOne(context.TODO(), bsonMap).Decode(&result)
+	err := collection.FindOne(context.TODO(), jBsonMap).Decode(&result)
 	if err != nil {
 		log.Println("Fetching documents from collection failed, %v", err)
 		return nil, err
 	}
+	log.Println("Result is ", result)
 	return &pb.ValidateCouponResponse{
 		Coupon: result,
 	}, nil
