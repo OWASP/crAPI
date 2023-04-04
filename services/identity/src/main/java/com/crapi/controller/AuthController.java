@@ -15,15 +15,16 @@
 package com.crapi.controller;
 
 import com.crapi.config.JwtProvider;
+import com.crapi.constant.TestUsers;
 import com.crapi.constant.UserMessage;
 import com.crapi.entity.User;
 import com.crapi.model.*;
+import com.crapi.model.SeedUser;
 import com.crapi.service.OtpService;
 import com.crapi.service.UserRegistrationService;
 import com.crapi.service.UserService;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -181,18 +182,13 @@ public class AuthController {
   }
 
   /** @return success or failure of password updation. */
-  @PostMapping("/reset")
+  @PostMapping("/reset-test-users")
   public ResponseEntity<?> resetPassword() {
-
-    Map<String, String> testUsers = new HashMap<String, String>();
-    testUsers.put("adam007@example.com", "adam007!123");
-    testUsers.put("pogba006@example.com", "pogba006!123");
-    testUsers.put("robot001@example.com", "robot001!123");
-    testUsers.put("test@example.com", "Test!123");
-
-    for (Map.Entry<String, String> entry : testUsers.entrySet()) {
-      User user = userService.updateUserPassword(entry.getValue(), entry.getKey());
-      if (user == null)
+    ArrayList<SeedUser> userDetailList = new TestUsers().getUsers();
+    for (SeedUser userDetails : userDetailList) {
+      User resetUser =
+          userService.updateUserPassword(userDetails.getPassword(), userDetails.getEmail());
+      if (resetUser == null)
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(new CRAPIResponse("Internal Server Error", 500));
     }
