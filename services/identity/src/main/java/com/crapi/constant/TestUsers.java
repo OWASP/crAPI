@@ -18,15 +18,11 @@ import com.crapi.enums.ERole;
 import com.crapi.model.SeedUser;
 import java.util.ArrayList;
 import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TestUsers {
-  private static final Logger logger = LoggerFactory.getLogger(TestUsers.class);
   @Getter public ArrayList<SeedUser> users = new ArrayList<SeedUser>();
 
   public TestUsers() {
-    logger.info("FILLING VALUES NOWW");
     users.add(
         new SeedUser(
             "Adam", "adam007@example.com", "9876895423", "adam007!123", ERole.ROLE_PREDEFINE));
