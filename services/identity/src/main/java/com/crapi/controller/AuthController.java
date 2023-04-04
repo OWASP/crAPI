@@ -25,9 +25,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.validation.Valid;
-import org.apache.logging.log4j.core.impl.Log4jContextFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +35,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/identity/api/auth")
 public class AuthController {
-  static final Log4jContextFactory log4jContextFactory = new Log4jContextFactory();
-  private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
   @Autowired UserService userService;
 
   @Autowired UserRegistrationService userRegistrationService;
@@ -196,7 +191,6 @@ public class AuthController {
     testUsers.put("test@example.com", "Test!123");
 
     for (Map.Entry<String, String> entry : testUsers.entrySet()) {
-      logger.info(entry.getKey() + " " + entry.getValue());
       User user = userService.updateUserPassword(entry.getValue(), entry.getKey());
       if (user == null)
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
