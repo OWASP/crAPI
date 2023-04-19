@@ -195,6 +195,61 @@
         "response": []
       },
       {
+        "name": "Reset Test Users",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "exec": [
+                ""
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "request": {
+          "method": "GET",
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "url": {
+            "raw": "{{url}}/identity/api/auth/reset-test-users",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "identity",
+              "api",
+              "auth",
+              "reset-test-users"
+            ]
+          }
+        },
+        "response": []
+      },
+      {
         "name": "Verify JWT Token",
         "event": [
           {
