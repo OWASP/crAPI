@@ -15,7 +15,7 @@
 
 
 ## Uncomment the following line if you wish to run tests
-IS_TESTING=True python3 manage.py test &&\
+IS_TESTING=True python3 manage.py test --no-input &&\
 python3 manage.py migrate user --fake &&\
 python3 manage.py migrate crapi &&\
 python3 manage.py migrate db &&\
