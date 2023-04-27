@@ -97,11 +97,11 @@
                 "properties" : {
                   "email" : {
                     "type" : "string",
-                    "example": "test@example.com"
+                    "example": "pogba006@example.com"
                   },
                   "password" : {
                     "type" : "string",
-                    "example": "Test!123"
+                    "example": "pogba006!123"
                   }
                 }
               }
