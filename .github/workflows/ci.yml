@@ -135,6 +135,18 @@ jobs:
           cache-from: type=gha,scope=web-service
           cache-to: type=gha,mode=max,scope=web-service
 
+      - name: Build gateway-service image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./services/gateway-service
+          tags: crapi/gateway-service:${{ env.TAG_LATEST }},crapi/gateway-service:${{ env.TAG_NAME }}
+          push: false
+          load: true
+          platforms: linux/amd64
+          cache-from: type=gha,scope=gateway-service
+          cache-to: type=gha,mode=max,scope=gateway-service
+
+
       - name: Check Mailhog existence
         id: check_mailhog_exists
         uses: andstor/file-existence-action@v1
@@ -212,6 +224,16 @@ jobs:
           platforms: ${{ env.PLATFORMS }}
           cache-from: type=gha,scope=web-service
           cache-to: type=gha,mode=max,scope=web-service
+
+      - name: Build gateway-service all platforms and conditionally push to Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          context: ./services/gateway-service
+          tags: crapi/gateway-service:${{ env.TAG_LATEST }},crapi/gateway-service:${{ env.TAG_NAME }}
+          push: ${{ needs.build-context.outputs.push_image }}
+          platforms: ${{ env.PLATFORMS }}
+          cache-from: type=gha,scope=gateway-service
+          cache-to: type=gha,mode=max,scope=gateway-service
 
       - name: Build mailhog all platforms and conditionally push to Docker Hub
         if: steps.check_mailhog_exists.outputs.files_exists == 'true'

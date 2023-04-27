@@ -16,15 +16,20 @@
 contains views related to Shop APIs
 """
 import logging
+import uuid
 from django.db import connection
 from django.utils import timezone
 from django.http import FileResponse
 from django.urls import reverse
+import requests
+from crapi_site import settings
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from utils.helper import basic_auth
 
 from crapi.shop.serializers import OrderSerializer, ProductSerializer, CouponSerializer, ProductQuantitySerializer
+from user.serializers import UserSerializer
 from utils.jwt import jwt_auth_required
 from utils import messages
 from crapi.shop.models import Order, Product, AppliedCoupon, Coupon
@@ -97,9 +102,41 @@ class OrderControlView(APIView):
             message and corresponding status if error
         """
         order = Order.objects.get(id=order_id)
-        serializer = OrderSerializer(order)
+        order_serializer = OrderSerializer(order)
+        user = order.user
+        # email user.email, number user.number
+        payment = {}
+        try:
+            user_dict = UserSerializer(user).data
+            user_details = UserDetails.objects.get(user=user)
+            user_dict['name'] = user_details.name
+            gateway_endpoint = settings.API_GATEWAY_URL + "/v1/payment"
+            gateway_credential = basic_auth(settings.API_GATEWAY_USERNAME, settings.API_GATEWAY_PASSWORD)
+            logging.debug(gateway_endpoint)
+            data = {
+            }
+            data['user'] = user_dict
+            data['order'] = order_serializer.data
+            data['amount'] = float(order.product.price) * int(order.quantity)
+            payment_response = requests.post(
+                gateway_endpoint,
+                headers={
+                    "Authorization": gateway_credential, 
+                    "Content-Type": "application/json"
+                    },
+                json=data,
+                verify=False
+            )
+            if payment_response.status_code == 200:
+                payment = payment_response.json()
+            else:
+                logging.error("Payment response error, {}: {}".format(payment_response.status_code, payment_response.content))
+            logging.debug("payment response: {}".format(payment))
+        except Exception as e:
+            logging.error(e, exc_info=True)
         response_data = dict(
-            orders=serializer.data
+            order=order_serializer.data,
+            payment=payment
         )
         return Response(response_data, status=status.HTTP_200_OK)
 
@@ -137,6 +174,7 @@ class OrderControlView(APIView):
             product=product,
             quantity=request_data['quantity'],
             created_on=timezone.now(),
+            transaction_id=uuid.uuid4(),
         )
         user_details.save()
         return Response({

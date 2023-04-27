@@ -15,7 +15,10 @@
 package com.crapi.entity;
 
 import com.crapi.enums.EStatus;
+import com.crapi.model.VehicleOwnership;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import javax.persistence.*;
 import lombok.Data;
@@ -36,6 +39,7 @@ public class VehicleDetails {
   private String vin;
   private long year;
   private EStatus status;
+  @Transient List<VehicleOwnership> previousOwners;
 
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "vehicle_model_id")
@@ -55,6 +59,7 @@ public class VehicleDetails {
     this.vin = vin;
     this.status = EStatus.ACTIVE;
     this.year = LocalDate.now().getYear();
+    this.previousOwners = Arrays.asList();
   }
 
   public VehicleDetails() {}

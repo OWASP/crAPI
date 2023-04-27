@@ -218,6 +218,18 @@ public class UserServiceImplTest {
   }
 
   @Test
+  public void testUpdateUserPassword() {
+    User user = getDummyUser();
+    String samplePassword = "samplePassword";
+    Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(user);
+    Mockito.when(userRepository.saveAndFlush(Mockito.any())).thenReturn(user);
+    userService.updateUserPassword(samplePassword, getDummyUser().getEmail());
+    Assertions.assertEquals(user.getPassword(), encoder.encode(samplePassword));
+    Mockito.verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
+    Mockito.verify(userRepository, Mockito.times(1)).findByEmail(user.getEmail());
+  }
+
+  @Test
   public void getUserByRequestTokenRequestSuccessFull() {
     User user = getDummyUser();
     UserDetails userDetails = getDummyUserDetails();

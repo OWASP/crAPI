@@ -1,0 +1,11 @@
+{{ if .Values.apiGatewayServiceInstall }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.apiGatewayService.config.name }}
+  labels:
+    release: {{ .Release.Name }}
+    {{- toYaml .Values.apiGatewayService.config.labels | nindent 4 }}
+data:
+    SERVER_PORT: {{ .Values.apiGatewayService.port | quote }}
+{{ end }}
