@@ -55,6 +55,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-core:${log4jVersion}")
     implementation("org.apache.logging.log4j:log4j-web:${log4jVersion}")
     implementation("com.google.cloud:libraries-bom:25.4.0")
+    implementation("org.apache.httpcomponents:httpclient:4.5.13")
     implementation("com.google.cloud:google-cloud-storage:2.10.0")
     testImplementation("org.mockito:mockito-junit-jupiter:${mockito}")
     testImplementation("org.mockito:mockito-core:${mockito}")

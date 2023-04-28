@@ -1,6 +1,5 @@
-#! /bin/sh
+#!/bin/bash
 
-#
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -14,11 +13,11 @@
 # limitations under the License.
 
 
-## Uncomment the following line if you wish to run tests
-IS_TESTING=True python3 manage.py test --no-input &&\
-python3 manage.py migrate user --fake &&\
-python3 manage.py migrate crapi &&\
-python3 manage.py migrate db &&\
-python3 manage.py runserver 0.0.0.0:${SERVER_PORT}
-
-exec "$@"
+set -x
+cd "$(dirname $0)"
+docker build -t crapi/gateway-service:${VERSION:-latest} .
+retVal=$?
+if [ $retVal -ne 0 ]; then
+    echo "Error building crapi-ownership-external image"
+    exit $retVal
+fi

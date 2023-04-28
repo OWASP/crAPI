@@ -27,16 +27,20 @@
                 "required" : [ "email", "name", "number", "password" ],
                 "properties" : {
                   "email" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example": "Cristobal.Weissnat@example.com"
                   },
                   "name" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example": "Cristobal.Weissnat"
                   },
                   "number" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example": "6915656974"
                   },
                   "password" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example": "5hmb0gvyC__hVQg"
                   }
                 }
               }
@@ -92,10 +96,12 @@
                 "required" : [ "email", "password" ],
                 "properties" : {
                   "email" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example": "test@example.com"
                   },
                   "password" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example": "Test!123"
                   }
                 }
               }
@@ -142,7 +148,8 @@
                 "required" : [ "email" ],
                 "properties" : {
                   "email" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example": "adam007@example.com"
                   }
                 }
               }
@@ -404,10 +411,12 @@
                 "required" : [ "new_email", "old_email" ],
                 "properties" : {
                   "new_email" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example": "Sofia.Predovic@example.com"
                   },
                   "old_email" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example": "Cristobal.Weissnat@example.com"
                   }
                 }
               }
@@ -446,13 +455,16 @@
                 "required" : [ "old_email", "new_email", "token" ],
                 "properties" : {
                   "old_email" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example" : "Einar.Swaniawski@example.com"
                   },
                   "new_email" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example": "Danielle.Ankunding@example.com"
                   },
                   "token" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example": "T9O2s6i3C7o2E8l7X5Y4"
                   }
                 }
               }
@@ -996,10 +1008,12 @@
                 "required" : [ "pincode", "vin" ],
                 "properties" : {
                   "pincode" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example": "9896"
                   },
                   "vin" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example": "0IOJO38SMVL663989"
                   }
                 }
               }
@@ -1093,7 +1107,8 @@
         "required" : true,
         "schema" : {
           "type" : "string",
-          "format" : "uuid"
+          "format" : "uuid",
+          "example": "0be319f0-f0dd-44aa-af0b-af927f3a383f"
         }
       } ]
     },
@@ -1158,7 +1173,8 @@
         "name" : "postId",
         "required" : true,
         "schema" : {
-          "type" : "string"
+          "type" : "string",
+          "example": "tiSTSUzh4BwtvYSLWPsqu9"
         }
       } ]
     },
@@ -1178,10 +1194,12 @@
                 "type" : "object",
                 "properties" : {
                   "content" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example": "Est maiores voluptas velit. Necessitatibus vero veniam quos nobis."
                   },
                   "title" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example": "Velit quia minima."
                   }
                 }
               }
@@ -1263,7 +1281,8 @@
                 "type" : "object",
                 "properties" : {
                   "content" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example": "Porro aut ratione et."
                   }
                 }
               }
@@ -1368,7 +1387,8 @@
         "name" : "postId",
         "required" : true,
         "schema" : {
-          "type" : "string"
+          "type" : "string",
+          "example": "tiSTSUzh4BwtvYSLWPsqu9"
         }
       } ]
     },
@@ -1559,7 +1579,8 @@
                 "required" : [ "coupon_code" ],
                 "properties" : {
                   "coupon_code" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example": "TRAC075"
                   }
                 }
               }
@@ -1961,7 +1982,8 @@
           "in" : "query",
           "name" : "order_id",
           "schema" : {
-            "type" : "integer"
+            "type" : "integer",
+            "example": 33
           },
           "required" : true
         } ],
@@ -2047,10 +2069,12 @@
                 "required" : [ "amount", "coupon_code" ],
                 "properties" : {
                   "amount" : {
-                    "type" : "number"
+                    "type" : "number",
+                    "example": 75
                   },
                   "coupon_code" : {
-                    "type" : "string"
+                    "type" : "string",
+                    "example": "TRAC075"
                   }
                 }
               }
@@ -2251,11 +2275,11 @@
               },
               "example" : {
                 "mechanic_api" : "http://localhost:8000/workshop/api/mechanic/receive_report",
-                "mechanic_code" : "TRAC_MECH1",
-                "number_of_repeats" : 0,
+                "mechanic_code" : "TRAC_JHN",
+                "number_of_repeats" : 1,
                 "repeat_request_if_failed" : false,
-                "problem_details" : "My car has engine trouble, and I need urgent help!",
-                "vin" : "0BZCX25UTBJ987271"
+                "problem_details" : "Hi Jhon",
+                "vin" : "8UOLV89RGKL908077"
               }
             }
           }
@@ -2810,10 +2834,12 @@
         "type" : "object",
         "properties" : {
           "product_id" : {
-            "type" : "integer"
+            "type" : "integer",
+            "example": 1
           },
           "quantity" : {
-            "type" : "integer"
+            "type" : "integer",
+            "example": 1
           }
         },
         "required" : [ "product_id", "quantity" ]
@@ -2932,17 +2958,20 @@
           "otp" : {
             "maxLength" : 4,
             "minLength" : 3,
-            "type" : "string"
+            "type" : "string",
+            "example": "9969"
           },
           "password" : {
             "maxLength" : 30,
             "minLength" : 5,
-            "type" : "string"
+            "type" : "string",
+            "example": "5hmb0gvyC__hVQg"
           },
           "email" : {
             "maxLength" : 30,
             "minLength" : 5,
-            "type" : "string"
+            "type" : "string",
+            "example": "Cristobal.Weissnat@example.com"   
           }
         }
       },

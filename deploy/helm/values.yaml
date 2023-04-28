@@ -6,6 +6,9 @@ jwtSecret: crapi
 enableLog4j: false
 enableShellInjection: true
 imagePullPolicy: Always
+apiGatewayServiceUrl: https://api.crapi.io
+apiGatewayServiceInstall: true
+apiGatewayPassword: 
 
 waitForK8sResources:
   image: groundnuty/k8s-wait-for:v1.3
@@ -249,3 +252,30 @@ postgresdb:
     app: postgresdb
   statefulsetSelectorMatchLabels:
     app: postgresdb
+
+apiGatewayService:
+  name: gateway-service
+  image: crapi/gateway-service
+  port: 443
+  replicaCount: 1
+  service:
+    name: "gateway-service"
+    labels:
+      app: gateway-service
+  config:
+    name: gateway-service
+    labels:
+      app: gateway-service
+  resources:
+    limits:
+      cpu: "100m"
+    requests:
+      cpu: 50m
+  deploymentLabels:
+    app: gateway-service
+  podLabels:
+    app: gateway-service
+  deploymentSelectorMatchLabels:
+    app: gateway-service
+  serviceSelectorLabels:
+    app: gateway-service

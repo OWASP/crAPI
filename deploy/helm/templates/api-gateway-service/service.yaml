@@ -1,0 +1,17 @@
+{{ if .Values.apiGatewayServiceInstall }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.apiGatewayService.service.name }}
+  labels:
+    release: {{ .Release.Name }}
+    {{- with .Values.apiGatewayService.service.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  ports:
+  - port: {{ .Values.apiGatewayService.port }}
+    name: https
+  selector:
+    {{- toYaml .Values.apiGatewayService.serviceSelectorLabels | nindent 4 }}
+{{ end }}

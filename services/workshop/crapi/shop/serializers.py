@@ -46,7 +46,7 @@ class OrderSerializer(serializers.ModelSerializer):
         Meta class for OrderSerializer
         """
         model = Order
-        fields = ('id', 'user', 'product', 'quantity', 'status', 'created_on')
+        fields = ('id', 'user', 'product', 'quantity', 'status', 'transaction_id', 'created_on')
 
 
 class CouponSerializer(serializers.Serializer):
