@@ -118,6 +118,7 @@ class ReceiveReportView(APIView):
     """
     View to receive report from contact mechanic feature
     """
+    @jwt_auth_required
     def get(self, request):
         """
         receive_report endpoint for mechanic
