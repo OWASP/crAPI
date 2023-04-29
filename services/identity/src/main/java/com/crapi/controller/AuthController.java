@@ -182,7 +182,7 @@ public class AuthController {
   }
 
   /** @return success or failure of password updation. */
-  @GetMapping("/reset-test-users")
+  @PostMapping("/reset-test-users")
   public ResponseEntity<?> resetPassword() {
     ArrayList<SeedUser> userDetailList = new TestUsers().getUsers();
     for (SeedUser userDetails : userDetailList) {
