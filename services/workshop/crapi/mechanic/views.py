@@ -156,7 +156,7 @@ class GetReportView(APIView):
     View to get only particular service request
     """
     @jwt_auth_required
-    def get(self, request):
+    def get(self, request, user=None):
         """
         fetch service request details from report_link
         :param request: http request for the view
