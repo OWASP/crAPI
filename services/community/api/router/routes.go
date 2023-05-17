@@ -58,5 +58,16 @@ func (server *Server) InitializeRoutes() *mux.Router {
 //
 func (server *Server) Run(addr string) {
 	fmt.Println("Listening to port "+ os.Getenv("SERVER_PORT"))
-	fmt.Println(http.ListenAndServe(addr, server.Router))
+        _, is_tls := os.LookupEnv("TLS")
+        if is_tls {
+            err := http.ListenAndServeTLS(addr, "certs/server.crt", "certs/server.key", server.Router)
+            if err != nil {
+                fmt.Println(err)
+            }
+        } else {
+	    err := http.ListenAndServe(addr, server.Router)
+            if err != nil {
+                fmt.Println(err)
+            }
+        }
 }

@@ -34,6 +34,7 @@ FROM alpine:3
 RUN mkdir /app
 RUN apk update && apk add --no-cache curl
 COPY --from=builder /dist/main /app/main
+COPY certs /app/certs
 RUN ls -al /app
 
 ARG SERVER_PORT 
