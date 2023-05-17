@@ -18,7 +18,11 @@
 IS_TESTING=True python3 manage.py test --no-input &&\
 python3 manage.py migrate user --fake &&\
 python3 manage.py migrate crapi &&\
-python3 manage.py migrate db &&\
-python3 manage.py runserver 0.0.0.0:${SERVER_PORT}
+python3 manage.py migrate db
 
+if [ "$TLS" != "" ]; then
+  python3 manage.py runsslserver 0.0.0.0:${SERVER_PORT} --certificate $PWD/certs/server.crt --key $PWD/certs/server.key
+else
+  python3 manage.py runserver 0.0.0.0:${SERVER_PORT}
+fi
 exec "$@"

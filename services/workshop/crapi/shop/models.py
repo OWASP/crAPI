@@ -51,7 +51,7 @@ class Order(models.Model):
     user = ForeignKey(User, DB_CASCADE)
     product = ForeignKey(Product, DB_CASCADE)
     quantity = models.IntegerField(default=1)
-    transaction_id = models.CharField(max_length=255, default=uuid.uuid4())
+    transaction_id = models.CharField(max_length=255, default=uuid.uuid4)
     created_on = models.DateTimeField()
 
     STATUS_CHOICES = Choices(
