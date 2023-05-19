@@ -226,7 +226,11 @@ USE_L10N = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
 IDENTITY_VERIFY = 'http://{}/identity/api/auth/verify'.format(get_env_value('IDENTITY_SERVICE'))
 IDENTITY_LOGIN = 'http://{}/identity/api/auth/login'.format(get_env_value('IDENTITY_SERVICE'))
+TLS_ENABLED = os.environ.get('TLS_ENABLED', False)
+if TLS_ENABLED:
+    IDENTITY_VERIFY = 'https://{}/identity/api/auth/verify'.format(get_env_value('IDENTITY_SERVICE'))
+    IDENTITY_LOGIN = 'https://{}/identity/api/auth/login'.format(get_env_value('IDENTITY_SERVICE'))
+
 

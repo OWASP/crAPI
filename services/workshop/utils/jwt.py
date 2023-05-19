@@ -40,7 +40,7 @@ def jwt_auth_required(func):
                 token = request.META.get('HTTP_AUTHORIZATION')[7:]
                 tokenJson = {'token': token}
                 token_verify_response = requests.post(
-                    url=settings.IDENTITY_VERIFY, json=tokenJson)
+                    url=settings.IDENTITY_VERIFY, json=tokenJson, verify=False)
 
                 if token_verify_response.status_code == status.HTTP_200_OK:
                     decoded = jwt.decode(token, verify=False)

@@ -18,11 +18,11 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strings"
 
 	"crapi.proj/goservice/api/config"
 	"crapi.proj/goservice/api/controllers"
 	"crapi.proj/goservice/api/middlewares"
+	"crapi.proj/goservice/api/utils"
 	"github.com/gorilla/mux"
 )
 
@@ -57,21 +57,9 @@ func (server *Server) InitializeRoutes() *mux.Router {
 	return server.Router
 }
 
-func isTrue(a string) bool {
-	a = strings.ToLower(a)
-	true_list := []string{"true", "1", "t", "y", "yes"}
-	for _, b := range true_list {
-		if b == a {
-			return true
-		}
-	}
-	return false
-}
-
 func (server *Server) Run(addr string) {
 	fmt.Println("Listening to port " + os.Getenv("SERVER_PORT"))
-	tls_enabled, is_tls := os.LookupEnv("TLS_ENABLED")
-	if is_tls && isTrue(tls_enabled) {
+	if utils.IsTLSEnabled() {
 		// Check if env variable TLS_CERTIFICATE is set then use it as certificate else default to certs/server.crt
 		certificate, is_cert := os.LookupEnv("TLS_CERTIFICATE")
 		if !is_cert || certificate == "" {
