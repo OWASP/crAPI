@@ -23,7 +23,7 @@ spec:
           image: {{ .Values.web.image }}:{{ .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           ports:
-            - containerPort: 80
+            - containerPort: {{ if .Values.tlsEnabled }}443{{ else }}80{{- end }}
           {{- if .Values.web.resources }}
           resources:
             {{- toYaml .Values.web.resources | nindent 12 }}
