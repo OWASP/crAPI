@@ -25,6 +25,7 @@ server {
     sub_filter "://${COMMUNITY_SERVICE}" "://$http_host";
     sub_filter_once off;
     proxy_ssl_verify off;
+    proxy_ssl_trusted_certificate /app/certs/server.crt;
   }
 
   location /identity/ {
@@ -40,6 +41,7 @@ server {
     proxy_set_header Host ${IDENTITY_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
     proxy_ssl_verify off;
+    proxy_ssl_trusted_certificate /app/certs/server.crt;
   }
 
   location /workshop/ {
@@ -58,6 +60,7 @@ server {
     sub_filter "://${WORKSHOP_SERVICE}" "://$http_host";
     sub_filter_once off;
     proxy_ssl_verify off;
+    proxy_ssl_trusted_certificate /app/certs/server.crt;
   }
 
   location /images {
@@ -67,6 +70,7 @@ server {
   location /.well-known/jwks.json {
     proxy_pass ${HTTP_PROTOCOL}://${IDENTITY_SERVICE}/identity/api/auth/jwks.json;
     proxy_ssl_verify off;
+    proxy_ssl_trusted_certificate /app/certs/server.crt;
   }
 
   location / {
