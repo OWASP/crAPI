@@ -9,6 +9,7 @@ imagePullPolicy: Always
 apiGatewayServiceUrl: https://api.crapi.io
 apiGatewayServiceInstall: true
 apiGatewayPassword: 
+tlsEnabled: false
 
 waitForK8sResources:
   image: groundnuty/k8s-wait-for:v1.3
@@ -70,6 +71,11 @@ identity:
     smtpFrom: "no-reply@example.com"
     smtpAuth: true
     smtpStartTLS: true
+    keyStoreType: PKCS12
+    keyStore: classpath:certs/server.p12
+    keyStorePassword: passw0rd
+    keyPassword: passw0rd
+    keyAlias: identity
   resources:
     limits:
       cpu: "500m"

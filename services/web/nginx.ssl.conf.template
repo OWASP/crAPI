@@ -1,6 +1,10 @@
 server {
-  listen 80;
+  listen 443 ssl;
   server_name _;
+  ssl_certificate /app/certs/server.crt;
+  ssl_certificate_key /app/certs/server.key;
+  ssl_protocols TLSv1.3 TLSv1.2 TLSv1.1;
+
   client_max_body_size 50M;
   index index.html;
   root /usr/share/nginx/html;

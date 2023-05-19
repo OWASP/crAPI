@@ -21,7 +21,14 @@ python3 manage.py migrate crapi &&\
 python3 manage.py migrate db
 
 if [ "$TLS" != "" ]; then
-  python3 manage.py runsslserver 0.0.0.0:${SERVER_PORT} --certificate $PWD/certs/server.crt --key $PWD/certs/server.key
+  # if $TLS_CERTIFICATE and $TLS_KEY are not set, use the default ones
+  if [ "$TLS_CERTIFICATE" == "" ]; then
+    TLS_CERTIFICATE=$PWD/certs/server.crt
+  fi
+  if [ "$TLS_KEY" == "" ]; then
+    TLS_KEY=$PWD/certs/server.key
+  fi
+  python3 manage.py runsslserver 0.0.0.0:${SERVER_PORT} --certificate "$TLS_CERTIFICATE" --key "$TLS_KEY"
 else
   python3 manage.py runserver 0.0.0.0:${SERVER_PORT}
 fi

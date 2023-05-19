@@ -22,3 +22,4 @@ data:
     MONGO_DB_PASSWORD: {{ .Values.mongodb.config.mongoPassword }}
     MONGO_DB_NAME: {{ .Values.mongodb.config.mongoDbName }}
     SERVER_PORT: {{ .Values.community.port | quote }}
+    TLS_ENABLED: {{ .Values.tlsEnabled }}

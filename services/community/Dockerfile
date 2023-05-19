@@ -31,7 +31,7 @@ RUN cp /build/main .
 FROM alpine:3
 
 # go
-RUN mkdir /app
+WORKDIR /app
 RUN apk update && apk add --no-cache curl
 COPY --from=builder /dist/main /app/main
 COPY certs /app/certs
