@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # if TLS_ENABLED is true or 1 then use https, otherwise use http
-if [ "$TLS_ENABLED" = "true" ] || [ "$TLS_ENABLED" = "1" ]; then
+if [ "$TLS_ENABLED" == "true" ] || [ "$TLS_ENABLED" == "1" ]; then
     export HTTP_PROTOCOL=https
     export NGINX_TEMPLATE=/etc/nginx/conf.d/default.ssl.conf.template
 else

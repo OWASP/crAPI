@@ -20,7 +20,7 @@ python3 manage.py migrate user --fake &&\
 python3 manage.py migrate crapi &&\
 python3 manage.py migrate db
 
-if [ "$TLS" != "" ]; then
+if [ "$TLS_ENABLED" == "true" ] || [ "$TLS_ENABLED" == "1" ]; then
   # if $TLS_CERTIFICATE and $TLS_KEY are not set, use the default ones
   if [ "$TLS_CERTIFICATE" == "" ]; then
     TLS_CERTIFICATE=$PWD/certs/server.crt
