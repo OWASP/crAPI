@@ -20,11 +20,13 @@ web:
   image: crapi/crapi-web
   replicaCount: 1
   port: 80
+  sslport: 443
   service:
     name: crapi-web
     labels:
       app: crapi-web
     nodePort: 30080
+    sslNodePort: 30443
   config:
     name: crapi-web-configmap
     labels:

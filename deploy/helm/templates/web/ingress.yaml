@@ -8,8 +8,12 @@ metadata:
 spec:
   ports:
   - port: {{ .Values.web.port }}
-    targetPort: {{ if .Values.tlsEnabled }}443{{ else }}80{{- end }}
+    targetPort: 80
     nodePort: {{ .Values.web.service.nodePort }}
+    name: nginx
+  - port: {{ .Values.web.sslport }}
+    targetPort: 443
+    nodePort: {{ .Values.web.service.sslNodePort }}
     name: nginx
   type: LoadBalancer
   selector:
