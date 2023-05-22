@@ -12,7 +12,7 @@ tlsEnabled: true
 web:
   image: crapi/crapi-web
   port: 80
-  sslport: 443
+  sslPort: 443
 identity:
   image: crapi/crapi-identity
   port: 8080

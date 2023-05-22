@@ -68,10 +68,11 @@ class ContactMechanicView(APIView):
 
         repeat_count = 0
         while True:
-            logger.info(f"Repeat count: {repeat_count}")
+            request_url=request_data['mechanic_api']
+            logger.info(f"Repeat count: {repeat_count}, mechanic_api: {request_url}")
             try:
                 mechanic_response = requests.get(
-                    url=request_data['mechanic_api'],
+                    request_url,
                     params=request_data,
                     headers={'Authorization': request.META.get('HTTP_AUTHORIZATION')},
                     verify=False
