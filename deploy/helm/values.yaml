@@ -20,7 +20,7 @@ web:
   image: crapi/crapi-web
   replicaCount: 1
   port: 80
-  sslport: 443
+  sslPort: 443
   service:
     name: crapi-web
     labels:
