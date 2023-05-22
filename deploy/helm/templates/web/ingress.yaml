@@ -14,7 +14,7 @@ spec:
   - port: {{ .Values.web.sslport }}
     targetPort: 443
     nodePort: {{ .Values.web.service.sslNodePort }}
-    name: nginx
+    name: nginx-ssl
   type: LoadBalancer
   selector:
     {{- toYaml .Values.web.serviceSelectorLabels | nindent 4 }}
