@@ -61,18 +61,18 @@ API_GATEWAY_PASSWORD = "Pa$$4Vendor_1"
 # Application definition
 
 INSTALLED_APPS = [
-    'sslserver',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crapi.apps.CRAPIConfig',
-    'user.apps.UserConfig',
     'corsheaders',
     'health_check',
     'health_check.db',
+    'crapi.apps.CRAPIConfig',
+    'user.apps.UserConfig',
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -163,7 +163,7 @@ LOGGING = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django_db_cascade.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': get_env_value('DB_NAME'),
         'USER': get_env_value('DB_USER'),
         'PASSWORD': get_env_value('DB_PASSWORD'),
@@ -226,10 +226,11 @@ USE_L10N = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
 IDENTITY_VERIFY = 'http://{}/identity/api/auth/verify'.format(get_env_value('IDENTITY_SERVICE'))
 IDENTITY_LOGIN = 'http://{}/identity/api/auth/login'.format(get_env_value('IDENTITY_SERVICE'))
-TLS_ENABLED = os.environ.get('TLS_ENABLED', False)
-if TLS_ENABLED:
+TLS_ENABLED = os.environ.get('TLS_ENABLED')
+if TLS_ENABLED and (TLS_ENABLED.lower() in ['true', '1', 'yes']):
     IDENTITY_VERIFY = 'https://{}/identity/api/auth/verify'.format(get_env_value('IDENTITY_SERVICE'))
     IDENTITY_LOGIN = 'https://{}/identity/api/auth/login'.format(get_env_value('IDENTITY_SERVICE'))
 

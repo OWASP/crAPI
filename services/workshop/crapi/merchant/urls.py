@@ -16,10 +16,10 @@
 merchant URL Configuration
 The `urlpatterns` list routes URLs to views.
 """
-from django.conf.urls import url
+from django.urls import include, re_path
 
 import crapi.merchant.views as merchant_views
 
 urlpatterns = [
-    url(r'contact_mechanic$', merchant_views.ContactMechanicView.as_view()),
+    re_path(r'contact_mechanic$', merchant_views.ContactMechanicView.as_view()),
 ]

@@ -53,7 +53,7 @@ services:
       mongodb:
         condition: service_healthy
     healthcheck:
-        test: curl -k 0.0.0.0:${IDENTITY_SERVER_PORT:-8080}/identity/health_check
+        test: curl -k http://0.0.0.0:${IDENTITY_SERVER_PORT:-8080}/identity/health_check | curl -k https://0.0.0.0:${IDENTITY_SERVER_PORT:-8080}/identity/health_check
         interval: 15s
         timeout: 15s
         retries: 15
@@ -92,7 +92,7 @@ services:
       crapi-identity:
         condition: service_healthy
     healthcheck:
-        test: curl -k 0.0.0.0:${COMMUNITY_SERVER_PORT:-8087}/community/home
+        test: curl -k http://0.0.0.0:${COMMUNITY_SERVER_PORT:-8087}/community/home || curl -k https://0.0.0.0:${COMMUNITY_SERVER_PORT:-8087}/community/home
         interval: 15s
         timeout: 15s
         retries: 15
@@ -135,7 +135,7 @@ services:
       crapi-community:
         condition: service_healthy
     healthcheck:
-        test: curl -k 0.0.0.0:${WORKSHOP_SERVER_PORT:-8000}/workshop/health_check/
+        test: curl -k http://0.0.0.0:${WORKSHOP_SERVER_PORT:-8000}/workshop/health_check/ || curl -k https://0.0.0.0:${WORKSHOP_SERVER_PORT:-8000}/workshop/health_check/
         interval: 15s
         timeout: 15s
         retries: 15

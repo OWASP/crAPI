@@ -24,6 +24,7 @@ COPY ./api ./api
 RUN go mod vendor
 RUN ls -al
 RUN go build -o main .
+RUN go test -v ./...
 WORKDIR /dist
 RUN cp /build/main .
 

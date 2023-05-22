@@ -21,7 +21,7 @@ import (
 
 func IsTrue(a string) bool {
 	a = strings.ToLower(a)
-	true_list := []string{"true", "1", "t", "y", "yes"}
+	true_list := []string{"true", "1"}
 	for _, b := range true_list {
 		if b == a {
 			return true
