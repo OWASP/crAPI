@@ -14,7 +14,7 @@ server {
       ngx.req.read_body()  -- explicitly read the req body
       local body = ngx.req.get_body_data()
       if body then
-        body = ngx.re.gsub(body, "://"..ngx.var.http_host, "://${COMMUNITY_SERVICE}")
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${COMMUNITY_SERVICE}")
         ngx.req.set_body_data(body)
       end
     }
@@ -22,7 +22,7 @@ server {
     proxy_set_header Host ${COMMUNITY_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
     sub_filter_types application/json text/html;
-    sub_filter "://${COMMUNITY_SERVICE}" "://$http_host";
+    sub_filter "${HTTP_PROTOCOL}://${COMMUNITY_SERVICE}" "$scheme://$http_host";
     sub_filter_once off;
     proxy_ssl_verify off;
     proxy_ssl_trusted_certificate /app/certs/server.crt;
@@ -33,7 +33,7 @@ server {
       ngx.req.read_body()  -- explicitly read the req body
       local body = ngx.req.get_body_data()
       if body then
-        body = ngx.re.gsub(body, "://"..ngx.var.http_host, "://${IDENTITY_SERVICE}")
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${IDENTITY_SERVICE}")
         ngx.req.set_body_data(body)
       end
     }
@@ -49,7 +49,7 @@ server {
       ngx.req.read_body()  -- explicitly read the req body
       local body = ngx.req.get_body_data()
       if body then
-        body = ngx.re.gsub(body, "://"..ngx.var.http_host, "://${WORKSHOP_SERVICE}")
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${WORKSHOP_SERVICE}")
         ngx.req.set_body_data(body)
       end
     }
@@ -57,7 +57,7 @@ server {
     proxy_set_header Host ${WORKSHOP_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
     sub_filter_types application/json text/html;
-    sub_filter "://${WORKSHOP_SERVICE}" "://$http_host";
+    sub_filter "${HTTP_PROTOCOL}://${WORKSHOP_SERVICE}" "$scheme://$http_host";
     sub_filter_once off;
     proxy_ssl_verify off;
     proxy_ssl_trusted_certificate /app/certs/server.crt;
@@ -95,7 +95,7 @@ server {
       ngx.req.read_body()  -- explicitly read the req body
       local body = ngx.req.get_body_data()
       if body then
-        body = ngx.re.gsub(body, "://"..ngx.var.http_host, "://${COMMUNITY_SERVICE}")
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${COMMUNITY_SERVICE}")
         ngx.req.set_body_data(body)
       end
     }
@@ -103,7 +103,7 @@ server {
     proxy_set_header Host ${COMMUNITY_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
     sub_filter_types application/json text/html;
-    sub_filter "://${COMMUNITY_SERVICE}" "://$http_host";
+    sub_filter "${HTTP_PROTOCOL}://${COMMUNITY_SERVICE}" "$scheme://$http_host";
     sub_filter_once off;
   }
 
@@ -112,7 +112,7 @@ server {
       ngx.req.read_body()  -- explicitly read the req body
       local body = ngx.req.get_body_data()
       if body then
-        body = ngx.re.gsub(body, "://"..ngx.var.http_host, "://${IDENTITY_SERVICE}")
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${IDENTITY_SERVICE}")
         ngx.req.set_body_data(body)
       end
     }
@@ -126,7 +126,7 @@ server {
       ngx.req.read_body()  -- explicitly read the req body
       local body = ngx.req.get_body_data()
       if body then
-        body = ngx.re.gsub(body, "://"..ngx.var.http_host, "://${WORKSHOP_SERVICE}")
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${WORKSHOP_SERVICE}")
         ngx.req.set_body_data(body)
       end
     }
@@ -134,7 +134,7 @@ server {
     proxy_set_header Host ${WORKSHOP_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
     sub_filter_types application/json text/html;
-    sub_filter "://${WORKSHOP_SERVICE}" "://$http_host";
+    sub_filter "${HTTP_PROTOCOL}://${WORKSHOP_SERVICE}" "$scheme://$http_host";
     sub_filter_once off;
   }
 
