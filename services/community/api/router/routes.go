@@ -18,17 +18,19 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"github.com/gorilla/mux"
+
 	"crapi.proj/goservice/api/config"
 	"crapi.proj/goservice/api/controllers"
 	"crapi.proj/goservice/api/middlewares"
+	"crapi.proj/goservice/api/utils"
+	"github.com/gorilla/mux"
 )
 
 type Server config.Server
 
 var controller = controllers.Server{}
 
-//initializeRoutes initialize routes of url with Authentication or without Authentication
+// initializeRoutes initialize routes of url with Authentication or without Authentication
 func (server *Server) InitializeRoutes() *mux.Router {
 
 	controller.DB = server.DB
@@ -55,8 +57,27 @@ func (server *Server) InitializeRoutes() *mux.Router {
 	return server.Router
 }
 
-//
 func (server *Server) Run(addr string) {
-	fmt.Println("Listening to port "+ os.Getenv("SERVER_PORT"))
-	fmt.Println(http.ListenAndServe(addr, server.Router))
+	fmt.Println("Listening to port " + os.Getenv("SERVER_PORT"))
+	if utils.IsTLSEnabled() {
+		// Check if env variable TLS_CERTIFICATE is set then use it as certificate else default to certs/server.crt
+		certificate, is_cert := os.LookupEnv("TLS_CERTIFICATE")
+		if !is_cert || certificate == "" {
+			certificate = "certs/server.crt"
+		}
+		// Check if env variable TLS_KEY is set then use it as key else default to certs/server.key
+		key, is_key := os.LookupEnv("TLS_KEY")
+		if !is_key || key == "" {
+			key = "certs/server.key"
+		}
+		err := http.ListenAndServeTLS(addr, certificate, key, server.Router)
+		if err != nil {
+			fmt.Println(err)
+		}
+	} else {
+		err := http.ListenAndServe(addr, server.Router)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
 }

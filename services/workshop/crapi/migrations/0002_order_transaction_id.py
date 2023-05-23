@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='order',
             name='transaction_id',
-            field=models.CharField(default=uuid.UUID('23197a01-ea30-4932-98dd-ba69d0524e94'), max_length=255),
+            field=models.CharField(default=uuid.uuid4, max_length=255),
         ),
     ]

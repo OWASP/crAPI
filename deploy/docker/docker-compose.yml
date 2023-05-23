@@ -41,13 +41,19 @@ services:
       - SMTP_STARTTLS=true
       - ENABLE_LOG4J=${ENABLE_LOG4J:-false}
       - API_GATEWAY_URL=https://api.crapi.io
+      - TLS_ENABLED=${TLS_ENABLED:-false}
+      - TLS_KEYSTORE_TYPE=PKCS12
+      - TLS_KEYSTORE=classpath:certs/server.p12
+      - TLS_KEYSTORE_PASSWORD=passw0rd
+      - TLS_KEY_PASSWORD=passw0rd
+      - TLS_KEY_ALIAS=identity
     depends_on:
       postgresdb:
         condition: service_healthy
       mongodb:
         condition: service_healthy
     healthcheck:
-        test: curl 0.0.0.0:${IDENTITY_SERVER_PORT:-8080}/identity/health_check
+        test: /app/health.sh
         interval: 15s
         timeout: 15s
         retries: 15
@@ -75,6 +81,9 @@ services:
       - MONGO_DB_USER=admin
       - MONGO_DB_PASSWORD=crapisecretpassword
       - MONGO_DB_NAME=crapi
+      - TLS_ENABLED=${TLS_ENABLED:-false}
+      - TLS_CERTIFICATE=certs/server.crt
+      - TLS_KEY=certs/server.key
     depends_on:
       postgresdb:
         condition: service_healthy
@@ -83,7 +92,7 @@ services:
       crapi-identity:
         condition: service_healthy
     healthcheck:
-        test: curl 0.0.0.0:${COMMUNITY_SERVER_PORT:-8087}/community/home
+        test: /app/health.sh
         interval: 15s
         timeout: 15s
         retries: 15
@@ -113,6 +122,9 @@ services:
       - MONGO_DB_NAME=crapi
       - SECRET_KEY=crapi
       - API_GATEWAY_URL=https://api.crapi.io
+      - TLS_ENABLED=${TLS_ENABLED:-false}
+      - TLS_CERTIFICATE=certs/server.crt
+      - TLS_KEY=certs/server.key
     depends_on:
       postgresdb:
         condition: service_healthy
@@ -123,7 +135,7 @@ services:
       crapi-community:
         condition: service_healthy
     healthcheck:
-        test: curl 0.0.0.0:${WORKSHOP_SERVER_PORT:-8000}/workshop/health_check/
+        test: /app/health.sh
         interval: 15s
         timeout: 15s
         retries: 15
@@ -138,10 +150,12 @@ services:
     image: crapi/crapi-web:${VERSION:-latest}
     ports:
       - "${LISTEN_IP:-127.0.0.1}:8888:80"
+      - "${LISTEN_IP:-127.0.0.1}:8443:443"
     environment:
       - COMMUNITY_SERVICE=crapi-community:${COMMUNITY_SERVER_PORT:-8087}
       - IDENTITY_SERVICE=crapi-identity:${IDENTITY_SERVER_PORT:-8080}
       - WORKSHOP_SERVICE=crapi-workshop:${WORKSHOP_SERVER_PORT:-8000}
+      - TLS_ENABLED=${TLS_ENABLED:-false}
     depends_on:
       crapi-community:
         condition: service_healthy
@@ -235,6 +249,7 @@ services:
         interval: 15s
         timeout: 15s
         retries: 15
+        start_period: 15s
     deploy:
       resources:
         limits:

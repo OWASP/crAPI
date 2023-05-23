@@ -21,6 +21,12 @@ from rest_framework.response import Response
 from django.conf import settings
 from utils import messages
 from user.models import User
+import urllib3
+import logging
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+logger = logging.getLogger()
 
 def jwt_auth_required(func):
     """
@@ -39,26 +45,30 @@ def jwt_auth_required(func):
                     and request.META.get('HTTP_AUTHORIZATION')[0:7] == 'Bearer ':
                 token = request.META.get('HTTP_AUTHORIZATION')[7:]
                 tokenJson = {'token': token}
+                identity_url = settings.IDENTITY_VERIFY
+                logger.debug(f"Identity url: {identity_url}, tokenJson: {tokenJson}")
                 token_verify_response = requests.post(
-                    url=settings.IDENTITY_VERIFY, json=tokenJson)
-
-                if token_verify_response.status_code == status.HTTP_200_OK:
-                    decoded = jwt.decode(token, verify=False)
+                    identity_url, json=tokenJson, verify=False)
+                logger.debug(f"Identity url: {identity_url}, token_verify_response: {token_verify_response}")
+                response_status_code = token_verify_response.status_code
+                if response_status_code == status.HTTP_200_OK:
+                    decoded = jwt.decode(token, options={"verify_signature": False})
                     username = decoded['sub']
                     user = User.objects.get(email=username)
                     # Add user object to the view function if authorized
                     kwargs['user'] = user
                     return func(*args, **kwargs)
-
+                logger.debug("JWT token verification failed")
                 return Response({'message': messages.INVALID_TOKEN},
                                 status=status.HTTP_401_UNAUTHORIZED,
                                 content_type="application/json")
-
+            logger.debug("JWT token not found in request header")
             return Response({'message': messages.JWT_REQUIRED},
                             status=status.HTTP_401_UNAUTHORIZED,
                             content_type="application/json")
 
-        except (jwt.exceptions.DecodeError, User.DoesNotExist):
+        except (jwt.exceptions.DecodeError, User.DoesNotExist) as e:
+            logger.debug(f"JWT token verification failed with exception: {e}", exc_info=True)
             return Response({'message': messages.INVALID_TOKEN},
                             status=status.HTTP_401_UNAUTHORIZED,
                             content_type="application/json")
