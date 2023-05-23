@@ -36,6 +36,7 @@ WORKDIR /app
 RUN apk update && apk add --no-cache curl
 COPY --from=builder /dist/main /app/main
 COPY certs /app/certs
+COPY health.sh /app/health.sh
 RUN ls -al /app
 
 ARG SERVER_PORT 
