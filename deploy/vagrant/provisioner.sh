@@ -41,7 +41,7 @@ mkdir /opt/crapi
 
 cp "$MOUNT_DIR/deploy/docker/docker-compose.yml" /opt/crapi \
     && sed -i /opt/crapi/docker-compose.yml \
-    -e 's/${LISTEN_IP:-127\.0\.0\.1}:8888:80/${LISTEN_IP:-0.0.0.0}:8888:80/; s/${LISTEN_IP:-127\.0\.0\.1}:8025:8025/${LISTEN_IP:-0.0.0.0}:8025:8025/'
+    -e 's/${LISTEN_IP:-127\.0\.0\.1}:8888:80/80:80/; s/${LISTEN_IP:-127\.0\.0\.1}:8025:8025/8025:8025/'
 cp "$MOUNT_DIR/deploy/vagrant/crapi.service" /etc/systemd/system/ \
     && systemctl daemon-reload \
     && systemctl enable crapi.service
