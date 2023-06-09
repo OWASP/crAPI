@@ -20,3 +20,7 @@ data:
     MONGO_DB_PASSWORD: crapisecretpassword
     MONGO_DB_NAME: crapi
     SERVER_PORT: "8000"
+    API_GATEWAY_URL: "https://api.crapi.io"
+    TLS_ENABLED: "true"
+    TLS_CERTIFICATE: certs/server.crt
+    TLS_KEY: certs/server.key      
