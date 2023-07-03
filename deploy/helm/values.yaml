@@ -6,7 +6,7 @@ jwtSecret: crapi
 enableLog4j: false
 enableShellInjection: true
 imagePullPolicy: Always
-apiGatewayServiceUrl: https://api.crapi.io
+apiGatewayServiceUrl: https://api.mypremiumdealership.com
 apiGatewayServiceInstall: true
 apiGatewayPassword: 
 tlsEnabled: false
