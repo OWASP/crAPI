@@ -1,4 +1,4 @@
-module api.crapi.io/v1
+module api.mypremiumdealership.com/v1
 
 go 1.19
 

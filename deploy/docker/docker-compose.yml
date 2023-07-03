@@ -40,7 +40,7 @@ services:
       - SMTP_AUTH=true
       - SMTP_STARTTLS=true
       - ENABLE_LOG4J=${ENABLE_LOG4J:-false}
-      - API_GATEWAY_URL=https://api.crapi.io
+      - API_GATEWAY_URL=https://api.mypremiumdealership.com
       - TLS_ENABLED=${TLS_ENABLED:-false}
       - TLS_KEYSTORE_TYPE=PKCS12
       - TLS_KEYSTORE=classpath:certs/server.p12
@@ -121,7 +121,7 @@ services:
       - MONGO_DB_PASSWORD=crapisecretpassword
       - MONGO_DB_NAME=crapi
       - SECRET_KEY=crapi
-      - API_GATEWAY_URL=https://api.crapi.io
+      - API_GATEWAY_URL=https://api.mypremiumdealership.com
       - TLS_ENABLED=${TLS_ENABLED:-false}
       - TLS_CERTIFICATE=certs/server.crt
       - TLS_KEY=certs/server.key
@@ -239,8 +239,8 @@ services:
           cpus: '0.3'
           memory: 128M
 
-  api.crapi.io:
-    container_name: api.crapi.io
+  api.mypremiumdealership.com:
+    container_name: api.mypremiumdealership.com
     image: crapi/gateway-service:${VERSION:-latest}
     #ports:
     #  - "${LISTEN_IP:-127.0.0.1}:8443:443" # https
