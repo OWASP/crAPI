@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-service
+  template:
+    metadata:
+      labels:
+        app: gateway-service
+    spec:
+      containers:
+      - name: gateway-service
+        image: crapi/gateway-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8087
+        resources:
+          limits:
+            cpu: "100m"
+          requests:
+            cpu: 50m

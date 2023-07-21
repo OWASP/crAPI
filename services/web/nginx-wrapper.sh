@@ -13,7 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-envsubst '${COMMUNITY_SERVICE} ${IDENTITY_SERVICE} ${WORKSHOP_SERVICE}' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
+# if TLS_ENABLED is true or 1 then use https, otherwise use http
+if [ "$TLS_ENABLED" = "true" ] || [ "$TLS_ENABLED" = "1" ]; then
+    export HTTP_PROTOCOL=https
+    export NGINX_TEMPLATE=/etc/nginx/conf.d/default.ssl.conf.template
+else
+    export HTTP_PROTOCOL=http
+    export NGINX_TEMPLATE=/etc/nginx/conf.d/default.conf.template
+fi
+ls -al /app/certs
+env
+envsubst '${HTTP_PROTOCOL} ${COMMUNITY_SERVICE} ${IDENTITY_SERVICE} ${WORKSHOP_SERVICE}' < $NGINX_TEMPLATE > /etc/nginx/conf.d/default.conf
 openresty
 exec "$@"

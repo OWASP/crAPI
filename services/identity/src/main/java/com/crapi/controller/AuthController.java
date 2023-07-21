@@ -15,12 +15,16 @@
 package com.crapi.controller;
 
 import com.crapi.config.JwtProvider;
+import com.crapi.constant.TestUsers;
 import com.crapi.constant.UserMessage;
+import com.crapi.entity.User;
 import com.crapi.model.*;
+import com.crapi.model.SeedUser;
 import com.crapi.service.OtpService;
 import com.crapi.service.UserRegistrationService;
 import com.crapi.service.UserService;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,7 +36,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/identity/api/auth")
 public class AuthController {
-
   @Autowired UserService userService;
 
   @Autowired UserRegistrationService userRegistrationService;
@@ -176,5 +179,20 @@ public class AuthController {
       return ResponseEntity.status(HttpStatus.OK).body(jwt);
     }
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(jwt);
+  }
+
+  /** @return success or failure of password updation. */
+  @PostMapping("/reset-test-users")
+  public ResponseEntity<?> resetPassword() {
+    ArrayList<SeedUser> userDetailList = new TestUsers().getUsers();
+    for (SeedUser userDetails : userDetailList) {
+      User resetUser =
+          userService.updateUserPassword(userDetails.getPassword(), userDetails.getEmail());
+      if (resetUser == null)
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(new CRAPIResponse("Internal Server Error", 500));
+    }
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(new CRAPIResponse("Test Users Password Resetted", 200));
   }
 }

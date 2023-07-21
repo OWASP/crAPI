@@ -19,6 +19,8 @@ import com.crapi.entity.VehicleDetails;
 import com.crapi.model.CRAPIResponse;
 import com.crapi.model.VehicleForm;
 import com.crapi.model.VehicleLocationResponse;
+import com.crapi.model.VehicleOwnership;
+import com.crapi.service.VehicleOwnershipService;
 import com.crapi.service.VehicleService;
 import java.util.List;
 import java.util.UUID;
@@ -35,6 +37,8 @@ import org.springframework.web.bind.annotation.*;
 public class VehicleController {
 
   @Autowired VehicleService vehicleService;
+
+  @Autowired VehicleOwnershipService vehicleOwnershipService;
 
   /**
    * @param vehicleDetails
@@ -71,12 +75,31 @@ public class VehicleController {
   @GetMapping("/vehicle/vehicles")
   public ResponseEntity<?> getVehicle(HttpServletRequest request) {
     List<VehicleDetails> vehicleDetails = vehicleService.getVehicleDetails(request);
+    for (VehicleDetails vehicleDetail : vehicleDetails) {
+      String vin = vehicleDetail.getVin();
+      List<VehicleOwnership> vehicleOwnerships = vehicleOwnershipService.getPreviousOwners(vin);
+      if (vehicleOwnerships != null) {
+        vehicleDetail.setPreviousOwners(vehicleOwnerships);
+      }
+    }
     if (vehicleDetails != null) {
       return ResponseEntity.status(HttpStatus.OK).body(vehicleDetails);
     }
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(new CRAPIResponse(UserMessage.DID_NOT_GET_VEHICLE_FOR_USER, 500));
   }
+
+  /**
+   * @param request
+   * @return this api returns List of vehicle of user Dashboard Vehicle details fetch by this
+   *     api @GetMapping("/vehicle/vehicles") public ResponseEntity<?>
+   *     getVehicleOwnership(HttpServletRequest request) {
+   *     <p>List<VehicleOwnership> vehicleOwnership =
+   *     vehicleOwnershipService.getPreviousOwners(request); if (vehicleOwnership != null) { return
+   *     ResponseEntity.status(HttpStatus.OK).body(vehicleOwnership); } return
+   *     ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR) .body(new
+   *     CRAPIResponse(UserMessage.DID_NOT_GET_VEHICLE_FOR_USER, 500)); }
+   */
 
   /**
    * @param carId

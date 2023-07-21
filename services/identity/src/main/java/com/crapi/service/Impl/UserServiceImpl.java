@@ -148,6 +148,21 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
+   * @param password update password in database
+   * @param email by email user details and update password
+   */
+  @Transactional
+  @Override
+  public User updateUserPassword(String password, String email) {
+    User user = userRepository.findByEmail(email);
+    if (user != null) {
+      user.setPassword(encoder.encode(password));
+      userRepository.saveAndFlush(user);
+    }
+    return user;
+  }
+
+  /**
    * @param loginForm Contains user email, password and number
    * @param request getting jwt token for user from request header
    * @return boolean for user reset password

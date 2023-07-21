@@ -14,15 +14,18 @@
 
 package com.crapi.config;
 
+import com.crapi.constant.TestUsers;
 import com.crapi.entity.User;
 import com.crapi.entity.UserDetails;
 import com.crapi.entity.VehicleDetails;
 import com.crapi.enums.ERole;
+import com.crapi.model.SeedUser;
 import com.crapi.repository.*;
 import com.crapi.service.VehicleService;
 import com.crapi.utils.UserData;
 import com.crapi.utils.VehicleLocationData;
 import com.crapi.utils.VehicleModelData;
+import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,22 +80,18 @@ public class InitialDataConfig {
 
   public void addUser() {
     if (CollectionUtils.isEmpty(userDetailsRepository.findAll())) {
-      boolean user1 =
-          predefineUserData(
-              "Adam", "adam007@example.com", "adam007!123", "9876895423", ERole.ROLE_PREDEFINE);
-      boolean user2 =
-          predefineUserData(
-              "Pogba", "pogba006@example.com", "pogba006!123", "9876570006", ERole.ROLE_PREDEFINE);
-      boolean user3 =
-          predefineUserData(
-              "Robot", "robot001@example.com", "robot001!123", "9876570001", ERole.ROLE_PREDEFINE);
-      boolean userTest =
-          predefineUserData("Test", "test@example.com", "Test!123", "9876540001", ERole.ROLE_USER);
-      boolean userAdmin =
-          predefineUserData(
-              "Admin", "admin@example.com", "Admin!123", "9010203040", ERole.ROLE_ADMIN);
-      if (!user1 || !user2 || !user3 || !userTest || !userAdmin) {
-        logger.error("Fail to create predefined users");
+      ArrayList<SeedUser> userDetailList = new TestUsers().getUsers();
+      for (SeedUser userDetails : userDetailList) {
+        boolean user =
+            predefineUserData(
+                userDetails.getName(),
+                userDetails.getEmail(),
+                userDetails.getPassword(),
+                userDetails.getNumber(),
+                userDetails.getRole());
+        if (!user) {
+          logger.error("Fail to create predefined users");
+        }
       }
     }
   }

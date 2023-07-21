@@ -9,3 +9,4 @@ data:
   COMMUNITY_SERVICE: {{ .Values.community.service.name }}:{{ .Values.community.port }}
   IDENTITY_SERVICE: {{ .Values.identity.service.name }}:{{ .Values.identity.port }}
   WORKSHOP_SERVICE: {{ .Values.workshop.service.name }}:{{ .Values.workshop.port }}
+  TLS_ENABLED: {{ .Values.tlsEnabled | quote }}

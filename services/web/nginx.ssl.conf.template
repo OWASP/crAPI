@@ -1,0 +1,157 @@
+server {
+  listen 443 ssl;
+  server_name _;
+  ssl_certificate /app/certs/server.crt;
+  ssl_certificate_key /app/certs/server.key;
+  ssl_protocols TLSv1.3 TLSv1.2 TLSv1.1;
+
+  client_max_body_size 50M;
+  index index.html;
+  root /usr/share/nginx/html;
+
+  location /community/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${COMMUNITY_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  ${HTTP_PROTOCOL}://${COMMUNITY_SERVICE};
+    proxy_set_header Host ${COMMUNITY_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+    sub_filter_types application/json text/html;
+    sub_filter "${HTTP_PROTOCOL}://${COMMUNITY_SERVICE}" "$scheme://$http_host";
+    sub_filter_once off;
+    proxy_ssl_verify off;
+    proxy_ssl_trusted_certificate /app/certs/server.crt;
+  }
+
+  location /identity/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${IDENTITY_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  ${HTTP_PROTOCOL}://${IDENTITY_SERVICE};
+    proxy_set_header Host ${IDENTITY_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+    proxy_ssl_verify off;
+    proxy_ssl_trusted_certificate /app/certs/server.crt;
+  }
+
+  location /workshop/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${WORKSHOP_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  ${HTTP_PROTOCOL}://${WORKSHOP_SERVICE};
+    proxy_set_header Host ${WORKSHOP_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+    sub_filter_types application/json text/html;
+    sub_filter "${HTTP_PROTOCOL}://${WORKSHOP_SERVICE}" "$scheme://$http_host";
+    sub_filter_once off;
+    proxy_ssl_verify off;
+    proxy_ssl_trusted_certificate /app/certs/server.crt;
+  }
+
+  location /images {
+    try_files $uri $uri/ =404;
+  }
+
+  location /.well-known/jwks.json {
+    proxy_pass ${HTTP_PROTOCOL}://${IDENTITY_SERVICE}/identity/api/auth/jwks.json;
+    proxy_ssl_verify off;
+    proxy_ssl_trusted_certificate /app/certs/server.crt;
+  }
+
+  location / {
+    try_files $uri /index.html =404;
+    add_header Last-Modified $date_gmt;
+    add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+    if_modified_since off;
+    expires off;
+    etag off;
+  }
+}
+
+server {
+  listen 80;
+  server_name _;
+  client_max_body_size 50M;
+  index index.html;
+  root /usr/share/nginx/html;
+
+  location /community/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${COMMUNITY_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  ${HTTP_PROTOCOL}://${COMMUNITY_SERVICE};
+    proxy_set_header Host ${COMMUNITY_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+    sub_filter_types application/json text/html;
+    sub_filter "${HTTP_PROTOCOL}://${COMMUNITY_SERVICE}" "$scheme://$http_host";
+    sub_filter_once off;
+  }
+
+  location /identity/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${IDENTITY_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  ${HTTP_PROTOCOL}://${IDENTITY_SERVICE};
+    proxy_set_header Host ${IDENTITY_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+  }
+
+  location /workshop/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${WORKSHOP_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  ${HTTP_PROTOCOL}://${WORKSHOP_SERVICE};
+    proxy_set_header Host ${WORKSHOP_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+    sub_filter_types application/json text/html;
+    sub_filter "${HTTP_PROTOCOL}://${WORKSHOP_SERVICE}" "$scheme://$http_host";
+    sub_filter_once off;
+  }
+
+  location /images {
+    try_files $uri $uri/ =404;
+  }
+
+  location /.well-known/jwks.json {
+    proxy_pass ${HTTP_PROTOCOL}://${IDENTITY_SERVICE}/identity/api/auth/jwks.json;
+  }
+
+  location / {
+    try_files $uri /index.html =404;
+    add_header Last-Modified $date_gmt;
+    add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+    if_modified_since off;
+    expires off;
+    etag off;
+  }
+}
