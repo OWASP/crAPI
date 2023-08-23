@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.community_grpc.service.name }}
+  labels:
+    release: {{ .Release.Name }}
+    {{- with .Values.community_grpc.service.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  ports:
+  - port: {{ .Values.community_grpc.port }}
+    name: go
+  selector:
+    {{- toYaml .Values.community_grpc.serviceSelectorLabels | nindent 4 }}

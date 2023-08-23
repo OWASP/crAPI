@@ -30,7 +30,7 @@ spec:
             - mountPath: "/.keys"
               name: jwt-key-secret
               readOnly: true
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 8080
           envFrom:

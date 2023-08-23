@@ -188,7 +188,11 @@ services:
       - MONGO_DB_PASSWORD=crapisecretpassword
       - MONGO_DB_NAME=crapi
     depends_on:
-      crapi-community-graphql:
+      postgresdb:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      crapi-identity:
         condition: service_healthy
     healthcheck:
         test: curl 0.0.0.0:${COMMUNITY_GRAPHQL_SERVER_PORT:-8087}/health

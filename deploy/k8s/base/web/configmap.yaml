@@ -5,6 +5,6 @@ metadata:
   labels:
     app: crapi-web
 data: 
-  COMMUNITY_SERVICE: crapi-community:8087
+  COMMUNITY_SERVICE: crapi-community-graphql:8087
   IDENTITY_SERVICE: crapi-identity:8080
   WORKSHOP_SERVICE: crapi-workshop:8000

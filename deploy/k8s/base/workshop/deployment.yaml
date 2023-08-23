@@ -21,14 +21,14 @@ spec:
             - "crapi-identity"
         - name: wait-for-crapi-community
           image: groundnuty/k8s-wait-for:v1.3
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           args:
             - "service"
-            - "crapi-community"
+            - "crapi-community-graphql"
       containers:
       - name: crapi-workshop
         image: crapi/crapi-workshop:latest
-        imagePullPolicy: Always  
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8000
         envFrom:

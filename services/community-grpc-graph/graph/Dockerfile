@@ -33,6 +33,8 @@ RUN protoc -I /build/grpc/v1/ community_requests.proto --go_out=/build/grpc/ --g
 RUN protoc -I /build/grpc/v1/ community_responses.proto --go_out=/build/grpc/ --go-grpc_out=/build/grpc
 RUN protoc -I /build/grpc/v1/ community_service.proto --go_out=/build/grpc/ --go-grpc_out=/build/grpc
 RUN protoc-go-inject-tag -input=/build/grpc/proto/*.pb.go
+# RUN go get github.com/99designs/gqlgen
+# RUN go run github.com/99designs/gqlgen generate
 RUN go mod tidy
 RUN go mod vendor
 RUN ls -al

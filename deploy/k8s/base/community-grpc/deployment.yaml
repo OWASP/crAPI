@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: crapi-community
+  name: crapi-community-grpc
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: crapi-community
+      app: crapi-community-grpc
   template:
     metadata:
       labels:
-        app: crapi-community
+        app: crapi-community-grpc
     spec:
       initContainers:
         - name: wait-for-postgres
@@ -32,14 +32,14 @@ spec:
             - "service"
             - "crapi-identity"
       containers:
-      - name: crapi-community
-        image: crapi/crapi-community:latest
-        imagePullPolicy: Always
+      - name: crapi-community-grpc
+        image: crapi/crapi-community/grpc-server:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8087
         envFrom:
             - configMapRef:
-                name: crapi-community-configmap
+                name: crapi-community-grpc-configmap
         resources:
           limits:
             cpu: "500m"

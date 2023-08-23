@@ -32,7 +32,7 @@ spec:
           imagePullPolicy: {{ .Values.waitForK8sResources.imagePullPolicy }}
           args:
             - "service"
-            - {{ .Values.community.service.name | quote }}
+            - {{ .Values.community_graphql.service.name | quote }}
       containers:
         - name: {{ .Values.workshop.name }}
           image: {{ .Values.workshop.image }}:{{ .Chart.AppVersion }}

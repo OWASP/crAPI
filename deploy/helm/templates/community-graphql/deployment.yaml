@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.community.name }}
+  name: {{ .Values.community_graphql.name }}
   labels:
     release: {{ .Release.Name }}
-    {{- with .Values.community.deploymentLabels }}
+    {{- with .Values.community_graphql.deploymentLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
 
 spec:
-  replicas: {{ .Values.community.replicaCount }}
+  replicas: {{ .Values.community_graphql.replicaCount }}
   selector:
     matchLabels:
-      {{- toYaml .Values.community.deploymentSelectorMatchLabels | nindent 6 }}
+      {{- toYaml .Values.community_graphql.deploymentSelectorMatchLabels | nindent 6 }}
   template:
     metadata:
       labels:
         release: {{ .Release.Name }}
-        {{- with .Values.community.podLabels }}
+        {{- with .Values.community_graphql.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
@@ -41,15 +41,15 @@ spec:
             - "service"
             - {{ .Values.identity.service.name | quote }}
       containers:
-        - name: {{ .Values.community.name }}
-          image: {{ .Values.community.image }}:{{ .Chart.AppVersion }}
+        - name: {{ .Values.community_graphql.name }}
+          image: {{ .Values.community_graphql.image }}:{{ .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           ports:
-            - containerPort: {{ .Values.community.port }}
+            - containerPort: {{ .Values.community_graphql.port }}
           envFrom:
             - configMapRef:
-                name: {{ .Values.community.config.name }}
-          {{- if .Values.community.resources }}
+                name: {{ .Values.community_graphql.config.name }}
+          {{- if .Values.community_graphql.resources }}
           resources:
-            {{- toYaml .Values.community.resources | nindent 12 }}
+            {{- toYaml .Values.community_graphql.resources | nindent 12 }}
           {{- end }}

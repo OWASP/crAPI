@@ -26,3 +26,4 @@ data:
   SMTP_AUTH: "true"
   SMTP_STARTTLS: "true"
   SERVER_PORT: "8080"
+  API_GATEWAY_URL: "https://gateway-service"

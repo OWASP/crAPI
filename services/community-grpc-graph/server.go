@@ -22,6 +22,7 @@ const defaultPort = "8087"
 var DB *gorm.DB
 
 func SetMiddlewareAuthentication(next http.Handler) http.Handler {
+	log.Println("Yay we got a request!! GRPAHQL")
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Request URL: %s", r.URL.String())
 		_, err := auth.ExtractTokenID(r, server.DB)
@@ -41,7 +42,6 @@ func main() {
 
 	server.DB = server.Initialize("postgres", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_PORT"), os.Getenv("DB_HOST"), os.Getenv("DB_NAME"))
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
-
 	http.Handle("/health", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/community/query", SetMiddlewareAuthentication(srv))
 	http.Handle("/workshop/query", SetMiddlewareAuthentication(srv))

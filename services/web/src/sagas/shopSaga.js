@@ -265,7 +265,7 @@ export function* applyCoupon(param) {
         query: 
         `query ValidateCoupon { 
           ValidateCoupon(
-            code:"{\\"coupon_code\\":\\"${couponCode}\\"}"
+            code:"${couponCode}"
             ) { 
               coupon_code 
               amount 
