@@ -23,6 +23,7 @@ from django.utils import timezone
 from django.db import models
 from django.db import connection, transaction
 import logging
+import traceback
 
 logger = logging.getLogger()
 
@@ -43,13 +44,15 @@ def create_products():
     ]
     for product_details in product_details_all:
         if Product.objects.filter(name=product_details['name']).exists():
+            logger.info("Product already exists. Skipping: "+ product_details['name'])
             continue
         product = Product.objects.create(
             name=product_details['name'],
             price=float(product_details['price']),
             image_url=product_details['image_url']
         )
-
+        product.save()
+        logger.info("Created Product: "+str(product.__dict__))
 
 def create_mechanics():
     from user.models import User, UserDetails
@@ -93,16 +96,22 @@ def create_mechanics():
                 role=User.ROLE_CHOICES.MECH,
                 created_on=timezone.now()
             )
+            user.save()
+            logger.info("Created User: "+str(user.__dict__))
         else:
             user = uset.first()
             
         if Mechanic.objects.filter(mechanic_code=mechanic_details['mechanic_code']):
+            logger.info("Mechanic already exists. Skipping: "
+                        + mechanic_details['mechanic_code']
+                        + " " + mechanic_details['name'] + " "
+                        + mechanic_details['email'])
             continue
-        
-        Mechanic.objects.create(
+        mechanic = Mechanic.objects.create(
             mechanic_code=mechanic_details['mechanic_code'],
             user=user
         )
+        mechanic.save()
         try:
             cursor = connection.cursor()
             cursor.execute("select nextval('user_details_id_seq')")
@@ -111,13 +120,14 @@ def create_mechanics():
         except Exception as e:
             logger.error("Failed to fetch user_details_id_seq"+str(e))
             user_details_id = 1
-        UserDetails.objects.create(
+        userdetails = UserDetails.objects.create(
             id=user_details_id,
             available_credit=0,
             name=mechanic_details['name'],
             status='ACTIVE',
             user=user
         )
+        userdetails.save()
 
 def create_reports():
     import random
@@ -129,6 +139,7 @@ def create_reports():
     count = ServiceRequest.objects.all().count()
     if (count >= 5):
         return
+    logger.info("Creating Reports")
     mechanics = Mechanic.objects.all()
     vehicles = Vehicle.objects.all()
     for i in range(5):
@@ -136,8 +147,8 @@ def create_reports():
             mechanic = random.choice(mechanics)
             vehicle = random.choice(vehicles)
             status = random.choice(ServiceRequest.STATUS_CHOICES)[0]
-            logger.debug(vehicle.__dict__)
-            logger.debug(status)
+            logger.info(vehicle.__dict__)
+            logger.info(status)
             vehicle_model = vehicle.vehicle_model
             vehicle_company = vehicle_model.vehiclecompany
             user = vehicle.owner
@@ -162,10 +173,41 @@ def create_reports():
                 created_on=timezone.now()
             )
             service_request.save()
-            logger.debug(service_request.__dict__)
+            logger.info(service_request.__dict__)
         except Exception as e:
             print(sys.exc_info()[0])
             logger.error("Failed to create report: "+str(e))
+
+def create_orders():
+    import uuid
+    from user.models import User, UserDetails
+    from crapi.shop.models import Product
+    from crapi.shop.models import Order
+    if Order.objects.all().count() >= 1:
+        return
+    user = User.objects.filter(email='test@example.com').first()
+    product = Product.objects.filter(name='Seat').first()
+    order1 = Order.objects.create(
+        user=user,
+        product=product,
+        quantity=2,
+        created_on=timezone.now(),
+        transaction_id=uuid.uuid4(),
+    )
+    order1.save()
+    logger.info("Created Order:1: "+str(order1.__dict__))
+    order2 = Order.objects.create(
+        user=user,
+        product=product,
+        quantity=2,
+        created_on=timezone.now(),
+        transaction_id=uuid.uuid4(),
+    )
+    order2.save()
+    logger.info("Created Order:2: "+str(order2.__dict__))
+    
+        
+    
 
 
 class CRAPIConfig(AppConfig):
@@ -175,12 +217,15 @@ class CRAPIConfig(AppConfig):
     name = 'crapi'
 
     def ready(self):
-        if not 'runserver' in sys.argv:
-            return
         """
         Pre-populate mechanic model and product model
         :return: None
         """
+        # Check if sys.argv contains 'runserver' or 'runserver_plus'
+        is_runserver = any("runserver" in x for x in sys.argv)
+        if not is_runserver:
+            return
+        logger.info("Pre Populating Model Data")
         try:
             create_products()
         except Exception as e:
@@ -193,3 +238,7 @@ class CRAPIConfig(AppConfig):
             create_reports()
         except Exception as e:
             logger.error("Cannot Pre Populate Reports: "+str(e))
+        try:
+            create_orders()
+        except Exception as e:
+            logger.error("Cannot Pre Populate Orders: "+str(e))

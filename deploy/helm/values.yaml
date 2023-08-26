@@ -6,9 +6,10 @@ jwtSecret: crapi
 enableLog4j: false
 enableShellInjection: true
 imagePullPolicy: IfNotPresent
-apiGatewayServiceUrl: https://api.crapi.io
+apiGatewayServiceUrl: https://api.mypremiumdealership.com
 apiGatewayServiceInstall: true
 apiGatewayPassword: 
+tlsEnabled: false
 
 waitForK8sResources:
   image: groundnuty/k8s-wait-for:v1.3
@@ -19,11 +20,13 @@ web:
   image: crapi/crapi-web
   replicaCount: 1
   port: 80
+  sslPort: 443
   service:
     name: crapi-web
     labels:
       app: crapi-web
     nodePort: 30080
+    sslNodePort: 30443
   config:
     name: crapi-web-configmap
     labels:
@@ -70,6 +73,11 @@ identity:
     smtpFrom: "no-reply@example.com"
     smtpAuth: true
     smtpStartTLS: true
+    keyStoreType: PKCS12
+    keyStore: classpath:certs/server.p12
+    keyStorePassword: passw0rd
+    keyPassword: passw0rd
+    keyAlias: identity
   resources:
     limits:
       cpu: "500m"

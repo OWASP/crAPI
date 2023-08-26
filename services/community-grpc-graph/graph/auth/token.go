@@ -16,6 +16,7 @@ package auth
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -51,7 +52,12 @@ func ExtractToken(r *http.Request) string {
 // If token is valid we extract username from token Claims.
 // Then check that username in postgres database.
 func ExtractTokenID(r *http.Request, db *gorm.DB) (uint32, error) {
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	tokenVerifyURL := fmt.Sprintf("http://%s/identity/api/auth/verify", os.Getenv("IDENTITY_SERVICE"))
+	tls_enabled, is_tls := os.LookupEnv("TLS_ENABLED")
+	if is_tls && utils.IsTrue(tls_enabled) {
+		tokenVerifyURL = fmt.Sprintf("https://%s/identity/api/auth/verify", os.Getenv("IDENTITY_SERVICE"))
+	}
 	tokenString := ExtractToken(r)
 	tokenJSON, err := json.Marshal(Token{Token: tokenString})
 	if err != nil {

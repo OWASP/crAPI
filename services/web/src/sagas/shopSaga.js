@@ -186,9 +186,9 @@ export function* getOrderById(param) {
     if (recievedResponse.ok) {
       yield put({
         type: actionTypes.FETCHED_ORDER,
-        payload: { orderId: orderId, order: ResponseJson.orders },
+        payload: { orderId: orderId, order: ResponseJson.order },
       });
-      callback(responseTypes.SUCCESS, ResponseJson.orders);
+      callback(responseTypes.SUCCESS, ResponseJson.order);
     } else {
       callback(responseTypes.FAILURE, ResponseJson.message);
     }
