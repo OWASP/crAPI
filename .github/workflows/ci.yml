@@ -246,3 +246,7 @@ jobs:
           cache-from: type=gha,scope=mailhog-service
           cache-to: type=gha,mode=max,scope=mailhog-service
 
+      - name: Dump docker logs on failure
+        if: failure()
+        uses: jwalton/gh-docker-logs@v2
+

@@ -23,6 +23,7 @@ spec:
           image: {{ .Values.web.image }}:{{ .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           ports:
+            - containerPort: 443
             - containerPort: 80
           {{- if .Values.web.resources }}
           resources:

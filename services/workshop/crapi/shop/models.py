@@ -31,7 +31,7 @@ class Product(models.Model):
     Product Model
     represents a product in the application
     """
-
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=20, decimal_places=2)
     image_url = models.CharField(max_length=255)
@@ -48,10 +48,11 @@ class Order(models.Model):
     Order Model
     represents an order in the application
     """
+    id = models.AutoField(primary_key=True)
     user = ForeignKey(User, DB_CASCADE)
     product = ForeignKey(Product, DB_CASCADE)
     quantity = models.IntegerField(default=1)
-    transaction_id = models.CharField(max_length=255, default=uuid.uuid4())
+    transaction_id = models.CharField(max_length=255, default=uuid.uuid4)
     created_on = models.DateTimeField()
 
     STATUS_CHOICES = Choices(
@@ -87,6 +88,7 @@ class AppliedCoupon(models.Model):
     AppliedCoupon Model
     represents a mapping between coupon_code and user
     """
+    id = models.AutoField(primary_key=True)
     user = ForeignKey(User, DB_CASCADE)
     coupon_code = models.CharField(max_length=255)
 

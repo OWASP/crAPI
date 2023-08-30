@@ -37,4 +37,5 @@ ENV JAVA_TOOL_OPTIONS "-Xmx128m"
 
 COPY jwks.json default_jwks.json
 COPY entrypoint.sh /entrypoint.sh
+COPY health.sh /app/health.sh
 CMD [ "/entrypoint.sh"]

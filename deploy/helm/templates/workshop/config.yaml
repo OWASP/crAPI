@@ -22,3 +22,4 @@ data:
     MONGO_DB_NAME: {{ .Values.mongodb.config.mongoDbName }}
     SERVER_PORT: {{ .Values.workshop.port | quote }}
     API_GATEWAY_URL: {{ if .Values.apiGatewayServiceInstall }}"https://{{ .Values.apiGatewayService.service.name }}"{{ else }}{{ .Values.apiGatewayServiceUrl }}{{ end }}
+    TLS_ENABLED: {{ .Values.tlsEnabled | quote }}
