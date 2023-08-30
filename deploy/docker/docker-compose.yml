@@ -47,6 +47,7 @@ services:
       - TLS_KEYSTORE_PASSWORD=passw0rd
       - TLS_KEY_PASSWORD=passw0rd
       - TLS_KEY_ALIAS=identity
+      - API_GATEWAY_URL=https://api.crapi.io
     depends_on:
       postgresdb:
         condition: service_healthy
