@@ -21,6 +21,8 @@ RUN go mod tidy
 RUN go mod download
 COPY ./graph ./graph
 COPY ./grpc ./grpc
+COPY ./certs ./certs
+COPY ./api ./api
 COPY ./server.go ./main.go
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest

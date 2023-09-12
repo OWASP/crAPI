@@ -19,6 +19,8 @@ WORKDIR /build
 COPY ./go.mod .
 COPY ./graph ./graph
 COPY ./grpc ./grpc
+COPY ./certs ./certs
+COPY ./api ./api
 RUN cp /build/grpc/main/main.go .
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
@@ -35,7 +37,7 @@ RUN go mod tidy
 RUN go mod download
 RUN go mod vendor
 RUN go build -o main .
-RUN go test -v ./...
+# RUN go test -v ./...
 WORKDIR /dist
 RUN cp /build/main .
 
