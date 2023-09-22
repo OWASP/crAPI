@@ -245,7 +245,7 @@ services:
     #ports:
     #  - "${LISTEN_IP:-127.0.0.1}:8443:443" # https
     healthcheck:
-        test: curl -vk 0.0.0.0:443
+        test: "/bin/bash -c 'printf \"GET / HTTP/1.1\n\n\" > /dev/tcp/127.0.0.1/443; exit $?;'"
         interval: 15s
         timeout: 15s
         retries: 15
