@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.community_grpc.name }}
+  labels:
+    release: {{ .Release.Name }}
+    {{- with .Values.community_grpc.deploymentLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+
+spec:
+  replicas: {{ .Values.community_grpc.replicaCount }}
+  selector:
+    matchLabels:
+      {{- toYaml .Values.community_grpc.deploymentSelectorMatchLabels | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        release: {{ .Release.Name }}
+        {{- with .Values.community_grpc.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      initContainers:
+        - name: wait-for-postgres
+          image: {{ .Values.waitForK8sResources.image }}
+          imagePullPolicy: {{ .Values.waitForK8sResources.imagePullPolicy }}
+          args:
+            - "service"
+            - {{ .Values.postgresdb.service.name | quote }}
+        - name: wait-for-mongo
+          image: {{ .Values.waitForK8sResources.image }}
+          imagePullPolicy: {{ .Values.waitForK8sResources.imagePullPolicy }}
+          args:
+            - "service"
+            - {{ .Values.mongodb.service.name | quote }}
+        - name: wait-for-java
+          image: {{ .Values.waitForK8sResources.image }}
+          imagePullPolicy: {{ .Values.waitForK8sResources.imagePullPolicy }}
+          args:
+            - "service"
+            - {{ .Values.identity.service.name | quote }}
+      containers:
+        - name: {{ .Values.community_grpc.name }}
+          image: {{ .Values.community_grpc.image }}:{{ .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.community_grpc.port }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.community_grpc.config.name }}
+          {{- if .Values.community_grpc.resources }}
+          resources:
+            {{- toYaml .Values.community_grpc.resources | nindent 12 }}
+          {{- end }}

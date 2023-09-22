@@ -6,7 +6,7 @@ metadata:
     release: {{ .Release.Name }}
     {{- toYaml .Values.web.config.labels | nindent 4 }}
 data:
-  COMMUNITY_SERVICE: {{ .Values.community.service.name }}:{{ .Values.community.port }}
+  COMMUNITY_SERVICE: {{ .Values.community_graphql.service.name }}:{{ .Values.community_graphql.port }}
   IDENTITY_SERVICE: {{ .Values.identity.service.name }}:{{ .Values.identity.port }}
   WORKSHOP_SERVICE: {{ .Values.workshop.service.name }}:{{ .Values.workshop.port }}
   TLS_ENABLED: {{ .Values.tlsEnabled | quote }}

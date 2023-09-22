@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
@@ -14,20 +14,11 @@
 
 
 set -x
-set -e
 cd "$(dirname $0)"
-scripts=$(find ../../../services/ -name 'build-image*.sh')
-for script in ${scripts}
-do
-    echo "Executing $script"
-    bash -x "$script"
-done
-
-if [ -z "${DOCKER_REGISTRY}" ]; then 
-  DOCKER_REGISTRY=crapi
+# docker build -t crapi/crapi-community:${VERSION:-latest} .
+docker build -t crapi/crapi-community/graphql-server:${VERSION:-latest} -f graph/Dockerfile . && docker build -t crapi/crapi-community/grpc-server:${VERSION:-latest} -f grpc/Dockerfile .
+retVal=$?
+if [ $retVal -ne 0 ]; then
+    echo "Error building crapi-community image"
+    exit $retVal
 fi
-export DOCKER_REGISTRY
-
-# Deploy to local repository
-docker images | grep crapi | grep -v '/' | awk '{print $1}' | xargs -L1 -I{} docker tag {} ${DOCKER_REGISTRY}/{}:v1
-docker images | grep crapi |  grep "${DOCKER_REGISTRY}/" | grep v1 | awk '{print $1":"$2}' | xargs -L1 docker push

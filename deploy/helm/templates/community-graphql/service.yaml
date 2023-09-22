@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.community_graphql.service.name }}
+  labels:
+    release: {{ .Release.Name }}
+    {{- with .Values.community_graphql.service.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  ports:
+  - port: {{ .Values.community_graphql.port }}
+    name: go
+  selector:
+    {{- toYaml .Values.community_graphql.serviceSelectorLabels | nindent 4 }}

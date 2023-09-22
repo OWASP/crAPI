@@ -5,7 +5,7 @@
 jwtSecret: crapi
 enableLog4j: false
 enableShellInjection: true
-imagePullPolicy: Always
+imagePullPolicy: IfNotPresent
 apiGatewayServiceUrl: https://api.mypremiumdealership.com
 apiGatewayServiceInstall: true
 apiGatewayPassword: 
@@ -92,19 +92,19 @@ identity:
   serviceSelectorLabels:
     app: crapi-identity
 
-community:
-  name: crapi-community
-  image: crapi/crapi-community
-  port: 8087
+community_grpc:
+  name: crapi-community-grpc
+  image: crapi/crapi-community/grpc-server
+  port: 9090
   replicaCount: 1
   service:
-    name: crapi-community
+    name: crapi-community-grpc
     labels:
-      app: crapi-community
+      app: crapi-community-grpc
   config:
-    name: crapi-community-configmap
+    name: crapi-community-grpc-configmap
     labels:
-      app: crapi-community
+      app: crapi-community-grpc
     postgresDbDriver: postgres
     mongoDbDriver: mongodb
   resources:
@@ -113,13 +113,42 @@ community:
     requests:
       cpu: 256m
   deploymentLabels:
-    app: crapi-community
+    app: crapi-community-grpc
   podLabels:
-    app: crapi-community
+    app: crapi-community-grpc
   deploymentSelectorMatchLabels:
-    app: crapi-community
+    app: crapi-community-grpc
   serviceSelectorLabels:
-    app: crapi-community
+    app: crapi-community-grpc
+
+community_graphql:
+  name: crapi-community-graphql
+  image: crapi/crapi-community/graphql-server
+  port: 8087
+  replicaCount: 1
+  service:
+    name: crapi-community-graphql
+    labels:
+      app: crapi-community-graphql
+  config:
+    name: crapi-community-graphql-configmap
+    labels:
+      app: crapi-community-graphql
+    postgresDbDriver: postgres
+    mongoDbDriver: mongodb
+  resources:
+    limits:
+      cpu: "500m"
+    requests:
+      cpu: 256m
+  deploymentLabels:
+    app: crapi-community-graphql
+  podLabels:
+    app: crapi-community-graphql
+  deploymentSelectorMatchLabels:
+    app: crapi-community-graphql
+  serviceSelectorLabels:
+    app: crapi-community-graphql
 
 workshop:
   name: crapi-workshop

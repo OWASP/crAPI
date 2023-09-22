@@ -1,12 +1,11 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: crapi-workshop-configmap
+  name: crapi-community-graphql-configmap
   labels:
-    app: crapi-workshop
+    app: crapi-community-graphql
 data:
     IDENTITY_SERVICE: crapi-identity:8080
-    SECRET_KEY: crapi
     DB_HOST: postgresdb
     DB_DRIVER: postgres
     DB_USER: admin
@@ -19,5 +18,5 @@ data:
     MONGO_DB_USER: admin
     MONGO_DB_PASSWORD: crapisecretpassword
     MONGO_DB_NAME: crapi
-    SERVER_PORT: "8000"
-    API_GATEWAY_URL: https://api.crapi.io
+    SERVER_PORT: "8087"
+    GRPC-SERVICE: crapi-community-grpc:9090

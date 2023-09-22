@@ -1,0 +1,71 @@
+scalar Time
+
+type Post {
+  id: String!
+  title: String!
+  content: String!
+  author: User!
+  comments: [Comment!]
+  authorid: String!
+  CreatedAt: Time! 
+}
+
+input PostInput {
+  title: String!
+  content: String! 
+}
+
+type Coupon {
+  coupon_code: String!
+  amount: String!
+  CreatedAt: Time!
+}
+
+input CouponInput {
+  coupon_code: String!
+  amount: String!
+}
+
+type User {
+  # id: String!
+  nickname: String!
+  email: String!
+  vehicleid: String!
+  profile_pic_url: String!
+  created_at: Time!
+}
+
+input UserInput {
+  # id: String!
+  nickname: String!
+  email: String!
+  vehicle_id: String!
+  profile_pic_url: String!
+  created_at: Time
+}
+
+type Comment {
+  id: String!
+  content: String!
+  CreatedAt: Time!
+  author: User!
+}
+
+input CommentInput {
+  id: String!
+  content: String!
+  # created_at: String
+  # author: UserInput!
+}
+
+type Query {
+  GetPosts(ids: [String!]!): [Post!]!
+  GetAllPosts(limit:Int!): [Post!]
+  ValidateCoupon(code: String!): Coupon!
+}
+
+type Mutation {
+  CreatePost(input:PostInput!): Post!
+  CreateCoupon(input:CouponInput!): Coupon!
+  AddComment(input:CommentInput): Post!
+}
