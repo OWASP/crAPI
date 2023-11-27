@@ -28,6 +28,7 @@ import io.jsonwebtoken.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -45,7 +46,7 @@ public class JwtProvider {
   private static final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
 
   @Value("${app.jwtExpiration}")
-  private int jwtExpiration;
+  private String jwtExpiration;
 
   private KeyPair keyPair;
 
@@ -82,11 +83,14 @@ public class JwtProvider {
    * @return generated token with expire date
    */
   public String generateJwtToken(User user) {
+    int jwtExpirationInt;
+    if (jwtExpiration.contains("e+")) jwtExpirationInt = new BigDecimal(jwtExpiration).intValue();
+    else jwtExpirationInt = Integer.parseInt(jwtExpiration);
     return Jwts.builder()
         .setSubject((user.getEmail()))
         .claim("role", user.getRole().getName())
         .setIssuedAt(new Date())
-        .setExpiration(new Date((new Date()).getTime() + jwtExpiration))
+        .setExpiration(new Date((new Date()).getTime() + jwtExpirationInt))
         .signWith(SignatureAlgorithm.RS256, this.keyPair.getPrivate())
         .compact();
   }
