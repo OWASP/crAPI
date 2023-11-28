@@ -29,7 +29,7 @@ class Mechanic(models.Model):
     Mechanic Model
     represents a mechanic for the application
     """
-
+    id = models.AutoField(primary_key=True)
     mechanic_code = models.CharField(max_length=100, null=False, unique=True)
     user = ForeignKey(User, DB_CASCADE)
 
@@ -45,7 +45,7 @@ class ServiceRequest(models.Model):
     Service Request Model
     represents a service request in the application
     """
-
+    id = models.AutoField(primary_key=True)
     mechanic = ForeignKey(Mechanic, DB_CASCADE)
     vehicle = ForeignKey(Vehicle, DB_CASCADE)
     problem_details = models.CharField(max_length=500, blank=True)
