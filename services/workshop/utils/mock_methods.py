@@ -17,7 +17,10 @@ from functools import wraps
 from rest_framework import status
 from rest_framework.response import Response
 from utils import messages
-from user.models import User
+from crapi.user.models import User
+from faker import Faker
+Faker.seed(4321)
+
 
 """
 contains all methods that are common and
@@ -50,6 +53,39 @@ def get_sample_user_data():
         "number": "9123456708",
         "password": "password",
     }
+
+def fake_phone_number(fake: Faker) -> str:
+    return f'{fake.msisdn()[3:]}'
+
+def get_sample_users(users_count=100):
+    """
+    gives sample users which can be used for testing
+    """
+    fake = Faker()
+    users = []
+    for i in range(users_count):
+        users.append({
+            "name": fake.name(),
+            "email": fake.email(),
+            "number": fake_phone_number(fake),
+            "password": fake.password(),
+            "role": fake.random_element(elements=dict(User.ROLE_CHOICES).keys()),
+        })
+    return users
+
+def get_sample_admin_user():
+    """
+    gives admin user which can be used for testing
+    """
+    return {
+        "name": "Admin 1",
+        "email": "admin1@crapi.com",
+        "number": "9123456700",
+        "password": "password1",
+        "role": User.ROLE_CHOICES.ADMIN,
+    }
+
+
 
 def mock_jwt_auth_required(func):
     """

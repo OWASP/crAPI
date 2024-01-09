@@ -29,11 +29,11 @@ from rest_framework.views import APIView
 from utils.helper import basic_auth
 
 from crapi.shop.serializers import OrderSerializer, ProductSerializer, CouponSerializer, ProductQuantitySerializer
-from user.serializers import UserSerializer
+from crapi.user.serializers import UserSerializer
 from utils.jwt import jwt_auth_required
 from utils import messages
 from crapi.shop.models import Order, Product, AppliedCoupon, Coupon
-from user.models import UserDetails
+from crapi.user.models import UserDetails
 from utils.logging import log_error
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -121,7 +121,7 @@ class OrderControlView(APIView):
             payment_response = requests.post(
                 gateway_endpoint,
                 headers={
-                    "Authorization": gateway_credential, 
+                    "Authorization": gateway_credential,
                     "Content-Type": "application/json"
                     },
                 json=data,

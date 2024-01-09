@@ -20,7 +20,7 @@ import uuid
 from django.db import models
 from django.conf import settings
 
-from user.models import User
+from crapi.user.models import User
 from extended_choices import Choices
 from django_db_cascade.fields import ForeignKey, OneToOneField
 from django_db_cascade.deletions import DB_CASCADE
@@ -42,7 +42,7 @@ class Product(models.Model):
     def __str__(self):
         return f"{self.name} - {self.price}"
 
-    
+
 class Order(models.Model):
     """
     Order Model

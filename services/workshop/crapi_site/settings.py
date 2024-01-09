@@ -71,7 +71,7 @@ INSTALLED_APPS = [
     'health_check',
     'health_check.db',
     'crapi.apps.CRAPIConfig',
-    'user.apps.UserConfig',
+    #'user.apps.UserConfig',
     "django_extensions",
 ]
 
@@ -154,7 +154,7 @@ LOGGING = {
    'djongo': {
         'level': 'DEBUG',
         'handlers': ['console'],
-        'propogate': True,                        
+        'propogate': True,
     },
 }
 

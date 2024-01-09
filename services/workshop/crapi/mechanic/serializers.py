@@ -18,7 +18,7 @@ contains all the serializers for mechanic APIs
 from rest_framework import serializers
 
 from crapi.mechanic.models import Mechanic, ServiceRequest
-from user.serializers import UserSerializer, VehicleSerializer
+from crapi.user.serializers import UserSerializer, VehicleSerializer
 
 
 class MechanicSerializer(serializers.ModelSerializer):
