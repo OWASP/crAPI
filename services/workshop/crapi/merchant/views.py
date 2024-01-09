@@ -21,7 +21,6 @@ from requests.exceptions import MissingSchema, InvalidURL
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from crapi.merchant.serializers import ContactMechanicSerializer
 from utils.jwt import jwt_auth_required
 from utils import messages
@@ -41,7 +40,7 @@ class ContactMechanicView(APIView):
         :param request: http request for the view
             method allowed: POST
             http request should be authorised by the jwt token of the user
-            mandatory fields: ['mechanic_api', 'repeat_request_if_failed', 'number_of_repeats']
+            mandatory fields: ['mechanic_api']
         :param user: User object of the requesting user
         :returns Response object with
             response_from_mechanic_api and 200 status if no error
@@ -53,8 +52,8 @@ class ContactMechanicView(APIView):
             log_error(request.path, request.data, status.HTTP_400_BAD_REQUEST, serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        repeat_request_if_failed = request_data['repeat_request_if_failed']
-        number_of_repeats = request_data['number_of_repeats']
+        repeat_request_if_failed = request_data.get('repeat_request_if_failed', False)
+        number_of_repeats = request_data.get('number_of_repeats', 1)
         if repeat_request_if_failed and number_of_repeats < 1:
             return Response(
                 {'message': messages.MIN_NO_OF_REPEATS_FAILED},

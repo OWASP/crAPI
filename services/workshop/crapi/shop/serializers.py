@@ -18,7 +18,7 @@ contains all serializers related to Shop APIs
 from rest_framework import serializers
 
 from crapi.shop.models import Order, Product, Coupon
-from user.serializers import UserSerializer
+from crapi.user.serializers import UserSerializer
 
 
 class ProductSerializer(serializers.ModelSerializer):

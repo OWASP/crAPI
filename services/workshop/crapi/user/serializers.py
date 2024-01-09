@@ -17,7 +17,7 @@ contains all the serializers for User and Vehicle Objects
 """
 from rest_framework import serializers
 
-from user.models import User, Vehicle
+from crapi.user.models import User, UserDetails, Vehicle
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -31,6 +31,20 @@ class UserSerializer(serializers.ModelSerializer):
         """
         model = User
         fields = ('email', 'number')
+
+
+class UserDetailsSerializer(serializers.ModelSerializer):
+    """
+    Serializer for User Details model
+    """
+    user = UserSerializer()
+
+    class Meta:
+        """
+        Meta class for UserSerializer
+        """
+        model = UserDetails
+        fields = ('user', 'available_credit')
 
 
 class VehicleSerializer(serializers.ModelSerializer):

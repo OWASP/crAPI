@@ -28,19 +28,19 @@
                 "properties" : {
                   "email" : {
                     "type" : "string",
-                    "example": "Cristobal.Weissnat@example.com"
+                    "example" : "Cristobal.Weissnat@example.com"
                   },
                   "name" : {
                     "type" : "string",
-                    "example": "Cristobal.Weissnat"
+                    "example" : "Cristobal.Weissnat"
                   },
                   "number" : {
                     "type" : "string",
-                    "example": "6915656974"
+                    "example" : "6915656974"
                   },
                   "password" : {
                     "type" : "string",
-                    "example": "5hmb0gvyC__hVQg"
+                    "example" : "5hmb0gvyC__hVQg"
                   }
                 }
               }
@@ -97,11 +97,11 @@
                 "properties" : {
                   "email" : {
                     "type" : "string",
-                    "example": "test@example.com"
+                    "example" : "test@example.com"
                   },
                   "password" : {
                     "type" : "string",
-                    "example": "Test!123"
+                    "example" : "Test!123"
                   }
                 }
               }
@@ -149,7 +149,7 @@
                 "properties" : {
                   "email" : {
                     "type" : "string",
-                    "example": "adam007@example.com"
+                    "example" : "adam007@example.com"
                   }
                 }
               }
@@ -412,11 +412,11 @@
                 "properties" : {
                   "new_email" : {
                     "type" : "string",
-                    "example": "Sofia.Predovic@example.com"
+                    "example" : "Sofia.Predovic@example.com"
                   },
                   "old_email" : {
                     "type" : "string",
-                    "example": "Cristobal.Weissnat@example.com"
+                    "example" : "Cristobal.Weissnat@example.com"
                   }
                 }
               }
@@ -460,11 +460,11 @@
                   },
                   "new_email" : {
                     "type" : "string",
-                    "example": "Danielle.Ankunding@example.com"
+                    "example" : "Danielle.Ankunding@example.com"
                   },
                   "token" : {
                     "type" : "string",
-                    "example": "T9O2s6i3C7o2E8l7X5Y4"
+                    "example" : "T9O2s6i3C7o2E8l7X5Y4"
                   }
                 }
               }
@@ -526,6 +526,18 @@
                     "video_name" : { },
                     "video_url" : { },
                     "picture_url" : { }
+                  },
+                  "example" : {
+                    "id" : 35,
+                    "name" : "Jasen.Hamill",
+                    "email" : "Jasen.Hamill@example.com",
+                    "number" : "7005397357",
+                    "picture_url" : null,
+                    "video_url" : null,
+                    "video_name" : null,
+                    "available_credit" : 155,
+                    "video_id" : 0,
+                    "role" : "ROLE_USER"
                   }
                 }
               }
@@ -677,7 +689,8 @@
           "schema" : {
             "type" : "integer",
             "format" : "int64"
-          }
+          },
+          "example" : 1
         } ],
         "responses" : {
           "200" : {
@@ -717,7 +730,8 @@
           "schema" : {
             "type" : "integer",
             "format" : "int64"
-          }
+          },
+          "example" : 10
         } ],
         "requestBody" : {
           "content" : {
@@ -767,7 +781,8 @@
           "schema" : {
             "type" : "integer",
             "format" : "int64"
-          }
+          },
+          "example" : 1
         } ],
         "responses" : {
           "200" : {
@@ -819,7 +834,8 @@
           "schema" : {
             "type" : "integer",
             "format" : "int64"
-          }
+          },
+          "example" : 1
         } ],
         "responses" : {
           "200" : {
@@ -851,7 +867,8 @@
           "schema" : {
             "type" : "integer",
             "format" : "int64"
-          }
+          },
+          "example" : 12345
         } ],
         "responses" : {
           "200" : {
@@ -1009,11 +1026,11 @@
                 "properties" : {
                   "pincode" : {
                     "type" : "string",
-                    "example": "9896"
+                    "example" : "9896"
                   },
                   "vin" : {
                     "type" : "string",
-                    "example": "0IOJO38SMVL663989"
+                    "example" : "0IOJO38SMVL663989"
                   }
                 }
               }
@@ -1108,7 +1125,7 @@
         "schema" : {
           "type" : "string",
           "format" : "uuid",
-          "example": "0be319f0-f0dd-44aa-af0b-af927f3a383f"
+          "example" : "0be319f0-f0dd-44aa-af0b-af927f3a383f"
         }
       } ]
     },
@@ -1174,7 +1191,7 @@
         "required" : true,
         "schema" : {
           "type" : "string",
-          "example": "tiSTSUzh4BwtvYSLWPsqu9"
+          "example" : "tiSTSUzh4BwtvYSLWPsqu9"
         }
       } ]
     },
@@ -1195,11 +1212,11 @@
                 "properties" : {
                   "content" : {
                     "type" : "string",
-                    "example": "Est maiores voluptas velit. Necessitatibus vero veniam quos nobis."
+                    "example" : "Est maiores voluptas velit. Necessitatibus vero veniam quos nobis."
                   },
                   "title" : {
                     "type" : "string",
-                    "example": "Velit quia minima."
+                    "example" : "Velit quia minima."
                   }
                 }
               }
@@ -1282,7 +1299,7 @@
                 "properties" : {
                   "content" : {
                     "type" : "string",
-                    "example": "Porro aut ratione et."
+                    "example" : "Porro aut ratione et."
                   }
                 }
               }
@@ -1388,7 +1405,7 @@
         "required" : true,
         "schema" : {
           "type" : "string",
-          "example": "tiSTSUzh4BwtvYSLWPsqu9"
+          "example" : "tiSTSUzh4BwtvYSLWPsqu9"
         }
       } ]
     },
@@ -1400,6 +1417,23 @@
         "tags" : [ "Community / Posts" ],
         "security" : [ {
           "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "example" : "30"
+          }
+        }, {
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "example" : "0"
+          }
         } ],
         "responses" : {
           "200" : {
@@ -1522,11 +1556,10 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/Coupon"
+                "$ref" : "#/components/schemas/AddCouponRequest"
               }
             }
-          },
-          "required" : true
+          }
         },
         "responses" : {
           "200" : {
@@ -1534,7 +1567,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "string"
+                  "$ref" : "#/components/schemas/AddCouponResponse"
                 }
               }
             }
@@ -1565,49 +1598,53 @@
     "/community/api/v2/coupon/validate-coupon" : {
       "post" : {
         "operationId" : "validate_coupon",
-        "summary" : "Validate Coupon - Version 2",
+        "summary" : "Validate Coupon",
         "description" : "Used to validate the provided discount coupon code",
         "tags" : [ "Community / Coupon" ],
         "security" : [ {
           "bearerAuth" : [ ]
         } ],
         "requestBody" : {
+          "description" : "Coupon",
           "content" : {
             "application/json" : {
               "schema" : {
-                "type" : "object",
-                "required" : [ "coupon_code" ],
-                "properties" : {
-                  "coupon_code" : {
-                    "type" : "string",
-                    "example": "TRAC075"
-                  }
-                }
+                "$ref" : "#/components/schemas/ValidateCouponRequest"
               }
             }
-          }
+          },
+          "required" : true
         },
         "responses" : {
           "200" : {
+            "description" : "Validate coupon response",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Coupon"
+                  "$ref" : "#/components/schemas/ValidateCouponResponse"
                 }
               }
-            },
-            "description" : ""
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
           },
           "500" : {
+            "description" : "Internal Server Error",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object",
-                  "properties" : { }
+                  "type" : "string"
                 }
               }
-            },
-            "description" : ""
+            }
           }
         }
       }
@@ -1634,7 +1671,7 @@
                       "type" : "number"
                     },
                     "products" : {
-                      "$ref" : "#/components/schemas/Product"
+                      "$ref" : "#/components/schemas/Products"
                     }
                   }
                 }
@@ -1724,6 +1761,11 @@
                       "type" : "number",
                       "format" : "float"
                     }
+                  },
+                  "example" : {
+                    "id" : 30,
+                    "message" : "Order sent successfully.",
+                    "credit" : 155
                   }
                 }
               }
@@ -1767,7 +1809,8 @@
           "schema" : {
             "type" : "integer"
           },
-          "required" : true
+          "required" : true,
+          "example" : 1
         } ],
         "requestBody" : {
           "content" : {
@@ -1850,7 +1893,8 @@
           "schema" : {
             "type" : "integer"
           },
-          "required" : true
+          "required" : true,
+          "example" : 1
         } ],
         "responses" : {
           "200" : {
@@ -1983,7 +2027,7 @@
           "name" : "order_id",
           "schema" : {
             "type" : "integer",
-            "example": 33
+            "example" : 33
           },
           "required" : true
         } ],
@@ -2065,18 +2109,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "type" : "object",
-                "required" : [ "amount", "coupon_code" ],
-                "properties" : {
-                  "amount" : {
-                    "type" : "number",
-                    "example": 75
-                  },
-                  "coupon_code" : {
-                    "type" : "string",
-                    "example": "TRAC075"
-                  }
-                }
+                "$ref" : "#/components/schemas/ApplyCouponRequest"
               }
             }
           }
@@ -2086,16 +2119,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object",
-                  "required" : [ "credit", "message" ],
-                  "properties" : {
-                    "credit" : {
-                      "type" : "number"
-                    },
-                    "message" : {
-                      "type" : "string"
-                    }
-                  }
+                  "$ref" : "#/components/schemas/ApplyCouponResponse"
                 }
               }
             },
@@ -2150,6 +2174,101 @@
               }
             },
             "description" : "QR Code PNG Image"
+          }
+        }
+      }
+    },
+    "/workshop/api/management/users/all" : {
+      "get" : {
+        "operationId" : "get_workshop_users_all",
+        "summary" : "Get Workshop Users Detail",
+        "description" : "Used to get all the users in the workshop database.",
+        "tags" : [ "Workshop / Shop" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "example" : "30"
+          }
+        }, {
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "example" : "0"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "headers" : {
+              "Transfer-Encoding" : {
+                "content" : {
+                  "text/plain" : {
+                    "schema" : {
+                      "type" : "string"
+                    },
+                    "example" : "chunked"
+                  }
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "users" ],
+                  "properties" : {
+                    "users" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "required" : [ "user", "available_credit" ],
+                        "properties" : {
+                          "available_credit" : {
+                            "type" : "integer",
+                            "format" : "float"
+                          },
+                          "user" : {
+                            "type" : "object",
+                            "required" : [ "email", "number" ],
+                            "properties" : {
+                              "email" : {
+                                "type" : "string"
+                              },
+                              "number" : {
+                                "type" : "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example" : {
+                  "users" : [ {
+                    "user" : {
+                      "email" : "adam007@example.com",
+                      "number" : "9876895423"
+                    },
+                    "available_credit" : 100
+                  }, {
+                    "user" : {
+                      "email" : "pogba006@example.com",
+                      "number" : "9876570006"
+                    },
+                    "available_credit" : 100
+                  } ]
+                }
+              }
+            }
           }
         }
       }
@@ -2626,6 +2745,25 @@
         "security" : [ {
           "bearerAuth" : [ ]
         } ],
+        "parameters" : [ {
+          "name" : "limit",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "example" : 30
+          }
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "example" : 0
+          }
+        } ],
         "responses" : {
           "200" : {
             "description" : "OK",
@@ -2658,7 +2796,13 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ServiceRequests"
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  },
+                  "required" : [ "message" ]
                 }
               }
             }
@@ -2802,7 +2946,18 @@
             "format" : "url"
           }
         },
-        "required" : [ "image_url", "name", "price" ]
+        "required" : [ "image_url", "name", "price" ],
+        "example" : {
+          "name" : "WheelBase",
+          "image_url" : "http://example.com/wheelbase.png",
+          "price" : "10.12"
+        }
+      },
+      "Products" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/Product"
+        }
       },
       "Product" : {
         "type" : "object",
@@ -2824,7 +2979,13 @@
             "format" : "url"
           }
         },
-        "required" : [ "id", "image_url", "name", "price" ]
+        "required" : [ "id", "image_url", "name", "price" ],
+        "example" : {
+          "id" : 1,
+          "name" : "Seat",
+          "price" : "10.00",
+          "image_url" : "images/seat.svg"
+        }
       },
       "OrderStatusEnum" : {
         "enum" : [ "delivered", "return pending", "returned" ],
@@ -2835,11 +2996,11 @@
         "properties" : {
           "product_id" : {
             "type" : "integer",
-            "example": 1
+            "example" : 1
           },
           "quantity" : {
             "type" : "integer",
-            "example": 1
+            "example" : 1
           }
         },
         "required" : [ "product_id", "quantity" ]
@@ -2959,19 +3120,19 @@
             "maxLength" : 4,
             "minLength" : 3,
             "type" : "string",
-            "example": "9969"
+            "example" : "9969"
           },
           "password" : {
             "maxLength" : 30,
             "minLength" : 5,
             "type" : "string",
-            "example": "5hmb0gvyC__hVQg"
+            "example" : "5hmb0gvyC__hVQg"
           },
           "email" : {
             "maxLength" : 30,
             "minLength" : 5,
             "type" : "string",
-            "example": "Cristobal.Weissnat@example.com"   
+            "example" : "Cristobal.Weissnat@example.com"
           }
         }
       },
@@ -3028,9 +3189,63 @@
           "user" : {
             "$ref" : "#/components/schemas/User"
           }
+        },
+        "example" : {
+          "id" : 1,
+          "video_name" : "abc.mp4",
+          "conversion_params" : "-v codec h264",
+          "profileVideo" : "data:image/jpeg;base64,aGFrZmhhcw=="
         }
       },
-      "Coupon" : {
+      "ApplyCouponRequest" : {
+        "type" : "object",
+        "properties" : {
+          "amount" : {
+            "type" : "integer"
+          },
+          "coupon_code" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "amount", "coupon_code" ],
+        "example" : {
+          "coupon_code" : "TRAC075",
+          "amount" : 75
+        }
+      },
+      "ApplyCouponResponse" : {
+        "type" : "object",
+        "properties" : {
+          "credit" : {
+            "type" : "integer"
+          },
+          "message" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "credit", "message" ],
+        "example" : {
+          "credit" : 165,
+          "message" : "Coupon successfully applied!"
+        }
+      },
+      "AddCouponRequest" : {
+        "type" : "object",
+        "properties" : {
+          "coupon_code" : {
+            "type" : "string"
+          },
+          "amount" : {
+            "type" : "integer"
+          }
+        },
+        "required" : [ "coupon_code", "amount" ],
+        "example" : {
+          "coupon_code" : "TRAC075",
+          "amount" : 75
+        }
+      },
+      "AddCouponResponse" : {
         "type" : "object",
         "properties" : {
           "amount" : {
@@ -3043,7 +3258,44 @@
             "type" : "string"
           }
         },
-        "required" : [ "amount", "coupon_code" ]
+        "required" : [ "amount", "coupon_code", "CreatedAt" ],
+        "example" : {
+          "coupon_code" : "TRAC075",
+          "amount" : "75",
+          "CreatedAt" : "2023-12-07T14:22:29.832Z"
+        }
+      },
+      "ValidateCouponRequest" : {
+        "type" : "object",
+        "properties" : {
+          "coupon_code" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "coupon_code" ],
+        "example" : {
+          "coupon_code" : "TRAC075"
+        }
+      },
+      "ValidateCouponResponse" : {
+        "type" : "object",
+        "properties" : {
+          "amount" : {
+            "type" : "string"
+          },
+          "coupon_code" : {
+            "type" : "string"
+          },
+          "createdAt" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "amount", "coupon_code", "CreatedAt" ],
+        "example" : {
+          "coupon_code" : "TRAC075",
+          "amount" : "75",
+          "CreatedAt" : "2023-12-07T14:22:29.832Z"
+        }
       },
       "ServiceRequests" : {
         "title" : "Service Requests",

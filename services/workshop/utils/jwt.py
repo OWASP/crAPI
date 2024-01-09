@@ -20,7 +20,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.conf import settings
 from utils import messages
-from user.models import User
+from crapi.user.models import User
 import urllib3
 import logging
 

@@ -87,15 +87,15 @@ func (s *Server) GetPost(w http.ResponseWriter, r *http.Request) {
 		limit = 50
 	}
 
-	page_param := r.URL.Query().Get("page")
-	page := 0
-	if page_param != "" {
-		page, err = strconv.Atoi(page_param)
+	offset := 0
+	offset_param := r.URL.Query().Get("offset")
+	if offset_param != "" {
+		offset, err = strconv.Atoi(offset_param)
 		if err != nil {
-			page = 0
+			offset = 0
 		}
 	}
-	posts, err := models.FindAllPost(s.Client, page, limit)
+	posts, err := models.FindAllPost(s.Client, offset, limit)
 
 	if err != nil {
 		responses.ERROR(w, http.StatusInternalServerError, err)
