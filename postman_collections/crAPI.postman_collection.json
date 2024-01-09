@@ -869,6 +869,94 @@
         "uid": "13872198-557cbaea-7709-4da6-8f18-36d05a49f3c5"
       },
       {
+        "name": "Get Dashboard",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "94c6588b-1056-4828-8c7f-309bdd80a557",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "15ed7adb-1256-4039-9d7a-2c81d5b9a764",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "51aeab4f-44d3-44f4-a68f-8ca534c76eb2",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "GET",
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "url": {
+            "raw": "{{url}}/identity/api/v2/user/dashboard",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "identity",
+              "api",
+              "v2",
+              "user",
+              "dashboard"
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-51aeab4f-44d3-44f4-a68f-8ca534c76eb2"
+      },
+      {
         "name": "Get vehicles",
         "event": [
           {
@@ -1429,6 +1517,92 @@
         "uid": "13872198-7fe2e5da-ca18-46c5-b802-eb777841d76c"
       },
       {
+        "name": "Get All Mechanics",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "1d1f1d9e-34e2-462a-8469-f3a48bfce052",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "f13d8ca4-39d1-4003-bf2e-8d31f3b4a178",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "76ff951b-e220-4784-a97b-8bf29a63b58f",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "GET",
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "url": {
+            "raw": "{{url}}/workshop/api/mechanic",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "workshop",
+              "api",
+              "mechanic"
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-76ff951b-e220-4784-a97b-8bf29a63b58f"
+      },
+      {
         "name": "Contact mechanic",
         "event": [
           {
@@ -1526,6 +1700,198 @@
         "uid": "13872198-66c46dc2-2386-44cf-890a-63d917d2ca23"
       },
       {
+        "name": "Mechanic Login",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "ecefadd8-d1fb-4415-a0b2-cfcae8216ac6",
+              "exec": [
+                "",
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "    var jsonData = JSON.parse(responseBody);",
+                "    pm.collectionVariables.set(\"mechanicToken\", jsonData.token);",
+                "    var token = pm.collectionVariables.get(\"mechanicToken\");",
+                "    pm.test(\"Token is set\", function () {",
+                "        pm.expect(jsonData.token).to.eql(token);",
+                "    });",
+                "});",
+                ""
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "96148952-7c1a-4316-8577-b7b0cc59fdb4",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For-Admin\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "0eeb2452-e86b-48f3-bf4f-082703f39884",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "noauth"
+          },
+          "method": "POST",
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\"email\":\"jhon@example.com\",\"password\":\"Admin1@#\"}"
+          },
+          "url": {
+            "raw": "{{url}}/identity/api/auth/login",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "identity",
+              "api",
+              "auth",
+              "login"
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-0eeb2452-e86b-48f3-bf4f-082703f39884"
+      },
+      {
+        "name": "Service Requests",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "f0f39752-0671-4381-8df8-9cbe570e6925",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "d470cb7e-2d7a-45e8-b610-da6a0d820882",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "dc6c5d9a-9cd1-493e-9226-41cb0d50b3a1",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{mechanicToken}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "GET",
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb25zdGVyQGRhcmt3ZWIuY29tIiwiaWF0IjoxNjA4NTQzODI0LCJleHAiOjE2MDg2MzAyMjR9.AAIvhrtstlloPf7-NNCcmhEZm-XkO1aO3x3CLns1em7ft9U77B88LpK9jIrF8C-IH32JPWVazRFo0gBIBZ9FpA"
+            },
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": ""
+          },
+          "url": {
+            "raw": "{{url}}/workshop/api/mechanic/service_requests?limit=30&offset=0",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "workshop",
+              "api",
+              "mechanic",
+              "service_requests"
+            ],
+            "query": [
+              {
+                "key": "limit",
+                "value": "30"
+              },
+              {
+                "key": "offset",
+                "value": "0"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-dc6c5d9a-9cd1-493e-9226-41cb0d50b3a1"
+      },
+      {
         "name": "GetReport",
         "event": [
           {
@@ -1592,17 +1958,13 @@
               "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"
             },
             {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
               "key": "Accept",
               "value": "*/*"
             }
           ],
           "body": {
             "mode": "raw",
-            "raw": "{\"mechanic_code\":\"TRAC_JHN\",\"problem_details\":\"Hi Jhon\",\"vin\":\"{{VIN}}\",\"mechanic_api\":\"{{url}}/workshop/api/mechanic/receive_report\",\"repeat_request_if_failed\":false,\"number_of_repeats\":1}"
+            "raw": ""
           },
           "url": {
             "raw": "{{url}}/workshop/api/mechanic/mechanic_report?report_id={{report_id}}",
@@ -1716,101 +2078,6 @@
         },
         "response": [],
         "uid": "13872198-f76df6ed-a560-4517-ae32-9bf7d7518896"
-      },
-      {
-        "name": "Add Product",
-        "event": [
-          {
-            "listen": "test",
-            "script": {
-              "id": "f58f20f7-878b-4ffa-b17a-835c779b561a",
-              "exec": [
-                "pm.test(\"Status code is 200\", function () {",
-                "    pm.response.to.have.status(200);",
-                "    var jsonData = pm.response.json();",
-                "    var productId = jsonData.id;",
-                "    pm.collectionVariables.set(\"product_id\", productId);",
-                "    console.log(\"Product ID \", productId);",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          },
-          {
-            "listen": "prerequest",
-            "script": {
-              "id": "200fbc66-8abc-4d88-8d38-787ee390c27a",
-              "exec": [
-                "const {Property} = require('postman-collection');\r",
-                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
-                "if (!xff){\r",
-                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
-                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
-                "    \r",
-                "}\r",
-                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
-                "pm.request.headers.remove('X-Forwarded-For');\r",
-                "pm.request.headers.add({ \r",
-                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
-                "    disabled: false,\r",
-                "    // Your header, effectively\r",
-                "    key: 'X-Forwarded-For', \r",
-                "    value: xff\r",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          }
-        ],
-        "id": "c9414a2a-aac8-4db6-be4d-b501931922d7",
-        "protocolProfileBehavior": {
-          "disableBodyPruning": true
-        },
-        "request": {
-          "auth": {
-            "type": "bearer",
-            "bearer": [
-              {
-                "key": "token",
-                "value": "{{token}}",
-                "type": "string"
-              }
-            ]
-          },
-          "method": "POST",
-          "header": [
-            {
-              "key": "User-Agent",
-              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
-            },
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "Accept",
-              "value": "*/*"
-            }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\n    \"name\": \"JayeshLogic\",\n    \"price\": -100,\n    \"image_url\": \"https://dmtyylqvwgyxw.cloudfront.net/instances/132/uploads/images/user/avatar/116251/bigger_18813373_824126644422297_1018561156004747806_n.jpg?v=1553900524\"\n}"
-          },
-          "url": {
-            "raw": "{{url}}/workshop/api/shop/products",
-            "host": [
-              "{{url}}"
-            ],
-            "path": [
-              "workshop",
-              "api",
-              "shop",
-              "products"
-            ]
-          }
-        },
-        "response": [],
-        "uid": "13872198-c9414a2a-aac8-4db6-be4d-b501931922d7"
       },
       {
         "name": "Validate coupon",
@@ -3098,6 +3365,101 @@
         "uid": "13872198-29cdda38-7bdf-471c-9a17-9217e4749ce2"
       },
       {
+        "name": "Add Product",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "f58f20f7-878b-4ffa-b17a-835c779b561a",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "    var jsonData = pm.response.json();",
+                "    var productId = jsonData.id;",
+                "    pm.collectionVariables.set(\"product_id\", productId);",
+                "    console.log(\"Product ID \", productId);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "200fbc66-8abc-4d88-8d38-787ee390c27a",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "c9414a2a-aac8-4db6-be4d-b501931922d7",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{adminToken}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "POST",
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"name\": \"NewSeat\",\n    \"price\": 100,\n    \"image_url\": \"images/seat.svg\"\n}"
+          },
+          "url": {
+            "raw": "{{url}}/workshop/api/shop/products",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "workshop",
+              "api",
+              "shop",
+              "products"
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-c9414a2a-aac8-4db6-be4d-b501931922d7"
+      },
+      {
         "name": "Delete video by admin",
         "event": [
           {
@@ -4358,6 +4720,10 @@
       },
       {
         "key": "post_id",
+        "value": ""
+      },
+      {
+        "key": "mechanicToken",
         "value": ""
       }
     ]

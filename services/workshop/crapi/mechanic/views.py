@@ -29,7 +29,9 @@ from crapi.user.models import User, Vehicle, UserDetails
 from utils.logging import log_error
 from .models import Mechanic, ServiceRequest
 from .serializers import MechanicSerializer, ServiceRequestSerializer, ReceiveReportSerializer, SignUpSerializer
-
+DEFAULT_LIMIT = 10
+DEFAULT_OFFSET = 0
+MAX_LIMIT = 100
 
 class SignUpView(APIView):
     """
@@ -204,7 +206,22 @@ class ServiceRequestsView(APIView):
             list of service request object and 200 status if no error
             message and corresponding status if error
         """
-        service_requests = ServiceRequest.objects.filter(mechanic__user=user)
+        limit = request.GET.get('limit', str(DEFAULT_LIMIT))
+        offset = request.GET.get('offset', str(DEFAULT_OFFSET))
+        if not limit.isdigit() or not offset.isdigit():
+            return Response(
+                {'message': messages.INVALID_LIMIT_OR_OFFSET},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        limit = int(limit)
+        offset = int(offset)
+        if limit > MAX_LIMIT:
+            limit = 100
+        if limit < 0:
+            limit = DEFAULT_LIMIT
+        if offset < 0:
+            offset = DEFAULT_OFFSET
+        service_requests = ServiceRequest.objects.filter(mechanic__user=user).order_by('id')[offset:offset+limit]
         serializer = ServiceRequestSerializer(service_requests, many=True)
         response_data = dict(
             service_requests=serializer.data

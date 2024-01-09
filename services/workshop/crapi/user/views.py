@@ -30,7 +30,7 @@ from utils.logging import log_error
 logger = logging.getLogger()
 DEFAULT_LIMIT = 30
 DEFAULT_OFFSET = 0
-
+MAX_LIMIT = 100
 
 class AdminUserView(APIView):
     """
@@ -58,10 +58,12 @@ class AdminUserView(APIView):
             )
         limit = int(limit)
         offset = int(offset)
-        if limit > 100:
-            limit = 100
+        if limit > MAX_LIMIT:
+            limit = MAX_LIMIT
+        if int(limit) < 0:
+            limit = DEFAULT_LIMIT
         if offset < 0:
-            offset = 0
+            offset = DEFAULT_OFFSET
         # Sort by id
         userdetails = UserDetails.objects.all().order_by('id')[offset:offset+limit]
         if not userdetails:
