@@ -104,12 +104,13 @@ func GetPostByID(client *mongo.Client, ID string) (Post, error) {
 }
 
 //FindAllPost return all recent post
-func FindAllPost(client *mongo.Client) ([]interface{}, error) {
+func FindAllPost(client *mongo.Client, page int, limit int) ([]interface{}, error) {
 	post := []Post{}
 
 	options := options.Find()
 	options.SetSort(bson.D{{"_id", -1}})
-	options.SetLimit(10)
+	options.SetLimit(int64(limit))
+	options.SetSkip(int64(page * limit))
 	collection := client.Database("crapi").Collection("post")
 	cur, err := collection.Find(context.Background(), bson.D{}, options)
 	if err != nil {
