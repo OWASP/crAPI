@@ -16,3 +16,4 @@ pymongo==3.12.3
 pyOpenSSL==23.1.1
 requests==2.30.0
 Werkzeug==2.0.3
+Faker==22.1.0

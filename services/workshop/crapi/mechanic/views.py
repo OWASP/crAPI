@@ -25,7 +25,7 @@ from rest_framework.views import APIView
 from django.db import models
 from utils.jwt import jwt_auth_required
 from utils import messages
-from user.models import User, Vehicle, UserDetails
+from crapi.user.models import User, Vehicle, UserDetails
 from utils.logging import log_error
 from .models import Mechanic, ServiceRequest
 from .serializers import MechanicSerializer, ServiceRequestSerializer, ReceiveReportSerializer, SignUpSerializer

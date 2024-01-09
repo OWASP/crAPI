@@ -24,7 +24,7 @@ import json
 from django.test import TestCase, Client
 from django.utils import timezone
 from utils import messages
-from user.models import User, UserDetails
+from crapi.user.models import User, UserDetails
 from crapi.shop.models import Coupon
 
 logger = logging.getLogger('ProductTest')

@@ -150,4 +150,4 @@ class MechanicSignUpTestCase(TestCase):
         res = self.client.post('/workshop/api/mechanic/signup',
                                self.mechanic,
                                content_type="application/json")
-        self.assertNotEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, 400)

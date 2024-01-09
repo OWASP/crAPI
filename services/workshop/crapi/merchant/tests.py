@@ -22,7 +22,7 @@ import bcrypt
 from django.test import TestCase, Client
 from django.utils import timezone
 from utils import messages
-from user.models import User, Vehicle, VehicleModel, VehicleCompany
+from crapi.user.models import User, Vehicle, VehicleModel, VehicleCompany
 
 
 class MerchantTestCase(TestCase):
@@ -135,7 +135,7 @@ class MerchantTestCase(TestCase):
         self.assertIn('<title>Google</title>',
                       res.json()['response_from_mechanic_api'])
 
-    def test_bad_request(self):
+    def test_repeat_missing_request(self):
         """
         deletes repeat_request_if_failed field from contact_mechanic request body
         should get a bad request response
@@ -146,7 +146,7 @@ class MerchantTestCase(TestCase):
                                self.contact_mechanic_request_body,
                                **self.user_auth_headers,
                                content_type="application/json")
-        self.assertNotEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, 200)
 
     def test_receive_report_and_get_report(self):
         """

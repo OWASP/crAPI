@@ -55,7 +55,7 @@ def create_products():
         logger.info("Created Product: "+str(product.__dict__))
 
 def create_mechanics():
-    from user.models import User, UserDetails
+    from crapi.user.models import User, UserDetails
     from crapi.mechanic.models import Mechanic
     mechanic_details_all = [
         {
@@ -100,7 +100,7 @@ def create_mechanics():
             logger.info("Created User: "+str(user.__dict__))
         else:
             user = uset.first()
-            
+
         if Mechanic.objects.filter(mechanic_code=mechanic_details['mechanic_code']):
             logger.info("Mechanic already exists. Skipping: "
                         + mechanic_details['mechanic_code']
@@ -133,7 +133,7 @@ def create_reports():
     import random
     import sys
     import textwrap
-    from user.models import User, UserDetails, Vehicle
+    from crapi.user.models import User, UserDetails, Vehicle
     from crapi.mechanic.models import Mechanic, ServiceRequest
     from django.utils import timezone
     count = ServiceRequest.objects.all().count()
@@ -159,14 +159,14 @@ def create_reports():
                 problem_details=textwrap.dedent("""\
                     My car {} - {} is having issues.
                     Can you give me a call on my mobile {},
-                    Or send me an email at {} 
+                    Or send me an email at {}
                     Thanks,
                     {}.
                     """.format(
-                        vehicle_company.name, 
+                        vehicle_company.name,
                         vehicle_model.model,
-                        user.number, 
-                        user.email, 
+                        user.number,
+                        user.email,
                         user_detail.name)
                 ),
                 status=status,
@@ -180,7 +180,7 @@ def create_reports():
 
 def create_orders():
     import uuid
-    from user.models import User, UserDetails
+    from crapi.user.models import User, UserDetails
     from crapi.shop.models import Product
     from crapi.shop.models import Order
     if Order.objects.all().count() >= 1:
@@ -205,9 +205,9 @@ def create_orders():
     )
     order2.save()
     logger.info("Created Order:2: "+str(order2.__dict__))
-    
-        
-    
+
+
+
 
 
 class CRAPIConfig(AppConfig):

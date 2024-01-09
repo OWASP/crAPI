@@ -38,6 +38,7 @@ class User(models.Model):
     ROLE_CHOICES = Choices(
         ('USER', 1, 'User'),
         ('MECH', 2, 'Mechanic'),
+        ('ADMIN', 3, 'Admin'),
         dict_class = OrderedDict
     )
     role = models.IntegerField(choices=ROLE_CHOICES, default=ROLE_CHOICES.USER)

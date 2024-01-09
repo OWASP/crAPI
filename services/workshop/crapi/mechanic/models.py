@@ -18,7 +18,7 @@ Mechanic and Service Request Models
 """
 from django.db import models
 
-from user.models import User, Vehicle
+from crapi.user.models import User, Vehicle
 from collections import OrderedDict
 from extended_choices import Choices
 from django_db_cascade.fields import ForeignKey, OneToOneField
