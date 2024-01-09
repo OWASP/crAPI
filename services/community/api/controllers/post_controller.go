@@ -18,10 +18,11 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 
-	"github.com/gorilla/mux"
 	"crapi.proj/goservice/api/models"
 	"crapi.proj/goservice/api/responses"
+	"github.com/gorilla/mux"
 )
 
 //AddNewPost add post in database,
@@ -72,8 +73,30 @@ func (s *Server) GetPostByID(w http.ResponseWriter, r *http.Request) {
 //GetPost Vulnerabilities
 func (s *Server) GetPost(w http.ResponseWriter, r *http.Request) {
 	//post := models.Post{}
+	limit_param := r.URL.Query().Get("limit")
+	limit := 30
+	err := error(nil)
+	if limit_param != "" {
+		// Parse limit_param and set to limit
+		limit, err = strconv.Atoi(limit_param)
+		if err != nil {
+			limit = 30
+		}
+	}
+	if limit > 50 {
+		limit = 50
+	}
 
-	posts, err := models.FindAllPost(s.Client)
+	page_param := r.URL.Query().Get("page")
+	page := 0
+	if page_param != "" {
+		page, err = strconv.Atoi(page_param)
+		if err != nil {
+			page = 0
+		}
+	}
+	posts, err := models.FindAllPost(s.Client, page, limit)
+
 	if err != nil {
 		responses.ERROR(w, http.StatusInternalServerError, err)
 		return
