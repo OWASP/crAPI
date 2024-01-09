@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	"crapi.proj/goservice/api/config"
 	"crapi.proj/goservice/api/controllers"
@@ -59,6 +60,12 @@ func (server *Server) InitializeRoutes() *mux.Router {
 
 func (server *Server) Run(addr string) {
 	fmt.Println("Listening to port " + os.Getenv("SERVER_PORT"))
+	srv := &http.Server{
+		Addr:    addr,
+		Handler: server.Router,
+		ReadTimeout:  30 * time.Second,
+		WriteTimeout: 30 * time.Second,
+	}
 	if utils.IsTLSEnabled() {
 		// Check if env variable TLS_CERTIFICATE is set then use it as certificate else default to certs/server.crt
 		certificate, is_cert := os.LookupEnv("TLS_CERTIFICATE")
@@ -70,12 +77,12 @@ func (server *Server) Run(addr string) {
 		if !is_key || key == "" {
 			key = "certs/server.key"
 		}
-		err := http.ListenAndServeTLS(addr, certificate, key, server.Router)
+		err := srv.ListenAndServeTLS(certificate, key)
 		if err != nil {
 			fmt.Println(err)
 		}
 	} else {
-		err := http.ListenAndServe(addr, server.Router)
+		err := srv.ListenAndServe()
 		if err != nil {
 			fmt.Println(err)
 		}

@@ -10,7 +10,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 services:
 
   crapi-identity:
@@ -39,6 +38,7 @@ services:
       - SMTP_FROM=no-reply@example.com
       - SMTP_AUTH=true
       - SMTP_STARTTLS=true
+      - JWT_EXPIRATION=604800000
       - ENABLE_LOG4J=${ENABLE_LOG4J:-false}
       - API_GATEWAY_URL=https://api.mypremiumdealership.com
       - TLS_ENABLED=${TLS_ENABLED:-false}
@@ -53,10 +53,10 @@ services:
       mongodb:
         condition: service_healthy
     healthcheck:
-        test: /app/health.sh
-        interval: 15s
-        timeout: 15s
-        retries: 15
+      test: /app/health.sh
+      interval: 15s
+      timeout: 15s
+      retries: 15
     deploy:
       resources:
         limits:
@@ -92,10 +92,10 @@ services:
       crapi-identity:
         condition: service_healthy
     healthcheck:
-        test: /app/health.sh
-        interval: 15s
-        timeout: 15s
-        retries: 15
+      test: /app/health.sh
+      interval: 15s
+      timeout: 15s
+      retries: 15
     deploy:
       resources:
         limits:
@@ -135,10 +135,10 @@ services:
       crapi-community:
         condition: service_healthy
     healthcheck:
-        test: /app/health.sh
-        interval: 15s
-        timeout: 15s
-        retries: 15
+      test: /app/health.sh
+      interval: 15s
+      timeout: 15s
+      retries: 15
     deploy:
       resources:
         limits:
@@ -164,10 +164,10 @@ services:
       crapi-workshop:
         condition: service_healthy
     healthcheck:
-        test: curl 0.0.0.0:80/web/health
-        interval: 15s
-        timeout: 15s
-        retries: 15
+      test: curl 0.0.0.0:80/web/health
+      interval: 15s
+      timeout: 15s
+      retries: 15
     deploy:
       resources:
         limits:
@@ -184,10 +184,10 @@ services:
     #ports:
     #  - "${LISTEN_IP:-127.0.0.1}:5432:5432"
     healthcheck:
-        test: ["CMD-SHELL", "pg_isready"]
-        interval: 15s
-        timeout: 15s
-        retries: 15
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 15s
+      timeout: 15s
+      retries: 15
     volumes:
       - postgresql-data:/var/lib/postgresql/data/
     deploy:
@@ -205,11 +205,11 @@ services:
     #ports:
     #  - "${LISTEN_IP:-127.0.0.1}:27017:27017"
     healthcheck:
-        test: echo 'db.runCommand("ping").ok' | mongo mongodb:27017/test --quiet
-        interval: 15s
-        timeout: 15s
-        retries: 15
-        start_period: 20s
+      test: echo 'db.runCommand("ping").ok' | mongo mongodb:27017/test --quiet
+      interval: 15s
+      timeout: 15s
+      retries: 15
+      start_period: 20s
     volumes:
       - mongodb-data:/data/db
     deploy:
@@ -226,13 +226,13 @@ services:
       MH_MONGO_URI: admin:crapisecretpassword@mongodb:27017
       MH_STORAGE: mongodb
     ports:
-    #  - "127.0.0.1:1025:1025" # smtp server
+      #  - "127.0.0.1:1025:1025" # smtp server
       - "${LISTEN_IP:-127.0.0.1}:8025:8025" # Mail ui
     healthcheck:
-        test: ["CMD", "nc", "-z", "localhost", "8025"]
-        interval: 15s
-        timeout: 15s
-        retries: 15
+      test: [ "CMD", "nc", "-z", "localhost", "8025" ]
+      interval: 15s
+      timeout: 15s
+      retries: 15
     deploy:
       resources:
         limits:
@@ -245,11 +245,11 @@ services:
     #ports:
     #  - "${LISTEN_IP:-127.0.0.1}:8443:443" # https
     healthcheck:
-        test: curl -vk 0.0.0.0:443
-        interval: 15s
-        timeout: 15s
-        retries: 15
-        start_period: 15s
+      test: echo -n "GET / HTTP/1.1\n\n" > /dev/tcp/api.mypremiumdealership.com/443
+      interval: 15s
+      timeout: 15s
+      retries: 15
+      start_period: 15s
     deploy:
       resources:
         limits:

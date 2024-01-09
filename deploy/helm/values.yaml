@@ -8,7 +8,7 @@ enableShellInjection: true
 imagePullPolicy: Always
 apiGatewayServiceUrl: https://api.mypremiumdealership.com
 apiGatewayServiceInstall: true
-apiGatewayPassword: 
+apiGatewayPassword:
 tlsEnabled: false
 
 waitForK8sResources:
@@ -73,6 +73,7 @@ identity:
     smtpFrom: "no-reply@example.com"
     smtpAuth: true
     smtpStartTLS: true
+    jwtExpiration: 604800000
     keyStoreType: PKCS12
     keyStore: classpath:certs/server.p12
     keyStorePassword: passw0rd
