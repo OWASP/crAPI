@@ -28,6 +28,9 @@ import os
 
 from django.core.exceptions import ImproperlyConfigured
 
+DEFAULT_LIMIT = 10
+DEFAULT_OFFSET = 0
+MAX_LIMIT = 100
 
 def get_env_value(env_variable):
     try:

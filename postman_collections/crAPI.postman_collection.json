@@ -2421,7 +2421,7 @@
             }
           ],
           "url": {
-            "raw": "{{url}}/workshop/api/shop/orders/all",
+            "raw": "{{url}}/workshop/api/shop/orders/all?limit=30&offset=0",
             "host": [
               "{{url}}"
             ],
@@ -2431,6 +2431,16 @@
               "shop",
               "orders",
               "all"
+            ],
+            "query": [
+              {
+                "key": "limit",
+                "value": "30"
+              },
+              {
+                "key": "offset",
+                "value": "0"
+              }
             ]
           }
         },
