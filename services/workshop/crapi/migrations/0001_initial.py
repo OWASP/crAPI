@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
                 ('jwt_token', models.CharField(max_length=500, null=True, unique=True)),
                 ('number', models.CharField(max_length=255, null=True)),
                 ('password', models.CharField(max_length=255)),
-                ('role', models.IntegerField(choices=[(2, 1), (0, 0)], default=0)),
+                ('role', models.IntegerField(choices=[(1, 'User'), (2, 'Mechanic'), (3, 'Admin')], default=1)),
             ],
             options={
                 'db_table': 'user_login',
@@ -165,7 +165,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Coupon',
             fields=[
-                ('coupon_code', models.CharField(primary_key=True, max_length=255)),
+                ('coupon_code', models.CharField(max_length=255, primary_key=True, serialize=False)),
                 ('amount', models.CharField(max_length=255)),
             ],
             options={

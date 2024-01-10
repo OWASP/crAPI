@@ -26,7 +26,7 @@ import json
 from django.test import TestCase, Client
 from django.utils import timezone
 from utils import messages
-from crapi.user.views import DEFAULT_LIMIT
+from crapi_site import settings
 from crapi.user.models import User, UserDetails
 
 logger = logging.getLogger('UserTest')
@@ -105,7 +105,7 @@ class UserDetailsTestCase(TestCase):
         response = self.client.get('/workshop/api/management/users/all', **self.auth_headers)
         self.assertEqual(response.status_code, 200)
         response_data = json.loads(response.content)
-        self.assertEqual(len(response_data['users']), DEFAULT_LIMIT)
+        self.assertEqual(len(response_data['users']), settings.DEFAULT_LIMIT)
         response = self.client.get('/workshop/api/management/users/all?limit=10&offset=0', **self.auth_headers)
         self.assertEqual(response.status_code, 200)
         response_data = json.loads(response.content)

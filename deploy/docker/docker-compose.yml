@@ -100,7 +100,7 @@ services:
       resources:
         limits:
           cpus: '0.3'
-          memory: 128M
+          memory: 192M
 
   crapi-workshop:
     container_name: crapi-workshop
@@ -194,8 +194,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.3'
-          memory: 128M
+          cpus: '0.5'
+          memory: 256M
 
   mongodb:
     container_name: mongodb
