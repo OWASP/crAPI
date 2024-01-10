@@ -23,14 +23,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from crapi.user.serializers import UserDetailsSerializer
 from crapi.user.models import User, UserDetails
+from crapi_site import settings
 from utils.jwt import jwt_auth_required
 from utils import messages
 from utils.logging import log_error
 
 logger = logging.getLogger()
-DEFAULT_LIMIT = 30
-DEFAULT_OFFSET = 0
-MAX_LIMIT = 100
 
 class AdminUserView(APIView):
     """
@@ -49,21 +47,21 @@ class AdminUserView(APIView):
             user details and 200 status if no error
             message and corresponding status if error
         """
-        limit = request.GET.get('limit', str(DEFAULT_LIMIT))
-        offset = request.GET.get('offset', str(DEFAULT_OFFSET))
+        limit = request.GET.get('limit', str(settings.DEFAULT_LIMIT))
+        offset = request.GET.get('offset', str(settings.DEFAULT_OFFSET))
         if not limit.isdigit() or not offset.isdigit():
             return Response(
-                {'message': messages.INVALID_LIMIT_OFFSET},
+                {'message': messages.INVALID_LIMIT_OR_OFFSET},
                 status=status.HTTP_400_BAD_REQUEST
             )
         limit = int(limit)
         offset = int(offset)
-        if limit > MAX_LIMIT:
-            limit = MAX_LIMIT
-        if int(limit) < 0:
-            limit = DEFAULT_LIMIT
+        if limit > settings.MAX_LIMIT:
+            limit = 100
+        if limit < 0:
+            limit = settings.DEFAULT_LIMIT
         if offset < 0:
-            offset = DEFAULT_OFFSET
+            offset = settings.DEFAULT_OFFSET
         # Sort by id
         userdetails = UserDetails.objects.all().order_by('id')[offset:offset+limit]
         if not userdetails:
