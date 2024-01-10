@@ -23,15 +23,13 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db import models
+from crapi_site import settings
 from utils.jwt import jwt_auth_required
 from utils import messages
 from crapi.user.models import User, Vehicle, UserDetails
 from utils.logging import log_error
 from .models import Mechanic, ServiceRequest
 from .serializers import MechanicSerializer, ServiceRequestSerializer, ReceiveReportSerializer, SignUpSerializer
-DEFAULT_LIMIT = 10
-DEFAULT_OFFSET = 0
-MAX_LIMIT = 100
 
 class SignUpView(APIView):
     """
@@ -206,8 +204,8 @@ class ServiceRequestsView(APIView):
             list of service request object and 200 status if no error
             message and corresponding status if error
         """
-        limit = request.GET.get('limit', str(DEFAULT_LIMIT))
-        offset = request.GET.get('offset', str(DEFAULT_OFFSET))
+        limit = request.GET.get('limit', str(settings.DEFAULT_LIMIT))
+        offset = request.GET.get('offset', str(settings.DEFAULT_OFFSET))
         if not limit.isdigit() or not offset.isdigit():
             return Response(
                 {'message': messages.INVALID_LIMIT_OR_OFFSET},
@@ -215,12 +213,12 @@ class ServiceRequestsView(APIView):
             )
         limit = int(limit)
         offset = int(offset)
-        if limit > MAX_LIMIT:
+        if limit > settings.MAX_LIMIT:
             limit = 100
         if limit < 0:
-            limit = DEFAULT_LIMIT
+            limit = settings.DEFAULT_LIMIT
         if offset < 0:
-            offset = DEFAULT_OFFSET
+            offset = settings.DEFAULT_OFFSET
         service_requests = ServiceRequest.objects.filter(mechanic__user=user).order_by('id')[offset:offset+limit]
         serializer = ServiceRequestSerializer(service_requests, many=True)
         response_data = dict(

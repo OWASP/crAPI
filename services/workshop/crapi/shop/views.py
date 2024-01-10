@@ -241,7 +241,22 @@ class OrderDetailsView(APIView):
             list of order object and 200 status if no error
             message and corresponding status if error
         """
-        orders = Order.objects.filter(user=user)
+        limit = request.GET.get('limit', str(settings.DEFAULT_LIMIT))
+        offset = request.GET.get('offset', str(settings.DEFAULT_OFFSET))
+        if not limit.isdigit() or not offset.isdigit():
+            return Response(
+                {'message': messages.INVALID_LIMIT_OR_OFFSET},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        limit = int(limit)
+        offset = int(offset)
+        if limit > settings.MAX_LIMIT:
+            limit = 100
+        if limit < 0:
+            limit = settings.DEFAULT_LIMIT
+        if offset < 0:
+            offset = settings.DEFAULT_OFFSET
+        orders = Order.objects.filter(user=user).order_by('-id')[offset:offset+limit]
         serializer = OrderSerializer(orders, many=True)
         response_data = dict(
             orders=serializer.data
@@ -329,14 +344,21 @@ class ApplyCouponView(APIView):
         if not serializer.is_valid():
             log_error(request.path, request.data, 400, serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        row = None
         with connection.cursor() as cursor:
-            cursor.execute("SELECT coupon_code from applied_coupon WHERE user_id = "\
-                    + str(user.id)\
-                    + " AND coupon_code = '"\
-                    + coupon_request_body['coupon_code']\
-                    + "'")
-            row = cursor.fetchall()
+            try:
+                cursor.execute("SELECT coupon_code from applied_coupon WHERE user_id = "\
+                        + str(user.id)\
+                        + " AND coupon_code = '"\
+                        + coupon_request_body['coupon_code']\
+                        + "'")
+                row = cursor.fetchall()
+            except Exception as e:
+                log_error(request.path, request.data, 500, e)
+                return Response(
+                    {'message': e},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
 
         if row and row != None:
             return Response(
