@@ -100,7 +100,7 @@ services:
       resources:
         limits:
           cpus: '0.3'
-          memory: 128M
+          memory: 192M
 
   crapi-workshop:
     container_name: crapi-workshop
