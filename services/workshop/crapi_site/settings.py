@@ -176,7 +176,7 @@ DATABASES = {
             'NAME': 'test_crapi',
             'USER': get_env_value('DB_USER'),
         },
-        'CONN_MAX_AGE': 60,
+        'CONN_MAX_AGE': 0,
     },
     'mongodb': {
         'ENGINE': 'djongo',
