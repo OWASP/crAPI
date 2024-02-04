@@ -104,6 +104,7 @@ public class ProfileServiceImpl implements ProfileService {
         profileVideo.setVideo_name(file.getOriginalFilename());
       } else {
         profileVideo = new ProfileVideo(file.getOriginalFilename(), file.getBytes(), user);
+        profileVideo.setConversion_params(conversionParam);
       }
       profileVideoRepository.save(profileVideo);
       return profileVideo;

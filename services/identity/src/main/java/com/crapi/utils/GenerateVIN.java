@@ -14,12 +14,23 @@
 
 package com.crapi.utils;
 
+import java.util.Random;
+
 public class GenerateVIN {
 
   static String charsequence = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   static String num = "0123456789";
   String vin = "";
   String pincode = "";
+  Random random;
+
+  public GenerateVIN() {
+    random = new Random();
+  }
+
+  public GenerateVIN(long seed) {
+    random = new Random(seed);
+  }
 
   /** @return random generate pin code for add vehicle */
   public String generatePincode() {
@@ -34,26 +45,26 @@ public class GenerateVIN {
   }
 
   public String getChar(int num) {
-    String random = "";
-    for (int j = 0; j <= num; j++) random += randomCharacter();
-    return random;
+    String randStr = "";
+    for (int j = 0; j <= num; j++) randStr += randomCharacter();
+    return randStr;
   }
 
   public String getNum(int num) {
-    String random = "";
-    for (int k = 0; k <= num; k++) random += randomNumber();
-    return random;
+    String randNum = "";
+    for (int k = 0; k <= num; k++) randNum += randomNumber();
+    return randNum;
   }
 
   public String randomCharacter() {
     int n = charsequence.length();
-    int r = (int) (n * Math.random());
+    int r = random.nextInt(n);
     return charsequence.substring(r, r + 1);
   }
 
   public String randomNumber() {
     int n = num.length();
-    int r = (int) (n * Math.random());
+    int r = random.nextInt(n);
     return num.substring(r, r + 1);
   }
 }
