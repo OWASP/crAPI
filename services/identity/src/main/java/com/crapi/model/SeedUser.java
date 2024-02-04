@@ -43,11 +43,46 @@ public class SeedUser {
   @Size(min = 3, max = 100)
   private ERole role;
 
-  public SeedUser(String name, String email, String number, String password, ERole role) {
+  @NotBlank
+  @Size(min = 3, max = 100)
+  private String carid;
+
+  @NotBlank
+  @Size(min = 3, max = 100)
+  private String vin;
+
+  @NotBlank
+  @Size(min = 3, max = 100)
+  private String pincode;
+
+  @NotBlank
+  @Size(min = 3, max = 100)
+  private String latitude;
+
+  @NotBlank
+  @Size(min = 3, max = 100)
+  private String longitude;
+
+  public SeedUser(
+      String name,
+      String email,
+      String number,
+      String password,
+      ERole role,
+      String carid,
+      String vin,
+      String pincode,
+      String latitude,
+      String longitude) {
     this.name = name;
     this.email = email;
     this.number = number;
     this.password = password;
     this.role = role;
+    this.carid = carid;
+    this.vin = vin;
+    this.pincode = pincode;
+    this.latitude = latitude;
+    this.longitude = longitude;
   }
 }
