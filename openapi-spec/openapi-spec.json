@@ -1125,7 +1125,7 @@
         "schema" : {
           "type" : "string",
           "format" : "uuid",
-          "example" : "0be319f0-f0dd-44aa-af0b-af927f3a383f"
+          "example" : "1929186d-8b67-4163-a208-de52a41f7301"
         }
       } ]
     },
@@ -2730,8 +2730,8 @@
                         }
                       },
                       "example" : {
-                        "id" : 23,
-                        "vin" : "0FOPP90TFEE927859",
+                        "id" : 3,
+                        "vin" : "1G1OP124017231334",
                         "owner" : {
                           "email" : "victim.one@example.com",
                           "number" : "4156895423"
@@ -3096,7 +3096,7 @@
         "example" : {
           "nickname" : "Hacker",
           "email" : "hacker@darkweb.com",
-          "vehicleid" : "abac4018-5a38-466c-ab7f-361908afeab6",
+          "vehicleid" : "4bae9968-ec7f-4de3-a3a0-ba1b2ab5e5e5",
           "profile_pic_url" : "",
           "created_at" : "2021-09-16T01:46:32.432Z"
         }
