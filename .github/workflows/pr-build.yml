@@ -233,6 +233,14 @@ jobs:
           source .env
           IS_TESTING=True python3 manage.py test --no-input --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner
 
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: |
+            **/test-results/**/*.xml
+            **/test-results/**/*.json
+
       - name: Run workshop coverage
         run: |
           cd services/workshop
@@ -242,17 +250,8 @@ jobs:
           coverage report
           coverage xml -o coverage.xml
 
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
+      - name: Publish Coverage for workshop
+        uses: orgoro/coverage@v3.1
         with:
-          files: |
-            **/test-results/**/*.xml
-            **/test-results/**/*.json
-
-      - name: Publish Coverage Report
-        if: always()
-        uses: aGallea/tests-coverage-report@v1
-        with:
-          min-coverage-percentage: '50'
-          fail-under-coverage-percentage: 'false'
+            coverageFile: services/workshop/coverage.xml
+            token: ${{ secrets.GITHUB_TOKEN }}
