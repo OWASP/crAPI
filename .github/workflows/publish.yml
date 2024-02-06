@@ -29,14 +29,14 @@ jobs:
       PLATFORMS: "linux/amd64,linux/arm64"
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Env seen prerun
         run: env
 
       - name: Get branch name
         id: branch-name
-        uses: tj-actions/branch-names@v5.2
+        uses: tj-actions/branch-names@v8
 
       - name: Current branch name
         run: |
@@ -71,19 +71,19 @@ jobs:
       # setup Docker build action
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Set up QEMU
         id: qemu
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
 
       - name: Login to DockerHub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build crapi-identity all platforms and conditionally push to Docker Hub
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./services/identity
           tags: crapi/crapi-identity:${{ env.TAG_LATEST }},crapi/crapi-identity:${{ env.TAG_NAME }}
@@ -92,7 +92,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=identity-service
 
       - name: Build crapi-workshop all platforms and conditionally push to Docker Hub
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./services/workshop
           tags: crapi/crapi-workshop:${{ env.TAG_LATEST }},crapi/crapi-workshop:${{ env.TAG_NAME }}
@@ -101,7 +101,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=workshop-service
 
       - name: Build crapi-community all platforms and conditionally push to Docker Hub
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./services/community
           tags: crapi/crapi-community:${{ env.TAG_LATEST }},crapi/crapi-community:${{ env.TAG_NAME }}
@@ -110,7 +110,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=community-service
 
       - name: Build crapi-web all platforms and conditionally push to Docker Hub
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./services/web
           tags: crapi/crapi-web:${{ env.TAG_LATEST }},crapi/crapi-web:${{ env.TAG_NAME }}
@@ -119,7 +119,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=web-service
 
       - name: Build gateway-service all platforms and conditionally push to Docker Hub
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./services/gateway-service
           tags: crapi/gateway-service:${{ env.TAG_LATEST }},crapi/gateway-service:${{ env.TAG_NAME }}
@@ -128,8 +128,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=gateway-service
 
       - name: Build mailhog all platforms and conditionally push to Docker Hub
-        if: steps.check_mailhog_exists.outputs.files_exists == 'true'
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./services/mailhog
           tags: crapi/mailhog:${{ env.TAG_LATEST }},crapi/mailhog:${{ env.TAG_NAME }}

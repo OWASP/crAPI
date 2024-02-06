@@ -77,13 +77,13 @@ jobs:
       # setup Docker build action
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Set up QEMU
         id: qemu
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
 
       - name: Build crapi-identity image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./services/identity
           tags: crapi/crapi-identity:${{ env.TAG_LATEST }},crapi/crapi-identity:${{ env.TAG_NAME }}
@@ -94,7 +94,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=identity-service
 
       - name: Build crapi-workshop image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./services/workshop
           tags: crapi/crapi-workshop:${{ env.TAG_LATEST }},crapi/crapi-workshop:${{ env.TAG_NAME }}
@@ -105,7 +105,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=workshop-service
 
       - name: Build crapi-community image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./services/community
           tags: crapi/crapi-community:${{ env.TAG_LATEST }},crapi/crapi-community:${{ env.TAG_NAME }}
@@ -116,7 +116,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=community-service
 
       - name: Build crapi-web image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./services/web
           tags: crapi/crapi-web:${{ env.TAG_LATEST }},crapi/crapi-web:${{ env.TAG_NAME }}
@@ -127,7 +127,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=web-service
 
       - name: Build gateway-service image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./services/gateway-service
           tags: crapi/gateway-service:${{ env.TAG_LATEST }},crapi/gateway-service:${{ env.TAG_NAME }}
@@ -137,16 +137,8 @@ jobs:
           cache-from: type=gha,scope=gateway-service
           cache-to: type=gha,mode=max,scope=gateway-service
 
-
-      - name: Check Mailhog existence
-        id: check_mailhog_exists
-        uses: andstor/file-existence-action@v1
-        with:
-          files: "./services/mailhog"
-
       - name: Build mailhog image
-        if: steps.check_mailhog_exists.outputs.files_exists == 'true'
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./services/mailhog
           tags: crapi/mailhog:${{ env.TAG_LATEST }},crapi/mailhog:${{ env.TAG_NAME }}
@@ -168,7 +160,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
 
       - name: Install newman
         run: npm install -g newman
