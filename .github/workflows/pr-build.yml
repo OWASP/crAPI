@@ -1,17 +1,6 @@
 name: PR Build
 
 on:
-  push:
-    branches:
-      - 'develop'
-      - 'main'
-    tags:
-      - 'v*.*.*'
-    paths:
-      - 'services/**'
-      - 'postman_collections/**'
-      - 'deploy/**'
-      - '.github/workflows/**'
   pull_request:
     paths:
       - 'services/**'
@@ -221,6 +210,7 @@ jobs:
           virtualenv venv
           source venv/bin/activate
           pip3 install -r requirements.txt
+          pip3 install -r dev-requirements.txt
           mkdir -p test-results
           source .env
           IS_TESTING=True python3 manage.py test --no-input --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner
