@@ -230,6 +230,7 @@ jobs:
           source venv/bin/activate
           pip3 install -r requirements.txt
           mkdir -p test-results
+          source .env
           IS_TESTING=True python3 manage.py test --no-input --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner
 
       - name: Run workshop coverage
