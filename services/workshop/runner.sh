@@ -23,13 +23,6 @@ python3 manage.py migrate
 python3 manage.py check &&\
 python3 manage.py health_check
 
-## Uncomment the following line if you wish to run tests
-if [ "$RUN_TESTS" = "true" ] || [ "$RUN_TESTS" = "1" ]; then
-  echo "Running tests"
-  IS_TESTING=True python3 manage.py test --no-input
-  echo "Tests finished"
-fi
-
 echo "Seeding the database"
 python3 manage.py seed_database
 

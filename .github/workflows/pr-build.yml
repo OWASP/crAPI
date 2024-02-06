@@ -35,14 +35,14 @@ jobs:
       PLATFORMS: "linux/amd64,linux/arm64"
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Env seen prerun
         run: env
 
       - name: Get branch name
         id: branch-name
-        uses: tj-actions/branch-names@v5.2
+        uses: tj-actions/branch-names@@v8
 
       - name: Current branch name
         run: |
@@ -219,6 +219,8 @@ jobs:
         run: |
           cd services/community
           go test -v ./...
+          mkdir test-results
+          go test -json > test-results/TestResults.json
 
       - name: Run workshop tests
         run: |
@@ -228,13 +230,13 @@ jobs:
           source venv/bin/activate
           pip3 install -r requirements.txt
           mkdir -p test-results
-          IS_TESTING=True python3 manage.py test --no-input --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner --output-dir test-results
+          IS_TESTING=True python3 manage.py test --no-input --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner
 
       - name: Run workshop coverage
         run: |
           cd services/workshop
           source venv/bin/activate
-          coverage run ./manage.py test crapi
+          IS_TESTING=True coverage run ./manage.py test --no-input crapi
           coverage report
           coverage xml -o coverage.xml
 
@@ -244,6 +246,7 @@ jobs:
         with:
           files: |
             **/test-results/**/*.xml
+            **/test-results/**/*.json
 
       - name: Publish Coverage Report
         if: always()
