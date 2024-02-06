@@ -73,8 +73,10 @@ INSTALLED_APPS = [
     'corsheaders',
     'health_check',
     'health_check.db',
-    'crapi.apps.CRAPIConfig',
-    #'user.apps.UserConfig',
+    'core',
+    'crapi',
+    # 'crapi.apps.CRAPIConfig',
+    # 'user.apps.UserConfig',
     "django_extensions",
 ]
 

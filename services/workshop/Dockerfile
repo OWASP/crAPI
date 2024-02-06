@@ -12,11 +12,11 @@
 # limitations under the License.
 
 
-FROM python:3.8-alpine3.15 as build
+FROM python:3.8-alpine as build
 # Not using alpine based on suggestion
 # https://pythonspeed.com/articles/alpine-docker-python/
 
-# Python 
+# Python
 ENV PYTHONUNBUFFERED=1
 RUN apk add --update --no-cache  gettext curl py3-pip postgresql-dev
 RUN apk add --update --no-cache --virtual .build-deps \
@@ -26,7 +26,7 @@ RUN apk add --update --no-cache --virtual .build-deps \
         libressl-dev \
         musl-dev \
         libffi-dev
-    
+
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 RUN mkdir /app
@@ -34,7 +34,7 @@ WORKDIR /app
 COPY ./ /app
 RUN pip install wheel && pip wheel . --wheel-dir /app/wheels
 
-FROM python:3.8-alpine3.15
+FROM python:3.10-alpine
 COPY --from=build /app /app
 WORKDIR /app
 RUN apk update && apk add --no-cache postgresql-libs curl
