@@ -73,8 +73,10 @@ INSTALLED_APPS = [
     'corsheaders',
     'health_check',
     'health_check.db',
-    'crapi.apps.CRAPIConfig',
-    #'user.apps.UserConfig',
+    'core',
+    'crapi',
+    # 'crapi.apps.CRAPIConfig',
+    # 'user.apps.UserConfig',
     "django_extensions",
 ]
 
@@ -94,6 +96,10 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'crapi_site.urls'
+
+TEST_RUNNER = 'xmlrunner.extra.djangotestrunner.XMLTestRunner'
+
+TEST_OUTPUT_DIR = os.path.join(BASE_DIR, 'test-reports')
 
 TEMPLATES = [
     {

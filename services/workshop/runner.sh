@@ -23,8 +23,8 @@ python3 manage.py migrate
 python3 manage.py check &&\
 python3 manage.py health_check
 
-## Uncomment the following line if you wish to run tests
-IS_TESTING=True python3 manage.py test --no-input
+echo "Seeding the database"
+python3 manage.py seed_database
 
 echo "Starting Django server"
 if [ "$TLS_ENABLED" = "true" ] || [ "$TLS_ENABLED" = "1" ]; then
@@ -38,9 +38,10 @@ if [ "$TLS_ENABLED" = "true" ] || [ "$TLS_ENABLED" = "1" ]; then
   fi
   echo "TLS_CERTIFICATE: $TLS_CERTIFICATE"
   echo "TLS_KEY: $TLS_KEY"
-  python3 manage.py runserver_plus --cert-file $TLS_CERTIFICATE --key-file $TLS_KEY --noreload 0.0.0.0:${SERVER_PORT}
+  # python3 manage.py runserver_plus --cert-file $TLS_CERTIFICATE --key-file $TLS_KEY --noreload 0.0.0.0:${SERVER_PORT}
+  gunicorn --workers=2 --threads=10  --timeout 60 --bind 0.0.0.0:${SERVER_PORT} --certfile $TLS_CERTIFICATE --keyfile $TLS_KEY --log-level=debug crapi_site.wsgi
 else
   echo "TLS is DISABLED"
-  python3 manage.py runserver 0.0.0.0:${SERVER_PORT} --noreload
+  # python3 manage.py runserver 0.0.0.0:${SERVER_PORT} --noreload
+  gunicorn --workers=2 --threads=10  --timeout 60 --bind 0.0.0.0:${SERVER_PORT} --log-level=debug crapi_site.wsgi
 fi
-exec "$@"
