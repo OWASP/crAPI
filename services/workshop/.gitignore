@@ -3,3 +3,4 @@ __pycache__/
 *.log
 .coverage
 *.xml
+test-results/

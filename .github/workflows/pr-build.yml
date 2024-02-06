@@ -185,6 +185,7 @@ jobs:
 
 
   tests:
+    needs: build-context
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -222,10 +223,12 @@ jobs:
       - name: Run workshop tests
         run: |
           cd services/workshop
+          pip3 install virtualenv
           virtualenv venv
           source venv/bin/activate
-          pip install -r requirements.txt
-          IS_TESTING=True python3 manage.py test --no-input
+          pip3 install -r requirements.txt
+          mkdir -p test-results
+          IS_TESTING=True python3 manage.py test --no-input --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner --output-dir test-results
 
       - name: Run workshop coverage
         run: |
@@ -234,3 +237,17 @@ jobs:
           coverage run ./manage.py test crapi
           coverage report
           coverage xml -o coverage.xml
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: |
+            **/test-results/**/*.xml
+
+      - name: Publish Coverage Report
+        if: always()
+        uses: aGallea/tests-coverage-report@v1
+        with:
+          min-coverage-percentage: '50'
+          fail-under-coverage-percentage: 'false'
