@@ -220,7 +220,7 @@ jobs:
           cd services/community
           go test -v ./...
           mkdir test-results
-          go test -json > test-results/TestResults.json
+          go run gotest.tools/gotestsum@latest --format testname --junitfile test-results/unit-tests.xml
 
       - name: Run workshop tests
         run: |

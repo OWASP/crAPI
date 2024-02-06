@@ -12,7 +12,7 @@
 # limitations under the License.
 
 
-FROM python:3.8-alpine as build
+FROM python:3.10-alpine as build
 # Not using alpine based on suggestion
 # https://pythonspeed.com/articles/alpine-docker-python/
 
@@ -23,7 +23,6 @@ RUN apk add --update --no-cache --virtual .build-deps \
         python3-dev openssl-dev \
         libffi-dev gcc py3-pip \
         python3-dev \
-        libressl-dev \
         musl-dev \
         libffi-dev
 
