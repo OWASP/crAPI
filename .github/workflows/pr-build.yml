@@ -237,6 +237,7 @@ jobs:
         run: |
           cd services/workshop
           source venv/bin/activate
+          source .env
           IS_TESTING=True coverage run ./manage.py test --no-input crapi
           coverage report
           coverage xml -o coverage.xml
