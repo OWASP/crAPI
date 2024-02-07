@@ -39,9 +39,9 @@ if [ "$TLS_ENABLED" = "true" ] || [ "$TLS_ENABLED" = "1" ]; then
   echo "TLS_CERTIFICATE: $TLS_CERTIFICATE"
   echo "TLS_KEY: $TLS_KEY"
   # python3 manage.py runserver_plus --cert-file $TLS_CERTIFICATE --key-file $TLS_KEY --noreload 0.0.0.0:${SERVER_PORT}
-  gunicorn --workers=2 --threads=10  --timeout 60 --bind 0.0.0.0:${SERVER_PORT} --certfile $TLS_CERTIFICATE --keyfile $TLS_KEY --log-level=debug crapi_site.wsgi
+  gunicorn --workers=1 --threads=20  --timeout 60 --bind 0.0.0.0:${SERVER_PORT} --certfile $TLS_CERTIFICATE --keyfile $TLS_KEY --log-level=debug crapi_site.wsgi
 else
   echo "TLS is DISABLED"
   # python3 manage.py runserver 0.0.0.0:${SERVER_PORT} --noreload
-  gunicorn --workers=2 --threads=10  --timeout 60 --bind 0.0.0.0:${SERVER_PORT} --log-level=debug crapi_site.wsgi
+  gunicorn --workers=1 --threads=20  --timeout 60 --bind 0.0.0.0:${SERVER_PORT} --log-level=debug crapi_site.wsgi
 fi

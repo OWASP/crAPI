@@ -82,61 +82,63 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build crapi-identity all platforms and conditionally push to Docker Hub
+      - name: Build crapi-identity all platforms and push to Docker Hub
         uses: docker/build-push-action@v3
         with:
           context: ./services/identity
           tags: crapi/crapi-identity:${{ env.TAG_LATEST }},crapi/crapi-identity:${{ env.TAG_NAME }}
           platforms: ${{ env.PLATFORMS }}
+          push: true
           cache-from: type=gha,scope=identity-service
           cache-to: type=gha,mode=max,scope=identity-service
 
-      - name: Build crapi-workshop all platforms and conditionally push to Docker Hub
+      - name: Build crapi-workshop all platforms and push to Docker Hub
         uses: docker/build-push-action@v3
         with:
           context: ./services/workshop
           tags: crapi/crapi-workshop:${{ env.TAG_LATEST }},crapi/crapi-workshop:${{ env.TAG_NAME }}
           platforms: ${{ env.PLATFORMS }}
+          push: true
           cache-from: type=gha,scope=workshop-service
           cache-to: type=gha,mode=max,scope=workshop-service
 
-      - name: Build crapi-community all platforms and conditionally push to Docker Hub
+      - name: Build crapi-community all platforms and push to Docker Hub
         uses: docker/build-push-action@v3
         with:
           context: ./services/community
           tags: crapi/crapi-community:${{ env.TAG_LATEST }},crapi/crapi-community:${{ env.TAG_NAME }}
           platforms: ${{ env.PLATFORMS }}
+          push: true
           cache-from: type=gha,scope=community-service
           cache-to: type=gha,mode=max,scope=community-service
 
-      - name: Build crapi-web all platforms and conditionally push to Docker Hub
+      - name: Build crapi-web all platforms and push to Docker Hub
         uses: docker/build-push-action@v3
         with:
           context: ./services/web
           tags: crapi/crapi-web:${{ env.TAG_LATEST }},crapi/crapi-web:${{ env.TAG_NAME }}
           platforms: ${{ env.PLATFORMS }}
+          push: true
           cache-from: type=gha,scope=web-service
           cache-to: type=gha,mode=max,scope=web-service
 
-      - name: Build gateway-service all platforms and conditionally push to Docker Hub
+      - name: Build gateway-service all platforms and push to Docker Hub
         uses: docker/build-push-action@v3
         with:
           context: ./services/gateway-service
           tags: crapi/gateway-service:${{ env.TAG_LATEST }},crapi/gateway-service:${{ env.TAG_NAME }}
           platforms: ${{ env.PLATFORMS }}
+          push: true
           cache-from: type=gha,scope=gateway-service
           cache-to: type=gha,mode=max,scope=gateway-service
 
-      - name: Build mailhog all platforms and conditionally push to Docker Hub
+      - name: Build mailhog all platforms and push to Docker Hub
         uses: docker/build-push-action@v3
         with:
           context: ./services/mailhog
           tags: crapi/mailhog:${{ env.TAG_LATEST }},crapi/mailhog:${{ env.TAG_NAME }}
           platforms: ${{ env.PLATFORMS }}
+          push: true
           cache-from: type=gha,scope=mailhog-service
           cache-to: type=gha,mode=max,scope=mailhog-service
-
-      - name: Dump docker logs on failure
-        if: failure()
-        uses: jwalton/gh-docker-logs@v2
 
