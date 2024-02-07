@@ -185,8 +185,9 @@ def create_orders():
     from crapi.shop.models import Order
     if Order.objects.all().count() >= 1:
         return
-    users = User.objects.filter(role=User.ROLE_CHOICES.PREDEFINED).order_by('id')
-    for user in users:
+    users = User.objects.all().order_by('id')
+    users_seed = users[:5]
+    for user in users_seed:
         product = Product.objects.filter(name='Seat').first()
         order = Order.objects.create(
             user=user,
