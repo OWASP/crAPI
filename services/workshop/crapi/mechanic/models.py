@@ -53,8 +53,8 @@ class ServiceRequest(models.Model):
     updated_on = models.DateTimeField(null=True)
 
     STATUS_CHOICES = Choices(
-        ('PEN', "Pending", "Pending"),
-        ('FIN', "Finished", "Finished")
+        ('PEN', "pending", "Pending"),
+        ('FIN', "finished", "Finished")
     )
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=STATUS_CHOICES.PEN)
 

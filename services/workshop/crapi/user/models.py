@@ -36,6 +36,7 @@ class User(models.Model):
     password = models.CharField(max_length=255)
 
     ROLE_CHOICES = Choices(
+        ('PREDEFINED', 0, 'Predefined'),
         ('USER', 1, 'User'),
         ('MECH', 2, 'Mechanic'),
         ('ADMIN', 3, 'Admin'),

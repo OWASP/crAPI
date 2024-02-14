@@ -24,6 +24,8 @@ from django.db import models
 from django.db import connection, transaction
 import logging
 import traceback
+from django.core.management.base import BaseCommand
+from django.utils import timezone
 
 logger = logging.getLogger()
 
@@ -183,8 +185,9 @@ def create_orders():
     from crapi.shop.models import Order
     if Order.objects.all().count() >= 1:
         return
-    users = User.objects.filter(role=User.ROLE_CHOICES.PREDEFINED).order_by('id')
-    for user in users:
+    users = User.objects.all().order_by('id')
+    users_seed = users[:5]
+    for user in users_seed:
         product = Product.objects.filter(name='Seat').first()
         order = Order.objects.create(
             user=user,
@@ -197,24 +200,14 @@ def create_orders():
         logger.info("Created Order for User %s: %s", user.email, order.__dict__)
 
 
+class Command(BaseCommand):
+    help = 'Seed the database with initial data.'
 
-
-
-class CRAPIConfig(AppConfig):
-    """
-    Stores all meta data of crapi application
-    """
-    name = 'crapi'
-
-    def ready(self):
+    def handle(self, *args, **kwargs):
         """
         Pre-populate mechanic model and product model
         :return: None
         """
-        # Check if sys.argv contains 'runserver' or 'runserver_plus'
-        is_runserver = any("runserver" in x for x in sys.argv)
-        if not is_runserver:
-            return
         logger.info("Pre Populating Model Data")
         try:
             create_products()
