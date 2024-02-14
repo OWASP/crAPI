@@ -32,11 +32,6 @@ web:
     name: crapi-web-configmap
     labels:
       app: crapi-web
-  resources:
-    limits:
-      cpu: "500m"
-    requests:
-      cpu: 256m
   deploymentLabels:
     app: crapi-web
   podLabels:
@@ -79,11 +74,6 @@ identity:
     keyStorePassword: passw0rd
     keyPassword: passw0rd
     keyAlias: identity
-  resources:
-    limits:
-      cpu: "500m"
-    requests:
-      cpu: 256m
   deploymentLabels:
     app: crapi-identity
   podLabels:
@@ -108,11 +98,6 @@ community:
       app: crapi-community
     postgresDbDriver: postgres
     mongoDbDriver: mongodb
-  resources:
-    limits:
-      cpu: "500m"
-    requests:
-      cpu: 256m
   deploymentLabels:
     app: crapi-community
   podLabels:
@@ -138,11 +123,6 @@ workshop:
     postgresDbDriver: postgres
     mongoDbDriver: mongodb
     secretKey: crapi
-  resources:
-    limits:
-      cpu: "256m"
-    requests:
-      cpu: 256m
   deploymentLabels:
     app: crapi-workshop
   podLabels:
@@ -175,13 +155,6 @@ mailhog:
     labels:
       app: mailhog
     mailhogStorage: mongodb
-  resources:
-    limits:
-      cpu: "1"
-      memory: 1024Mi
-    requests:
-      cpu: 50m
-      memory: 64Mi
   deploymentLabels:
     app: mailhog
   podLabels:
@@ -218,7 +191,7 @@ mongodb:
       app: mongodb
     resources:
       requests:
-        storage: 1Gi
+        storage: 2Gi
   serviceSelectorLabels:
     app: mongodb
   podLabels:
@@ -252,7 +225,7 @@ postgresdb:
       app: postgresdb
     resources:
       requests:
-        storage: 1Gi
+        storage: 2Gi
   serviceSelectorLabels:
     app: postgresdb
   podLabels:
@@ -275,11 +248,6 @@ apiGatewayService:
     name: gateway-service
     labels:
       app: gateway-service
-  resources:
-    limits:
-      cpu: "100m"
-    requests:
-      cpu: 50m
   deploymentLabels:
     app: gateway-service
   podLabels:
