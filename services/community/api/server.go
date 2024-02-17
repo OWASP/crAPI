@@ -25,8 +25,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var server = config.Server{}
-var route = router.Server{}
+
 
 func init() {
 	// loads values from .env into the system
@@ -36,6 +35,8 @@ func init() {
 }
 
 func Run() {
+	var server = config.Server{}
+	var route = router.Server{}
 
 	route.Client = server.InitializeMongo("mongodb", os.Getenv("MONGO_DB_USER"), os.Getenv("MONGO_DB_PASSWORD"), os.Getenv("MONGO_DB_PORT"), os.Getenv("MONGO_DB_HOST"))
 

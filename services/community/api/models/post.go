@@ -17,7 +17,6 @@ package models
 import (
 	"context"
 	"errors"
-	"fmt"
 	"html"
 	"log"
 	"reflect"
@@ -84,7 +83,7 @@ func SavePost(client *mongo.Client, post Post) (Post, error) {
 	collection := client.Database("crapi").Collection("post")
 	_, err := collection.InsertOne(context.TODO(), post)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 
 	return post, err
@@ -96,7 +95,7 @@ func GetPostByID(client *mongo.Client, ID string) (Post, error) {
 
 	//filter := bson.D{{"name", "Ash"}}
 	collection := client.Database("crapi").Collection("post")
-	filter := bson.D{{"id", ID}}
+	filter := bson.D{{Key: "id", Value: ID}}
 	err := collection.FindOne(context.TODO(), filter).Decode(&post)
 
 	return post, err
@@ -108,7 +107,7 @@ func FindAllPost(client *mongo.Client, offset int, limit int) ([]interface{}, er
 	post := []Post{}
 
 	options := options.Find()
-	options.SetSort(bson.D{{"_id", -1}})
+	options.SetSort(bson.D{{Key: "_id", Value: -1}})
 	options.SetLimit(int64(limit))
 	options.SetSkip(int64(offset * limit))
 	collection := client.Database("crapi").Collection("post")
@@ -116,7 +115,7 @@ func FindAllPost(client *mongo.Client, offset int, limit int) ([]interface{}, er
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Println(cur)
+	log.Println(cur)
 	objectType := reflect.TypeOf(post).Elem()
 	var list = make([]interface{}, 0)
 	defer cur.Close(context.Background())

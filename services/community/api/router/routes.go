@@ -15,7 +15,7 @@
 package router
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -29,10 +29,10 @@ import (
 
 type Server config.Server
 
-var controller = controllers.Server{}
 
 // initializeRoutes initialize routes of url with Authentication or without Authentication
 func (server *Server) InitializeRoutes() *mux.Router {
+	var controller = controllers.Server{}
 
 	controller.DB = server.DB
 
@@ -59,7 +59,7 @@ func (server *Server) InitializeRoutes() *mux.Router {
 }
 
 func (server *Server) Run(addr string) {
-	fmt.Println("Listening to port " + os.Getenv("SERVER_PORT"))
+	log.Println("Listening to port " + os.Getenv("SERVER_PORT"))
 	srv := &http.Server{
 		Addr:    addr,
 		Handler: server.Router,
@@ -79,12 +79,12 @@ func (server *Server) Run(addr string) {
 		}
 		err := srv.ListenAndServeTLS(certificate, key)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 		}
 	} else {
 		err := srv.ListenAndServe()
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 		}
 	}
 }

@@ -17,13 +17,14 @@ package models
 import (
 	"context"
 	"errors"
-	"fmt"
 	"html"
+	"log"
 	"strings"
 	"time"
+
 	"github.com/jinzhu/gorm"
-	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 //Coupon
@@ -63,9 +64,9 @@ func SaveCoupon(client *mongo.Client, coupon Coupon) (Coupon, error) {
 	// Insert a single document
 	insertResult, err := collection.InsertOne(context.TODO(), coupon)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
-	fmt.Println("Inserted a single document: ", insertResult.InsertedID)
+	log.Println("Inserted a single document: ", insertResult.InsertedID)
 
 	return coupon, err
 }

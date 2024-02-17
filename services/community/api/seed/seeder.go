@@ -16,7 +16,7 @@ package seed
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -70,20 +70,27 @@ func LoadMongoData(mongoClient *mongo.Client, db *gorm.DB) {
 	// get a MongoDB document using the FindOne() method
 	err := collection.FindOne(context.TODO(), bson.D{}).Decode(&couponResult)
 	if err != nil {
-		for i, _ := range coupons {
+		for i := range coupons {
 			couponData, err := collection.InsertOne(context.TODO(), coupons[i])
-			fmt.Println(couponData, err)
+			log.Println(couponData, err)
 		}
 	}
 	postCollection := mongoClient.Database(os.Getenv("MONGO_DB_NAME")).Collection("post")
 	er := postCollection.FindOne(context.TODO(), bson.D{}).Decode(&postResult)
 	if er != nil {
-		for j, _ := range posts {
-			models.FindAuthorByEmail(emails[j], db)
+		for j := range posts {
+			author, err := models.FindAuthorByEmail(emails[j], db)
+			if err != nil {
+				log.Println("Error finding author", err)
+				continue
+			}
+			log.Println(author)
 			posts[j].Prepare()
-			models.SavePost(mongoClient, posts[j])
-			//postData, err := collection.InsertOne(context.TODO(), posts[j])
-			//fmt.Println(postData, err)
+			postData, err := models.SavePost(mongoClient, posts[j]) // Assign the returned values to separate variables
+			if err != nil {
+				log.Println("Error saving post", err)
+			}
+			log.Println(postData) // Use the returned values as needed
 		}
 	}
 }
