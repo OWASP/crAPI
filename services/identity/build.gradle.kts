@@ -35,7 +35,7 @@ pluginManager.withPlugin("java") {
 }
 dependencies {
     val lombokVersion = "1.18.30"
-    val mockito = "3.7.7"
+    val mockito = "5.2.0"
     val springBootVersion = "3.2.2"
     val springSecurityVersion = "6.0.3"
     val log4jVersion = "2.14.0"
@@ -63,7 +63,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-api:${log4jVersion}")
     implementation("org.apache.logging.log4j:log4j-core:${log4jVersion}")
     implementation("org.apache.logging.log4j:log4j-web:${log4jVersion}")
-    implementation("com.google.cloud:libraries-bom:25.4.0")
+    implementation("com.google.cloud:libraries-bom:26.32.0")
     implementation("org.apache.httpcomponents:httpclient:4.5.13")
     implementation("com.google.cloud:google-cloud-storage:2.10.0")
     implementation("org.apache.httpcomponents.client5:httpclient5:5.3")
@@ -72,6 +72,6 @@ dependencies {
     testImplementation("org.mockito:mockito-junit-jupiter:${mockito}")
     testImplementation("org.mockito:mockito-core:${mockito}")
     testImplementation("org.mockito:mockito-inline:${mockito}")
-    testImplementation("junit:junit:4.13.1")
+    testImplementation("junit:junit:4.13.2")
     //implementation("org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}")
 }
