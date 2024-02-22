@@ -15,8 +15,8 @@
 package com.crapi.entity;
 
 import com.crapi.enums.ERole;
+import jakarta.persistence.*;
 import java.time.LocalDate;
-import javax.persistence.*;
 import lombok.Data;
 
 @Entity

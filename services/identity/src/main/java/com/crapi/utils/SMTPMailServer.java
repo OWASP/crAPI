@@ -16,11 +16,11 @@ package com.crapi.utils;
 
 import com.crapi.config.MailConfiguration;
 import com.crapi.config.MailHogConfiguration;
+import jakarta.mail.Message;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.*;
 import java.util.Date;
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

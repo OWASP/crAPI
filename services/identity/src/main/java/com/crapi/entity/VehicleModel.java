@@ -15,8 +15,8 @@
 package com.crapi.entity;
 
 import com.crapi.enums.EFuelType;
+import jakarta.persistence.*;
 import java.io.Serializable;
-import javax.persistence.*;
 import lombok.Data;
 
 @Entity

@@ -15,7 +15,7 @@
 package com.crapi.entity;
 
 import com.crapi.enums.EStatus;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity

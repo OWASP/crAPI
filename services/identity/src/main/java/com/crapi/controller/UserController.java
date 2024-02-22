@@ -20,8 +20,8 @@ import com.crapi.model.CRAPIResponse;
 import com.crapi.model.DashboardResponse;
 import com.crapi.model.LoginForm;
 import com.crapi.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,7 @@ public class UserController {
 
   @Autowired UserService userService;
 
-  @Autowired private JwtProvider tokenProvider;
+  @Autowired JwtProvider tokenProvider;
 
   /**
    * @param request getting jwt token for user from request header

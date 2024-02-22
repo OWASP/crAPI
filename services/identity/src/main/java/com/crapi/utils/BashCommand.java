@@ -46,13 +46,14 @@ public class BashCommand {
       Process p = r.exec(commands);
 
       p.waitFor();
-      b = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
+      InputStreamReader data = new InputStreamReader(p.getInputStream());
+      b = new BufferedReader(data);
       String line = "";
       output = new StringBuilder();
       while ((line = b.readLine()) != null) {
         output.append(line + "\n");
       }
+      b.close();
       return (output != null ? String.valueOf(output) : "command not found");
     } catch (Exception e) {
       logger.error("Failed to execute bash with command: " + command);

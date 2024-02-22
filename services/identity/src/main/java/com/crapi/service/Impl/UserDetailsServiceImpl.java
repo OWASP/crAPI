@@ -17,7 +17,7 @@ package com.crapi.service.Impl;
 import com.crapi.entity.User;
 import com.crapi.entity.UserPrinciple;
 import com.crapi.repository.UserRepository;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

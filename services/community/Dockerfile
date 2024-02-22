@@ -41,4 +41,6 @@ RUN ls -al /app
 
 ARG SERVER_PORT
 EXPOSE ${SERVER_PORT}
+# Expose profiling port
+EXPOSE 6060
 CMD /app/main

@@ -68,6 +68,7 @@ func ExtractTokenID(r *http.Request, db *gorm.DB) (uint32, error) {
 
 	resp, err := http.Post(tokenVerifyURL, "application/json",
 		bytes.NewBuffer(tokenJSON))
+	defer resp.Body.Close()
 	if err != nil {
 		log.Println(err)
 		return 0, err

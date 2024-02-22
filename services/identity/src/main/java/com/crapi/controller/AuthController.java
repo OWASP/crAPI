@@ -23,15 +23,17 @@ import com.crapi.model.SeedUser;
 import com.crapi.service.OtpService;
 import com.crapi.service.UserRegistrationService;
 import com.crapi.service.UserService;
+import jakarta.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @CrossOrigin
 @RestController
 @RequestMapping("/identity/api/auth")
@@ -56,7 +58,6 @@ public class AuthController {
     try {
 
       JwtResponse jwtToken = userService.authenticateUserLogin(loginForm);
-
       if (jwtToken.getToken() != null) {
         return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
       } else {

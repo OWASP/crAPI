@@ -16,12 +16,12 @@ package com.crapi.config;
 
 import com.crapi.entity.ChangeEmailRequest;
 import com.crapi.exception.EntityNotFoundException;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.internet.AddressException;
 import java.io.IOException;
 import java.util.Properties;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.internet.AddressException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -67,7 +67,7 @@ public class MailConfiguration {
     Session session =
         Session.getInstance(
             props,
-            new javax.mail.Authenticator() {
+            new jakarta.mail.Authenticator() {
               protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(email, password);
               }

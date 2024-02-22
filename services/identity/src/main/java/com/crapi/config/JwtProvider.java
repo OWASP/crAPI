@@ -18,6 +18,7 @@ import com.crapi.entity.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -35,11 +36,13 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.text.ParseException;
 import java.util.*;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class JwtProvider {
 
@@ -59,6 +62,7 @@ public class JwtProvider {
       Base64.Decoder decoder = Base64.getDecoder();
       InputStream jwksStream = new ByteArrayInputStream(decoder.decode(jwksJson));
       JWKSet jwkSet = JWKSet.load(jwksStream);
+      jwksStream.close();
       List<JWK> keys = jwkSet.getKeys();
       if (keys.size() != 1 || !Objects.equals(keys.get(0).getAlgorithm().getName(), "RS256")) {
         throw new RuntimeException("Invalid JWKS key passed!!!");
@@ -86,13 +90,15 @@ public class JwtProvider {
     int jwtExpirationInt;
     if (jwtExpiration.contains("e+")) jwtExpirationInt = new BigDecimal(jwtExpiration).intValue();
     else jwtExpirationInt = Integer.parseInt(jwtExpiration);
-    return Jwts.builder()
-        .setSubject((user.getEmail()))
-        .claim("role", user.getRole().getName())
-        .setIssuedAt(new Date())
-        .setExpiration(new Date((new Date()).getTime() + jwtExpirationInt))
-        .signWith(SignatureAlgorithm.RS256, this.keyPair.getPrivate())
-        .compact();
+    JwtBuilder builder =
+        Jwts.builder()
+            .subject(user.getEmail())
+            .issuedAt(new Date())
+            .expiration(new Date((new Date()).getTime() + jwtExpirationInt))
+            .claim("role", user.getRole().getName())
+            .signWith(this.keyPair.getPrivate());
+    String jwt = builder.compact();
+    return jwt;
   }
 
   /**
@@ -111,6 +117,7 @@ public class JwtProvider {
       if (jku != null) {
         URLConnection connection = jku.toURL().openConnection();
         JWKSet jwkSet = JWKSet.load(connection.getInputStream());
+        connection.getInputStream().close();
         logger.info("JWKSet from URL : " + jwkSet.toString(false));
         JWK key = jwkSet.getKeyByKeyId(header.getKeyID());
         if (key != null && Objects.equals(key.getAlgorithm().getName(), "RS256")) {
@@ -155,10 +162,8 @@ public class JwtProvider {
       if (Objects.equals(alg.getName(), "HS256")) {
         String secret = getJwtSecret(header);
         logger.info("JWT Secret: " + secret);
-        Jwts.parser()
-            .setSigningKey(secret.getBytes(StandardCharsets.UTF_8))
-            .parseClaimsJws(authToken);
-        return true;
+        JWSVerifier verifier = new MACVerifier(secret.getBytes(StandardCharsets.UTF_8));
+        return signedJWT.verify(verifier);
       } else {
         RSAKey verificationKey = getKeyFromJkuHeader(header);
         JWSVerifier verifier;
