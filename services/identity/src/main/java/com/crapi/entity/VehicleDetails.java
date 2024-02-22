@@ -16,11 +16,11 @@ package com.crapi.entity;
 
 import com.crapi.enums.EStatus;
 import com.crapi.model.VehicleOwnership;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import javax.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -45,7 +45,7 @@ public class VehicleDetails {
   @JoinColumn(name = "vehicle_model_id")
   private VehicleModel model;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "location_id")
   private VehicleLocation vehicleLocation;
 

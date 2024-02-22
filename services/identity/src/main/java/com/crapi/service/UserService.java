@@ -16,8 +16,8 @@ package com.crapi.service;
 
 import com.crapi.entity.User;
 import com.crapi.model.*;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import javax.servlet.http.HttpServletRequest;
 
 public interface UserService {
 

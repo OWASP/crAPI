@@ -32,6 +32,7 @@ import (
 func (s *Server) AddNewPost(w http.ResponseWriter, r *http.Request) {
 
 	body, err := io.ReadAll(r.Body)
+	defer r.Body.Close()
 	if err != nil {
 		responses.ERROR(w, http.StatusBadRequest, err)
 		return
@@ -112,6 +113,7 @@ func (s *Server) Comment(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	body, err := io.ReadAll(r.Body)
+	defer r.Body.Close()
 	if err != nil {
 		responses.ERROR(w, http.StatusBadRequest, err)
 		return

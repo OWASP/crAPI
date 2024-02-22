@@ -24,6 +24,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import javax.net.ssl.SSLContext;
+import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustAllStrategy;
@@ -74,8 +75,10 @@ public class VehicleOwnershipServiceImpl implements VehicleOwnershipService {
     SSLConnectionSocketFactory csf =
         new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
     CloseableHttpClient httpClient =
-        HttpClients.custom().setSSLContext(sslContext).setSSLSocketFactory(csf).build();
-    builder = builder.requestFactory(() -> new HttpComponentsClientHttpRequestFactory(httpClient));
+        HttpClients.custom().setSSLSocketFactory(csf).setSSLContext(sslContext).build();
+    builder =
+        builder.requestFactory(
+            () -> new HttpComponentsClientHttpRequestFactory((HttpClient) httpClient));
 
     // Add basic auth header
     builder = builder.basicAuthentication(apiGatewayUsername, apiGatewayPassword);

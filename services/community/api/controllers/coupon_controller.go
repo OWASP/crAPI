@@ -30,6 +30,7 @@ import (
 //Server have database connection
 func (s *Server) AddNewCoupon(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
+	defer r.Body.Close()
 	if err != nil {
 		responses.ERROR(w, http.StatusBadRequest, err)
 		return
@@ -61,6 +62,7 @@ func (s *Server) ValidateCoupon(w http.ResponseWriter, r *http.Request) {
 	var bsonMap bson.M
 
 	body, err := io.ReadAll(r.Body)
+	defer r.Body.Close()
 	if err != nil {
 		responses.ERROR(w, http.StatusBadRequest, err)
 		log.Println("No payload for ValidateCoupon", body, err)

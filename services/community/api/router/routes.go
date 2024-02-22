@@ -17,6 +17,7 @@ package router
 import (
 	"log"
 	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"time"
 
@@ -29,16 +30,19 @@ import (
 
 type Server config.Server
 
+var controller = controllers.Server{}
 
 // initializeRoutes initialize routes of url with Authentication or without Authentication
 func (server *Server) InitializeRoutes() *mux.Router {
-	var controller = controllers.Server{}
 
 	controller.DB = server.DB
 
 	controller.Client = server.Client
 
 	server.Router.Use(middlewares.AccessControlMiddleware)
+	if os.Getenv("DEBUG") == "1" {
+		server.Router.PathPrefix("/debug/pprof/").Handler(http.DefaultServeMux)
+	}
 	// Post Route
 	server.Router.HandleFunc("/community/api/v2/community/posts/recent", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(controller.GetPost, server.DB))).Methods("GET", "OPTIONS")
 
@@ -77,14 +81,8 @@ func (server *Server) Run(addr string) {
 		if !is_key || key == "" {
 			key = "certs/server.key"
 		}
-		err := srv.ListenAndServeTLS(certificate, key)
-		if err != nil {
-			log.Println(err)
-		}
+		log.Println(srv.ListenAndServeTLS(certificate, key))
 	} else {
-		err := srv.ListenAndServe()
-		if err != nil {
-			log.Println(err)
-		}
+		log.Println(srv.ListenAndServe())
 	}
 }

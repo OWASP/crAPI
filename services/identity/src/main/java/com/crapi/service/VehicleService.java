@@ -18,9 +18,9 @@ import com.crapi.entity.*;
 import com.crapi.model.CRAPIResponse;
 import com.crapi.model.VehicleForm;
 import com.crapi.model.VehicleLocationResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.UUID;
-import javax.servlet.http.HttpServletRequest;
 
 public interface VehicleService {
 

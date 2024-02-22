@@ -14,8 +14,8 @@
 
 package com.crapi.entity;
 
+import jakarta.persistence.*;
 import java.io.Serializable;
-import javax.persistence.*;
 import lombok.Data;
 
 @Entity
