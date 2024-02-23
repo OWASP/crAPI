@@ -45,4 +45,8 @@ public interface UserService {
   JwtResponse loginWithEmailTokenV2(LoginWithEmailToken loginWithEmailToken);
 
   JwtResponse authenticateUserLogin(LoginForm loginForm) throws UnsupportedEncodingException;
+
+  JwtResponse unlockAccount(HttpServletRequest request, UnlockAccountForm unlockAccountForm);
+
+  CRAPIResponse lockAccount(HttpServletRequest request, LockAccountForm lockAccountForm);
 }

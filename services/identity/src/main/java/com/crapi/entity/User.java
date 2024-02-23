@@ -41,6 +41,8 @@ public class User {
 
   private LocalDate createdOn = LocalDate.now();
 
+  private String mfaCode;
+
   // @OneToOne
   private ERole role;
 
@@ -52,5 +54,10 @@ public class User {
     this.email = email;
     this.number = number;
     this.role = userRole;
+    this.mfaCode = "";
+  }
+
+  public boolean isMfaRequired() {
+    return mfaCode != null && !mfaCode.isEmpty();
   }
 }

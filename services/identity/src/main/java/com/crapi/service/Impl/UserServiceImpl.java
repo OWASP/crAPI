@@ -27,6 +27,7 @@ import com.crapi.repository.*;
 import com.crapi.service.UserService;
 import com.crapi.utils.EmailTokenGenerator;
 import com.crapi.utils.MailBody;
+import com.crapi.utils.OTPGenerator;
 import com.crapi.utils.SMTPMailServer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -109,6 +110,15 @@ public class UserServiceImpl implements UserService {
         if (jwt != null) {
           updateUserToken(jwt, loginForm.getEmail());
           jwtResponse.setToken(jwt);
+          if (user.isMfaRequired()) {
+            UserDetails userDetails = userDetailsRepository.findByUser_id(user.getId());
+            smtpMailServer.sendMail(
+                user.getEmail(), MailBody.mfaMailBody(userDetails), "Unlock your account");
+            jwtResponse.setMfaRequired(true);
+            jwtResponse.setMessage(UserMessage.OTP_REQUIRED_MESSAGE);
+          } else {
+            jwtResponse.setMessage(UserMessage.LOGIN_SUCCESSFULL_MESSAGE);
+          }
         } else {
           jwtResponse.setMessage(UserMessage.INVALID_CREDENTIALS);
         }
@@ -388,5 +398,61 @@ public class UserServiceImpl implements UserService {
 
   public boolean isLog4jEnabled() {
     return String.valueOf(System.getenv("ENABLE_LOG4J")).equals("true");
+  }
+
+  /**
+   * @param unlockAccountForm contains user email and password, which allow user to unlock account
+   * @return success or failure of account unlock
+   */
+  @Transactional
+  @Override
+  public CRAPIResponse lockAccount(HttpServletRequest request, LockAccountForm lockAccountForm) {
+
+    String email = lockAccountForm.getEmail();
+    try {
+      User user = userRepository.findByEmail(email);
+      if (user != null) {
+        user.setMfaCode(OTPGenerator.generateRandom(8));
+        userRepository.save(user);
+        return new CRAPIResponse(UserMessage.ACCOUNT_LOCKED_MESSAGE, 200);
+      } else {
+        return new CRAPIResponse(UserMessage.EMAIL_NOT_REGISTERED, 400);
+      }
+    } catch (Exception exception) {
+      logger.error("fail to lock account  -> Message:%s", exception.getMessage());
+    }
+    return new CRAPIResponse(UserMessage.ACCOUNT_LOCK_FAILURE, 400);
+  }
+
+  /**
+   * @param unlockAccountForm contains user email and password, which allow user to unlock account
+   * @return success or failure of account unlock
+   */
+  @Transactional
+  @Override
+  public JwtResponse unlockAccount(
+      HttpServletRequest request, UnlockAccountForm unlockAccountForm) {
+    User user = null;
+    try {
+      String jwt = jwtAuthTokenFilter.getJwt(request);
+      String username = jwtProvider.getUserNameFromJwtToken(jwt);
+      if (username != null && !username.equalsIgnoreCase(EStatus.INVALID.toString())) {
+        user = userRepository.findByEmail(username);
+      }
+      if (user != null) {
+        if (unlockAccountForm.getMfaCode().equals(user.getMfaCode())) {
+          jwt = jwtProvider.generateJwtToken(user);
+          user.setMfaCode("");
+          user.setJwtToken(jwt);
+          userRepository.save(user);
+          JwtResponse jwtResponse = new JwtResponse(jwt);
+          jwtResponse.setMessage(UserMessage.ACCOUNT_UNLOCKED_MESSAGE);
+          return jwtResponse;
+        }
+      }
+    } catch (Exception exception) {
+      logger.error("fail to unlock account  -> Message:%s", exception.getMessage());
+    }
+    return new JwtResponse("", UserMessage.INVALID_CREDENTIALS);
   }
 }

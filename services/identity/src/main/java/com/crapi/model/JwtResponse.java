@@ -21,6 +21,7 @@ public class JwtResponse {
   private String token;
   private String type = "Bearer";
   private String message;
+  private boolean isMfaRequired;
 
   public JwtResponse() {}
 
@@ -32,5 +33,6 @@ public class JwtResponse {
     this.token = token;
     this.type = "";
     this.message = message;
+    this.isMfaRequired = false;
   }
 }

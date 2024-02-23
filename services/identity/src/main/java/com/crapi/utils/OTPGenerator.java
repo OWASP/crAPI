@@ -19,14 +19,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class OTPGenerator {
 
-  String num = "0123456789";
-  String otp = "";
+  public static String num = "0123456789";
 
   /**
    * @param length
    * @return generate random otp for forgot password
    */
-  public String generateRandom(int length) {
+  public static String generateRandom(int length) {
+    String otp = "";
     for (int i = 0; i < length; i++) {
       otp += randomNumber(num);
     }
@@ -34,7 +34,7 @@ public class OTPGenerator {
     return otp;
   }
 
-  public String randomNumber(String characters) {
+  public static String randomNumber(String characters) {
     int n = num.length();
     int r = (int) (n * Math.random());
     return num.substring(r, r + 1);

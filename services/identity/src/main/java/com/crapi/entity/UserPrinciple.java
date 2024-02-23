@@ -32,6 +32,8 @@ public class UserPrinciple implements UserDetails {
 
   private String email;
 
+  private boolean mfaRequired;
+
   @JsonIgnore private String password;
 
   private ERole role;
@@ -39,19 +41,30 @@ public class UserPrinciple implements UserDetails {
   private GrantedAuthority authorities;
 
   public UserPrinciple(
-      Long id, String email, String password, ERole role, GrantedAuthority authorities) {
+      Long id,
+      String email,
+      String password,
+      ERole role,
+      GrantedAuthority authorities,
+      boolean mfaRequired) {
     this.id = id;
     this.name = email;
     this.email = email;
     this.role = role;
     this.password = password;
     this.authorities = authorities;
+    this.mfaRequired = mfaRequired;
   }
 
   public static UserPrinciple build(User user) {
     GrantedAuthority authorities = new SimpleGrantedAuthority(user.getRole().toString());
     return new UserPrinciple(
-        user.getId(), user.getEmail(), user.getPassword(), user.getRole(), authorities);
+        user.getId(),
+        user.getEmail(),
+        user.getPassword(),
+        user.getRole(),
+        authorities,
+        user.isMfaRequired());
   }
 
   @Override
@@ -77,7 +90,7 @@ public class UserPrinciple implements UserDetails {
 
   @Override
   public boolean isAccountNonLocked() {
-    return true;
+    return mfaRequired ? false : true;
   }
 
   @Override

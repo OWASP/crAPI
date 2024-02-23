@@ -15,6 +15,7 @@
 package com.crapi.utils;
 
 import com.crapi.entity.Otp;
+import com.crapi.entity.UserDetails;
 import com.crapi.entity.VehicleDetails;
 import com.crapi.model.ChangeEmailForm;
 
@@ -92,6 +93,31 @@ public class MailBody {
             + "<br>"
             + "<br>"
             + "<p><font face='calibri' style = 'font-size:15px;color:#000;'>If you haven not sent a request to change your email address, please ignore this message.</font></p>"
+            + "<p><font face='calibri' style = 'font-size:15px;color:#000;'>Thank You & have a wonderful day !</font></p>"
+            + "<font face='calibri' style = 'font-size:15px;color:#000;'>Warm Regards,<br/><b>crAPI - Team</b></font><font face='calibri' font color='#0000ff'></font><br/>"
+            + "<strong>Email:</strong>&nbsp;<a href='mailto:support@crapi.io'>support@crapi.io</a></font><br><font face='calibri'>&nbsp;&nbsp;<br> "
+            + "<em style= 'color:#000;'>This E-mail and any attachments are private, intended solely for the use of the addressee. If you are not the intended recipient, they have been sent to you in error: any use of information in them is strictly prohibited. </em>"
+            + "</body>"
+            + "</html>";
+
+    return msgBody;
+  }
+
+  /**
+   * @param mfaCode
+   * @param email
+   * @return Mail Body for MFA Code to Unlock Account
+   */
+  public static String mfaMailBody(UserDetails userdetails) {
+    String msgBody =
+        "<html><body>"
+            + "<font face='calibri' style = 'font-size:15px; color:#000;'>Hi"
+            + userdetails.getName()
+            + "<font>,"
+            + "<p><font face='calibri' style = 'font-size:15px;color:#000;'>We received a request to unlock your account. Please provide the following code to unlock your account: <b>"
+            + userdetails.getUser().getMfaCode()
+            + "</b></font>"
+            + "<p><font face='calibri' style = 'font-size:15px;color:#000;'>If you haven not sent a request to unlock your account, please ignore this message.</font></p>"
             + "<p><font face='calibri' style = 'font-size:15px;color:#000;'>Thank You & have a wonderful day !</font></p>"
             + "<font face='calibri' style = 'font-size:15px;color:#000;'>Warm Regards,<br/><b>crAPI - Team</b></font><font face='calibri' font color='#0000ff'></font><br/>"
             + "<strong>Email:</strong>&nbsp;<a href='mailto:support@crapi.io'>support@crapi.io</a></font><br><font face='calibri'>&nbsp;&nbsp;<br> "

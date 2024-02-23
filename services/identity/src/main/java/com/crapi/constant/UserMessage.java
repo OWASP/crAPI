@@ -16,6 +16,14 @@ package com.crapi.constant;
 
 public class UserMessage {
 
+  public static final String LOGIN_SUCCESSFULL_MESSAGE = "Login successful";
+  public static final String OTP_REQUIRED_MESSAGE =
+      "User is locked. OTP has been sent to your email. Please provide that to unlock the account.";
+  public static final String ACCOUNT_LOCKED_MESSAGE =
+      "User account is locked. Retry login with MFA to unlock.";
+  public static final String ACCOUNT_LOCK_FAILURE =
+      "Failed to lock the account. Please try again..";
+  public static final String ACCOUNT_UNLOCKED_MESSAGE = "User account is unlocked.";
   public static final String INVALID_CREDENTIALS = "Invalid Credentials";
   public static final String SIGN_UP_SUCCESS_MESSAGE =
       "User registered successfully! Please Login.";

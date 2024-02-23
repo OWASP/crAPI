@@ -14,6 +14,7 @@
 
 package com.crapi.config;
 
+import com.crapi.constant.UserMessage;
 import com.crapi.enums.EStatus;
 import com.crapi.service.Impl.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
@@ -55,11 +56,18 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
       String username = getUserFromToken(request);
       if (username != null && !username.equalsIgnoreCase(EStatus.INVALID.toString())) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        UsernamePasswordAuthenticationToken authentication =
-            new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities());
-        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (userDetails == null) {
+          tokenLogger.error("User not found");
+        }
+        if (userDetails.isAccountNonLocked() == false) {
+          UsernamePasswordAuthenticationToken authentication =
+              new UsernamePasswordAuthenticationToken(
+                  userDetails, null, userDetails.getAuthorities());
+          authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+          SecurityContextHolder.getContext().setAuthentication(authentication);
+        } else {
+          tokenLogger.error(UserMessage.ACCOUNT_LOCKED_MESSAGE);
+        }
       }
     } catch (Exception e) {
       tokenLogger.error("Can NOT set user authentication -> Message:%d", e);
