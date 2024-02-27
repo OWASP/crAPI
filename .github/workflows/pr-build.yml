@@ -161,7 +161,7 @@ jobs:
         if: failure()
         uses: jwalton/gh-docker-logs@v2
 
-      - name: Run crAPI using built images
+      - name: Cleanup docker
         run:  docker-compose -f deploy/docker/docker-compose.yml down --volumes --remove-orphans
 
 
