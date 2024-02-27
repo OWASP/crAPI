@@ -30,7 +30,7 @@ const communityReducer = (state = initialData, action) => {
       return {
         ...state,
         posts: state.posts.map((post) =>
-          post.id === action.payload.postId ? action.payload.post : post
+          post.id === action.payload.postId ? action.payload.post : post,
         ),
         post: action.payload.post,
       };

@@ -18,7 +18,20 @@ import { APIService, requestURLS } from "../constants/APIConstant";
 import actionTypes from "../constants/actionTypes";
 import responseTypes from "../constants/responseTypes";
 import {
-  INVALID_CREDS, INVALID_CODE_CREDS, SIGN_UP_SUCCESS, SIGN_UP_FAILED, OTP_SENT, OTP_NOT_SENT, OTP_VERIFIED, OTP_NOT_VERIFIED, PASSWORD_CHANGED, PASSWORD_NOT_CHANGED, TOKEN_NOT_SENT, EMAIL_CHANGED, EMAIL_NOT_CHANGED, NO_SERVICES,
+  INVALID_CREDS,
+  INVALID_CODE_CREDS,
+  SIGN_UP_SUCCESS,
+  SIGN_UP_FAILED,
+  OTP_SENT,
+  OTP_NOT_SENT,
+  OTP_VERIFIED,
+  OTP_NOT_VERIFIED,
+  PASSWORD_CHANGED,
+  PASSWORD_NOT_CHANGED,
+  TOKEN_NOT_SENT,
+  EMAIL_CHANGED,
+  EMAIL_NOT_CHANGED,
+  NO_SERVICES,
 } from "../constants/messages";
 
 /**
@@ -61,7 +74,7 @@ export function* logIn(param) {
       callback(responseTypes.REDIRECT, "/unlock");
       return;
     }
-    if (!recievedResponse.ok ) {
+    if (!recievedResponse.ok) {
       throw responseJSON;
     }
 
@@ -205,8 +218,7 @@ export function* forgotPassword(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const postUrl =
-      APIService.IDENTITY_SERVICE + requestURLS.FORGOT_PASSWORD;
+    const postUrl = APIService.IDENTITY_SERVICE + requestURLS.FORGOT_PASSWORD;
     const headers = {
       "Content-Type": "application/json",
     };
@@ -400,8 +412,7 @@ export function* getServices(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const getUrl =
-      APIService.WORKSHOP_SERVICE + requestURLS.GET_SERVICES;
+    const getUrl = APIService.WORKSHOP_SERVICE + requestURLS.GET_SERVICES;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,

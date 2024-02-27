@@ -19,11 +19,12 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Modal, Avatar } from "antd";
 import Order from "../../components/order/order";
-import { getOrderByIdAction, returnOrderAction } from "../../actions/shopActions";
+import {
+  getOrderByIdAction,
+  returnOrderAction,
+} from "../../actions/shopActions";
 import responseTypes from "../../constants/responseTypes";
 import { FAILURE_MESSAGE } from "../../constants/messages";
-  
-
 
 const OrderContainer = (props) => {
   const { history, accessToken, getOrderById } = props;
@@ -59,8 +60,4 @@ OrderContainer.propTypes = {
   history: PropTypes.object,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(OrderContainer);
-
+export default connect(mapStateToProps, mapDispatchToProps)(OrderContainer);

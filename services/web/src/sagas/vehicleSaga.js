@@ -171,8 +171,7 @@ export function* getMechanics(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const getUrl =
-      APIService.WORKSHOP_SERVICE + requestURLS.GET_MECHANICS;
+    const getUrl = APIService.WORKSHOP_SERVICE + requestURLS.GET_MECHANICS;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -215,13 +214,12 @@ export function* contactMechanic(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const postUrl =
-      APIService.WORKSHOP_SERVICE + requestURLS.CONTACT_MECHANIC;
+    const postUrl = APIService.WORKSHOP_SERVICE + requestURLS.CONTACT_MECHANIC;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     };
-    var http_host = (new URL(window.location.href)).origin;
+    var http_host = new URL(window.location.href).origin;
     const ResponseJson = yield fetch(postUrl, {
       headers,
       method: "POST",
@@ -230,7 +228,10 @@ export function* contactMechanic(param) {
         problem_details: problemDetails,
         vin,
         mechanic_api:
-	      http_host+"/"+APIService.WORKSHOP_SERVICE + requestURLS.RECEIVE_REPORT,
+          http_host +
+          "/" +
+          APIService.WORKSHOP_SERVICE +
+          requestURLS.RECEIVE_REPORT,
         repeat_request_if_failed: false,
         number_of_repeats: 1,
       }),
@@ -263,8 +264,7 @@ export function* refreshLocation(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const getUrl =
-      APIService.IDENTITY_SERVICE + requestURLS.REFRESH_LOCATION;
+    const getUrl = APIService.IDENTITY_SERVICE + requestURLS.REFRESH_LOCATION;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,

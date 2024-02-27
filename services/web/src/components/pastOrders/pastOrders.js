@@ -36,8 +36,7 @@ const PastOrders = (props) => {
     <>
       <PageHeader
         title={`$${order.product.name}, $${order.product.price * order.quantity}`}
-	subtitle={`$${formatDateFromIso(order.created_on)}`}
-	
+        subtitle={`$${formatDateFromIso(order.created_on)}`}
         extra={[
           <Button
             type="primary"
@@ -45,7 +44,9 @@ const PastOrders = (props) => {
             size="large"
             key="order-details"
             onClick={() => props.history.push(`/orders?order_id=${order.id}`)}
-          > Order Details
+          >
+            {" "}
+            Order Details
           </Button>,
 
           <Button

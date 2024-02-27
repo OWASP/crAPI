@@ -113,7 +113,7 @@ const Post = (props) => {
                 <Col flex="auto">
                   <PageHeader
                     subTitle={`${comment.author.nickname}, ${formatDateFromIso(
-                      comment.CreatedAt
+                      comment.CreatedAt,
                     )}`}
                     className="page-header comment-title"
                   />

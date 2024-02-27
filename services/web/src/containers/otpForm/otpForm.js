@@ -66,7 +66,7 @@ const mapDispatchToProps = {
 OtpFormContainer.propTypes = {
   verifyOTP: PropTypes.func,
   email: PropTypes.string,
-  history: PropTypes.object
+  history: PropTypes.object,
 };
 
 export default connect(null, mapDispatchToProps)(OtpFormContainer);

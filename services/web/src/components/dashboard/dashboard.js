@@ -96,7 +96,7 @@ const Dashboard = (props) => {
                 height="360"
                 src={getMapUrl(
                   vehicle.vehicleLocation.latitude,
-                  vehicle.vehicleLocation.longitude
+                  vehicle.vehicleLocation.longitude,
                 )}
                 title="Map"
               />

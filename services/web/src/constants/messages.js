@@ -23,9 +23,12 @@ export const INVALID_PHONE = "Contact number should have only numbers and -";
 export const PASSWORD_REQUIRED = "Please enter your password";
 export const INVALID_PASSWORD = (
   <>
-  Password should contain at least one digit, one small letter, one capital letter and one special character.<br />
-  Should be at least contain 8 characters and maximum 16 characters.<br />
-  Allowed special characters are #$@!%&*?
+    Password should contain at least one digit, one small letter, one capital
+    letter and one special character.
+    <br />
+    Should be at least contain 8 characters and maximum 16 characters.
+    <br />
+    Allowed special characters are #$@!%&*?
   </>
 );
 export const CONFIRM_PASSWORD = "Please confirm your password!";

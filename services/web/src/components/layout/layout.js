@@ -161,7 +161,7 @@ const mapDispatchToProps = {
  */
 const StyledComp = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )((props) => {
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
@@ -320,8 +320,8 @@ const StyledComp = connect(
                         !props.isLoggedIn
                           ? "/login"
                           : props.role === roleTypes.ROLE_USER
-                          ? "/dashboard"
-                          : "/mechanic-dashboard"
+                            ? "/dashboard"
+                            : "/mechanic-dashboard"
                       }`,
                       state: { from: props.location },
                     }}

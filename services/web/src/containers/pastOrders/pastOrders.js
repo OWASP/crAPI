@@ -61,7 +61,7 @@ const PastOrdersContainer = (props) => {
     };
     returnOrder({ callback, accessToken, orderId });
   };
-  
+
   return <PastOrders history={history} returnOrder={handleReturnOrder} />;
 };
 
@@ -83,5 +83,5 @@ PastOrdersContainer.propTypes = {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(PastOrdersContainer);

@@ -91,5 +91,5 @@ ResetPasswordContainer.propTypes = {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(ResetPasswordContainer);

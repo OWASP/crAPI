@@ -38,7 +38,7 @@ const vehicleReducer = (state = initialData, action) => {
         vehicles: state.vehicles.map((vehicle) =>
           vehicle.uuid === action.payload.carId
             ? { ...vehicle, vehicleLocation: action.payload.location }
-            : vehicle
+            : vehicle,
         ),
       };
     default:

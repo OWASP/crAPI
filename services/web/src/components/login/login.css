@@ -1,11 +1,11 @@
-.container{
+.container {
   display: flex;
   height: 91vh;
   width: 100%;
 }
 
-.alternative-style{
-  color:#262C6F;
+.alternative-style {
+  color: #262c6f;
   font-size: 12px;
   cursor: pointer;
   display: flex;
@@ -15,23 +15,23 @@
   border: none;
   background-color: transparent;
 }
-.spinner{
+.spinner {
   max-height: none !important;
 }
-.error-message{
+.error-message {
   text-align: left;
   color: red;
   font-size: 12px;
   padding: 15px 0;
 }
 
-.form-card{
-  border-radius: 5px; 
+.form-card {
+  border-radius: 5px;
   width: 30%;
   margin: auto;
-  min-width: 400px ;
+  min-width: 400px;
 }
 
-.form-button{
+.form-button {
   width: 100%;
 }

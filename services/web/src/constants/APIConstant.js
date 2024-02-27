@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { crapienv } from "../config.js"
+import { crapienv } from "../config.js";
 
 export const APIService = {
   IDENTITY_SERVICE: crapienv.IDENTITY_SERVICE,
@@ -22,7 +22,6 @@ export const APIService = {
 };
 
 export const requestURLS = {
-
   LOGIN: "api/auth/login",
   UNLOCK: "api/auth/unlock",
   GET_USER: "api/v2/user/dashboard",

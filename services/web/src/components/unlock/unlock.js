@@ -29,7 +29,6 @@ import { EMAIL_REQUIRED } from "../../constants/messages";
 const Unlock = (props) => {
   const { email, message, hasErrored, errorMessage, onFinish, history } = props;
 
-
   return (
     <div className="container">
       <Card title="Unlock Account" bordered={false} className="form-card">
@@ -50,7 +49,11 @@ const Unlock = (props) => {
               },
             ]}
           >
-            <Input placeholder="Email" prefix={<UserOutlined />} value={email}/>
+            <Input
+              placeholder="Email"
+              prefix={<UserOutlined />}
+              value={email}
+            />
           </Form.Item>
           <Form.Item
             name="code"
@@ -75,7 +78,9 @@ const Unlock = (props) => {
               className="alternative-style"
               onClick={() => history.push("/login")}
               type="button"
-            > Already Unlocked? Login
+            >
+              {" "}
+              Already Unlocked? Login
             </button>
           </Form.Item>
           <Form.Item>
@@ -83,7 +88,9 @@ const Unlock = (props) => {
               className="alternative-style"
               onClick={() => history.push("/signup")}
               type="button"
-            > Dont have an Account? SignUp
+            >
+              {" "}
+              Dont have an Account? SignUp
             </button>
           </Form.Item>
         </Form>
