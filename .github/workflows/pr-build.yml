@@ -149,7 +149,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 14
 
       - name: Install newman
         run: npm install -g newman
@@ -247,3 +247,9 @@ jobs:
         with:
             coverageFile: services/workshop/coverage.xml
             token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: node prettier
+        run: |
+          cd services/web
+          npm install
+          npm run lint
