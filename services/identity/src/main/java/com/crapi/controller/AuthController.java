@@ -56,17 +56,11 @@ public class AuthController {
   public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginForm loginForm)
       throws UnsupportedEncodingException {
     try {
-
-      JwtResponse jwtToken = userService.authenticateUserLogin(loginForm);
-      if (jwtToken.getToken() != null) {
-        return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
-      } else {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(jwtToken);
-      }
-
+      return userService.authenticateUserLogin(loginForm);
     } catch (BadCredentialsException e) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(new JwtResponse("", UserMessage.INVALID_CREDENTIALS));
+      JwtResponse jwtResponse = new JwtResponse();
+      jwtResponse.setMessage(UserMessage.INVALID_CREDENTIALS);
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(jwtResponse);
     }
   }
 
@@ -198,24 +192,11 @@ public class AuthController {
   }
 
   /**
-   * @param lockAccountForm contains mfaCode to unlock the account
+   * @param unlockAccountForm contains code to unlock the account
    * @param request getting jwt token for user from request header
-   * @return unlock account for the user. first verify token, validate mfaCode and then unlock
+   * @return unlock account for the user. first verify token, validate code and then unlock
    */
-  @PostMapping("/v4.0/user/lock")
-  public ResponseEntity<CRAPIResponse> lockAccount(
-      @RequestBody LockAccountForm lockAccountForm, HttpServletRequest request)
-      throws UnsupportedEncodingException {
-    CRAPIResponse response = userService.lockAccount(request, lockAccountForm);
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-  }
-
-  /**
-   * @param unlockAccountForm contains mfaCode to unlock the account
-   * @param request getting jwt token for user from request header
-   * @return unlock account for the user. first verify token, validate mfaCode and then unlock
-   */
-  @PostMapping("/v4.0/user/unlock")
+  @PostMapping("/unlock")
   public ResponseEntity<JwtResponse> unlockAccount(
       @RequestBody UnlockAccountForm unlockAccountForm, HttpServletRequest request)
       throws UnsupportedEncodingException {

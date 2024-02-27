@@ -40,7 +40,7 @@ export function* uploadProfilePic(param) {
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
     const postUrl =
-      APIService.JAVA_MICRO_SERVICES + requestURLS.UPLOAD_PROFILE_PIC;
+      APIService.IDENTITY_SERVICE + requestURLS.UPLOAD_PROFILE_PIC;
     const headers = {
       // "Content-Type": "multipart/form-data;",
       Authorization: `Bearer ${accessToken}`,
@@ -84,7 +84,7 @@ export function* uploadVideo(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const postUrl = APIService.JAVA_MICRO_SERVICES + requestURLS.UPLOAD_VIDEO;
+    const postUrl = APIService.IDENTITY_SERVICE + requestURLS.UPLOAD_VIDEO;
     const headers = {
       // "Content-Type": "multipart/form-data;",
       Authorization: `Bearer ${accessToken}`,
@@ -132,7 +132,7 @@ export function* changeVideoName(param) {
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
     const putUrl =
-      APIService.JAVA_MICRO_SERVICES +
+      APIService.IDENTITY_SERVICE +
       requestURLS.CHANGE_VIDEO_NAME.replace("<videoId>", videoId);
     const headers = {
       "Content-Type": "application/json",
@@ -174,7 +174,7 @@ export function* convertVideo(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const getUrl = APIService.JAVA_MICRO_SERVICES + requestURLS.CONVERT_VIDEO;
+    const getUrl = APIService.IDENTITY_SERVICE + requestURLS.CONVERT_VIDEO;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,

@@ -134,14 +134,13 @@ public class OtpServiceImpl implements OtpService {
   @Override
   public CRAPIResponse generateOtp(ForgetPassword forgetPassword) {
     CRAPIResponse forgetPasswordResponse = null;
-    OTPGenerator otpGenerator = new OTPGenerator();
     Otp checkOtpEnteryForUser = null;
     User user = null;
     String otp = "";
     user = userRepository.findByEmail(forgetPassword.getEmail());
     if (user != null) {
       // Generate random 4 digit otp
-      otp = otpGenerator.generateRandom(4);
+      otp = OTPGenerator.generateRandom(4);
       if (otp != null) {
         // Check OTP entry for user in database.
         checkOtpEnteryForUser = otpRepository.findByUser(user);

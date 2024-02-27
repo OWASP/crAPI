@@ -15,6 +15,7 @@
 package com.crapi.config;
 
 import com.crapi.service.Impl.UserDetailsServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -22,10 +23,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -33,13 +34,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@Slf4j
 @ComponentScan(basePackages = {"com.crapi"})
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
   @Autowired UserDetailsServiceImpl userDetailsService;
 
-  @Autowired JwtAuthEntryPoint unauthorizedHandler;
+  @Autowired JwtAuthEntryPoint jwtUnauthorizedHandler;
 
   @Bean
   public JwtAuthTokenFilter authenticationJwtTokenFilter() {
@@ -61,8 +62,7 @@ public class WebSecurityConfig {
     DaoAuthenticationProvider authProvider = authenticationProvider();
     return new AuthenticationManager() {
       @Override
-      public org.springframework.security.core.Authentication authenticate(
-          org.springframework.security.core.Authentication authentication)
+      public Authentication authenticate(Authentication authentication)
           throws org.springframework.security.core.AuthenticationException {
         return authProvider.authenticate(authentication);
       }
@@ -75,7 +75,7 @@ public class WebSecurityConfig {
   }
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain securityFilterChainWeb(HttpSecurity http) throws Exception {
     http.cors(Customizer.withDefaults())
         .csrf(
             (csrf) -> {
@@ -90,14 +90,15 @@ public class WebSecurityConfig {
                     .permitAll()
                     .requestMatchers("/identity/api/v2/user/dashboard")
                     .permitAll()
+                    .requestMatchers("/identity/management/**")
+                    .hasRole("ADMIN")
                     .anyRequest()
                     .authenticated())
+        .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandler));
+        .exceptionHandling(handling -> handling.authenticationEntryPoint(jwtUnauthorizedHandler));
     http.authenticationProvider(authenticationProvider());
-    http.addFilterBefore(
-        authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     return http.build();
   }
 }

@@ -39,7 +39,7 @@ export function* resendMail(param) {
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
 
-    const postUrl = APIService.JAVA_MICRO_SERVICES + requestURLS.RESEND_MAIL;
+    const postUrl = APIService.IDENTITY_SERVICE + requestURLS.RESEND_MAIL;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -77,7 +77,7 @@ export function* verifyVehicle(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const postUrl = APIService.JAVA_MICRO_SERVICES + requestURLS.ADD_VEHICLE;
+    const postUrl = APIService.IDENTITY_SERVICE + requestURLS.ADD_VEHICLE;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -115,7 +115,7 @@ export function* getVehicles(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    let getUrl = APIService.JAVA_MICRO_SERVICES + requestURLS.GET_USER;
+    let getUrl = APIService.IDENTITY_SERVICE + requestURLS.GET_USER;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -135,7 +135,7 @@ export function* getVehicles(param) {
       payload: userResponseJSON,
     });
 
-    getUrl = APIService.JAVA_MICRO_SERVICES + requestURLS.GET_VEHICLES;
+    getUrl = APIService.IDENTITY_SERVICE + requestURLS.GET_VEHICLES;
     const ResponseJson = yield fetch(getUrl, {
       headers,
       method: "GET",
@@ -172,7 +172,7 @@ export function* getMechanics(param) {
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
     const getUrl =
-      APIService.PYTHON_MICRO_SERVICES + requestURLS.GET_MECHANICS;
+      APIService.WORKSHOP_SERVICE + requestURLS.GET_MECHANICS;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -216,7 +216,7 @@ export function* contactMechanic(param) {
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
     const postUrl =
-      APIService.PYTHON_MICRO_SERVICES + requestURLS.CONTACT_MECHANIC;
+      APIService.WORKSHOP_SERVICE + requestURLS.CONTACT_MECHANIC;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -230,7 +230,7 @@ export function* contactMechanic(param) {
         problem_details: problemDetails,
         vin,
         mechanic_api:
-	      http_host+"/"+APIService.PYTHON_MICRO_SERVICES + requestURLS.RECEIVE_REPORT,
+	      http_host+"/"+APIService.WORKSHOP_SERVICE + requestURLS.RECEIVE_REPORT,
         repeat_request_if_failed: false,
         number_of_repeats: 1,
       }),
@@ -264,7 +264,7 @@ export function* refreshLocation(param) {
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
     const getUrl =
-      APIService.JAVA_MICRO_SERVICES + requestURLS.REFRESH_LOCATION;
+      APIService.IDENTITY_SERVICE + requestURLS.REFRESH_LOCATION;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,

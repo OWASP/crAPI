@@ -39,9 +39,12 @@ public class User {
   @Column(length = 500)
   private String jwtToken;
 
+  @Column(length = 1000)
+  private String apiKey;
+
   private LocalDate createdOn = LocalDate.now();
 
-  private String mfaCode;
+  private String code;
 
   // @OneToOne
   private ERole role;
@@ -54,10 +57,10 @@ public class User {
     this.email = email;
     this.number = number;
     this.role = userRole;
-    this.mfaCode = "";
+    this.code = "";
   }
 
   public boolean isMfaRequired() {
-    return mfaCode != null && !mfaCode.isEmpty();
+    return code != null && !code.isEmpty();
   }
 }

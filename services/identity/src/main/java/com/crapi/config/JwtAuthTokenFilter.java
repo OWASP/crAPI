@@ -32,6 +32,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+enum ApiType {
+  JWT,
+  APIKEY;
+}
+
 public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
   private static final Logger tokenLogger = LoggerFactory.getLogger(JwtAuthTokenFilter.class);
@@ -58,8 +63,9 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         if (userDetails == null) {
           tokenLogger.error("User not found");
+          response.sendError(HttpServletResponse.SC_UNAUTHORIZED, UserMessage.INVALID_CREDENTIALS);
         }
-        if (userDetails.isAccountNonLocked() == false) {
+        if (userDetails.isAccountNonLocked()) {
           UsernamePasswordAuthenticationToken authentication =
               new UsernamePasswordAuthenticationToken(
                   userDetails, null, userDetails.getAuthorities());
@@ -67,6 +73,8 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
           SecurityContextHolder.getContext().setAuthentication(authentication);
         } else {
           tokenLogger.error(UserMessage.ACCOUNT_LOCKED_MESSAGE);
+          response.sendError(
+              HttpServletResponse.SC_UNAUTHORIZED, UserMessage.ACCOUNT_LOCKED_MESSAGE);
         }
       }
     } catch (Exception e) {
@@ -78,16 +86,29 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
   /**
    * @param request
-   * @return jwt token
+   * @return key/token
    */
-  public String getJwt(HttpServletRequest request) {
+  public String getToken(HttpServletRequest request) {
     String authHeader = request.getHeader("Authorization");
 
     // checking token is there or not
-    if (authHeader != null && authHeader.startsWith("Bearer ")) {
-      return authHeader.replace("Bearer ", "");
+    if (authHeader != null && authHeader.length() > 7) {
+      return authHeader.substring(7);
     }
     return null;
+  }
+
+  /**
+   * @param request
+   * @return api type from HttpServletRequest
+   */
+  public ApiType getKeyType(HttpServletRequest request) {
+    String authHeader = request.getHeader("Authorization");
+    ApiType apiType = ApiType.JWT;
+    if (authHeader != null && authHeader.startsWith("ApiKey ")) {
+      apiType = ApiType.APIKEY;
+    }
+    return apiType;
   }
 
   /**
@@ -96,9 +117,16 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
    *     from request token
    */
   public String getUserFromToken(HttpServletRequest request) throws ParseException {
-    String jwt = getJwt(request);
-    if (jwt != null && tokenProvider.validateJwtToken(jwt)) {
-      String username = tokenProvider.getUserNameFromJwtToken(jwt);
+    ApiType apiType = getKeyType(request);
+    String token = getToken(request);
+    String username = null;
+    if (token != null) {
+      if (apiType == ApiType.APIKEY) {
+        username = tokenProvider.getUserNameFromApiToken(token);
+      } else {
+        tokenProvider.validateJwtToken(token);
+        username = tokenProvider.getUserNameFromJwtToken(token);
+      }
       // checking username from token
       if (username != null) return username;
     }

@@ -19,6 +19,11 @@ public class UserMessage {
   public static final String LOGIN_SUCCESSFULL_MESSAGE = "Login successful";
   public static final String OTP_REQUIRED_MESSAGE =
       "User is locked. OTP has been sent to your email. Please provide that to unlock the account.";
+  public static final String API_KEY_GENERATED_MESSAGE =
+      "Api Key generated successfully. Use it in authorization header with ApiKey prefix.";
+  public static final String API_KEY_GENERATION_FAILED =
+      "Api Key generation failed! Only permitted for admin users.";
+  public static final String ACCOUNT_LOCK_MESSAGE = "User account has been locked.";
   public static final String ACCOUNT_LOCKED_MESSAGE =
       "User account is locked. Retry login with MFA to unlock.";
   public static final String ACCOUNT_LOCK_FAILURE =

@@ -4,8 +4,8 @@
 replicaCount: 1
 imagePullPolicy: Always
 
-enableLog4j: true
-enableShellInjection: true
+enableLog4j: false
+enableShellInjection: false
 
 web:
   image: crapi/crapi-web

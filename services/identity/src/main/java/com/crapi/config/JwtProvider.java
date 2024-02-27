@@ -15,6 +15,7 @@
 package com.crapi.config;
 
 import com.crapi.entity.User;
+import com.crapi.repository.UserRepository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.nimbusds.jose.*;
@@ -39,6 +40,7 @@ import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -47,6 +49,8 @@ import org.springframework.stereotype.Component;
 public class JwtProvider {
 
   private static final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
+
+  @Autowired private UserRepository userRepository;
 
   @Value("${app.jwtExpiration}")
   private String jwtExpiration;
@@ -108,6 +112,21 @@ public class JwtProvider {
   public String getUserNameFromJwtToken(String token) throws ParseException {
     // Parse without verifying token signature
     return JWTParser.parse(token).getJWTClaimsSet().getSubject();
+  }
+
+  /**
+   * @param token
+   * @return username from JWT Token
+   */
+  public String getUserNameFromApiToken(String token) throws ParseException {
+    // Parse without verifying token signature
+    if (token != null) {
+      User user = userRepository.findByApiKey(token);
+      if (user != null) {
+        return user.getEmail();
+      }
+    }
+    return null;
   }
 
   // Load RSA Public Key for JKU header if present

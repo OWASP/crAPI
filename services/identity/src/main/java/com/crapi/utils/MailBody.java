@@ -104,18 +104,18 @@ public class MailBody {
   }
 
   /**
-   * @param mfaCode
+   * @param code
    * @param email
    * @return Mail Body for MFA Code to Unlock Account
    */
   public static String mfaMailBody(UserDetails userdetails) {
     String msgBody =
         "<html><body>"
-            + "<font face='calibri' style = 'font-size:15px; color:#000;'>Hi"
+            + "<font face='calibri' style = 'font-size:15px; color:#000;'>Hi "
             + userdetails.getName()
             + "<font>,"
             + "<p><font face='calibri' style = 'font-size:15px;color:#000;'>We received a request to unlock your account. Please provide the following code to unlock your account: <b>"
-            + userdetails.getUser().getMfaCode()
+            + userdetails.getUser().getCode()
             + "</b></font>"
             + "<p><font face='calibri' style = 'font-size:15px;color:#000;'>If you haven not sent a request to unlock your account, please ignore this message.</font></p>"
             + "<p><font face='calibri' style = 'font-size:15px;color:#000;'>Thank You & have a wonderful day !</font></p>"

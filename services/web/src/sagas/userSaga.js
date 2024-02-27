@@ -18,7 +18,7 @@ import { APIService, requestURLS } from "../constants/APIConstant";
 import actionTypes from "../constants/actionTypes";
 import responseTypes from "../constants/responseTypes";
 import {
-  INVALID_CREDS, SIGN_UP_SUCCESS, SIGN_UP_FAILED, OTP_SENT, OTP_NOT_SENT, OTP_VERIFIED, OTP_NOT_VERIFIED, PASSWORD_CHANGED, PASSWORD_NOT_CHANGED, TOKEN_NOT_SENT, EMAIL_CHANGED, EMAIL_NOT_CHANGED, NO_SERVICES,
+  INVALID_CREDS, INVALID_CODE_CREDS, SIGN_UP_SUCCESS, SIGN_UP_FAILED, OTP_SENT, OTP_NOT_SENT, OTP_VERIFIED, OTP_NOT_VERIFIED, PASSWORD_CHANGED, PASSWORD_NOT_CHANGED, TOKEN_NOT_SENT, EMAIL_CHANGED, EMAIL_NOT_CHANGED, NO_SERVICES,
 } from "../constants/messages";
 
 /**
@@ -34,7 +34,7 @@ export function* logIn(param) {
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
 
-    const postUrl = APIService.JAVA_MICRO_SERVICES + requestURLS.LOGIN;
+    const postUrl = APIService.IDENTITY_SERVICE + requestURLS.LOGIN;
     let headers = {
       "Content-Type": "application/json",
     };
@@ -45,15 +45,27 @@ export function* logIn(param) {
       body: JSON.stringify({ email, password }),
     }).then((response) => {
       recievedResponse = response;
-      if (recievedResponse.ok) return response.json();
+      if (recievedResponse.ok) {
+        return response.json();
+      } else if (recievedResponse.status === 423) {
+        return response.json();
+      }
       return response;
     });
 
-    if (!recievedResponse.ok) {
+    if (recievedResponse.status === 423) {
+      yield put({
+        type: actionTypes.UNLOCK_USER_REDIRECT,
+        payload: { email: email, message: responseJSON.message },
+      });
+      callback(responseTypes.REDIRECT, "/unlock");
+      return;
+    }
+    if (!recievedResponse.ok ) {
       throw responseJSON;
     }
 
-    const getUrl = APIService.JAVA_MICRO_SERVICES + requestURLS.GET_USER;
+    const getUrl = APIService.IDENTITY_SERVICE + requestURLS.GET_USER;
     headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${responseJSON.token}`,
@@ -83,6 +95,67 @@ export function* logIn(param) {
 }
 
 /**
+ * request for unlocking user
+ * @param {email, code, callback} param
+ * email: user email,
+ * code: user code recieved through mail,
+ * callback : callback method
+ */
+export function* unlock(param) {
+  const { email, code, callback } = param;
+  let recievedResponse = {};
+  try {
+    yield put({ type: actionTypes.FETCHING_DATA });
+
+    const postUrl = APIService.IDENTITY_SERVICE + requestURLS.UNLOCK;
+    let headers = {
+      "Content-Type": "application/json",
+    };
+
+    const responseJSON = yield fetch(postUrl, {
+      headers,
+      method: "POST",
+      body: JSON.stringify({ email, code }),
+    }).then((response) => {
+      recievedResponse = response;
+      if (recievedResponse.ok) return response.json();
+      return response;
+    });
+
+    if (!recievedResponse.ok) {
+      throw responseJSON;
+    }
+
+    const getUrl = APIService.IDENTITY_SERVICE + requestURLS.GET_USER;
+    headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${responseJSON.token}`,
+    };
+
+    const userResponseJSON = yield fetch(getUrl, {
+      headers,
+      method: "GET",
+    }).then((response) => {
+      recievedResponse = response;
+      return response.json();
+    });
+
+    if (!recievedResponse.ok) {
+      throw responseJSON;
+    }
+
+    yield put({
+      type: actionTypes.LOGGED_IN,
+      payload: { token: responseJSON.token, user: userResponseJSON },
+    });
+    callback(responseTypes.SUCCESS, responseJSON.data);
+  } catch (e) {
+    yield put({ type: actionTypes.FETCHED_DATA, payload: recievedResponse });
+    callback(responseTypes.FAILURE, INVALID_CODE_CREDS);
+  }
+}
+
+/**
  * request for new signup
  * @param {email, password, callback} param
  * name: user name,
@@ -97,7 +170,7 @@ export function* signUp(param) {
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
 
-    const postUrl = APIService.JAVA_MICRO_SERVICES + requestURLS.SIGNUP;
+    const postUrl = APIService.IDENTITY_SERVICE + requestURLS.SIGNUP;
     const headers = {
       "Content-Type": "application/json",
     };
@@ -133,7 +206,7 @@ export function* forgotPassword(param) {
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
     const postUrl =
-      APIService.JAVA_MICRO_SERVICES + requestURLS.FORGOT_PASSWORD;
+      APIService.IDENTITY_SERVICE + requestURLS.FORGOT_PASSWORD;
     const headers = {
       "Content-Type": "application/json",
     };
@@ -171,7 +244,7 @@ export function* verifyOTP(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const postUrl = APIService.JAVA_MICRO_SERVICES + requestURLS.VERIFY_OTP;
+    const postUrl = APIService.IDENTITY_SERVICE + requestURLS.VERIFY_OTP;
     const headers = {
       "Content-Type": "application/json",
     };
@@ -209,7 +282,7 @@ export function* resetPassword(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const postUrl = APIService.JAVA_MICRO_SERVICES + requestURLS.RESET_PASSWORD;
+    const postUrl = APIService.IDENTITY_SERVICE + requestURLS.RESET_PASSWORD;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -249,7 +322,7 @@ export function* changeEmail(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const postUrl = APIService.JAVA_MICRO_SERVICES + requestURLS.CHANGE_EMAIL;
+    const postUrl = APIService.IDENTITY_SERVICE + requestURLS.CHANGE_EMAIL;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -289,7 +362,7 @@ export function* verifyToken(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const postUrl = APIService.JAVA_MICRO_SERVICES + requestURLS.VERIFY_TOKEN;
+    const postUrl = APIService.IDENTITY_SERVICE + requestURLS.VERIFY_TOKEN;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -328,7 +401,7 @@ export function* getServices(param) {
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
     const getUrl =
-      APIService.PYTHON_MICRO_SERVICES + requestURLS.GET_SERVICES;
+      APIService.WORKSHOP_SERVICE + requestURLS.GET_SERVICES;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -356,6 +429,7 @@ export function* getServices(param) {
 
 export function* userActionWatcher() {
   yield takeLatest(actionTypes.LOG_IN, logIn);
+  yield takeLatest(actionTypes.UNLOCK_USER, unlock);
   yield takeLatest(actionTypes.SIGN_UP, signUp);
   yield takeLatest(actionTypes.VERIFY_OTP, verifyOTP);
   yield takeLatest(actionTypes.FORGOT_PASSWORD, forgotPassword);

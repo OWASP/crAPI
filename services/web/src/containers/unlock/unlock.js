@@ -16,12 +16,12 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import Login from "../../components/login/login";
-import { logInUserAction } from "../../actions/userActions";
+import Unlock from "../../components/unlock/unlock";
+import { unlockUserAction } from "../../actions/userActions";
 import responseTypes from "../../constants/responseTypes";
 
-const LoginContainer = (props) => {
-  const { history, logInUser } = props;
+const UnlockContainer = (props) => {
+  const { history, unlockUser } = props;
 
   const [hasErrored, setHasErrored] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -29,8 +29,6 @@ const LoginContainer = (props) => {
   const callback = (res, data) => {
     if (res === responseTypes.SUCCESS) {
       history.push("/dashboard");
-    } if (res === responseTypes.REDIRECT) {
-      history.push(data);
     } else {
       setHasErrored(true);
       setErrorMessage(data);
@@ -38,11 +36,14 @@ const LoginContainer = (props) => {
   };
 
   const onFinish = (values) => {
-    logInUser({ ...values, callback });
+    unlockUser({ ...values, callback });
   };
 
   return (
-    <Login
+    <Unlock
+      email={props.email}
+      message={props.message}
+      code={props.code}
       hasErrored={hasErrored}
       errorMessage={errorMessage}
       onFinish={onFinish}
@@ -50,14 +51,17 @@ const LoginContainer = (props) => {
     />
   );
 };
-
-const mapDispatchToProps = {
-  logInUser: logInUserAction,
+const mapStateToProps = ({ userReducer: { email, message } }) => {
+  return { email, message };
 };
 
-LoginContainer.propTypes = {
-  logInUser: PropTypes.func,
+const mapDispatchToProps = {
+  unlockUser: unlockUserAction,
+};
+
+UnlockContainer.propTypes = {
+  unlockUser: PropTypes.func,
   history: PropTypes.object,
 };
 
-export default connect(null, mapDispatchToProps)(LoginContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(UnlockContainer);

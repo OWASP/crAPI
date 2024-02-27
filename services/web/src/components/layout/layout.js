@@ -38,6 +38,7 @@ import ShopContainer from "../../containers/shop/shop";
 import PastOrdersContainer from "../../containers/pastOrders/pastOrders";
 import OrderContainer from "../../containers/order/order";
 import ForumContainer from "../../containers/forum/forum";
+import UnlockContainer from "../../containers/unlock/unlock";
 import NewPostContainer from "../../containers/newPost/newPost";
 import PostContainer from "../../containers/post/post";
 
@@ -179,6 +180,11 @@ const StyledComp = connect(
             <BeforeLogin
               path="/login"
               component={LoginContainer}
+              isLoggedIn={props.isLoggedIn}
+            />
+            <BeforeLogin
+              path="/unlock"
+              component={UnlockContainer}
               isLoggedIn={props.isLoggedIn}
             />
             <BeforeLogin

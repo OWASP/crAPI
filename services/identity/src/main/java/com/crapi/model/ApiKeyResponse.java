@@ -12,19 +12,24 @@
  * limitations under the License.
  */
 
-package com.crapi.repository;
+package com.crapi.model;
 
-import com.crapi.entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import lombok.Data;
 
-@Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-  boolean existsByNumber(String number);
+@Data
+public class ApiKeyResponse {
+  private String apiKey;
+  private String type = "ApiKey";
+  private String message;
 
-  boolean existsByEmail(String email);
+  public ApiKeyResponse() {}
 
-  User findByEmail(String s);
+  public ApiKeyResponse(String apiKey) {
+    this.apiKey = apiKey;
+  }
 
-  User findByApiKey(String apiKey);
+  public ApiKeyResponse(String apiKey, String message) {
+    this.apiKey = apiKey;
+    this.message = message;
+  }
 }

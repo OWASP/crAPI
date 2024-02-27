@@ -8,6 +8,10 @@ import lombok.Data;
 public class UnlockAccountForm {
 
   @NotBlank
+  @Size(min = 3, max = 100)
+  private String email;
+
+  @NotBlank
   @Size(min = 8, max = 8)
-  private String mfaCode;
+  private String code;
 }
