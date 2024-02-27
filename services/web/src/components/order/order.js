@@ -58,18 +58,32 @@ const Order = (props) => {
             <Card
               className="order-card"
               cover={renderAvatar(order && order.product.image_url)}
-              />
+            />
           </Col>
           <Col className="order-desc" span="10">
-            <Descriptions  bordered="true" column="1" layout="horizontal">
-              <Descriptions.Item span="24" label="Billed To">{order && order.user.email}</Descriptions.Item>
-              <Descriptions.Item span="24" label="Phone">{order && order.user.number }</Descriptions.Item>
-              <Descriptions.Item span="24"  label="Item">{order && order.product.name}</Descriptions.Item>
-              <Descriptions.Item span="24" label="Purchased On">{order && `${formatDateFromIso(order.created_on)}` }</Descriptions.Item>
-              <Descriptions.Item span="24" label="Unit Price">{order && `$ ${order.product.price}`}</Descriptions.Item>
-              <Descriptions.Item span="24" label="Quantity">{order && order.quantity}</Descriptions.Item>
+            <Descriptions bordered="true" column="1" layout="horizontal">
+              <Descriptions.Item span="24" label="Billed To">
+                {order && order.user.email}
+              </Descriptions.Item>
+              <Descriptions.Item span="24" label="Phone">
+                {order && order.user.number}
+              </Descriptions.Item>
+              <Descriptions.Item span="24" label="Item">
+                {order && order.product.name}
+              </Descriptions.Item>
+              <Descriptions.Item span="24" label="Purchased On">
+                {order && `${formatDateFromIso(order.created_on)}`}
+              </Descriptions.Item>
+              <Descriptions.Item span="24" label="Unit Price">
+                {order && `$ ${order.product.price}`}
+              </Descriptions.Item>
+              <Descriptions.Item span="24" label="Quantity">
+                {order && order.quantity}
+              </Descriptions.Item>
               <Divider span="24" />
-              <Descriptions.Item span="24" label="Total">{order &&  `$ ${order.quantity * order.product.price}`}</Descriptions.Item>
+              <Descriptions.Item span="24" label="Total">
+                {order && `$ ${order.quantity * order.product.price}`}
+              </Descriptions.Item>
             </Descriptions>
           </Col>
         </Row>

@@ -13,40 +13,22 @@
  * limitations under the License.
  */
 
-import { Modal } from "antd";
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import ResetPassword from "../../components/resetPassword/resetPassword";
-
-import {
-  resetPasswordAction,
-  logOutUserAction,
-} from "../../actions/userActions";
+import Unlock from "../../components/unlock/unlock";
+import { unlockUserAction } from "../../actions/userActions";
 import responseTypes from "../../constants/responseTypes";
-import { SUCCESS_MESSAGE } from "../../constants/messages";
 
-const ResetPasswordContainer = (props) => {
-  const { history, logOutUser, resetPassword, accessToken } = props;
+const UnlockContainer = (props) => {
+  const { history, unlockUser } = props;
 
   const [hasErrored, setHasErrored] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const logout = () => {
-    logOutUser({
-      callback: () => {
-        localStorage.clear();
-      },
-    });
-  };
-
   const callback = (res, data) => {
     if (res === responseTypes.SUCCESS) {
-      logout();
-      Modal.success({
-        title: SUCCESS_MESSAGE,
-        content: data,
-      });
+      history.push("/dashboard");
     } else {
       setHasErrored(true);
       setErrorMessage(data);
@@ -54,42 +36,32 @@ const ResetPasswordContainer = (props) => {
   };
 
   const onFinish = (values) => {
-    resetPassword({
-      ...values,
-      accessToken,
-      callback,
-    });
+    unlockUser({ ...values, callback });
   };
 
   return (
-    <ResetPassword
+    <Unlock
+      email={props.email}
+      message={props.message}
+      code={props.code}
       hasErrored={hasErrored}
       errorMessage={errorMessage}
-      history={history}
       onFinish={onFinish}
+      history={history}
     />
   );
 };
+const mapStateToProps = ({ userReducer: { email, message } }) => {
+  return { email, message };
+};
 
 const mapDispatchToProps = {
-  resetPassword: resetPasswordAction,
-  logOutUser: logOutUserAction,
+  unlockUser: unlockUserAction,
 };
 
-const mapStateToProps = ({ userReducer: { accessToken } }) => {
-  return {
-    accessToken,
-  };
-};
-
-ResetPasswordContainer.propTypes = {
-  resetPassword: PropTypes.func,
-  logOutUser: PropTypes.func,
-  accessToken: PropTypes.string,
+UnlockContainer.propTypes = {
+  unlockUser: PropTypes.func,
   history: PropTypes.object,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ResetPasswordContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(UnlockContainer);

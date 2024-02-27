@@ -23,9 +23,12 @@ export const INVALID_PHONE = "Contact number should have only numbers and -";
 export const PASSWORD_REQUIRED = "Please enter your password";
 export const INVALID_PASSWORD = (
   <>
-  Password should contain at least one digit, one small letter, one capital letter and one special character.<br />
-  Should be at least contain 8 characters and maximum 16 characters.<br />
-  Allowed special characters are #$@!%&*?
+    Password should contain at least one digit, one small letter, one capital
+    letter and one special character.
+    <br />
+    Should be at least contain 8 characters and maximum 16 characters.
+    <br />
+    Allowed special characters are #$@!%&*?
   </>
 );
 export const CONFIRM_PASSWORD = "Please confirm your password!";
@@ -78,6 +81,7 @@ export const INVALID_COUPON_CODE = "Invalid Coupon Code";
 export const COUPON_APPLIED = "Coupon applied";
 export const COUPON_NOT_APPLIED = "Could not validate coupon";
 export const INVALID_CREDS = "Invalid Username or Password";
+export const INVALID_CODE_CREDS = "Invalid Email or Code";
 export const SIGN_UP_SUCCESS = "User Registered Successfully!";
 export const SIGN_UP_FAILED = "Could not sign up";
 export const OTP_SENT = "OTP has been sent to your registered emailid";

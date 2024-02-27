@@ -15,7 +15,8 @@
 
 import * as jwt from "jsonwebtoken";
 
-export const getMapUrl = (lat, long) => `https://maps.google.com/maps?q=${lat},${long}&output=embed`;
+export const getMapUrl = (lat, long) =>
+  `https://maps.google.com/maps?q=${lat},${long}&output=embed`;
 
 export const isAccessTokenValid = (token) => {
   const decoded = jwt.decode(token);

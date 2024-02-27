@@ -1,20 +1,21 @@
-.order-desc{
+.order-desc {
   padding: 0 10%;
 }
 
-.order-desc .ant-descriptions-item-label, .order-desc .ant-descriptions-item-content{
+.order-desc .ant-descriptions-item-label,
+.order-desc .ant-descriptions-item-content {
   font-size: 18px;
 }
 
-.return-btn{
+.return-btn {
   width: 30%;
   margin: 0 35%;
 }
 
-.order-card{
+.order-card {
   padding-top: 24px;
 }
 
-.order-avatar{
+.order-avatar {
   margin: auto;
 }

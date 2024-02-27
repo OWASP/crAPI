@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 jwtSecret: crapi
-enableLog4j: false
+enableLog4j: true
 enableShellInjection: true
 imagePullPolicy: Always
 apiGatewayServiceUrl: https://api.mypremiumdealership.com

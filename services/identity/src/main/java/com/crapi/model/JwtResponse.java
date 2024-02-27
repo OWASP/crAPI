@@ -20,9 +20,12 @@ import lombok.Data;
 public class JwtResponse {
   private String token;
   private String type = "Bearer";
-  private String message;
+  private String message = "";
+  private boolean isMfaRequired = false;
 
-  public JwtResponse() {}
+  public JwtResponse() {
+    this.type = "";
+  }
 
   public JwtResponse(String accessToken) {
     this.token = accessToken;
@@ -30,7 +33,7 @@ public class JwtResponse {
 
   public JwtResponse(String token, String message) {
     this.token = token;
-    this.type = "";
     this.message = message;
+    this.isMfaRequired = false;
   }
 }

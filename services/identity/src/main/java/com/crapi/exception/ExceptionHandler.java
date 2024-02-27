@@ -16,6 +16,7 @@ package com.crapi.exception;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
+import com.crapi.constant.UserMessage;
 import com.crapi.model.CRAPIResponse;
 import com.crapi.model.ErrorDetails;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -47,6 +49,15 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
   private ResponseEntity<Object> handleCRAPIException(CRAPIExceptionHandler e) {
     CRAPIResponse cr = new CRAPIResponse(e.getMessage(), e.getStatus());
     return new ResponseEntity<Object>(cr, HttpStatus.valueOf(e.getStatus()));
+  }
+
+  @org.springframework.web.bind.annotation.ExceptionHandler({LockedException.class})
+  private ResponseEntity<Object> handleAccountLockException(LockedException e) {
+    // Print stack trace
+    e.printStackTrace();
+    CRAPIResponse cr =
+        new CRAPIResponse(UserMessage.ACCOUNT_LOCKED_MESSAGE, HttpStatus.LOCKED.value());
+    return new ResponseEntity<Object>(cr, HttpStatus.LOCKED);
   }
 
   // @org.springframework.web.bind.annotation.ExceptionHandler({MethodArgumentNotValidException.class})

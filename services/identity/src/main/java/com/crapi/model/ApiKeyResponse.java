@@ -1,5 +1,4 @@
 /*
- *
  * Licensed under the Apache License, Version 2.0 (the “License”);
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,19 +12,24 @@
  * limitations under the License.
  */
 
-import { invalidSessionAction } from "../actions/userActions";
+package com.crapi.model;
 
-export const authInterceptor =
-  ({ dispatch }) =>
-  (next) =>
-  (action) => {
-    console.log(action);
-    if (action.payload?.status === 401) {
-      console.log("Logging out");
-      return dispatch(invalidSessionAction());
-    }
-    if (!action.error) {
-      return next(action);
-    }
-    return next(action);
-  };
+import lombok.Data;
+
+@Data
+public class ApiKeyResponse {
+  private String apiKey;
+  private String type = "ApiKey";
+  private String message;
+
+  public ApiKeyResponse() {}
+
+  public ApiKeyResponse(String apiKey) {
+    this.apiKey = apiKey;
+  }
+
+  public ApiKeyResponse(String apiKey, String message) {
+    this.apiKey = apiKey;
+    this.message = message;
+  }
+}

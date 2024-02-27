@@ -25,7 +25,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import createSagaMiddleware from "redux-saga";
 import storage from "redux-persist/lib/storage";
 import { Spin } from "antd";
-import {authInterceptor} from "./middleware";
+import { authInterceptor } from "./middleware";
 import rootReducer from "./reducers/rootReducer";
 import rootSaga from "./sagas";
 import Layout from "./components/layout/layout";
@@ -45,7 +45,7 @@ const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export const store = createStore(
   pReducer,
-  composeEnhancer(applyMiddleware(...middlewares))
+  composeEnhancer(applyMiddleware(...middlewares)),
 );
 
 sagaMiddleware.run(rootSaga);

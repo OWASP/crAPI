@@ -25,9 +25,12 @@ import com.crapi.exception.EntityNotFoundException;
 import com.crapi.model.*;
 import com.crapi.repository.*;
 import com.crapi.service.UserService;
+import com.crapi.utils.ApiKeyGenerator;
 import com.crapi.utils.EmailTokenGenerator;
 import com.crapi.utils.MailBody;
+import com.crapi.utils.OTPGenerator;
 import com.crapi.utils.SMTPMailServer;
+import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import java.text.ParseException;
@@ -37,6 +40,8 @@ import org.apache.logging.log4j.core.impl.Log4jContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -77,12 +82,14 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public JwtResponse authenticateUserLogin(LoginForm loginForm) throws BadCredentialsException {
+  public ResponseEntity<JwtResponse> authenticateUserLogin(LoginForm loginForm)
+      throws IOException, BadCredentialsException {
     JwtResponse jwtResponse = new JwtResponse();
     Authentication authentication = null;
     User user;
     if (loginForm.getEmail() == null) {
       jwtResponse.setMessage(UserMessage.EMAIL_NOT_PROVIDED);
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jwtResponse);
     } else {
       if (loginForm.getEmail().contains("jndi:")) {
         if (isLog4jEnabled()) {
@@ -101,21 +108,31 @@ public class UserServiceImpl implements UserService {
       if (user == null) {
         jwtResponse.setMessage(UserMessage.EMAIL_NOT_REGISTERED);
       } else {
+        if (user.isMfaRequired()) {
+          UserDetails userDetails = userDetailsRepository.findByUser_id(user.getId());
+          smtpMailServer.sendMail(
+              user.getEmail(), MailBody.mfaMailBody(userDetails), "Unlock your account");
+          jwtResponse.setMfaRequired(true);
+          jwtResponse.setMessage(UserMessage.OTP_REQUIRED_MESSAGE);
+          return ResponseEntity.status(HttpStatus.LOCKED).body(jwtResponse);
+        }
         authentication =
             authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                     loginForm.getEmail(), loginForm.getPassword()));
         String jwt = jwtProvider.generateJwtToken(user);
         if (jwt != null) {
-          updateUserToken(jwt, loginForm.getEmail());
-          jwtResponse.setToken(jwt);
+          updateUserToken(jwt, user.getEmail());
+          JwtResponse jwtResponse1 = new JwtResponse(jwt);
+          jwtResponse1.setMessage(UserMessage.LOGIN_SUCCESSFULL_MESSAGE);
+          return ResponseEntity.status(HttpStatus.OK).body(jwtResponse1);
         } else {
           jwtResponse.setMessage(UserMessage.INVALID_CREDENTIALS);
         }
       }
       SecurityContextHolder.getContext().setAuthentication(authentication);
     }
-    return jwtResponse;
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(jwtResponse);
   }
 
   /**
@@ -227,7 +244,6 @@ public class UserServiceImpl implements UserService {
   @Override
   public CRAPIResponse changeEmailRequest(
       HttpServletRequest request, ChangeEmailForm changeEmailForm) {
-    EmailTokenGenerator emailTokenGenerator = new EmailTokenGenerator();
     String token;
     User user;
     ChangeEmailRequest changeEmailRequest;
@@ -242,7 +258,7 @@ public class UserServiceImpl implements UserService {
       return new CRAPIResponse(
           UserMessage.EMAIL_NOT_REGISTERED + changeEmailForm.getOld_email(), 404);
     }
-    token = emailTokenGenerator.generateRandom(10);
+    token = EmailTokenGenerator.generateRandom(10);
     user = getUserFromToken(request);
     // fetching ChangeEmail Data for user
     changeEmailRequest = changeEmailRepository.findByUser(user);
@@ -329,7 +345,7 @@ public class UserServiceImpl implements UserService {
   public User getUserFromTokenWithoutValidation(HttpServletRequest request) {
     User user = null;
     try {
-      String jwt = jwtAuthTokenFilter.getJwt(request);
+      String jwt = jwtAuthTokenFilter.getToken(request);
       String username = jwtProvider.getUserNameFromJwtToken(jwt);
       if (username != null && !username.equalsIgnoreCase(EStatus.INVALID.toString())) {
         user = userRepository.findByEmail(username);
@@ -382,11 +398,80 @@ public class UserServiceImpl implements UserService {
         return new JwtResponse(jwt);
       }
     }
-
-    return new JwtResponse("", UserMessage.INVALID_CREDENTIALS);
+    JwtResponse jwtResponse = new JwtResponse();
+    jwtResponse.setMessage(UserMessage.INVALID_CREDENTIALS);
+    return jwtResponse;
   }
 
   public boolean isLog4jEnabled() {
     return String.valueOf(System.getenv("ENABLE_LOG4J")).equals("true");
+  }
+
+  /**
+   * @param lockAccountForm contains user email , which allow admin to lock the user account
+   * @return success or failure of account lock
+   */
+  @Transactional
+  @Override
+  public CRAPIResponse lockAccount(HttpServletRequest request, LockAccountForm lockAccountForm) {
+
+    String email = lockAccountForm.getEmail();
+    try {
+      User user = userRepository.findByEmail(email);
+      if (user != null) {
+        user.setCode(OTPGenerator.generateRandom(8));
+        userRepository.save(user);
+        return new CRAPIResponse(UserMessage.ACCOUNT_LOCK_MESSAGE, HttpStatus.OK.value());
+      } else {
+        return new CRAPIResponse(UserMessage.EMAIL_NOT_REGISTERED, HttpStatus.BAD_REQUEST.value());
+      }
+    } catch (Exception exception) {
+      logger.error("fail to lock account  -> Message:%s", exception.getMessage());
+    }
+    return new CRAPIResponse(UserMessage.ACCOUNT_LOCK_FAILURE, HttpStatus.BAD_REQUEST.value());
+  }
+
+  /**
+   * @param unlockAccountForm contains user email and password, which allow user to unlock account
+   * @return success or failure of account unlock
+   */
+  @Transactional
+  @Override
+  public JwtResponse unlockAccount(
+      HttpServletRequest request, UnlockAccountForm unlockAccountForm) {
+    try {
+      String email = unlockAccountForm.getEmail();
+      User user = userRepository.findByEmail(email);
+      if (user != null) {
+        if (unlockAccountForm.getCode().equals(user.getCode())) {
+          String jwt = jwtProvider.generateJwtToken(user);
+          user.setCode("");
+          user.setJwtToken(jwt);
+          userRepository.save(user);
+          JwtResponse jwtResponse = new JwtResponse(jwt);
+          jwtResponse.setMessage(UserMessage.ACCOUNT_UNLOCKED_MESSAGE);
+          return jwtResponse;
+        }
+      }
+    } catch (Exception exception) {
+      logger.error("fail to unlock account  -> Message:%s", exception.getMessage());
+    }
+    JwtResponse jwtResponse = new JwtResponse();
+    jwtResponse.setMessage(UserMessage.INVALID_CREDENTIALS);
+    return jwtResponse;
+  }
+
+  @Override
+  @Transactional
+  public ApiKeyResponse generateApiKey(HttpServletRequest request) {
+    User user = getUserFromToken(request);
+    if (user != null) {
+      String apiKey = ApiKeyGenerator.generateRandom(512);
+      logger.debug("Api Key for user {}: {}", user.getEmail(), apiKey);
+      user.setApiKey(apiKey);
+      userRepository.save(user);
+      return new ApiKeyResponse(user.getApiKey(), UserMessage.API_KEY_GENERATED_MESSAGE);
+    }
+    return new ApiKeyResponse("");
   }
 }

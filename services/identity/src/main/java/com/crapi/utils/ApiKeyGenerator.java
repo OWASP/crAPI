@@ -14,32 +14,29 @@
 
 package com.crapi.utils;
 
-public class EmailTokenGenerator {
-  static String charsequence = "abcdefghijklmnopqrstuvwxzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  static String num = "0123456789";
+import org.springframework.stereotype.Component;
+
+@Component
+public class ApiKeyGenerator {
+
+  public static String characters =
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
   /**
    * @param length
-   * @return generate random string for email token and magic url
+   * @return generate random otp for forgot password
    */
   public static String generateRandom(int length) {
-    String url = "";
+    String apiKey = "";
     for (int i = 0; i < length; i++) {
-      url += randomCharacter(charsequence);
-      url += randomNumber(num);
+      apiKey += randomCharacter(characters);
     }
-    return url;
+    return apiKey;
   }
 
   public static String randomCharacter(String characters) {
     int n = characters.length();
     int r = (int) (n * Math.random());
     return characters.substring(r, r + 1);
-  }
-
-  public static String randomNumber(String characters) {
-    int n = num.length();
-    int r = (int) (n * Math.random());
-    return num.substring(r, r + 1);
   }
 }

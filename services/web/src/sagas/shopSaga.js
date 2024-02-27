@@ -39,8 +39,7 @@ export function* getProducts(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const getUrl =
-      APIService.PYTHON_MICRO_SERVICES + requestURLS.GET_PRODUCTS;
+    const getUrl = APIService.WORKSHOP_SERVICE + requestURLS.GET_PRODUCTS;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -85,8 +84,7 @@ export function* buyProduct(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const postUrl =
-      APIService.PYTHON_MICRO_SERVICES + requestURLS.BUY_PRODUCT;
+    const postUrl = APIService.WORKSHOP_SERVICE + requestURLS.BUY_PRODUCT;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -127,7 +125,7 @@ export function* getOrders(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const getUrl = APIService.PYTHON_MICRO_SERVICES + requestURLS.GET_ORDERS;
+    const getUrl = APIService.WORKSHOP_SERVICE + requestURLS.GET_ORDERS;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -168,8 +166,7 @@ export function* getOrderById(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const getUrl =
-      APIService.PYTHON_MICRO_SERVICES + requestURLS.GET_ORDER_BY_ID;
+    const getUrl = APIService.WORKSHOP_SERVICE + requestURLS.GET_ORDER_BY_ID;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -198,7 +195,6 @@ export function* getOrderById(param) {
   }
 }
 
-
 /**
  * return an order
  * @param { accessToken, callback, orderId } param
@@ -211,8 +207,7 @@ export function* returnOrder(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const postUrl =
-      APIService.PYTHON_MICRO_SERVICES + requestURLS.RETURN_ORDER;
+    const postUrl = APIService.WORKSHOP_SERVICE + requestURLS.RETURN_ORDER;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -253,7 +248,7 @@ export function* applyCoupon(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    let postUrl = APIService.GO_MICRO_SERVICES + requestURLS.VALIDATE_COUPON;
+    let postUrl = APIService.COMMUNITY_SERVICE + requestURLS.VALIDATE_COUPON;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -272,7 +267,7 @@ export function* applyCoupon(param) {
       yield put({ type: actionTypes.FETCHED_DATA, payload: recievedResponse });
       callback(responseTypes.FAILURE, INVALID_COUPON_CODE);
     } else {
-      postUrl = APIService.PYTHON_MICRO_SERVICES + requestURLS.APPLY_COUPON;
+      postUrl = APIService.WORKSHOP_SERVICE + requestURLS.APPLY_COUPON;
       const ResponseJson = yield fetch(postUrl, {
         headers,
         method: "POST",

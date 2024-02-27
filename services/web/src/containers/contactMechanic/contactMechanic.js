@@ -90,5 +90,5 @@ ContactMechanicContainer.propTypes = {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(ContactMechanicContainer);

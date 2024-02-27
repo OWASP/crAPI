@@ -29,6 +29,9 @@ const LoginContainer = (props) => {
   const callback = (res, data) => {
     if (res === responseTypes.SUCCESS) {
       history.push("/dashboard");
+    }
+    if (res === responseTypes.REDIRECT) {
+      history.push(data);
     } else {
       setHasErrored(true);
       setErrorMessage(data);
