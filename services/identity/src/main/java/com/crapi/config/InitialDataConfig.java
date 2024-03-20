@@ -85,7 +85,7 @@ public class InitialDataConfig {
     vehicleCompany = new VehicleCompany("Mercedes-Benz");
     vehicleModel =
         new VehicleModel(
-            "GLA Class", EFuelType.DIESEL, vehicleCompany, "images/mercedesbenz-gla.jpg");
+            "GLA Class", EFuelType.PETROL, vehicleCompany, "images/mercedesbenz-gla.jpg");
     vehicleModelRepository.save(vehicleModel);
 
     vehicleCompany = new VehicleCompany("BMW");
@@ -94,7 +94,7 @@ public class InitialDataConfig {
     vehicleModelRepository.save(vehicleModel);
 
     vehicleCompany = new VehicleCompany("Audi");
-    vehicleModel = new VehicleModel("RS7", EFuelType.DIESEL, vehicleCompany, "images/audi-rs7.jpg");
+    vehicleModel = new VehicleModel("RS7", EFuelType.PETROL, vehicleCompany, "images/audi-rs7.jpg");
     vehicleModelRepository.save(vehicleModel);
 
     vehicleCompany = new VehicleCompany("MG Motor");
