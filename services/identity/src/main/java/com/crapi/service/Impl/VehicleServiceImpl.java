@@ -160,6 +160,7 @@ public class VehicleServiceImpl implements VehicleService {
               new VehicleLocationResponse(
                   carId,
                   (userDetails != null ? userDetails.getName() : null),
+                  (userDetails != null ? userDetails.getUser().getEmail() : null),
                   vehicleDetails.getVehicleLocation());
           return vehicleLocationForm;
         }
