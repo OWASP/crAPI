@@ -1,16 +1,32 @@
-kind: PersistentVolumeClaim
 apiVersion: v1
- 
+kind: PersistentVolume
 metadata:
-  name: postgres-pv-claim
+  name: postgres-pv
+  namespace: crapi
   labels:
-    app: postgresdb
- 
+    type: local
 spec:
-  #storageClassName: local-path
+  storageClassName: manual
+  capacity:
+    storage: 3Gi
   accessModes:
     - ReadWriteOnce
- 
+  hostPath:
+    path: "/mnt/data"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pv-claim
+  namespace: crapi
+  labels:
+    app: postgresdb
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 1000Mi
+      storage: 1000Mi      
