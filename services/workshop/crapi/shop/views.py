@@ -37,6 +37,7 @@ from crapi.user.models import UserDetails
 from utils.logging import log_error
 from django.core.exceptions import ObjectDoesNotExist
 
+
 class ProductView(APIView):
     """
     Product Controller View
@@ -54,7 +55,7 @@ class ProductView(APIView):
             message and corresponding status if error
         """
         user_details = UserDetails.objects.get(user=user)
-        products = Product.objects.all()
+        products = Product.objects.all().order_by('-id')
         serializer = ProductSerializer(products, many=True)
         response_data = dict(
             products=serializer.data,

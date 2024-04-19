@@ -19,6 +19,7 @@ export const APIService = {
   IDENTITY_SERVICE: crapienv.IDENTITY_SERVICE,
   WORKSHOP_SERVICE: crapienv.WORKSHOP_SERVICE,
   COMMUNITY_SERVICE: crapienv.COMMUNITY_SERVICE,
+  CHATBOT_SERVICE: crapienv.CHATBOT_SERVICE,
 };
 
 export const requestURLS = {

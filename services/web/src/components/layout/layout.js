@@ -18,10 +18,10 @@ import "./layout.css";
 import React, { useState } from "react";
 
 import { Redirect, Route, Switch } from "react-router-dom";
-
 import PropTypes from "prop-types";
 import { Layout, Spin } from "antd";
 import { connect } from "react-redux";
+import ChatBotComponent from "../bot/Bot.jsx";
 import LoginContainer from "../../containers/login/login";
 import SignupContainer from "../../containers/signup/signup";
 import NavBar from "../navBar/navBar";
@@ -46,7 +46,6 @@ import { logOutUserAction } from "../../actions/userActions";
 import { isAccessTokenValid } from "../../utils";
 
 const { Content } = Layout;
-
 /*
  * function to redirect to dashboard if the user is logged in
  * and tries to open login or other pages where log in is not required
@@ -176,7 +175,7 @@ const StyledComp = connect(
       <Layout style={{ minHeight: windowHeight }}>
         <Route path="/" component={NavBar} />
         <Content className="layout-content">
-          <Switch>
+            <Switch>
             <BeforeLogin
               path="/login"
               component={LoginContainer}
@@ -330,7 +329,9 @@ const StyledComp = connect(
               }}
             />
           </Switch>
+        <ChatBotComponent/>
         </Content>
+
       </Layout>
     </Spin>
   );
