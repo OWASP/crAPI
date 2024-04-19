@@ -23,6 +23,6 @@ else
 fi
 ls -al /app/certs
 env
-envsubst '${HTTP_PROTOCOL} ${COMMUNITY_SERVICE} ${IDENTITY_SERVICE} ${WORKSHOP_SERVICE}' < $NGINX_TEMPLATE > /etc/nginx/conf.d/default.conf
+envsubst '${HTTP_PROTOCOL} ${COMMUNITY_SERVICE} ${IDENTITY_SERVICE} ${WORKSHOP_SERVICE} ${CHATBOT_SERVICE}' < $NGINX_TEMPLATE > /etc/nginx/conf.d/default.conf
 openresty
 exec "$@"

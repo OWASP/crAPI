@@ -102,6 +102,16 @@ jobs:
           cache-from: type=gha,scope=workshop-service
           cache-to: type=gha,mode=max,scope=workshop-service
 
+      - name: Build crapi-chatbot all platforms and push to Docker Hub
+        uses: docker/build-push-action@v3
+        with:
+            context: ./services/chatbot
+            tags: crapi/crapi-chatbot:${{ env.TAG_LATEST }},crapi/crapi-chatbot:${{ env.TAG_NAME }}
+            platforms: ${{ env.PLATFORMS }}
+            push: true
+            cache-from: type=gha,scope=chatbot-service
+            cache-to: type=gha,mode=max,scope=chatbot-service
+
       - name: Build crapi-community all platforms and push to Docker Hub
         uses: docker/build-push-action@v3
         with:

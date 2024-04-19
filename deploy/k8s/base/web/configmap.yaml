@@ -8,3 +8,4 @@ data:
   COMMUNITY_SERVICE: crapi-community:8087
   IDENTITY_SERVICE: crapi-identity:8080
   WORKSHOP_SERVICE: crapi-workshop:8000
+  CHATBOT_SERVICE: crapi-chatbot:5002

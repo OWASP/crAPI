@@ -19,6 +19,9 @@ community:
 workshop:
   image: crapi/crapi-workshop
   port: 8000
+chatbot:
+  image: crapi/crapi-chatbot
+  port: 5002
 mailhog:
   image: crapi/mailhog
   webPort: 8025
