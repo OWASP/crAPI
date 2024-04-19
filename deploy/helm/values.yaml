@@ -132,7 +132,7 @@ workshop:
   serviceSelectorLabels:
     app: crapi-workshop
 
-workshop:
+chatbot:
   name: crapi-chatbot
   image: crapi/crapi-chatbot
   port: 5002
