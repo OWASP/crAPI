@@ -3,3 +3,4 @@ deploy/vagrant/.vagrant
 .secrets
 .vscode/
 *.local
+services/chatbot/db
