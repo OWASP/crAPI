@@ -8,7 +8,7 @@ The crAPI challenge is for you to find and exploit as many of these vulnerabilit
 
 There are two approaches to hack crAPI - the first is to look at it as a complete black box test, where you get no directions, but just try to understand the app from scratch and hack it.
 
-The second approach is using this page, which will give you an idea about which vulnerabilities exist in crAPI and will direct you on how to exploit them. 
+The second approach is using this page, which will give you an idea about which vulnerabilities exist in crAPI and will direct you on how to exploit them.
 
 # Challenges
 
@@ -102,3 +102,4 @@ JWT Authentication in crAPI is vulnerable to various attacks. Find any one way t
 ## << 2 secret challenges >>
 
 There are two more secret challenges in crAPI, that are pretty complex, and for now we don’t share details about them, except the fact they are really cool. 
+

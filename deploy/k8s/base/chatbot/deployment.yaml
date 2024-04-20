@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crapi-chatbot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crapi-chatbot
+  template:
+    metadata:
+      labels:
+        app: crapi-chatbot
+      containers:
+      - name: crapi-chatbot
+        image: crapi/crapi-chatbot:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5002
+        envFrom:
+            - configMapRef:
+                name: crapi-chatbot-configmap
+        resources:
+          limits:
+            cpu: "500m"
+          requests:
+            cpu: 256m

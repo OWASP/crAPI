@@ -20,7 +20,6 @@ import { applyMiddleware, compose, createStore } from "redux";
 import { persistReducer, persistStore } from "redux-persist";
 import { Provider } from "react-redux";
 import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import createSagaMiddleware from "redux-saga";
 import storage from "redux-persist/lib/storage";
@@ -30,6 +29,8 @@ import rootReducer from "./reducers/rootReducer";
 import rootSaga from "./sagas";
 import Layout from "./components/layout/layout";
 import * as serviceWorker from "./serviceWorker";
+import { createRoot } from 'react-dom/client';
+
 
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = [authInterceptor, sagaMiddleware];
@@ -71,9 +72,9 @@ const AppProvider = () => {
   );
 };
 
-export default AppProvider;
-
-ReactDOM.render(<AppProvider />, document.getElementById("root"));
+const container = document.getElementById('root');
+const root = createRoot(container);
+root.render(<AppProvider />);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

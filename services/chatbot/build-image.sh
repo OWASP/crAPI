@@ -1,6 +1,5 @@
-#!/bin/sh
+#!/bin/bash
 
-#
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,16 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# if TLS_ENABLED is true or 1 then use https, otherwise use http
-if [ "$TLS_ENABLED" = "true" ] || [ "$TLS_ENABLED" = "1" ]; then
-    export HTTP_PROTOCOL=https
-    export NGINX_TEMPLATE=/etc/nginx/conf.d/default.ssl.conf.template
-else
-    export HTTP_PROTOCOL=http
-    export NGINX_TEMPLATE=/etc/nginx/conf.d/default.conf.template
+
+set -x
+cd "$(dirname $0)"
+docker build -t crapi/crapi-chatbot:${VERSION:-latest} .
+retVal=$?
+if [ $retVal -ne 0 ]; then
+    echo "Error building crapi-chatbot image"
+    exit $retVal
 fi
-ls -al /app/certs
-env
-envsubst '${HTTP_PROTOCOL} ${COMMUNITY_SERVICE} ${IDENTITY_SERVICE} ${WORKSHOP_SERVICE} ${CHATBOT_SERVICE}' < $NGINX_TEMPLATE > /etc/nginx/conf.d/default.conf
-openresty
-exec "$@"

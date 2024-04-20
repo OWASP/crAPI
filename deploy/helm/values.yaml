@@ -132,6 +132,31 @@ workshop:
   serviceSelectorLabels:
     app: crapi-workshop
 
+chatbot:
+  name: crapi-chatbot
+  image: crapi/crapi-chatbot
+  port: 5002
+  replicaCount: 1
+  service:
+    name: crapi-chatbot
+    labels:
+      app: crapi-chatbot
+  config:
+    name: crapi-chatbot-configmap
+    labels:
+      app: crapi-chatbot
+    postgresDbDriver: postgres
+    mongoDbDriver: mongodb
+    secretKey: crapi
+  deploymentLabels:
+    app: crapi-chatbot
+  podLabels:
+    app: crapi-chatbot
+  deploymentSelectorMatchLabels:
+    app: crapi-chatbot
+  serviceSelectorLabels:
+    app: crapi-chatbot
+
 mailhog:
   name: mailhog
   image: crapi/mailhog
