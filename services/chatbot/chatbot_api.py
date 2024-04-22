@@ -7,21 +7,11 @@ import os
 from langchain.memory import  ConversationBufferWindowMemory
 from langchain.vectorstores import Chroma
 from langchain_openai import OpenAI
-import argparse
 from langchain.document_loaders import DirectoryLoader
-from langchain_community.chat_models.anthropic import ChatAnthropic
-from langchain.document_loaders.unstructured import UnstructuredFileLoader 
 from langchain.memory import  ConversationBufferWindowMemory
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.prompts import PromptTemplate
-import argparse
-from werkzeug.security import generate_password_hash, check_password_hash
-from transformers import pipeline
-from langchain.llms import HuggingFacePipeline 
 from langchain import PromptTemplate
-from transformers import AutoTokenizer , AutoModelForCausalLM, AutoModel
-from langchain.llms import CTransformers
-from langchain_anthropic import ChatAnthropicMessages
 from langchain_community.document_loaders import UnstructuredMarkdownLoader
 
 app = Flask(__name__)
