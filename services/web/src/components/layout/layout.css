@@ -9,3 +9,7 @@
 .ant-spin {
   z-index: 1100;
 }
+
+body > iframe {
+  display: none;
+}

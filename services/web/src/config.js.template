@@ -3,5 +3,6 @@ export const crapienv = {
     WORKSHOP_SERVICE: "workshop/",
     CHATBOT_SERVICE: "chatbot/",
     COMMUNITY_SERVICE: "community/",
+    CHATBOT_SERVICE: "chatbot/",
 };
 
