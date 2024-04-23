@@ -12,6 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { APIService } from "../../constants/APIConstant";
+const superagent = require("superagent");
 
 class MessageParser {
   constructor(actionProvider, state) {
@@ -19,24 +21,53 @@ class MessageParser {
     this.state = state;
   }
 
+  initializationRequired() {
+    const stateUrl = APIService.CHATBOT_SERVICE + "genai/state";
+    superagent
+      .get(stateUrl)
+      .set("Accept", "application/json")
+      .set("Content-Type", "application/json")
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          console.log("Initialization required");
+          return true;
+        }
+        console.log(res);
+        if ((res.status = 200)) {
+          console.log("Initialization not required");
+          return false;
+        }
+      });
+    console.log("Initialization required");
+    return true;
+  }
+
   parse(message) {
-    console.log("State", this.state);
-    console.log("Message", message);
+    console.log("State:", this.state);
+    console.log("Message:", message);
     const message_l = message.toLowerCase();
+    if (this.state.initializationRequired === undefined) {
+      this.state.initializationRequired = this.initializationRequired();
+    }
     if (message_l === "help") {
-      return this.actionProvider.handleHelp();
+      this.state.initializationRequired = this.initializationRequired();
+      return this.actionProvider.handleHelp(this.state.initializationRequired);
     } else if (message_l === "init" || message_l === "initialize") {
-      return this.actionProvider.handleInitialize();
-    } else if (this.state.initializing) {
-      return this.actionProvider.handleInitialized(message);
-    } else if (!this.state.openapiKey) {
-      return this.actionProvider.handleNotInitialized();
+      this.state.initializationRequired = this.initializationRequired();
+      return this.actionProvider.handleInitialize(
+        this.state.initializationRequired,
+      );
     } else if (
       message_l === "clear" ||
       message_l === "reset" ||
       message_l === "restart"
     ) {
       return this.actionProvider.handleResetContext();
+    } else if (this.state.initializing) {
+      return this.actionProvider.handleInitialized(message);
+    } else if (this.state.initializationRequired) {
+      return this.actionProvider.handleNotInitialized();
     }
 
     return this.actionProvider.handleChat(message);

@@ -33,17 +33,26 @@ class ActionProvider {
     this.addMessageToState(message);
   };
 
-  handleInitialize = () => {
-    this.addOpenApiKeyToState(null);
-    this.addInitializingToState();
-    const message = this.createChatBotMessage(
-      "Please type your OpenAI API key and press enter.",
-      {
+  handleInitialize = (initRequired) => {
+    console.log("Initialization required:", initRequired);
+    if (initRequired) {
+      this.addOpenApiKeyToState(null);
+      this.addInitializingToState();
+      const message = this.createChatBotMessage(
+        "Please type your OpenAI API key and press enter.",
+        {
+          loading: true,
+          terminateLoading: true,
+        },
+      );
+      this.addMessageToState(message);
+    } else {
+      const message = this.createChatBotMessage("Bot already initialized", {
         loading: true,
         terminateLoading: true,
-      },
-    );
-    this.addMessageToState(message);
+      });
+      this.addMessageToState(message);
+    }
   };
 
   handleInitialized = (api_key) => {
@@ -97,7 +106,7 @@ class ActionProvider {
     const chatUrl = APIService.CHATBOT_SERVICE + "genai/ask";
     superagent
       .post(chatUrl)
-      .send({ openai_api_key: this.state.openapiKey, question: message })
+      .send({ question: message })
       .set("Accept", "application/json")
       .set("Content-Type", "application/json")
       .end((err, res) => {
@@ -123,19 +132,30 @@ class ActionProvider {
       });
   };
 
-  handleHelp = () => {
-    const message = this.createChatBotMessage(
-      "To initialize the chatbot, please type init and press enter. To clear the chat context, type clear or reset and press enter.",
-      {
-        loading: true,
-        terminateLoading: true,
-      },
-    );
-    this.addMessageToState(message);
+  handleHelp = (initRequired) => {
+    console.log("Initialization required:", initRequired);
+    if (initRequired) {
+      const message = this.createChatBotMessage(
+        "To initialize the chatbot, please type init and press enter. To clear the chat context, type clear or reset and press enter.",
+        {
+          loading: true,
+          terminateLoading: true,
+        },
+      );
+      this.addMessageToState(message);
+    } else {
+      const message = this.createChatBotMessage(
+        "Chat with the bot and exploit it.",
+        {
+          loading: true,
+          terminateLoading: true,
+        },
+      );
+    }
   };
 
   handleResetContext = () => {
-    localStorage.removeItem("messages");
+    localStorage.removeItem("chat_messages");
     this.clearMessages();
     const message = this.createChatBotMessage(
       "Chat context has been cleared.",

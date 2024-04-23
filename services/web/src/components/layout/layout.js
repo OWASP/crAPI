@@ -175,7 +175,7 @@ const StyledComp = connect(
       <Layout style={{ minHeight: windowHeight }}>
         <Route path="/" component={NavBar} />
         <Content className="layout-content">
-            <Switch>
+          <Switch>
             <BeforeLogin
               path="/login"
               component={LoginContainer}
@@ -329,9 +329,8 @@ const StyledComp = connect(
               }}
             />
           </Switch>
-        <ChatBotComponent/>
+          <ChatBotComponent />
         </Content>
-
       </Layout>
     </Spin>
   );

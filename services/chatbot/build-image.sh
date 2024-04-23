@@ -15,6 +15,8 @@
 
 set -x
 cd "$(dirname $0)"
+mkdir -p retrieval
+cp -Rv ../../docs retrieval/
 docker build -t crapi/crapi-chatbot:${VERSION:-latest} .
 retVal=$?
 if [ $retVal -ne 0 ]; then
