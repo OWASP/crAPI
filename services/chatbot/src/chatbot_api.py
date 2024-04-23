@@ -32,7 +32,10 @@ def document_loader():
         load_dir = "retrieval"
         logger.debug("Loading documents from %s", load_dir)
         loader = DirectoryLoader(
-            load_dir, glob="**/*.md", loader_cls=UnstructuredMarkdownLoader
+            load_dir,
+            exclude=["**/*.png", "**/images/**", "**/images/*", "**/*.pdf"],
+            recursive=True,
+            loader_cls=UnstructuredMarkdownLoader,
         )
         documents = loader.load()
         logger.debug("Loaded %s documents", len(documents))
@@ -113,11 +116,14 @@ def init_bot():
 def state_bot():
     try:
         if loaded_model.is_set():
-            return jsonify({"message": "Model already loaded"})
+            return jsonify({"initialized": "true", "message": "Model already loaded"})
     except Exception as e:
         logger.error("Error checking state ", e)
-        return jsonify({"message": "Error checking state " + str(e)}), 400
-    return jsonify({"message": "Model Error"}), 400
+        return jsonify({"message": "Error checking state " + str(e)}), 200
+    return (
+        jsonify({"initialized": "false", "message": "Model needs to be initialized"}),
+        200,
+    )
 
 
 @app.route("/chatbot/genai/ask", methods=["POST"])

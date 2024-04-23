@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 import { APIService } from "../../constants/APIConstant";
-const superagent = require("superagent");
+import request from "superagent";
 
 class MessageParser {
   constructor(actionProvider, state) {
@@ -21,39 +21,46 @@ class MessageParser {
     this.state = state;
   }
 
-  initializationRequired() {
+  async initializationRequired() {
     const stateUrl = APIService.CHATBOT_SERVICE + "genai/state";
-    superagent
+    let initRequired = false;
+    // Wait for the response
+    await request
       .get(stateUrl)
       .set("Accept", "application/json")
       .set("Content-Type", "application/json")
-      .end((err, res) => {
-        if (err) {
-          console.log("Error:");
-          console.log(err);
-          console.log("Initialization required prefetch error");
-          return true;
+      .then((res) => {
+        console.log("I response:", res.body);
+        if (res.status === 200) {
+          if (res.body.initialized === "true") {
+            initRequired = false;
+          } else {
+            initRequired = true;
+          }
         }
-        console.log(res);
-        if (res.status == 200) {
-          console.log("Initialization not required");
-          return false;
-        }
+      })
+      .catch((err) => {
+        console.log("Error prefetch: ", err);
       });
+    console.log("Initialization required:", initRequired);
+    return initRequired;
   }
 
-  parse(message) {
+  async parse(message) {
     console.log("State:", this.state);
     console.log("Message:", message);
     const message_l = message.toLowerCase();
     if (this.state.initializationRequired === undefined) {
-      this.state.initializationRequired = this.initializationRequired();
+      this.state.initializationRequired = await this.initializationRequired();
+      console.log("State:", this.state);
     }
     if (message_l === "help") {
-      this.state.initializationRequired = this.initializationRequired();
+      this.state.initializationRequired = await this.initializationRequired();
+      console.log("State help:", this.state);
       return this.actionProvider.handleHelp(this.state.initializationRequired);
     } else if (message_l === "init" || message_l === "initialize") {
-      this.state.initializationRequired = this.initializationRequired();
+      this.state.initializationRequired = await this.initializationRequired();
+      console.log("State init:", this.state);
       return this.actionProvider.handleInitialize(
         this.state.initializationRequired,
       );

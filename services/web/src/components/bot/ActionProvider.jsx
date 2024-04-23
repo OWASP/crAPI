@@ -151,6 +151,7 @@ class ActionProvider {
           terminateLoading: true,
         },
       );
+      this.addMessageToState(message);
     }
   };
 
