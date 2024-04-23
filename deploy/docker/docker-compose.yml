@@ -148,9 +148,13 @@ services:
   crapi-chatbot:
     container_name: crapi-chatbot
     image: crapi/crapi-chatbot:${VERSION:-latest}
-    ports:
-      - "${LISTEN_IP:-127.0.0.1}:5002:5002"
-      
+    env:
+      - TLS_ENABLED=${TLS_ENABLED:-false}
+      - SERVER_PORT=${CHATBOT_SERVER_PORT:-5002}
+      # - CHATBOT_OPENAI_API_KEY=
+    # ports:
+    #  - "${LISTEN_IP:-127.0.0.1}:5002:5002"
+
   crapi-web:
     container_name: crapi-web
     image: crapi/crapi-web:${VERSION:-latest}

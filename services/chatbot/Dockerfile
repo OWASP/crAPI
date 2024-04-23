@@ -13,8 +13,8 @@ COPY requirements.txt /app/requirements.txt
 # Install any needed dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 COPY src /app
+COPY certs /app/certs
 COPY retrieval /app/retrieval
 ENV PYTHONPATH "${PYTHONPATH}:/app"
-CMD python3.12 -m gunicorn --bind 0.0.0.0:5002 chatbot_api:app
-
+CMD /entrypoint.sh
 EXPOSE 5002

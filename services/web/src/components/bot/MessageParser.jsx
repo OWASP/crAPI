@@ -32,7 +32,7 @@ class MessageParser {
       .then((res) => {
         console.log("I response:", res.body);
         if (res.status === 200) {
-          if (res.body.initialized === "true") {
+          if (res.body?.initialized === "true") {
             initRequired = false;
           } else {
             initRequired = true;

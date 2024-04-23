@@ -157,6 +157,23 @@ server {
     sub_filter_once off;
   }
 
+  location /chatbot/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${CHATBOT_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  ${HTTP_PROTOCOL}://${CHATBOT_SERVICE};
+    proxy_set_header Host ${CHATBOT_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+    sub_filter_types application/json text/html;
+    sub_filter "://${CHATBOT_SERVICE}" "://$http_host";
+    sub_filter_once off;
+  }
+
   location /images {
     try_files $uri $uri/ =404;
   }
