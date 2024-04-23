@@ -148,7 +148,7 @@ services:
   crapi-chatbot:
     container_name: crapi-chatbot
     image: crapi/crapi-chatbot:${VERSION:-latest}
-    env:
+    environment:
       - TLS_ENABLED=${TLS_ENABLED:-false}
       - SERVER_PORT=${CHATBOT_SERVER_PORT:-5002}
       # - CHATBOT_OPENAI_API_KEY=
