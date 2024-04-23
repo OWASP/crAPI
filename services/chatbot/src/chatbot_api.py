@@ -95,7 +95,7 @@ def init_bot():
     app.logger.debug("Initializing bot")
     try:
         with loaded_model_lock:
-            if os.environ.get("CHATBOT_OPENAI_API_KEY") is not None:
+            if os.environ.get("CHATBOT_OPENAI_API_KEY"):
                 app.logger.info("Using OpenAI API Key from environment")
                 os.environ["OPENAI_API_KEY"] = os.environ.get("CHATBOT_OPENAI_API_KEY")
             elif "openai_api_key" not in request.json:
