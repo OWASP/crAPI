@@ -31,3 +31,4 @@ if [ "$TLS_ENABLED" = "true" ] || [ "$TLS_ENABLED" = "1" ]; then
   gunicorn --workers=1 --threads=20  --timeout 60 --bind 0.0.0.0:${SERVER_PORT} --certfile $TLS_CERTIFICATE --keyfile $TLS_KEY --log-level=debug chatbot_api:app
 else:
   gunicorn --bind 0.0.0.0:${SERVER_PORT} chatbot_api:app
+fi

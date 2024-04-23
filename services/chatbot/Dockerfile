@@ -16,5 +16,6 @@ COPY src /app
 COPY certs /app/certs
 COPY retrieval /app/retrieval
 ENV PYTHONPATH "${PYTHONPATH}:/app"
-CMD /entrypoint.sh
+COPY entrypoint.sh /app/entrypoint.sh
+CMD /app/entrypoint.sh
 EXPOSE 5002
