@@ -29,18 +29,17 @@ class MessageParser {
       .set("Content-Type", "application/json")
       .end((err, res) => {
         if (err) {
+          console.log("Error:");
           console.log(err);
-          console.log("Initialization required");
+          console.log("Initialization required prefetch error");
           return true;
         }
         console.log(res);
-        if ((res.status = 200)) {
+        if (res.status == 200) {
           console.log("Initialization not required");
           return false;
         }
       });
-    console.log("Initialization required");
-    return true;
   }
 
   parse(message) {

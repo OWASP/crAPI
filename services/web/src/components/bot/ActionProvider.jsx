@@ -97,7 +97,7 @@ class ActionProvider {
           },
         );
         this.addMessageToState(successmessage);
-        this.addNotInitializingToState();
+        this.addInitializedToState();
       });
     return;
   };
@@ -123,7 +123,7 @@ class ActionProvider {
           return;
         }
         console.log(res);
-        const successmessage = this.createChatBotMessage(res.body.response, {
+        const successmessage = this.createChatBotMessage(res.body.answer, {
           loading: true,
           terminateLoading: true,
         });
@@ -188,10 +188,11 @@ class ActionProvider {
     }));
   };
 
-  addNotInitializingToState = () => {
+  addInitializedToState = () => {
     this.setState((state) => ({
       ...state,
       initializing: false,
+      initializationRequired: false,
     }));
   };
 

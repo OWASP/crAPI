@@ -22,7 +22,7 @@ persist_directory = os.environ.get("PERSIST_DIRECTORY")
 vulnerable_app_qa = None
 target_source_chunks = int(os.environ.get("TARGET_SOURCE_CHUNKS", 4))
 loaded_model_lock = threading.Lock()
-loaded_model = False
+loaded_model = threading.Event()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -93,28 +93,29 @@ def init_bot():
     try:
         with loaded_model_lock:
             if "openai_api_key" in request.json:
-                print("Initializing bot", request.json["openai_api_key"])
+                logger.debug("Initializing bot %s", request.json["openai_api_key"])
                 os.environ["OPENAI_API_KEY"] = request.json["openai_api_key"]
                 global vulnerable_app_qa, retriever
                 retriever = document_loader()
                 llm = get_llm()
                 vulnerable_app_qa = get_qa_chain(llm, retriever)
-                loaded_model = True
+                loaded_model.set()
                 return jsonify({"message": "Model Initialized"}), 200
             else:
                 return jsonify({"message": "openai_api_key not provided"}, 400)
     except Exception as e:
-        print("Error initializing bot ", e)
+        logger.error("Error initializing bot ", e)
+        logger.debug("Error initializing bot ", e, exc_info=True)
         return jsonify({"message": "Not able to initialize model " + str(e)}), 400
 
 
 @app.route("/chatbot/genai/state", methods=["GET"])
 def state_bot():
     try:
-        if loaded_model:
+        if loaded_model.is_set():
             return jsonify({"message": "Model already loaded"})
     except Exception as e:
-        print("Error checking state ", e)
+        logger.error("Error checking state ", e)
         return jsonify({"message": "Error checking state " + str(e)}), 400
     return jsonify({"message": "Model Error"}), 400
 
@@ -124,10 +125,10 @@ def ask_bot():
     question = request.json["question"]
     global vulnerable_app_qa
     answer = qa_app(vulnerable_app_qa, question)
-    print("###########################################")
-    print("Test Attacker Question: " + str(question))
-    print("Vulnerability App Answer: " + str(answer))
-    print("###########################################")
+    logger.info("###########################################")
+    logger.info("Test Attacker Question: %s", question)
+    logger.info("Vulnerability App Answer: %s", answer)
+    logger.info("###########################################")
     return jsonify({"answer": answer}), 200
 
 
