@@ -50,9 +50,9 @@ class MessageParser {
     console.log("State:", this.state);
     console.log("Message:", message);
     const message_l = message.toLowerCase();
-    if (this.state.initializationRequired === undefined) {
+    if (this.state?.initializationRequired === undefined) {
       this.state.initializationRequired = await this.initializationRequired();
-      console.log("State:", this.state);
+      console.log("State check:", this.state);
     }
     if (message_l === "help") {
       this.state.initializationRequired = await this.initializationRequired();
@@ -63,6 +63,7 @@ class MessageParser {
       console.log("State init:", this.state);
       return this.actionProvider.handleInitialize(
         this.state.initializationRequired,
+        this.state.accessToken,
       );
     } else if (
       message_l === "clear" ||
@@ -76,7 +77,7 @@ class MessageParser {
       return this.actionProvider.handleNotInitialized();
     }
 
-    return this.actionProvider.handleChat(message);
+    return this.actionProvider.handleChat(message, this.state.accessToken);
   }
 }
 

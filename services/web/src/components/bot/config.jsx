@@ -25,9 +25,7 @@ const config = {
     ),
   ],
   botName,
-  tate: {
-    optionName: "",
-  },
+  state: {},
   customStyles: {
     botMessageBox: {
       backgroundColor: "#376B7E",

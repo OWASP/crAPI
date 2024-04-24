@@ -329,7 +329,11 @@ const StyledComp = connect(
               }}
             />
           </Switch>
-          <ChatBotComponent />
+          <ChatBotComponent
+            accessToken={props.accessToken}
+            isLoggedIn={props.isLoggedIn}
+            role={props.role}
+          />
         </Content>
       </Layout>
     </Spin>

@@ -20,6 +20,7 @@ import { APIService } from "../../constants/APIConstant";
 import MessageParser from "./MessageParser.jsx";
 import ActionProvider from "./ActionProvider.jsx";
 import Chatbot from "react-chatbot-kit";
+import { connect } from "react-redux";
 import { createChatBotMessage } from "react-chatbot-kit";
 import {
   PageHeader,
@@ -50,13 +51,51 @@ const PandaSvg = () => (
 
 const PandaIcon = (props) => <Icon component={PandaSvg} {...props} />;
 
-const ChatBotComponent = () => {
+const ChatBotComponent = (props) => {
   const [chatbotState, setChatbotState] = useState({
-    messages: [],
     openapiKey: localStorage.getItem("openapi_key"),
     initializing: false,
     initializationRequired: false,
+    accessToken: props.accessToken,
+    isLoggedIn: props.isLoggedIn,
+    role: props.role,
   });
+
+  useEffect(() => {
+    const fetchInit = async () => {
+      const stateUrl = APIService.CHATBOT_SERVICE + "genai/state";
+      let initRequired = false;
+      // Wait for the response
+      await superagent
+        .get(stateUrl)
+        .set("Accept", "application/json")
+        .set("Content-Type", "application/json")
+        .then((res) => {
+          console.log("I response:", res.body);
+          if (res.status === 200) {
+            if (res.body?.initialized === "true") {
+              initRequired = false;
+            } else {
+              initRequired = true;
+            }
+          }
+        })
+        .catch((err) => {
+          console.log("Error prefetch: ", err);
+        });
+      console.log("Initialization required:", initRequired);
+      setChatbotState((prev) => ({
+        ...prev,
+        initializationRequired: initRequired,
+      }));
+    };
+    fetchInit();
+  }, []);
+
+  const config_chatbot = {
+    ...config,
+    state: chatbotState,
+  };
 
   const [showBot, toggleBot] = useState(false);
 
@@ -73,6 +112,7 @@ const ChatBotComponent = () => {
     localStorage.removeItem("chat_messages");
   };
 
+  console.log("Config state", config_chatbot);
   return (
     <Row>
       <Col xs={10}>
@@ -80,7 +120,7 @@ const ChatBotComponent = () => {
           <div style={{ maxWidth: "500px" }}>
             {showBot && (
               <Chatbot
-                config={config}
+                config={config_chatbot}
                 botAvator={
                   <Icon
                     icon={PandaIcon}
@@ -102,7 +142,7 @@ const ChatBotComponent = () => {
                         background: "#0a5e9c",
                         borderRadius: "0px",
                       }}
-                      href="#"
+                      href="##"
                       onClick={() => clearHistory()}
                     >
                       <DeleteOutlined />
@@ -115,7 +155,7 @@ const ChatBotComponent = () => {
                         background: "#0a5e9c",
                         borderRadius: "0px",
                       }}
-                      href="#"
+                      href="##"
                       onClick={() => toggleBot((prev) => !prev)}
                     >
                       <CloseSquareOutlined />

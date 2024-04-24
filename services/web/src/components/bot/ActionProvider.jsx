@@ -14,6 +14,8 @@
  */
 
 import { APIService } from "../../constants/APIConstant";
+import { isAccessTokenValid } from "../../utils";
+
 const superagent = require("superagent");
 
 class ActionProvider {
@@ -55,8 +57,8 @@ class ActionProvider {
     }
   };
 
-  handleInitialized = (api_key) => {
-    if (!api_key) {
+  handleInitialized = (apiKey, accessToken) => {
+    if (!apiKey) {
       const message = this.createChatBotMessage(
         "Please enter a valid OpenAI API key.",
         {
@@ -67,14 +69,15 @@ class ActionProvider {
       this.addMessageToState(message);
       return;
     }
-    localStorage.setItem("openapi_key", api_key);
-    this.addOpenApiKeyToState(api_key);
+    localStorage.setItem("openapi_key", apiKey);
+    this.addOpenApiKeyToState(apiKey);
     const initUrl = APIService.CHATBOT_SERVICE + "genai/init";
     superagent
       .post(initUrl)
-      .send({ openai_api_key: api_key })
+      .send({ openai_api_key: apiKey })
       .set("Accept", "application/json")
       .set("Content-Type", "application/json")
+      .set("Authorization", `Bearer ${accessToken}`)
       .end((err, res) => {
         if (err) {
           console.log(err);
@@ -102,13 +105,14 @@ class ActionProvider {
     return;
   };
 
-  handleChat = (message) => {
+  handleChat = (message, accessToken) => {
     const chatUrl = APIService.CHATBOT_SERVICE + "genai/ask";
     superagent
       .post(chatUrl)
       .send({ question: message })
       .set("Accept", "application/json")
       .set("Content-Type", "application/json")
+      .set("Authorization", `Bearer ${accessToken}`)
       .end((err, res) => {
         if (err) {
           console.log(err);
