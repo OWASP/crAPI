@@ -20,7 +20,6 @@ export const APIService = {
   WORKSHOP_SERVICE: crapienv.WORKSHOP_SERVICE,
   CHATBOT_SERVICE: crapienv.CHATBOT_SERVICE,
   COMMUNITY_SERVICE: crapienv.COMMUNITY_SERVICE,
-  CHATBOT_SERVICE: crapienv.CHATBOT_SERVICE,
 };
 
 export const requestURLS = {

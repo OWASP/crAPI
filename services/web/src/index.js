@@ -29,8 +29,7 @@ import rootReducer from "./reducers/rootReducer";
 import rootSaga from "./sagas";
 import Layout from "./components/layout/layout";
 import * as serviceWorker from "./serviceWorker";
-import { createRoot } from 'react-dom/client';
-
+import { createRoot } from "react-dom/client";
 
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = [authInterceptor, sagaMiddleware];
@@ -72,7 +71,7 @@ const AppProvider = () => {
   );
 };
 
-const container = document.getElementById('root');
+const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(<AppProvider />);
 

@@ -16,6 +16,7 @@
 import React, { useState, useEffect } from "react";
 
 import config from "./config.jsx";
+import { APIService } from "../../constants/APIConstant";
 import MessageParser from "./MessageParser.jsx";
 import ActionProvider from "./ActionProvider.jsx";
 import Chatbot from "react-chatbot-kit";
@@ -36,6 +37,8 @@ import { Space } from "antd";
 import Icon, { CloseSquareOutlined, DeleteOutlined } from "@ant-design/icons";
 import "./chatbot.css";
 
+const superagent = require("superagent");
+
 const PandaSvg = () => (
   <svg viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor">
     <path
@@ -52,6 +55,7 @@ const ChatBotComponent = () => {
     messages: [],
     openapiKey: localStorage.getItem("openapi_key"),
     initializing: false,
+    initializationRequired: false,
   });
 
   const [showBot, toggleBot] = useState(false);
@@ -68,25 +72,6 @@ const ChatBotComponent = () => {
   const clearHistory = () => {
     localStorage.removeItem("chat_messages");
   };
-
-  // useEffect(() => {
-  //   //   const handleOutsideClick = (e) => {
-  //   //     // simple implementation, should be made more robust.
-  //   //     try{
-  //   //       if (!e.currentTarget.classList.includes("react-chatbot-kit")) {
-  //   //             toggleBot(false)
-  //   //       }
-  //   //     }catch(e){
-  //   //       console.log(e)
-  //   //     }
-  //   // }
-
-  //   // window.addEventListener("click", handleOutsideClick)
-
-  //   // return () => {
-  //   //       window.removeEventListener("click", handleOutsideClick)
-  //   // }
-  // }, [])
 
   return (
     <Row>

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.chatbot.config.name }}
+  labels:
+    release: {{ .Release.Name }}
+    {{- toYaml .Values.chatbot.config.labels | nindent 4 }}
+data:
+    SERVER_PORT: {{ .Values.chatbot.port | quote }}
+    TLS_ENABLED: {{ .Values.tlsEnabled | quote }}
+    CHATBOT_OPENAI_API_KEY: {{ .Values.openAIApiKey | quote }}

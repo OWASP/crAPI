@@ -9,9 +9,13 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy the current directory contents into the container at /app
-COPY . /app
+COPY requirements.txt /app/requirements.txt
 # Install any needed dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
-CMD python3.12 -m gunicorn --bind 0.0.0.0:5002 chatbot_api:app
-
+COPY src /app
+COPY certs /app/certs
+COPY retrieval /app/retrieval
+ENV PYTHONPATH "${PYTHONPATH}:/app"
+COPY entrypoint.sh /app/entrypoint.sh
+CMD /app/entrypoint.sh
 EXPOSE 5002

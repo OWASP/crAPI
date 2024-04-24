@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.chatbot.name }}
+  labels:
+    release: {{ .Release.Name }}
+    {{- with .Values.chatbot.deploymentLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.chatbot.replicaCount }}
+  selector:
+    matchLabels:
+      {{- toYaml .Values.chatbot.deploymentSelectorMatchLabels | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        release: {{ .Release.Name }}
+        {{- with .Values.chatbot.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+        - name: {{ .Values.chatbot.name }}
+          image: {{ .Values.chatbot.image }}:{{ .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.chatbot.port }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.chatbot.config.name }}
+          {{- if .Values.chatbot.resources }}
+          resources:
+            {{- toYaml .Values.chatbot.resources | nindent 12 }}
+          {{- end }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.chatbot.port }}
+            initialDelaySeconds: 15
+            periodSeconds: 10
