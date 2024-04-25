@@ -41,7 +41,6 @@ def document_loader():
         text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
         texts = text_splitter.split_documents(documents)
         embeddings = get_embeddings()
-
         db = Chroma.from_documents(texts, embeddings, persist_directory="./db")
         db.persist()
         retriever = db.as_retriever(search_kwargs={"k": target_source_chunks})
