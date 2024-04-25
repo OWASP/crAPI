@@ -12,3 +12,4 @@ kubectl apply -n crapi -f ./identity
 kubectl apply -n crapi -f ./community
 kubectl apply -n crapi -f ./workshop
 kubectl apply -n crapi -f ./web
+kubectl apply -n crapi -f ./chatbot

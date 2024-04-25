@@ -11,6 +11,7 @@ spec:
     metadata:
       labels:
         app: crapi-chatbot
+    spec:
       containers:
       - name: crapi-chatbot
         image: crapi/crapi-chatbot:latest
