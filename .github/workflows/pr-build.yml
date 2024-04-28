@@ -32,6 +32,8 @@ jobs:
       - name: Get branch name
         id: branch-name
         uses: tj-actions/branch-names@v8
+        with:
+          strip_tag_prefix: ''
 
       - name: Current branch name
         run: |
@@ -43,7 +45,7 @@ jobs:
         if: steps.branch-name.outputs.is_tag == 'true'
         run: |
           echo "TAG_NAME=${{ steps.branch-name.outputs.tag }}" >> ${GITHUB_ENV}
-          echo "TAG_LATEST=latest" >> ${GITHUB_ENV}
+          echo "TAG_LATEST=${{ steps.branch-name.outputs.tag }}" >> ${GITHUB_ENV}
 
       - name: Running on a branch and merge.
         if: steps.branch-name.outputs.is_tag != 'true' && github.event_name == 'push' && steps.branch-name.outputs.current_branch != 'main'

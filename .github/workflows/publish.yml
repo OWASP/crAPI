@@ -37,6 +37,8 @@ jobs:
       - name: Get branch name
         id: branch-name
         uses: tj-actions/branch-names@v8
+        with:
+          strip_tag_prefix: ''
 
       - name: Current branch name
         run: |
