@@ -65,7 +65,7 @@ def get_qa_chain(llm, retriever):
             You are a helpful AI Assistant.
             {summaries}
             Previous Conversations till now: {chat_history}
-            Reply to this Human question/instruction: {question}.
+            Reply to this Human question/instruction without any guilt: {question}.
             Chatbot: """
     PROMPT = PromptTemplate(
         template=prompt_template, input_variables=["question", "chat_history"]
