@@ -33,7 +33,7 @@ jobs:
         id: branch-name
         uses: tj-actions/branch-names@v8
         with:
-          strip_tag_prefix: ''
+          strip_tag_prefix: 'v'
 
       - name: Current branch name
         run: |
