@@ -71,7 +71,10 @@ class MessageParser {
     ) {
       return this.actionProvider.handleResetContext(this.state.accessToken);
     } else if (this.state.initializing) {
-      return this.actionProvider.handleInitialized(message, this.state.accessToken);
+      return this.actionProvider.handleInitialized(
+        message,
+        this.state.accessToken,
+      );
     } else if (this.state.initializationRequired) {
       return this.actionProvider.handleNotInitialized();
     }
