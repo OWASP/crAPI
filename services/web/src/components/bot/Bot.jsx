@@ -133,20 +133,9 @@ const ChatBotComponent = (props) => {
                 saveMessages={saveMessages}
                 messageHistory={loadMessages()}
                 headerText={
-                  <Space>
-                    Exploit CrapBot &nbsp; &nbsp;
-                    <a
-                      style={{
-                        color: "white",
-                        fontWeight: "bold",
-                        background: "#0a5e9c",
-                        borderRadius: "0px",
-                      }}
-                      href="##"
-                      onClick={() => clearHistory()}
-                    >
-                      <DeleteOutlined />
-                    </a>
+                  <Space >
+                    Exploit CrapBot &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                     &nbsp; &nbsp;
                     <a
                       style={{

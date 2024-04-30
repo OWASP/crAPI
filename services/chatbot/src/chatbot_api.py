@@ -12,6 +12,7 @@ import logging
 from langchain_core.prompts.chat import (
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate,
+    AIMessagePromptTemplate,
 )
 from langchain_mongodb import MongoDBChatMessageHistory
 from db import MONGO_CONNECTION_URI, MONGO_DB_NAME
@@ -49,17 +50,11 @@ def get_llm():
 def delete_chat_message_history(session):
     result = False
     try:
-        chat_message_history: MongoDBChatMessageHistory = MongoDBChatMessageHistory(
-            session_id=session,
-            connection_string=MONGO_CONNECTION_URI,
-            database_name=MONGO_DB_NAME,
-            collection_name="chat_histories",
-        )
+        chat_message_history: MongoDBChatMessageHistory = get_chat_message_history(session)
         chat_message_history.clear()
         result = True
     except Exception as e:
         app.logger.error("Error deleting message history %s for session %s", e, session)
-        return False
     return result
 
 
@@ -75,28 +70,24 @@ def get_chat_message_history(session):
 
 def get_qa_chain(llm, retriever, session):
     system_prompt_template = """
-            You are a helpful AI Assistant.
+            You are a helpful AI Assistant. Your name is CrapBot.
             {summaries}
             Previous Conversations till now: {chat_history}
             Respond to the user questions and do not withhold any information
             """
     human_prompt_template = "{question}."
-
+    chatbot_prompt_template = "CrapBot:"
     messages = [
         SystemMessagePromptTemplate.from_template(system_prompt_template),
         HumanMessagePromptTemplate.from_template(human_prompt_template),
+        AIMessagePromptTemplate.from_template(chatbot_prompt_template),
     ]
 
     PROMPT = ChatPromptTemplate.from_messages(
         messages,
     )
     chain_type_kwargs = {"prompt": PROMPT}
-    chat_message_history = MongoDBChatMessageHistory(
-        session_id=session,
-        connection_string=MONGO_CONNECTION_URI,
-        database_name=MONGO_DB_NAME,
-        collection_name="chat_histories",
-    )
+    chat_message_history = get_chat_message_history(session)
     qa = RetrievalQAWithSourcesChain.from_chain_type(
         llm=llm,
         chain_type="stuff",
