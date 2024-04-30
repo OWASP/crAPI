@@ -159,17 +159,40 @@ class ActionProvider {
     }
   };
 
-  handleResetContext = () => {
+  handleResetContext = (accessToken) => {
     localStorage.removeItem("chat_messages");
     this.clearMessages();
-    const message = this.createChatBotMessage(
-      "Chat context has been cleared.",
-      {
-        loading: true,
-        terminateLoading: true,
-      },
-    );
-    this.addMessageToState(message);
+    const resetUrl = APIService.CHATBOT_SERVICE + "genai/reset";
+    superagent
+      .post(resetUrl)
+      .set("Accept", "application/json")
+      .set("Content-Type", "application/json")
+      .set("Authorization", `Bearer ${accessToken}`)
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          const errormessage = this.createChatBotMessage(
+            "Failed to clear chat context.",
+            {
+              loading: true,
+              terminateLoading: true,
+            },
+          );
+          this.addMessageToState(errormessage);
+          return;
+        }
+        console.log(res);
+        const successmessage = this.createChatBotMessage(
+          "Chat context has been cleared.",
+          {
+            loading: true,
+            terminateLoading: true,
+          },
+        );
+        this.addMessageToState(successmessage);
+        this.addInitializedToState();
+      });
+    return;
   };
 
   addMessageToState = (message) => {

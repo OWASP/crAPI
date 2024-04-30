@@ -164,17 +164,6 @@ def state_bot():
                 jsonify({"initialized": "true", "message": "Model already loaded"}),
                 200,
             )
-        else:
-            if not request.json.get("openai_api_key"):
-                return (
-                    jsonify(
-                        {
-                            "initialized": "false",
-                            "message": "API Key not set for OpenAI",
-                        }
-                    ),
-                    200,
-                )
     except Exception as e:
         app.logger.error("Error checking state ", e)
         return jsonify({"message": "Error checking state " + str(e)}, 200)

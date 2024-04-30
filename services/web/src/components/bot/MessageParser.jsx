@@ -63,16 +63,15 @@ class MessageParser {
       console.log("State init:", this.state);
       return this.actionProvider.handleInitialize(
         this.state.initializationRequired,
-        this.state.accessToken,
       );
     } else if (
       message_l === "clear" ||
       message_l === "reset" ||
       message_l === "restart"
     ) {
-      return this.actionProvider.handleResetContext();
+      return this.actionProvider.handleResetContext(this.state.accessToken);
     } else if (this.state.initializing) {
-      return this.actionProvider.handleInitialized(message);
+      return this.actionProvider.handleInitialized(message, this.state.accessToken);
     } else if (this.state.initializationRequired) {
       return this.actionProvider.handleNotInitialized();
     }
