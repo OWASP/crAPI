@@ -8,4 +8,16 @@ metadata:
 data:
     SERVER_PORT: {{ .Values.chatbot.port | quote }}
     TLS_ENABLED: {{ .Values.tlsEnabled | quote }}
+    DB_HOST: {{ .Values.postgresdb.service.name }}
+    DB_DRIVER: {{ .Values.workshop.config.postgresDbDriver }}
+    DB_USER: {{ .Values.postgresdb.config.postgresUser }}
+    DB_PASSWORD: {{ .Values.postgresdb.config.postgresPassword }}
+    DB_NAME: {{ .Values.postgresdb.config.postgresDbName }}
+    DB_PORT: {{ .Values.postgresdb.port | quote }}
+    MONGO_DB_HOST: {{ .Values.mongodb.service.name }}
+    MONGO_DB_DRIVER: {{ .Values.workshop.config.mongoDbDriver }}
+    MONGO_DB_PORT: {{ .Values.mongodb.port | quote }}
+    MONGO_DB_USER: {{ .Values.mongodb.config.mongoUser }}
+    MONGO_DB_PASSWORD: {{ .Values.mongodb.config.mongoPassword }}
+    MONGO_DB_NAME: {{ .Values.mongodb.config.mongoDbName }}
     CHATBOT_OPENAI_API_KEY: {{ .Values.openAIApiKey | quote }}

@@ -8,3 +8,4 @@ python-dotenv==1.0.1
 unstructured
 gunicorn==22.0.0
 markdown==3.6
+langchain-mongodb==0.1.3

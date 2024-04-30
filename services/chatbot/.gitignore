@@ -1,3 +1,5 @@
 retrieval/docs
 __pycache__/
 *.pyc
+db*/
+pkg/

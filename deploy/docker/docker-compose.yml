@@ -151,6 +151,16 @@ services:
     environment:
       - TLS_ENABLED=${TLS_ENABLED:-false}
       - SERVER_PORT=${CHATBOT_SERVER_PORT:-5002}
+      - DB_NAME=crapi
+      - DB_USER=admin
+      - DB_PASSWORD=crapisecretpassword
+      - DB_HOST=postgresdb
+      - DB_PORT=5432
+      - MONGO_DB_HOST=mongodb
+      - MONGO_DB_PORT=27017
+      - MONGO_DB_USER=admin
+      - MONGO_DB_PASSWORD=crapisecretpassword
+      - MONGO_DB_NAME=crapi
       # - CHATBOT_OPENAI_API_KEY=
     # ports:
     #  - "${LISTEN_IP:-127.0.0.1}:5002:5002"

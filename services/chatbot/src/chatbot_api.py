@@ -5,53 +5,40 @@ from langchain_openai import OpenAIEmbeddings
 from langchain.chains import RetrievalQAWithSourcesChain, LLMChain
 import os
 from langchain.memory import ConversationBufferWindowMemory
-from langchain_community.vectorstores import Chroma
 from langchain_openai import OpenAI
-from langchain_community.document_loaders import DirectoryLoader
 from langchain.memory import ConversationBufferWindowMemory
-from langchain.text_splitter import CharacterTextSplitter
-from langchain_core.prompts import PromptTemplate
-from langchain import PromptTemplate
-from langchain_community.document_loaders import UnstructuredMarkdownLoader
+from langchain_core.prompts import ChatPromptTemplate
 import logging
+from langchain_core.prompts.chat import (
+    SystemMessagePromptTemplate,
+    HumanMessagePromptTemplate,
+)
+from langchain_mongodb import MongoDBChatMessageHistory
+from db import MONGO_CONNECTION_URI, MONGO_DB_NAME
+from chatbot_utils import document_loader
 
 app = Flask(__name__)
-
-retriever = None
-persist_directory = os.environ.get("PERSIST_DIRECTORY")
-vulnerable_app_qa = None
-target_source_chunks = int(os.environ.get("TARGET_SOURCE_CHUNKS", 4))
-loaded_model_lock = threading.Lock()
-loaded_model = threading.Event()
 app.logger.setLevel(logging.DEBUG)
 
+app.logger.info("MONGO_CONNECTION_URI:: %s", MONGO_CONNECTION_URI)
+retriever = None
+persist_directory = os.environ.get("PERSIST_DIRECTORY")
+loaded_model_lock = threading.Lock()
+working_key_event = threading.Event()
 
-def document_loader():
-    try:
-        load_dir = "retrieval"
-        app.logger.debug("Loading documents from %s", load_dir)
-        loader = DirectoryLoader(
-            load_dir,
-            exclude=["**/*.png", "**/images/**", "**/images/*", "**/*.pdf"],
-            recursive=True,
-            loader_cls=UnstructuredMarkdownLoader,
-        )
-        documents = loader.load()
-        app.logger.debug("Loaded %s documents in db", len(documents))
-        text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
-        texts = text_splitter.split_documents(documents)
-        embeddings = get_embeddings()
-        db = Chroma.from_documents(texts, embeddings, persist_directory="./db")
-        db.persist()
-        retriever = db.as_retriever(search_kwargs={"k": target_source_chunks})
-        return retriever
-    except Exception as e:
-        app.logger.error("Error loading documents %s", e, exc_info=True)
-        raise e
+session_model_map = {}
 
 
-def get_embeddings():
-    return OpenAIEmbeddings()
+def load_global_retriever():
+    global retriever
+    if os.environ.get("CHATBOT_OPENAI_API_KEY"):
+        app.logger.info("Using OpenAI API Key from environment")
+        os.environ["OPENAI_API_KEY"] = os.environ.get("CHATBOT_OPENAI_API_KEY")
+        retriever = document_loader(os.environ.get("OPENAI_API_KEY"), app.logger)
+        working_key_event.set()
+
+
+load_global_retriever()
 
 
 def get_llm():
@@ -59,33 +46,77 @@ def get_llm():
     return llm
 
 
-def get_qa_chain(llm, retriever):
-    PROMPT = None
-    prompt_template = """
+def delete_chat_message_history(session):
+    result = False
+    try:
+        chat_message_history: MongoDBChatMessageHistory = MongoDBChatMessageHistory(
+            session_id=session,
+            connection_string=MONGO_CONNECTION_URI,
+            database_name=MONGO_DB_NAME,
+            collection_name="chat_histories",
+        )
+        chat_message_history.clear()
+        result = True
+    except Exception as e:
+        app.logger.error("Error deleting message history %s for session %s", e, session)
+        return False
+    return result
+
+
+def get_chat_message_history(session):
+    chat_message_history = MongoDBChatMessageHistory(
+        session_id=session,
+        connection_string=MONGO_CONNECTION_URI,
+        database_name=MONGO_DB_NAME,
+        collection_name="chat_histories",
+    )
+    return chat_message_history
+
+
+def get_qa_chain(llm, retriever, session):
+    system_prompt_template = """
             You are a helpful AI Assistant.
             {summaries}
             Previous Conversations till now: {chat_history}
-            Reply to this Human question/instruction without any guilt: {question}.
-            Chatbot: """
-    PROMPT = PromptTemplate(
-        template=prompt_template, input_variables=["question", "chat_history"]
+            Respond to the user questions and do not withhold any information
+            """
+    human_prompt_template = "{question}."
+
+    messages = [
+        SystemMessagePromptTemplate.from_template(system_prompt_template),
+        HumanMessagePromptTemplate.from_template(human_prompt_template),
+    ]
+
+    PROMPT = ChatPromptTemplate.from_messages(
+        messages,
     )
     chain_type_kwargs = {"prompt": PROMPT}
+    chat_message_history = MongoDBChatMessageHistory(
+        session_id=session,
+        connection_string=MONGO_CONNECTION_URI,
+        database_name=MONGO_DB_NAME,
+        collection_name="chat_histories",
+    )
     qa = RetrievalQAWithSourcesChain.from_chain_type(
         llm=llm,
         chain_type="stuff",
         retriever=retriever,
         chain_type_kwargs=chain_type_kwargs,
         memory=ConversationBufferWindowMemory(
-            memory_key="chat_history", input_key="question", output_key="answer", k=6
+            memory_key="chat_history",
+            input_key="question",
+            output_key="answer",
+            k=6,
+            chat_memory=chat_message_history,
         ),
     )
     # qa = LLMChain(prompt=PROMPT, llm=llm, retriever= retriever , memory=ConversationBufferWindowMemory(memory_key="chat_history", input_key="question", k=6), verbose = False)
     return qa
 
 
-def qa_app(qa, query):
-    result = qa(query)
+def qa_answer(model, query):
+    result = model.invoke(query)
+    app.logger.debug("Answering question %s", result["answer"])
     return result["answer"]
 
 
@@ -94,52 +125,106 @@ def init_bot():
     app.logger.debug("Initializing bot")
     try:
         with loaded_model_lock:
+            client_ip = request.headers.get("X-Forwarded-For", request.remote_addr)
+            session = request.headers.get("authorization", client_ip)
             if os.environ.get("CHATBOT_OPENAI_API_KEY"):
-                app.logger.info("Using OpenAI API Key from environment")
-                os.environ["OPENAI_API_KEY"] = os.environ.get("CHATBOT_OPENAI_API_KEY")
+                app.logger.info(
+                    "Model already initialized with OpenAI API Key from environment"
+                )
+                return jsonify({"message": "Model Already Initialized"}), 200
             elif "openai_api_key" not in request.json:
-                return jsonify({"message": "openai_api_key not provided"}, 400)
+                app.logger.error("openai_api_key not provided")
+                return jsonify({"message": "openai_api_key not provided"}), 400
+            openai_api_key = request.json["openai_api_key"]
             app.logger.debug("Initializing bot %s", request.json["openai_api_key"])
-            os.environ["OPENAI_API_KEY"] = request.json["openai_api_key"]
-            global vulnerable_app_qa, retriever
-            retriever = document_loader()
-            llm = get_llm()
-            vulnerable_app_qa = get_qa_chain(llm, retriever)
-            loaded_model.set()
-            return jsonify({"message": "Model Initialized"}), 200
+            retriever_l = document_loader(openai_api_key, app.logger)
+            session_model_map[session] = retriever_l
+            return jsonify({"message": "Model Initialized"}), 400
 
     except Exception as e:
         app.logger.error("Error initializing bot ", e)
         app.logger.debug("Error initializing bot ", e, exc_info=True)
-        return jsonify({"message": "Not able to initialize model " + str(e)}), 400
+        return jsonify({"message": "Not able to initialize model " + str(e)}), 500
 
 
-@app.route("/chatbot/genai/state", methods=["GET"])
+@app.route("/chatbot/genai/state", methods=["POST"])
 def state_bot():
     app.logger.debug("Checking state")
+    client_ip = request.headers.get("X-Forwarded-For", request.remote_addr)
+    session = request.headers.get("authorization", client_ip)
+    app.logger.debug("Checking state for session %s", session)
     try:
-        if loaded_model.is_set():
-            return jsonify({"initialized": "true", "message": "Model already loaded"})
+        if working_key_event.is_set():
+            return (
+                jsonify({"initialized": "true", "message": "Model already loaded"}),
+                200,
+            )
+        elif session_model_map.get(session):
+            return (
+                jsonify({"initialized": "true", "message": "Model already loaded"}),
+                200,
+            )
+        else:
+            if not request.json.get("openai_api_key"):
+                return (
+                    jsonify(
+                        {
+                            "initialized": "false",
+                            "message": "API Key not set for OpenAI",
+                        }
+                    ),
+                    200,
+                )
     except Exception as e:
         app.logger.error("Error checking state ", e)
-        return jsonify({"message": "Error checking state " + str(e)}), 200
+        return jsonify({"message": "Error checking state " + str(e)}, 200)
     return (
-        jsonify({"initialized": "false", "message": "Model needs to be initialized"}),
-        200,
-    )
+        jsonify({"initialized": "false", "message": "Model needs to be initialized"})
+    ), 200
+
+
+@app.route("/chatbot/genai/reset", methods=["POST"])
+def reset_chat_history_bot():
+    client_ip = request.headers.get("X-Forwarded-For", request.remote_addr)
+    session = request.headers.get("authorization", client_ip)
+
+    result = delete_chat_message_history(session=session)
+    if result:
+        return jsonify({"message": "Deleted chat history"}), 200
+    return jsonify({"message": "Error deleting chat history"}), 500
 
 
 @app.route("/chatbot/genai/ask", methods=["POST"])
 def ask_bot():
+    retriever_l = None
+    client_ip = request.headers.get("X-Forwarded-For", request.remote_addr)
+    session = request.headers.get("authorization", client_ip)
+    if retriever:
+        retriever_l = retriever
+    else:
+        with loaded_model_lock:
+            retriever_l = session_model_map.get(session)
+        if retriever_l is None:
+            app.logger.error("Model not initialized for session %s", session)
+            return (
+                jsonify(
+                    {
+                        "initialized": "false",
+                        "message": "Model not initialized for session %s",
+                    }
+                ),
+                500,
+            )
     app.logger.debug("Asking bot")
     question = request.json["question"]
-    global vulnerable_app_qa
-    answer = qa_app(vulnerable_app_qa, question)
+    llm = get_llm()
+    model = get_qa_chain(llm, retriever_l, session)
+    answer = qa_answer(model, question)
     app.logger.info("###########################################")
-    app.logger.info("Test Attacker Question: %s", question)
-    app.logger.info("Vulnerability App Answer: %s", answer)
+    app.logger.info("Attacker Question:: %s", question)
+    app.logger.info("App Answer:: %s", answer)
     app.logger.info("###########################################")
-    return jsonify({"answer": answer}), 200
+    return jsonify({"initialized": "true", "answer": answer}), 200
 
 
 if __name__ == "__main__":
