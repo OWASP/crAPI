@@ -83,7 +83,7 @@ def get_qa_chain(llm, retriever, session):
         ("system", system_prompt_template),
         MessagesPlaceholder(variable_name="chat_history", optional=False),
         ("human", human_prompt_template),
-        ("system", chatbot_prompt_template),
+        # ("system", chatbot_prompt_template),
     ]
 
     PROMPT = ChatPromptTemplate.from_messages(
