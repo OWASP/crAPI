@@ -162,6 +162,9 @@ services:
       - MONGO_DB_PASSWORD=crapisecretpassword
       - MONGO_DB_NAME=crapi
       # - CHATBOT_OPENAI_API_KEY=
+    depends_on:
+      mongodb:
+        condition: service_healthy
     # ports:
     #  - "${LISTEN_IP:-127.0.0.1}:5002:5002"
 
