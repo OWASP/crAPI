@@ -22,6 +22,7 @@ server {
     proxy_pass  ${HTTP_PROTOCOL}://${COMMUNITY_SERVICE};
     proxy_set_header Host ${COMMUNITY_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-For  $proxy_add_x_forwarded_for
     sub_filter_types application/json text/html;
     sub_filter "://${COMMUNITY_SERVICE}" "://$http_host";
     sub_filter_once off;
@@ -39,6 +40,7 @@ server {
     proxy_pass  ${HTTP_PROTOCOL}://${IDENTITY_SERVICE};
     proxy_set_header Host ${IDENTITY_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-For  $proxy_add_x_forwarded_for
   }
 
   location /workshop/ {
@@ -53,6 +55,7 @@ server {
     proxy_pass  ${HTTP_PROTOCOL}://${WORKSHOP_SERVICE};
     proxy_set_header Host ${WORKSHOP_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-For  $proxy_add_x_forwarded_for
     sub_filter_types application/json text/html;
     sub_filter "${HTTP_PROTOCOL}://${WORKSHOP_SERVICE}" "$scheme://$http_host";
     sub_filter_once off;
@@ -70,6 +73,7 @@ server {
     proxy_pass  ${HTTP_PROTOCOL}://${CHATBOT_SERVICE};
     proxy_set_header Host ${CHATBOT_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-For  $proxy_add_x_forwarded_for
     sub_filter_types application/json text/html;
     sub_filter "://${CHATBOT_SERVICE}" "://$http_host";
     sub_filter_once off;
@@ -112,6 +116,7 @@ server {
     proxy_pass  ${HTTP_PROTOCOL}://${COMMUNITY_SERVICE};
     proxy_set_header Host ${COMMUNITY_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-For  $proxy_add_x_forwarded_for
     sub_filter_types application/json text/html;
     sub_filter "://${COMMUNITY_SERVICE}" "://$http_host";
     sub_filter_once off;
@@ -129,6 +134,7 @@ server {
     proxy_pass  ${HTTP_PROTOCOL}://${IDENTITY_SERVICE};
     proxy_set_header Host ${IDENTITY_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-For  $proxy_add_x_forwarded_for
   }
 
   location /workshop/ {
@@ -143,6 +149,7 @@ server {
     proxy_pass  ${HTTP_PROTOCOL}://${WORKSHOP_SERVICE};
     proxy_set_header Host ${WORKSHOP_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-For  $proxy_add_x_forwarded_for
     sub_filter_types application/json text/html;
     sub_filter "${HTTP_PROTOCOL}://${WORKSHOP_SERVICE}" "$scheme://$http_host";
     sub_filter_once off;
@@ -160,6 +167,7 @@ server {
     proxy_pass  ${HTTP_PROTOCOL}://${CHATBOT_SERVICE};
     proxy_set_header Host ${CHATBOT_SERVICE};
     proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-For  $proxy_add_x_forwarded_for
     sub_filter_types application/json text/html;
     sub_filter "${HTTP_PROTOCOL}://${CHATBOT_SERVICE}" "$scheme://$http_host";
     sub_filter_once off;
