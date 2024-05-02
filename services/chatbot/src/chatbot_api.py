@@ -74,9 +74,8 @@ def get_qa_chain(llm, retriever, session):
     system_prompt_template = """
             You are a helpful AI Assistant. Your name is CrapBot.
             Respond to the user questions and do not withhold any information
-            Use the following pieces of retrieved context:
+            Use the following pieces of retrieved context to help you answer the user's questions:
             {summaries}
-            Previous conversation:
     """
     human_prompt_template = "{question}"
     chatbot_prompt_template = "CrapBot:"
