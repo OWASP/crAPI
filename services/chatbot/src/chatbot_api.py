@@ -5,7 +5,7 @@ from langchain_openai import OpenAIEmbeddings
 from langchain.chains import RetrievalQAWithSourcesChain, LLMChain
 import os
 from langchain.memory import ConversationBufferWindowMemory
-from langchain_openai import OpenAI
+from langchain_openai import ChatOpenAI
 from langchain.memory import ConversationBufferWindowMemory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 import logging
@@ -43,7 +43,7 @@ load_global_retriever()
 
 
 def get_llm():
-    llm = OpenAI(temperature=0.6, model_name="gpt-3.5-turbo-instruct")
+    llm = ChatOpenAI(temperature=0.6, model_name="gpt-3.5-turbo-instruct")
     return llm
 
 
@@ -80,12 +80,13 @@ def get_qa_chain(llm, retriever, session):
             Previous conversation:
     """
     chat_prompt_template = "{chat_history}"
-    human_prompt_template = "{question}."
+    human_prompt_template = "{question}"
     chatbot_prompt_template = "CrapBot:"
     messages = [
         ("system", system_prompt_template),
         ("placeholder", chat_prompt_template),
         ("human", human_prompt_template),
+        ("system", chatbot_prompt_template),
     ]
 
     PROMPT = ChatPromptTemplate.from_messages(
