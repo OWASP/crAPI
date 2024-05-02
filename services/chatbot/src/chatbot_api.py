@@ -79,12 +79,11 @@ def get_qa_chain(llm, retriever, session):
             {summaries}
             Previous conversation:
     """
-    chat_prompt_template = "{chat_history}"
     human_prompt_template = "{question}"
     chatbot_prompt_template = "CrapBot:"
     messages = [
         ("system", system_prompt_template),
-        ("placeholder", chat_prompt_template),
+        MessagesPlaceholder(variable_name="chat_history", optional=True),
         ("human", human_prompt_template),
         ("system", chatbot_prompt_template),
     ]
@@ -105,6 +104,7 @@ def get_qa_chain(llm, retriever, session):
             output_key="answer",
             k=6,
             chat_memory=chat_message_history,
+            return_messages=True,
         ),
     )
     # qa = LLMChain(prompt=PROMPT, llm=llm, retriever= retriever , memory=ConversationBufferWindowMemory(memory_key="chat_history", input_key="question", k=6), verbose = False)
@@ -112,7 +112,9 @@ def get_qa_chain(llm, retriever, session):
 
 
 def qa_answer(model, session, query):
-    result = model.invoke({"question": query})
+    result = model.invoke(
+        {"question": query}
+    )
     app.logger.debug("Result %s", result)
     app.logger.debug("Answering question %s", result["answer"])
     return result["answer"]
