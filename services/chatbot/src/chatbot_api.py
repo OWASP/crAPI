@@ -54,6 +54,7 @@ def delete_chat_message_history(session):
             session
         )
         chat_message_history.clear()
+        app.logger.debug("Deleting message history for session: %s", session)
         result = True
     except Exception as e:
         app.logger.error("Error deleting message history %s for session %s", e, session)
@@ -111,7 +112,7 @@ def get_qa_chain(llm, retriever, session):
 
 def qa_answer(model, session, query):
     result = model.invoke({"question": query})
-    app.logger.debug("Result %s", result)
+    app.logger.debug("Session: %s, Result %s", session, result)
     return result["answer"]
 
 
