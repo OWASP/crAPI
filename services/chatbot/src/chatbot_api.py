@@ -43,7 +43,7 @@ load_global_retriever()
 
 
 def get_llm():
-    llm = ChatOpenAI(temperature=0.6, model_name="gpt-3.5-turbo")
+    llm = ChatOpenAI(temperature=0.6, model_name="gpt-3.5-turbo-0613")
     return llm
 
 
@@ -111,7 +111,6 @@ def get_qa_chain(llm, retriever, session):
 
 def qa_answer(model, session, query):
     result = model.invoke({"question": query})
-    app.logger.debug("Model %s", model.__dict__)
     app.logger.debug("Result %s", result)
     return result["answer"]
 
