@@ -43,7 +43,7 @@ load_global_retriever()
 
 
 def get_llm():
-    llm = ChatOpenAI(temperature=0.6, model_name="gpt-3.5-turbo-instruct")
+    llm = ChatOpenAI(temperature=0.6, model_name="gpt-3.5-turbo")
     return llm
 
 
