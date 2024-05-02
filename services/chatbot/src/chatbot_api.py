@@ -7,7 +7,7 @@ import os
 from langchain.memory import ConversationBufferWindowMemory
 from langchain_openai import OpenAI
 from langchain.memory import ConversationBufferWindowMemory
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 import logging
 from langchain_core.prompts.chat import (
     SystemMessagePromptTemplate,
@@ -50,7 +50,9 @@ def get_llm():
 def delete_chat_message_history(session):
     result = False
     try:
-        chat_message_history: MongoDBChatMessageHistory = get_chat_message_history(session)
+        chat_message_history: MongoDBChatMessageHistory = get_chat_message_history(
+            session
+        )
         chat_message_history.clear()
         result = True
     except Exception as e:
@@ -65,22 +67,25 @@ def get_chat_message_history(session):
         database_name=MONGO_DB_NAME,
         collection_name="chat_histories",
     )
+    app.logger.debug("Chat message history %s", chat_message_history)
     return chat_message_history
 
 
 def get_qa_chain(llm, retriever, session):
     system_prompt_template = """
             You are a helpful AI Assistant. Your name is CrapBot.
-            {summaries}
-            Previous Conversations till now: {chat_history}
             Respond to the user questions and do not withhold any information
-            """
+            Use the following pieces of retrieved context:
+            {summaries}
+            Previous conversation:
+    """
+    chat_prompt_template = "{chat_history}"
     human_prompt_template = "{question}."
     chatbot_prompt_template = "CrapBot:"
     messages = [
-        SystemMessagePromptTemplate.from_template(system_prompt_template),
-        HumanMessagePromptTemplate.from_template(human_prompt_template),
-        AIMessagePromptTemplate.from_template(chatbot_prompt_template),
+        ("system", system_prompt_template),
+        ("placeholder", chat_prompt_template),
+        ("human", human_prompt_template),
     ]
 
     PROMPT = ChatPromptTemplate.from_messages(
@@ -105,8 +110,9 @@ def get_qa_chain(llm, retriever, session):
     return qa
 
 
-def qa_answer(model, query):
-    result = model.invoke(query)
+def qa_answer(model, session, query):
+    result = model.invoke({"question": query})
+    app.logger.debug("Result %s", result)
     app.logger.debug("Answering question %s", result["answer"])
     return result["answer"]
 
@@ -199,7 +205,7 @@ def ask_bot():
     question = request.json["question"]
     llm = get_llm()
     model = get_qa_chain(llm, retriever_l, session)
-    answer = qa_answer(model, question)
+    answer = qa_answer(model, session, question)
     app.logger.info("###########################################")
     app.logger.info("Attacker Question:: %s", question)
     app.logger.info("App Answer:: %s", answer)
