@@ -67,7 +67,6 @@ def get_chat_message_history(session):
         database_name=MONGO_DB_NAME,
         collection_name="chat_histories",
     )
-    app.logger.debug("Chat message history %s", chat_message_history)
     return chat_message_history
 
 
@@ -83,7 +82,7 @@ def get_qa_chain(llm, retriever, session):
     chatbot_prompt_template = "CrapBot:"
     messages = [
         ("system", system_prompt_template),
-        MessagesPlaceholder(variable_name="chat_history", optional=True),
+        MessagesPlaceholder(variable_name="chat_history", optional=False),
         ("human", human_prompt_template),
         ("system", chatbot_prompt_template),
     ]
@@ -103,20 +102,18 @@ def get_qa_chain(llm, retriever, session):
             input_key="question",
             output_key="answer",
             k=6,
+            ai_prefix="CrapBot",
             chat_memory=chat_message_history,
             return_messages=True,
         ),
     )
-    # qa = LLMChain(prompt=PROMPT, llm=llm, retriever= retriever , memory=ConversationBufferWindowMemory(memory_key="chat_history", input_key="question", k=6), verbose = False)
     return qa
 
 
 def qa_answer(model, session, query):
-    result = model.invoke(
-        {"question": query}
-    )
+    result = model.invoke({"question": query})
+    app.logger.debug("Model %s", model.__dict__)
     app.logger.debug("Result %s", result)
-    app.logger.debug("Answering question %s", result["answer"])
     return result["answer"]
 
 
@@ -209,10 +206,6 @@ def ask_bot():
     llm = get_llm()
     model = get_qa_chain(llm, retriever_l, session)
     answer = qa_answer(model, session, question)
-    app.logger.info("###########################################")
-    app.logger.info("Attacker Question:: %s", question)
-    app.logger.info("App Answer:: %s", answer)
-    app.logger.info("###########################################")
     return jsonify({"initialized": "true", "answer": answer}), 200
 
 
