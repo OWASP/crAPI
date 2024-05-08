@@ -9,4 +9,5 @@ data:
   COMMUNITY_SERVICE: {{ .Values.community.service.name }}:{{ .Values.community.port }}
   IDENTITY_SERVICE: {{ .Values.identity.service.name }}:{{ .Values.identity.port }}
   WORKSHOP_SERVICE: {{ .Values.workshop.service.name }}:{{ .Values.workshop.port }}
+  MAILHOG_WEB_SERVICE: {{ .Values.mailhog.service.name }}:{{ .Values.mailhog.webPort }}
   TLS_ENABLED: {{ .Values.tlsEnabled | quote }}

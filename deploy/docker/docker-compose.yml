@@ -155,6 +155,7 @@ services:
       - COMMUNITY_SERVICE=crapi-community:${COMMUNITY_SERVER_PORT:-8087}
       - IDENTITY_SERVICE=crapi-identity:${IDENTITY_SERVER_PORT:-8080}
       - WORKSHOP_SERVICE=crapi-workshop:${WORKSHOP_SERVER_PORT:-8000}
+      - MAILHOG_WEB_SERVICE=mailhog:8025
       - TLS_ENABLED=${TLS_ENABLED:-false}
     depends_on:
       crapi-community:
