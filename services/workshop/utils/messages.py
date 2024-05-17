@@ -31,16 +31,25 @@ INSUFFICIENT_BALANCE = "Insufficient Balance. Please apply coupons to get more b
 ORDER_CREATED = "Order sent successfully."
 ORDER_RETURNED_PENDING = "This order is already requested for returning!"
 ORDER_ALREADY_RETURNED = "This order is already returned!"
-ORDER_RETURNING = "Please use the following QR code to return your order to a UPS store!"
-COUPON_ALREADY_APPLIED = "Coupon code is already claimed by you!! Please try with another coupon code"
+ORDER_RETURNING = (
+    "Please use the following QR code to return your order to a UPS store!"
+)
+COUPON_ALREADY_APPLIED = (
+    "Coupon code is already claimed by you!! Please try with another coupon code"
+)
 COUPON_APPLIED = "Coupon successfully applied!"
 COUPON_NOT_FOUND = "Coupon not found"
 RESTRICTED = "You are not allowed to access this resource!"
-INVALID_STATUS = "The value of 'status' has to be 'delivered','return pending' or 'returned'"
-INVALID_SERVICE_REQUEST_STATUS = "The value of 'status' has to be 'Pending' or 'Finished'"
+INVALID_STATUS = (
+    "The value of 'status' has to be 'delivered','return pending' or 'returned'"
+)
+INVALID_SERVICE_REQUEST_STATUS = (
+    "The value of 'status' has to be 'Pending' or 'Finished'"
+)
 REPORT_ID_MISSING = "Please enter the report_id value."
 INVALID_REPORT_ID = "Please enter a valid report_id value."
 REPORT_DOES_NOT_EXIST = "The Report does not exist for given report_id."
 COULD_NOT_CONNECT = "Could not connect to mechanic api."
 INVALID_LIMIT_OR_OFFSET = "Param limit and offset values should be integers."
 NO_USER_DETAILS = "No user details found."
+NO_OBJECT_FOUND = "No object found."

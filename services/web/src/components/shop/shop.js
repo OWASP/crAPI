@@ -66,8 +66,11 @@ const ProductDescription = (product, onBuyProduct) => (
   </>
 );
 
+
+
 const Shop = (props) => {
   const {
+    accessToken,
     products,
     availableCredit,
     history,
@@ -76,6 +79,9 @@ const Shop = (props) => {
     hasErrored,
     errorMessage,
     onFinish,
+    prevOffset,
+    nextOffset,
+    onOffsetChange
   } = props;
   return (
     <Layout>
@@ -123,10 +129,32 @@ const Shop = (props) => {
             </Col>
           ))}
         </Row>
+        <Row justify="center" className="pagination">
+          <Button
+            type="primary"
+            shape="round"
+            size="large"
+            onClick={() => onOffsetChange(prevOffset)}
+            key="prev-button"
+            disabled={prevOffset === null}
+          >
+            Previous
+          </Button>
+          <Button
+            type="primary"
+            shape="round"
+            size="large"
+            key="next-button"
+            onClick={() => onOffsetChange(nextOffset)}
+            disabled={!nextOffset}
+          >
+            Next
+          </Button>
+        </Row>
       </Content>
       <Modal
         title="Enter Coupon Code"
-        visible={isCouponFormOpen}
+        open={isCouponFormOpen}
         footer={null}
         onCancel={() => setIsCouponFormOpen(false)}
       >
@@ -156,6 +184,7 @@ const Shop = (props) => {
 };
 
 Shop.propTypes = {
+  accessToken: PropTypes.string,
   history: PropTypes.object,
   products: PropTypes.array,
   availableCredit: PropTypes.number,
@@ -165,10 +194,13 @@ Shop.propTypes = {
   hasErrored: PropTypes.bool,
   errorMessage: PropTypes.string,
   onFinish: PropTypes.func,
+  prevOffset: PropTypes.number,
+  nextOffset: PropTypes.number,
+  onOffsetChange: PropTypes.func,
 };
 
-const mapStateToProps = ({ shopReducer: { availableCredit, products } }) => {
-  return { availableCredit, products };
+const mapStateToProps = ({ shopReducer: { accessToken, availableCredit, products, prevOffset, nextOffset} }) => {
+  return { accessToken, availableCredit, products, prevOffset, nextOffset };
 };
 
 export default connect(mapStateToProps)(Shop);

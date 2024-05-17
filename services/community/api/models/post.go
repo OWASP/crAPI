@@ -19,7 +19,6 @@ import (
 	"errors"
 	"html"
 	"log"
-	"reflect"
 	"strings"
 	"time"
 
@@ -51,17 +50,24 @@ func (post *Post) Prepare() {
 	post.CreatedAt = time.Now()
 }
 
+type PostsResponse struct {
+	Posts []Post `json:"posts"`
+	NextOffset *int64 `json:"next_offset"`
+	PrevOffset *int64 `json:"previous_offset"`
+	Total int `json:"total"`
+}
+
 //Validate data of post
 func (post *Post) Validate() error {
 
 	if post.Title == "" {
-		return errors.New("Required Title")
+		return errors.New("required title")
 	}
 	if post.Content == "" {
-		return errors.New("Required Content")
+		return errors.New("tequired content")
 	}
 	if post.AuthorID < 1 {
-		return errors.New("Required Author")
+		return errors.New("required author")
 	}
 	return nil
 }
@@ -97,42 +103,57 @@ func GetPostByID(client *mongo.Client, ID string) (Post, error) {
 	collection := client.Database("crapi").Collection("post")
 	filter := bson.D{{Key: "id", Value: ID}}
 	err := collection.FindOne(context.TODO(), filter).Decode(&post)
+	if err != nil {
+		log.Println(err)
+	}
 
 	return post, err
 
 }
 
 //FindAllPost return all recent post
-func FindAllPost(client *mongo.Client, offset int, limit int) ([]interface{}, error) {
-	post := []Post{}
-
+func FindAllPost(client *mongo.Client, offset int64, limit int64) (PostsResponse, error) {
+	postList := []Post{}
+	var postsResponse PostsResponse = PostsResponse{}
 	options := options.Find()
 	options.SetSort(bson.D{{Key: "_id", Value: -1}})
-	options.SetLimit(int64(limit))
-	options.SetSkip(int64(offset * limit))
+	options.SetLimit(limit)
+	options.SetSkip(offset)
+	ctx := context.Background()
 	collection := client.Database("crapi").Collection("post")
-	cur, err := collection.Find(context.Background(), bson.D{}, options)
+	cur, err := collection.Find(ctx, bson.D{}, options)
 	if err != nil {
-		log.Println(err)
+		log.Println("Error in finding posts: ", err)
+		return postsResponse, err
 	}
-	log.Println(cur)
-	objectType := reflect.TypeOf(post).Elem()
-	var list = make([]interface{}, 0)
-	defer cur.Close(context.Background())
-	for cur.Next(context.Background()) {
-		result := reflect.New(objectType).Interface()
-		err := cur.Decode(result)
-
+	for cur.Next(ctx) {
+		var elem Post
+		err := cur.Decode(&elem)
 		if err != nil {
-			log.Println(err)
-			return nil, err
+			log.Println("Error in decoding posts: ", err)
+			return postsResponse, err
 		}
-
-		list = append(list, result)
-	}
-	if err := cur.Err(); err != nil {
-		return nil, err
+		postList = append(postList, elem)
 	}
 
-	return list, err
+	postsResponse.Posts = postList
+	// get posts count for pagination
+	count, err1 := collection.CountDocuments(context.Background(), bson.D{})
+	if err1 != nil {
+		log.Println("Error in counting posts: ", err1)
+		return postsResponse, err1
+	}
+	if offset - limit >= 0 {
+		tempOffset := offset - limit
+		postsResponse.PrevOffset = &tempOffset
+	}
+	if offset + limit < count {
+		tempOffset := offset + limit
+		postsResponse.NextOffset = &tempOffset
+	}
+	postsResponse.Total = len(postList)
+	if err = cur.Err(); err != nil {
+		log.Println("Error in cursor: ", err)
+	}
+	return postsResponse, err
 }

@@ -17,6 +17,8 @@ import actionTypes from "../constants/actionTypes";
 
 const initialData = {
   posts: [],
+  prevOffset: null,
+  nextOffset: null,
 };
 
 const communityReducer = (state = initialData, action) => {
@@ -24,7 +26,9 @@ const communityReducer = (state = initialData, action) => {
     case actionTypes.FETCHED_POSTS:
       return {
         ...state,
-        posts: action.payload,
+        posts: action.payload.posts,
+        prevOffset: action.payload.previous_offset,
+        nextOffset: action.payload.next_offset,
       };
     case actionTypes.FETCHED_POST:
       return {

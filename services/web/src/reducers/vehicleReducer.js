@@ -31,6 +31,8 @@ const vehicleReducer = (state = initialData, action) => {
       return {
         ...state,
         mechanics: action.payload,
+        prevOffset: action.payload.prevOffset,
+        nextOffset: action.payload.nextOffset,
       };
     case actionTypes.REFRESHED_LOCATION:
       return {

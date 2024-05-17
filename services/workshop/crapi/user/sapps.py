@@ -22,4 +22,5 @@ class UserConfig(AppConfig):
     """
     Stores all meta data of user application
     """
-    name = 'user'
+
+    name = "user"

@@ -15,11 +15,12 @@
 
 import actionTypes from "../constants/actionTypes";
 
-export const getProductsAction = ({ callback, accessToken }) => {
+export const getProductsAction = ({ callback, accessToken, ...data }) => {
   return {
     type: actionTypes.GET_PRODUCTS,
     accessToken,
     callback,
+    ...data,
   };
 };
 
@@ -32,11 +33,12 @@ export const buyProductAction = ({ callback, accessToken, ...data }) => {
   };
 };
 
-export const getOrdersAction = ({ callback, accessToken }) => {
+export const getOrdersAction = ({ callback, accessToken, ...data }) => {
   return {
     type: actionTypes.GET_ORDERS,
     accessToken,
     callback,
+    ...data,
   };
 };
 

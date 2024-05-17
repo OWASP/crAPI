@@ -21,5 +21,5 @@ from django.urls import include, re_path
 import crapi.merchant.views as merchant_views
 
 urlpatterns = [
-    re_path(r'contact_mechanic$', merchant_views.ContactMechanicView.as_view()),
+    re_path(r"contact_mechanic$", merchant_views.ContactMechanicView.as_view()),
 ]

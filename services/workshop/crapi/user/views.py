@@ -27,10 +27,12 @@ from crapi_site import settings
 from utils.jwt import jwt_auth_required
 from utils import messages
 from utils.logging import log_error
+from rest_framework.pagination import LimitOffsetPagination
 
 logger = logging.getLogger()
 
-class AdminUserView(APIView):
+
+class AdminUserView(APIView, LimitOffsetPagination):
     """
     View for admin user to fetch user details
     """
@@ -47,31 +49,18 @@ class AdminUserView(APIView):
             user details and 200 status if no error
             message and corresponding status if error
         """
-        limit = request.GET.get('limit', str(settings.DEFAULT_LIMIT))
-        offset = request.GET.get('offset', str(settings.DEFAULT_OFFSET))
-        if not limit.isdigit() or not offset.isdigit():
-            return Response(
-                {'message': messages.INVALID_LIMIT_OR_OFFSET},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        limit = int(limit)
-        offset = int(offset)
-        if limit > settings.MAX_LIMIT:
-            limit = 100
-        if limit < 0:
-            limit = settings.DEFAULT_LIMIT
-        if offset < 0:
-            offset = settings.DEFAULT_OFFSET
         # Sort by id
-        userdetails = UserDetails.objects.all().order_by('id')[offset:offset+limit]
+        userdetails = UserDetails.objects.all().order_by("id")
         if not userdetails:
             return Response(
-                {'message': messages.NO_USER_DETAILS},
-                status=status.HTTP_404_NOT_FOUND
+                {"message": messages.NO_USER_DETAILS}, status=status.HTTP_404_NOT_FOUND
             )
-        serializer = UserDetailsSerializer(userdetails, many=True)
-        response_data = {
-            "users": serializer.data
-        }
+        paginated = self.paginate_queryset(userdetails, request)
+        serializer = UserDetailsSerializer(paginated, many=True)
+        response_data = dict(
+            users=serializer.data,
+            next_offset=self.offset + self.limit if self.offset + self.limit < self.count else None,
+            previous_offset=self.offset - self.limit if self.offset - self.limit >= 0 else None,
+            count=self.get_count(paginated),
+        )
         return Response(response_data, status=status.HTTP_200_OK)
-

@@ -7,13 +7,13 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crapi', '0001_initial'),
+        ("crapi", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='order',
-            name='transaction_id',
+            model_name="order",
+            name="transaction_id",
             field=models.CharField(default=uuid.uuid4, max_length=255),
         ),
     ]
