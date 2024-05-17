@@ -34,7 +34,7 @@ const PastOrdersContainer = (props) => {
         });
       }
     };
-    getOrders({ callback, accessToken});
+    getOrders({ callback, accessToken });
   }, [accessToken, getOrders]);
 
   const handleOffsetChange = (offset) => {
@@ -47,7 +47,7 @@ const PastOrdersContainer = (props) => {
       }
     };
     getOrders({ callback, accessToken, offset });
-  }
+  };
 
   const handleReturnOrder = (orderId) => {
     const callback = (res, data) => {
@@ -74,7 +74,13 @@ const PastOrdersContainer = (props) => {
     returnOrder({ callback, accessToken, orderId });
   };
 
-  return <PastOrders history={history} returnOrder={handleReturnOrder} handleOffsetChange={handleOffsetChange} />;
+  return (
+    <PastOrders
+      history={history}
+      returnOrder={handleReturnOrder}
+      handleOffsetChange={handleOffsetChange}
+    />
+  );
 };
 
 const mapStateToProps = ({ userReducer: { accessToken } }) => {

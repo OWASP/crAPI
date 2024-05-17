@@ -121,7 +121,9 @@ PastOrders.propTypes = {
   handleOffsetChange: PropTypes.func,
 };
 
-const mapStateToProps = ({ shopReducer: { pastOrders, prevOffset, nextOffset } }) => {
+const mapStateToProps = ({
+  shopReducer: { pastOrders, prevOffset, nextOffset },
+}) => {
   return { pastOrders, prevOffset, nextOffset };
 };
 

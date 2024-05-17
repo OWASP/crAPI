@@ -43,7 +43,7 @@ const ShopContainer = (props) => {
         });
       }
     };
-    getProducts({ callback, accessToken});
+    getProducts({ callback, accessToken });
   }, [accessToken, getProducts]);
 
   const handleBuyProduct = (product) => {
@@ -74,7 +74,7 @@ const ShopContainer = (props) => {
       }
     };
     getProducts({ callback, accessToken, offset });
-  }
+  };
 
   const handleFormFinish = (values) => {
     const callback = (res, data) => {
@@ -111,9 +111,9 @@ const ShopContainer = (props) => {
   );
 };
 
-
-
-const mapStateToProps = ({ userReducer: { accessToken, prevOffset, nextOffset } }) => {
+const mapStateToProps = ({
+  userReducer: { accessToken, prevOffset, nextOffset },
+}) => {
   return { accessToken, prevOffset, nextOffset };
 };
 

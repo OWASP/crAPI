@@ -40,7 +40,10 @@ export function* getProducts(param) {
   let offset = param.offset ? param.offset : 0;
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const getUrl = APIService.WORKSHOP_SERVICE + requestURLS.GET_PRODUCTS + `?limit=30&offset=${offset}`;
+    const getUrl =
+      APIService.WORKSHOP_SERVICE +
+      requestURLS.GET_PRODUCTS +
+      `?limit=30&offset=${offset}`;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -61,7 +64,11 @@ export function* getProducts(param) {
       });
       yield put({
         type: actionTypes.FETCHED_PRODUCTS,
-        payload: { products: ResponseJson.products, prevOffset: ResponseJson.previous_offset, nextOffset: ResponseJson.next_offset },
+        payload: {
+          products: ResponseJson.products,
+          prevOffset: ResponseJson.previous_offset,
+          nextOffset: ResponseJson.next_offset,
+        },
       });
       callback(responseTypes.SUCCESS, ResponseJson);
     } else {
@@ -128,7 +135,10 @@ export function* getOrders(param) {
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
     let offset = param.offset ? param.offset : 0;
-    const getUrl = APIService.WORKSHOP_SERVICE + requestURLS.GET_ORDERS + `?limit=30&offset=${offset}`;
+    const getUrl =
+      APIService.WORKSHOP_SERVICE +
+      requestURLS.GET_ORDERS +
+      `?limit=30&offset=${offset}`;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -145,7 +155,11 @@ export function* getOrders(param) {
     if (recievedResponse.ok) {
       yield put({
         type: actionTypes.FETCHED_ORDERS,
-        payload: { orders: ResponseJson.orders, prevOffset: ResponseJson.previous_offset, nextOffset: ResponseJson.next_offset },
+        payload: {
+          orders: ResponseJson.orders,
+          prevOffset: ResponseJson.previous_offset,
+          nextOffset: ResponseJson.next_offset,
+        },
       });
       callback(responseTypes.SUCCESS, ResponseJson);
     } else {

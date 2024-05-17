@@ -41,7 +41,11 @@ export function* getPosts(param) {
     if (param.offset) {
       offset = param.offset;
     }
-    const getUrl = APIService.COMMUNITY_SERVICE + requestURLS.GET_POSTS + "?limit=30&offset=" + offset;
+    const getUrl =
+      APIService.COMMUNITY_SERVICE +
+      requestURLS.GET_POSTS +
+      "?limit=30&offset=" +
+      offset;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,

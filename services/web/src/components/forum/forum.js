@@ -124,7 +124,9 @@ Forum.propTypes = {
   handleOffsetChange: PropTypes.func,
 };
 
-const mapStateToProps = ({ communityReducer: { posts, prevOffset, nextOffset } }) => {
+const mapStateToProps = ({
+  communityReducer: { posts, prevOffset, nextOffset },
+}) => {
   return { posts, prevOffset, nextOffset };
 };
 

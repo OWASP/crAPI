@@ -33,7 +33,12 @@ export const getMechanicsAction = ({ callback, accessToken, ...data }) => {
   };
 };
 
-export const getVehiclesAction = ({ callback, accessToken, email, ...data }) => {
+export const getVehiclesAction = ({
+  callback,
+  accessToken,
+  email,
+  ...data
+}) => {
   return {
     type: actionTypes.GET_VEHICLES,
     accessToken,

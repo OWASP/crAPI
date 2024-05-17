@@ -66,8 +66,6 @@ const ProductDescription = (product, onBuyProduct) => (
   </>
 );
 
-
-
 const Shop = (props) => {
   const {
     accessToken,
@@ -81,7 +79,7 @@ const Shop = (props) => {
     onFinish,
     prevOffset,
     nextOffset,
-    onOffsetChange
+    onOffsetChange,
   } = props;
   return (
     <Layout>
@@ -199,7 +197,15 @@ Shop.propTypes = {
   onOffsetChange: PropTypes.func,
 };
 
-const mapStateToProps = ({ shopReducer: { accessToken, availableCredit, products, prevOffset, nextOffset} }) => {
+const mapStateToProps = ({
+  shopReducer: {
+    accessToken,
+    availableCredit,
+    products,
+    prevOffset,
+    nextOffset,
+  },
+}) => {
   return { accessToken, availableCredit, products, prevOffset, nextOffset };
 };
 
