@@ -67,8 +67,14 @@ class ProductView(APIView, LimitOffsetPagination):
         response_data = dict(
             products=serializer.data,
             credit=user_details.available_credit,
-            next_offset=self.offset + self.limit if self.offset + self.limit < self.count else None,
-            previous_offset=self.offset - self.limit if self.offset - self.limit >= 0 else None,
+            next_offset=(
+                self.offset + self.limit
+                if self.offset + self.limit < self.count
+                else None
+            ),
+            previous_offset=(
+                self.offset - self.limit if self.offset - self.limit >= 0 else None
+            ),
             count=self.get_count(paginated),
         )
         return Response(response_data, status=status.HTTP_200_OK)
@@ -271,8 +277,14 @@ class OrderDetailsView(APIView, LimitOffsetPagination):
         serializer = OrderSerializer(paginated, many=True)
         response_data = dict(
             orders=serializer.data,
-            next_offset=self.offset + self.limit if self.offset + self.limit < self.count else None,
-            previous_offset=self.offset - self.limit if self.offset - self.limit >= 0 else None,
+            next_offset=(
+                self.offset + self.limit
+                if self.offset + self.limit < self.count
+                else None
+            ),
+            previous_offset=(
+                self.offset - self.limit if self.offset - self.limit >= 0 else None
+            ),
             count=self.get_count(paginated),
         )
         return Response(response_data, status=status.HTTP_200_OK)

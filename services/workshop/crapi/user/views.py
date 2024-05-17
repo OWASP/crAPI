@@ -59,8 +59,14 @@ class AdminUserView(APIView, LimitOffsetPagination):
         serializer = UserDetailsSerializer(paginated, many=True)
         response_data = dict(
             users=serializer.data,
-            next_offset=self.offset + self.limit if self.offset + self.limit < self.count else None,
-            previous_offset=self.offset - self.limit if self.offset - self.limit >= 0 else None,
+            next_offset=(
+                self.offset + self.limit
+                if self.offset + self.limit < self.count
+                else None
+            ),
+            previous_offset=(
+                self.offset - self.limit if self.offset - self.limit >= 0 else None
+            ),
             count=self.get_count(paginated),
         )
         return Response(response_data, status=status.HTTP_200_OK)

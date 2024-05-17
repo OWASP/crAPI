@@ -114,6 +114,7 @@ class UserDetailsTestCase(TestCase):
             "/workshop/api/management/users/all", **self.auth_headers
         )
         self.assertEqual(response.status_code, 200)
+        all_users_length = len(json.loads(response.content)["users"])
         response_data = json.loads(response.content)
         self.assertEqual(len(response_data["users"]), settings.DEFAULT_LIMIT)
         response = self.client.get(
@@ -128,6 +129,12 @@ class UserDetailsTestCase(TestCase):
         self.assertEqual(response2.status_code, 200)
         response_data2 = json.loads(response2.content)
         self.assertNotEquals(response_data["users"], response_data2["users"])
+        response = self.client.get(
+            "/workshop/api/management/users/all?limit=a&offset=-1", **self.auth_headers
+        )
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertEqual(len(response_data["users"]), all_users_length)
 
     def test_bad_get_api_management_users_all(self):
         """
@@ -136,7 +143,3 @@ class UserDetailsTestCase(TestCase):
         """
         response = self.client.get("/workshop/api/management/users/all")
         self.assertEqual(response.status_code, 401)
-        response = self.client.get(
-            "/workshop/api/management/users/all?limit=a&offset=-1", **self.auth_headers
-        )
-        self.assertEqual(response.status_code, 400)
