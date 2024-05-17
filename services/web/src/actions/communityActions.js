@@ -15,11 +15,12 @@
 
 import actionTypes from "../constants/actionTypes";
 
-export const getPostsAction = ({ accessToken, callback }) => {
+export const getPostsAction = ({ accessToken, callback, ...data }) => {
   return {
     type: actionTypes.GET_POSTS,
     accessToken,
     callback,
+    ...data,
   };
 };
 

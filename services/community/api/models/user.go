@@ -62,36 +62,36 @@ func (u *Author) Validate(action string) error {
 	switch strings.ToLower(action) {
 	case "update":
 		if u.Nickname == "" {
-			return errors.New("Required Nickname")
+			return errors.New("required nickname")
 		}
 		if u.Email == "" {
-			return errors.New("Required Email")
+			return errors.New("required email")
 		}
 		if err := checkmail.ValidateFormat(u.Email); err != nil {
-			return errors.New("Invalid Email")
+			return errors.New("invalid email")
 		}
 		return nil
 
 	case "login":
 		if u.Nickname == "" {
-			return errors.New("Required Nickname")
+			return errors.New("required nickname")
 		}
 		if u.Email == "" {
-			return errors.New("Required Email")
+			return errors.New("required email")
 		}
 		if err := checkmail.ValidateFormat(u.Email); err != nil {
-			return errors.New("Invalid Email")
+			return errors.New("invalid email")
 		}
 		return nil
 	default:
 		if u.Nickname == "" {
-			return errors.New("Required Nickname")
+			return errors.New("required nickname")
 		}
 		if u.Email == "" {
-			return errors.New("Required Email")
+			return errors.New("required email")
 		}
 		if err := checkmail.ValidateFormat(u.Email); err != nil {
-			return errors.New("Invalid Email")
+			return errors.New("invalid email")
 		}
 		return nil
 	}

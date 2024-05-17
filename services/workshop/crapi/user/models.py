@@ -22,6 +22,7 @@ from django.conf import settings
 from collections import OrderedDict
 from extended_choices import Choices
 
+
 class User(models.Model):
     """
     User Model
@@ -36,16 +37,16 @@ class User(models.Model):
     password = models.CharField(max_length=255)
 
     ROLE_CHOICES = Choices(
-        ('PREDEFINED', 0, 'Predefined'),
-        ('USER', 1, 'User'),
-        ('MECH', 2, 'Mechanic'),
-        ('ADMIN', 3, 'Admin'),
-        dict_class = OrderedDict
+        ("PREDEFINED", 0, "Predefined"),
+        ("USER", 1, "User"),
+        ("MECH", 2, "Mechanic"),
+        ("ADMIN", 3, "Admin"),
+        dict_class=OrderedDict,
     )
     role = models.IntegerField(choices=ROLE_CHOICES, default=ROLE_CHOICES.USER)
 
     class Meta:
-        db_table = 'user_login'
+        db_table = "user_login"
         managed = settings.IS_TESTING
 
     def __str__(self):
@@ -57,6 +58,7 @@ class UserDetails(models.Model):
     UserDetails Model
     stores additional details for the user
     """
+
     id = models.AutoField(primary_key=True)
     available_credit = models.FloatField()
     name = models.CharField(max_length=255, null=True)
@@ -64,7 +66,7 @@ class UserDetails(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
-        db_table = 'user_details'
+        db_table = "user_details"
         managed = settings.IS_TESTING
 
     def __str__(self):
@@ -76,11 +78,12 @@ class VehicleCompany(models.Model):
     UserDetails Model
     stores additional details for the user
     """
+
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
 
     class Meta:
-        db_table = 'vehicle_company'
+        db_table = "vehicle_company"
         managed = settings.IS_TESTING
 
     def __str__(self):
@@ -92,6 +95,7 @@ class VehicleModel(models.Model):
     UserDetails Model
     stores additional details for the user
     """
+
     id = models.AutoField(primary_key=True)
     fuel_type = models.BigIntegerField()
     model = models.CharField(max_length=255)
@@ -99,7 +103,7 @@ class VehicleModel(models.Model):
     vehiclecompany = models.ForeignKey(VehicleCompany, on_delete=models.CASCADE)
 
     class Meta:
-        db_table = 'vehicle_model'
+        db_table = "vehicle_model"
         managed = settings.IS_TESTING
 
     def __str__(self):
@@ -111,6 +115,7 @@ class Vehicle(models.Model):
     Vehicle Model
     represents a vehicle in the application
     """
+
     id = models.AutoField(primary_key=True)
     pincode = models.CharField(max_length=255, null=True)
     vin = models.CharField(max_length=255)
@@ -121,7 +126,7 @@ class Vehicle(models.Model):
     location_id = models.BigIntegerField(null=True)
 
     class Meta:
-        db_table = 'vehicle_details'
+        db_table = "vehicle_details"
         managed = settings.IS_TESTING
 
     def __str__(self):

@@ -29,33 +29,38 @@ class UserSerializer(serializers.ModelSerializer):
         """
         Meta class for UserSerializer
         """
+
         model = User
-        fields = ('email', 'number')
+        fields = ("email", "number")
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
     """
     Serializer for User Details model
     """
+
     user = UserSerializer()
 
     class Meta:
         """
         Meta class for UserSerializer
         """
+
         model = UserDetails
-        fields = ('user', 'available_credit')
+        fields = ("user", "available_credit")
 
 
 class VehicleSerializer(serializers.ModelSerializer):
     """
     Serializer for Vehicle model
     """
+
     owner = UserSerializer()
 
     class Meta:
         """
         Meta class for MechanicSerializer
         """
+
         model = Vehicle
-        fields = ('id', 'vin', 'owner')
+        fields = ("id", "vin", "owner")

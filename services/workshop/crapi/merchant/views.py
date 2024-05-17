@@ -33,6 +33,7 @@ class ContactMechanicView(APIView):
     """
     View for contact mechanic feature
     """
+
     @jwt_auth_required
     def post(self, request, user=None):
         """
@@ -49,32 +50,37 @@ class ContactMechanicView(APIView):
         request_data = request.data
         serializer = ContactMechanicSerializer(data=request_data)
         if not serializer.is_valid():
-            log_error(request.path, request.data, status.HTTP_400_BAD_REQUEST, serializer.errors)
+            log_error(
+                request.path,
+                request.data,
+                status.HTTP_400_BAD_REQUEST,
+                serializer.errors,
+            )
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        repeat_request_if_failed = request_data.get('repeat_request_if_failed', False)
-        number_of_repeats = request_data.get('number_of_repeats', 1)
+        repeat_request_if_failed = request_data.get("repeat_request_if_failed", False)
+        number_of_repeats = request_data.get("number_of_repeats", 1)
         if repeat_request_if_failed and number_of_repeats < 1:
             return Response(
-                {'message': messages.MIN_NO_OF_REPEATS_FAILED},
-                status=status.HTTP_503_SERVICE_UNAVAILABLE
+                {"message": messages.MIN_NO_OF_REPEATS_FAILED},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
             )
         elif repeat_request_if_failed and number_of_repeats > 100:
             return Response(
-                {'message': messages.NO_OF_REPEATS_EXCEEDED},
-                status=status.HTTP_503_SERVICE_UNAVAILABLE
+                {"message": messages.NO_OF_REPEATS_EXCEEDED},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
             )
 
         repeat_count = 0
         while True:
-            request_url=request_data['mechanic_api']
+            request_url = request_data["mechanic_api"]
             logger.info(f"Repeat count: {repeat_count}, mechanic_api: {request_url}")
             try:
                 mechanic_response = requests.get(
                     request_url,
                     params=request_data,
-                    headers={'Authorization': request.META.get('HTTP_AUTHORIZATION')},
-                    verify=False
+                    headers={"Authorization": request.META.get("HTTP_AUTHORIZATION")},
+                    verify=False,
                 )
                 if mechanic_response.status_code == status.HTTP_200_OK:
                     logger.info(f"Got a valid response at repeat count: {repeat_count}")
@@ -86,17 +92,17 @@ class ContactMechanicView(APIView):
                 repeat_count += 1
             except (MissingSchema, InvalidURL) as e:
                 log_error(request.path, request.data, status.HTTP_400_BAD_REQUEST, e)
-                return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
             except requests.exceptions.ConnectionError as e:
                 if not repeat_request_if_failed:
                     return Response(
-                        {'message': messages.COULD_NOT_CONNECT},
-                        status=status.HTTP_400_BAD_REQUEST
+                        {"message": messages.COULD_NOT_CONNECT},
+                        status=status.HTTP_400_BAD_REQUEST,
                     )
                 if repeat_count == number_of_repeats:
                     return Response(
-                        {'message': messages.COULD_NOT_CONNECT},
-                        status=status.HTTP_400_BAD_REQUEST
+                        {"message": messages.COULD_NOT_CONNECT},
+                        status=status.HTTP_400_BAD_REQUEST,
                     )
                 repeat_count += 1
                 continue
@@ -105,7 +111,10 @@ class ContactMechanicView(APIView):
             mechanic_response = mechanic_response.json()
         except ValueError:
             mechanic_response = mechanic_response.text
-        return Response({
-            'response_from_mechanic_api': mechanic_response,
-            'status': mechanic_response_status
-        }, status=mechanic_response_status)
+        return Response(
+            {
+                "response_from_mechanic_api": mechanic_response,
+                "status": mechanic_response_status,
+            },
+            status=mechanic_response_status,
+        )

@@ -71,15 +71,17 @@ func (s *Server) GetPostByID(w http.ResponseWriter, r *http.Request) {
 
 }
 
+
+
 //GetPost Vulnerabilities
 func (s *Server) GetPost(w http.ResponseWriter, r *http.Request) {
 	//post := models.Post{}
 	limit_param := r.URL.Query().Get("limit")
-	limit := 30
+	var limit int64 = 30
 	err := error(nil)
 	if limit_param != "" {
 		// Parse limit_param and set to limit
-		limit, err = strconv.Atoi(limit_param)
+		limit, err = strconv.ParseInt(limit_param, 10, 64)
 		if err != nil {
 			limit = 30
 		}
@@ -88,10 +90,10 @@ func (s *Server) GetPost(w http.ResponseWriter, r *http.Request) {
 		limit = 50
 	}
 
-	offset := 0
+	var offset int64 = 0
 	offset_param := r.URL.Query().Get("offset")
 	if offset_param != "" {
-		offset, err = strconv.Atoi(offset_param)
+		offset, err = strconv.ParseInt(offset_param, 10, 64)
 		if err != nil {
 			offset = 0
 		}

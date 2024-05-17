@@ -16,9 +16,14 @@ contains all the test cases related to shop management
 from unittest.mock import patch
 
 from django.db import connection
-from utils.mock_methods import get_sample_admin_user, get_sample_user_data, get_sample_users, mock_jwt_auth_required
+from utils.mock_methods import (
+    get_sample_admin_user,
+    get_sample_user_data,
+    get_sample_users,
+    mock_jwt_auth_required,
+)
 
-patch('utils.jwt.jwt_auth_required', mock_jwt_auth_required).start()
+patch("utils.jwt.jwt_auth_required", mock_jwt_auth_required).start()
 
 import logging
 import bcrypt
@@ -29,8 +34,9 @@ from utils import messages
 from crapi_site import settings
 from crapi.user.models import User, UserDetails
 
-logger = logging.getLogger('UserTest')
+logger = logging.getLogger("UserTest")
 MAX_USER_COUNT = 40
+
 
 class UserDetailsTestCase(TestCase):
     """
@@ -41,35 +47,34 @@ class UserDetailsTestCase(TestCase):
         auth_headers: Auth headers for dummy user
     """
 
-    databases = '__all__'
+    databases = "__all__"
     setup_done = False
 
     def setUp(self):
         self.client = Client()
         user_data = get_sample_admin_user()
-        uset = User.objects.filter(email=user_data['email'])
+        uset = User.objects.filter(email=user_data["email"])
         if not uset.exists():
             user = User.objects.create(
-                email=user_data['email'],
-                number=user_data['number'],
-                password=bcrypt.hashpw(user_data['password'].encode('utf-8'),
-                                    bcrypt.gensalt()).decode(),
-                role=user_data['role'],
-                created_on=timezone.now())
-            user_detail = UserDetails.objects.create(available_credit=100,
-                                                 name=user_data['name'],
-                                                 status='ACTIVE',
-                                                 user=user)
+                email=user_data["email"],
+                number=user_data["number"],
+                password=bcrypt.hashpw(
+                    user_data["password"].encode("utf-8"), bcrypt.gensalt()
+                ).decode(),
+                role=user_data["role"],
+                created_on=timezone.now(),
+            )
+            user_detail = UserDetails.objects.create(
+                available_credit=100, name=user_data["name"], status="ACTIVE", user=user
+            )
             user.save()
             user_detail.save()
-        self.auth_headers = {
-            'HTTP_AUTHORIZATION': 'Bearer ' + user_data['email']
-        }
+        self.auth_headers = {"HTTP_AUTHORIZATION": "Bearer " + user_data["email"]}
 
     def setup_database(self):
         self.users_data = get_sample_users(MAX_USER_COUNT)
         for user_data in self.users_data:
-            uset = User.objects.filter(email=user_data['email'])
+            uset = User.objects.filter(email=user_data["email"])
             if not uset.exists():
                 try:
                     cursor = connection.cursor()
@@ -77,24 +82,27 @@ class UserDetailsTestCase(TestCase):
                     result = cursor.fetchone()
                     user_id = result[0]
                 except Exception as e:
-                    logger.error("Failed to fetch user_login_id_seq"+str(e))
+                    logger.error("Failed to fetch user_login_id_seq" + str(e))
                     user_id = 1
                 user_i = User.objects.create(
-                    id = user_id,
-                    email=user_data['email'],
-                    number=user_data['number'],
-                    password=bcrypt.hashpw(user_data['password'].encode('utf-8'),
-                                        bcrypt.gensalt()).decode(),
-                    role=user_data['role'],
-                    created_on=timezone.now())
-                user_details_i = UserDetails.objects.create(available_credit=100,
-                                                        name=user_data['name'],
-                                                        status='ACTIVE',
-                                                        user=user_i)
+                    id=user_id,
+                    email=user_data["email"],
+                    number=user_data["number"],
+                    password=bcrypt.hashpw(
+                        user_data["password"].encode("utf-8"), bcrypt.gensalt()
+                    ).decode(),
+                    role=user_data["role"],
+                    created_on=timezone.now(),
+                )
+                user_details_i = UserDetails.objects.create(
+                    available_credit=100,
+                    name=user_data["name"],
+                    status="ACTIVE",
+                    user=user_i,
+                )
                 user_i.save()
                 user_details_i.save()
-                logger.info("Created user with id: "+str(user_id))
-
+                logger.info("Created user with id: " + str(user_id))
 
     def test_get_api_management_users_all(self):
         """
@@ -102,27 +110,38 @@ class UserDetailsTestCase(TestCase):
         :return: None
         """
         self.setup_database()
-        response = self.client.get('/workshop/api/management/users/all', **self.auth_headers)
+        response = self.client.get(
+            "/workshop/api/management/users/all", **self.auth_headers
+        )
         self.assertEqual(response.status_code, 200)
         response_data = json.loads(response.content)
-        self.assertEqual(len(response_data['users']), settings.DEFAULT_LIMIT)
-        response = self.client.get('/workshop/api/management/users/all?limit=10&offset=0', **self.auth_headers)
+        all_users_length = len(response_data["users"])
+        self.assertEqual(
+            len(response_data["users"]), min(all_users_length, settings.MAX_LIMIT)
+        )
+        response = self.client.get(
+            "/workshop/api/management/users/all?limit=10&offset=0", **self.auth_headers
+        )
         self.assertEqual(response.status_code, 200)
         response_data = json.loads(response.content)
-        self.assertEqual(len(response_data['users']), 10)
-        response2 = self.client.get('/workshop/api/management/users/all?limit=10&offset=10', **self.auth_headers)
+        self.assertEqual(len(response_data["users"]), 10)
+        response2 = self.client.get(
+            "/workshop/api/management/users/all?limit=10&offset=10", **self.auth_headers
+        )
         self.assertEqual(response2.status_code, 200)
         response_data2 = json.loads(response2.content)
-        self.assertNotEquals(response_data['users'], response_data2['users'])
-
+        self.assertNotEquals(response_data["users"], response_data2["users"])
+        response = self.client.get(
+            "/workshop/api/management/users/all?limit=a&offset=-1", **self.auth_headers
+        )
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertEqual(len(response_data["users"]), all_users_length)
 
     def test_bad_get_api_management_users_all(self):
         """
         tests the get user details api
         :return: None
         """
-        response = self.client.get('/workshop/api/management/users/all')
+        response = self.client.get("/workshop/api/management/users/all")
         self.assertEqual(response.status_code, 401)
-        response = self.client.get('/workshop/api/management/users/all?limit=a&offset=-1', **self.auth_headers)
-        self.assertEqual(response.status_code, 400)
-

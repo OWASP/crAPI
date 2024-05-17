@@ -46,20 +46,20 @@ func (c *Coupon) Prepare() {
 func (c *Coupon) Validate() error {
 
 	if c.CouponCode == "" {
-		return errors.New("Required Coupon Code")
+		return errors.New("required coupon code")
 	}
 	if c.Amount == "" {
-		return errors.New("Required Coupon Amount")
+		return errors.New("required coupon amount")
 	}
 
 	return nil
 }
 
-//SaveCoupon save coupon database.
+//SaveCoupon save coupon in database.
 func SaveCoupon(client *mongo.Client, coupon Coupon) (Coupon, error) {
 
 	// Get a handle for your collection
-	collection := client.Database("crapi").Collection("coupon")
+	collection := client.Database("crapi").Collection("coupons")
 
 	// Insert a single document
 	insertResult, err := collection.InsertOne(context.TODO(), coupon)
@@ -67,7 +67,6 @@ func SaveCoupon(client *mongo.Client, coupon Coupon) (Coupon, error) {
 		log.Println(err)
 	}
 	log.Println("Inserted a single document: ", insertResult.InsertedID)
-
 	return coupon, err
 }
 

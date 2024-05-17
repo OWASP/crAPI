@@ -37,6 +37,18 @@ const PastOrdersContainer = (props) => {
     getOrders({ callback, accessToken });
   }, [accessToken, getOrders]);
 
+  const handleOffsetChange = (offset) => {
+    const callback = (res, data) => {
+      if (res !== responseTypes.SUCCESS) {
+        Modal.error({
+          title: FAILURE_MESSAGE,
+          content: data,
+        });
+      }
+    };
+    getOrders({ callback, accessToken, offset });
+  };
+
   const handleReturnOrder = (orderId) => {
     const callback = (res, data) => {
       if (res === responseTypes.SUCCESS) {
@@ -62,7 +74,13 @@ const PastOrdersContainer = (props) => {
     returnOrder({ callback, accessToken, orderId });
   };
 
-  return <PastOrders history={history} returnOrder={handleReturnOrder} />;
+  return (
+    <PastOrders
+      history={history}
+      returnOrder={handleReturnOrder}
+      handleOffsetChange={handleOffsetChange}
+    />
+  );
 };
 
 const mapStateToProps = ({ userReducer: { accessToken } }) => {
@@ -79,6 +97,9 @@ PastOrdersContainer.propTypes = {
   getOrders: PropTypes.func,
   returnOrder: PropTypes.func,
   history: PropTypes.object,
+  prevOffset: PropTypes.number,
+  nextOffset: PropTypes.number,
+  handleOffsetChange: PropTypes.func,
 };
 
 export default connect(

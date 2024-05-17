@@ -75,11 +75,11 @@ func ExtractTokenID(r *http.Request, db *gorm.DB) (uint32, error) {
 
 	tokenValid := resp.StatusCode == 200
 	token, _, err := new(jwt.Parser).ParseUnverified(tokenString, jwt.MapClaims{})
-	claims, ok := token.Claims.(jwt.MapClaims)
 	if err != nil {
 		log.Println(err)
 		return 0, err
 	}
+	claims, ok := token.Claims.(jwt.MapClaims)
 
 	if ok && tokenValid {
 		name := claims["sub"]

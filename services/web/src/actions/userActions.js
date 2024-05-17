@@ -108,11 +108,12 @@ export const resetPasswordAction = ({
   };
 };
 
-export const getServicesAction = ({ callback, accessToken }) => {
+export const getServicesAction = ({ callback, accessToken, ...data }) => {
   return {
     type: actionTypes.GET_SERVICES,
     accessToken,
     callback,
+    ...data,
   };
 };
 
