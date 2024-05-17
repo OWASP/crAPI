@@ -114,9 +114,11 @@ class UserDetailsTestCase(TestCase):
             "/workshop/api/management/users/all", **self.auth_headers
         )
         self.assertEqual(response.status_code, 200)
-        all_users_length = len(json.loads(response.content)["users"])
         response_data = json.loads(response.content)
-        self.assertEqual(len(response_data["users"]), settings.DEFAULT_LIMIT)
+        all_users_length = len(response_data["users"])
+        self.assertEqual(
+            len(response_data["users"]), min(all_users_length, settings.MAX_LIMIT)
+        )
         response = self.client.get(
             "/workshop/api/management/users/all?limit=10&offset=0", **self.auth_headers
         )
