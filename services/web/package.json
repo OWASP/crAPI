@@ -2,6 +2,7 @@
   "name": "crapi-web",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8889",
   "dependencies": {
     "@ant-design/icons": "^4.8.1",
     "@testing-library/jest-dom": "^4.2.4",
@@ -28,7 +29,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "prettier --check src/**/*.{js,jsx}"
+    "lint": "prettier --check src/**/*.{js,jsx}",
+    "lint:fix": "prettier --write src/**/*.{js,jsx}"
   },
   "eslintConfig": {
     "extends": "react-app"

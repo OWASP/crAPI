@@ -64,6 +64,18 @@ const ShopContainer = (props) => {
     buyProduct({ callback, accessToken, productId: product.id });
   };
 
+  const handleOffsetChange = (offset) => {
+    const callback = (res, data) => {
+      if (res !== responseTypes.SUCCESS) {
+        Modal.error({
+          title: FAILURE_MESSAGE,
+          content: data,
+        });
+      }
+    };
+    getProducts({ callback, accessToken, offset });
+  };
+
   const handleFormFinish = (values) => {
     const callback = (res, data) => {
       if (res === responseTypes.SUCCESS) {
@@ -93,12 +105,16 @@ const ShopContainer = (props) => {
       hasErrored={hasErrored}
       errorMessage={errorMessage}
       onFinish={handleFormFinish}
+      onOffsetChange={handleOffsetChange}
+      {...props}
     />
   );
 };
 
-const mapStateToProps = ({ userReducer: { accessToken } }) => {
-  return { accessToken };
+const mapStateToProps = ({
+  userReducer: { accessToken, prevOffset, nextOffset },
+}) => {
+  return { accessToken, prevOffset, nextOffset };
 };
 
 const mapDispatchToProps = {
@@ -113,6 +129,9 @@ ShopContainer.propTypes = {
   buyProduct: PropTypes.func,
   applyCoupon: PropTypes.func,
   history: PropTypes.object,
+  nextOffset: PropTypes.number,
+  prevOffset: PropTypes.number,
+  onOffsetChange: PropTypes.func,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShopContainer);

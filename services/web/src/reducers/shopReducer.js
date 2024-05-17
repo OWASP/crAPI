@@ -19,6 +19,8 @@ const initialData = {
   availableCredit: 0,
   products: [],
   pastOrders: [],
+  prevOffset: null,
+  nextOffset: null,
 };
 
 const profileReducer = (state = initialData, action) => {
@@ -32,11 +34,15 @@ const profileReducer = (state = initialData, action) => {
       return {
         ...state,
         products: action.payload.products,
+        prevOffset: action.payload.prevOffset,
+        nextOffset: action.payload.nextOffset,
       };
     case actionTypes.FETCHED_ORDERS:
       return {
         ...state,
         pastOrders: action.payload.orders,
+        prevOffset: action.payload.prevOffset,
+        nextOffset: action.payload.nextOffset,
       };
     case actionTypes.FETCHED_ORDER:
       return {

@@ -32,7 +32,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('workshop/admin/', admin.site.urls),
-    path('workshop/health_check/', include('health_check.urls')),
-    path('workshop/', include('crapi.urls')),
+    path("workshop/admin/", admin.site.urls),
+    path("workshop/health_check/", include("health_check.urls")),
+    path("workshop/", include("crapi.urls")),
 ]

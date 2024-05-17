@@ -37,8 +37,15 @@ export function* getPosts(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-
-    const getUrl = APIService.COMMUNITY_SERVICE + requestURLS.GET_POSTS;
+    let offset = 0;
+    if (param.offset) {
+      offset = param.offset;
+    }
+    const getUrl =
+      APIService.COMMUNITY_SERVICE +
+      requestURLS.GET_POSTS +
+      "?limit=30&offset=" +
+      offset;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,

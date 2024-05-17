@@ -22,5 +22,5 @@ import crapi.user.views as user_views
 
 urlpatterns = [
     # Do not change the order of URLs
-    re_path(r'users/all$', user_views.AdminUserView.as_view()),
+    re_path(r"users/all$", user_views.AdminUserView.as_view()),
 ]

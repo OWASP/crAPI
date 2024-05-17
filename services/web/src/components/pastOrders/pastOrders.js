@@ -85,6 +85,28 @@ const PastOrders = (props) => {
             </Col>
           ))}
         </Row>
+        <Row justify="center" className="pagination">
+          <Button
+            type="primary"
+            shape="round"
+            size="large"
+            onClick={() => props.handleOffsetChange(props.prevOffset)}
+            key="prev-button"
+            disabled={props.prevOffset === null}
+          >
+            Previous
+          </Button>
+          <Button
+            type="primary"
+            shape="round"
+            size="large"
+            onClick={() => props.handleOffsetChange(props.nextOffset)}
+            key="next-button"
+            disabled={props.nextOffset === null}
+          >
+            Next
+          </Button>
+        </Row>
       </Content>
     </Layout>
   );
@@ -94,10 +116,15 @@ PastOrders.propTypes = {
   history: PropTypes.object,
   pastOrders: PropTypes.array,
   returnOrder: PropTypes.func,
+  prevOffset: PropTypes.number,
+  nextOffset: PropTypes.number,
+  handleOffsetChange: PropTypes.func,
 };
 
-const mapStateToProps = ({ shopReducer: { pastOrders } }) => {
-  return { pastOrders };
+const mapStateToProps = ({
+  shopReducer: { pastOrders, prevOffset, nextOffset },
+}) => {
+  return { pastOrders, prevOffset, nextOffset };
 };
 
 export default connect(mapStateToProps)(PastOrders);

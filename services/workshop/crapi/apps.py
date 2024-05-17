@@ -30,51 +30,46 @@ logger = logging.getLogger()
 
 def create_products():
     from crapi.shop.models import Product
+
     product_details_all = [
-        {
-            'name': 'Seat',
-            'price': 10,
-            'image_url': 'images/seat.svg'
-        },
-        {
-            'name': 'Wheel',
-            'price': 10,
-            'image_url': 'images/wheel.svg'
-        }
+        {"name": "Seat", "price": 10, "image_url": "images/seat.svg"},
+        {"name": "Wheel", "price": 10, "image_url": "images/wheel.svg"},
     ]
     for product_details in product_details_all:
-        if Product.objects.filter(name=product_details['name']).exists():
-            logger.info("Product already exists. Skipping: "+ product_details['name'])
+        if Product.objects.filter(name=product_details["name"]).exists():
+            logger.info("Product already exists. Skipping: " + product_details["name"])
             continue
         product = Product.objects.create(
-            name=product_details['name'],
-            price=float(product_details['price']),
-            image_url=product_details['image_url']
+            name=product_details["name"],
+            price=float(product_details["price"]),
+            image_url=product_details["image_url"],
         )
         product.save()
-        logger.info("Created Product: "+str(product.__dict__))
+        logger.info("Created Product: " + str(product.__dict__))
+
 
 def create_mechanics():
     from crapi.user.models import User, UserDetails
     from crapi.mechanic.models import Mechanic
+
     mechanic_details_all = [
         {
-            'name': 'Jhon',
-            'email': 'jhon@example.com',
-            'number': '',
-            'password': 'Admin1@#',
-            'mechanic_code': 'TRAC_JHN'
+            "name": "Jhon",
+            "email": "jhon@example.com",
+            "number": "",
+            "password": "Admin1@#",
+            "mechanic_code": "TRAC_JHN",
         },
         {
-            'name': 'James',
-            'email': 'james@example.com',
-            'number': '',
-            'password': 'Admin1@#',
-            'mechanic_code': 'TRAC_JME'
+            "name": "James",
+            "email": "james@example.com",
+            "number": "",
+            "password": "Admin1@#",
+            "mechanic_code": "TRAC_JME",
         },
     ]
     for mechanic_details in mechanic_details_all:
-        uset = User.objects.filter(email=mechanic_details['email'])
+        uset = User.objects.filter(email=mechanic_details["email"])
         if not uset.exists():
             try:
                 cursor = connection.cursor()
@@ -82,34 +77,36 @@ def create_mechanics():
                 result = cursor.fetchone()
                 user_id = result[0]
             except Exception as e:
-                logger.error("Failed to fetch user_login_id_seq"+str(e))
+                logger.error("Failed to fetch user_login_id_seq" + str(e))
                 user_id = 1
 
             user = User.objects.create(
                 id=user_id,
-                email=mechanic_details['email'],
-                number=mechanic_details['number'],
+                email=mechanic_details["email"],
+                number=mechanic_details["number"],
                 password=bcrypt.hashpw(
-                    mechanic_details['password'].encode('utf-8'),
-                    bcrypt.gensalt()
+                    mechanic_details["password"].encode("utf-8"), bcrypt.gensalt()
                 ).decode(),
                 role=User.ROLE_CHOICES.MECH,
-                created_on=timezone.now()
+                created_on=timezone.now(),
             )
             user.save()
-            logger.info("Created User: "+str(user.__dict__))
+            logger.info("Created User: " + str(user.__dict__))
         else:
             user = uset.first()
 
-        if Mechanic.objects.filter(mechanic_code=mechanic_details['mechanic_code']):
-            logger.info("Mechanic already exists. Skipping: "
-                        + mechanic_details['mechanic_code']
-                        + " " + mechanic_details['name'] + " "
-                        + mechanic_details['email'])
+        if Mechanic.objects.filter(mechanic_code=mechanic_details["mechanic_code"]):
+            logger.info(
+                "Mechanic already exists. Skipping: "
+                + mechanic_details["mechanic_code"]
+                + " "
+                + mechanic_details["name"]
+                + " "
+                + mechanic_details["email"]
+            )
             continue
         mechanic = Mechanic.objects.create(
-            mechanic_code=mechanic_details['mechanic_code'],
-            user=user
+            mechanic_code=mechanic_details["mechanic_code"], user=user
         )
         mechanic.save()
         try:
@@ -118,16 +115,17 @@ def create_mechanics():
             result = cursor.fetchone()
             user_details_id = result[0]
         except Exception as e:
-            logger.error("Failed to fetch user_details_id_seq"+str(e))
+            logger.error("Failed to fetch user_details_id_seq" + str(e))
             user_details_id = 1
         userdetails = UserDetails.objects.create(
             id=user_details_id,
             available_credit=0,
-            name=mechanic_details['name'],
-            status='ACTIVE',
-            user=user
+            name=mechanic_details["name"],
+            status="ACTIVE",
+            user=user,
         )
         userdetails.save()
+
 
 def create_reports():
     import random
@@ -136,8 +134,9 @@ def create_reports():
     from crapi.user.models import User, UserDetails, Vehicle
     from crapi.mechanic.models import Mechanic, ServiceRequest
     from django.utils import timezone
+
     count = ServiceRequest.objects.all().count()
-    if (count >= 5):
+    if count >= 5:
         return
     logger.info("Creating Reports")
     mechanics = Mechanic.objects.all()
@@ -154,7 +153,8 @@ def create_reports():
             service_request = ServiceRequest.objects.create(
                 vehicle=vehicle,
                 mechanic=mechanic,
-                problem_details=textwrap.dedent("""\
+                problem_details=textwrap.dedent(
+                    """\
                     My car {} - {} is having issues.
                     Can you give me a call on my mobile {},
                     Or send me an email at {}
@@ -165,27 +165,34 @@ def create_reports():
                         vehicle_model.model,
                         user.number,
                         user.email,
-                        user_detail.name)
+                        user_detail.name,
+                    )
                 ),
                 status=status,
-                created_on=timezone.now()
+                created_on=timezone.now(),
             )
             service_request.save()
-            logger.info("Created Service Request for User %s: %s", user.email, service_request.__dict__)
+            logger.info(
+                "Created Service Request for User %s: %s",
+                user.email,
+                service_request.__dict__,
+            )
         except Exception as e:
             print(sys.exc_info()[0])
-            logger.error("Failed to create report: "+str(e))
+            logger.error("Failed to create report: " + str(e))
+
 
 def create_orders():
     import uuid
     from crapi.user.models import User, UserDetails
     from crapi.shop.models import Product
     from crapi.shop.models import Order
+
     if Order.objects.all().count() >= 1:
         return
-    users = User.objects.filter(role=User.ROLE_CHOICES.PREDEFINED).order_by('id')
+    users = User.objects.filter(role=User.ROLE_CHOICES.PREDEFINED).order_by("id")
     for user in users:
-        product = Product.objects.filter(name='Seat').first()
+        product = Product.objects.filter(name="Seat").first()
         order = Order.objects.create(
             user=user,
             product=product,
@@ -197,14 +204,12 @@ def create_orders():
         logger.info("Created Order for User %s: %s", user.email, order.__dict__)
 
 
-
-
-
 class CRAPIConfig(AppConfig):
     """
     Stores all meta data of crapi application
     """
-    name = 'crapi'
+
+    name = "crapi"
 
     def ready(self):
         """
@@ -219,16 +224,16 @@ class CRAPIConfig(AppConfig):
         try:
             create_products()
         except Exception as e:
-            logger.error("Cannot Pre Populate Products: "+str(e))
+            logger.error("Cannot Pre Populate Products: " + str(e))
         try:
             create_mechanics()
         except Exception as e:
-            logger.error("Cannot Pre Populate Mechanics: "+str(e))
+            logger.error("Cannot Pre Populate Mechanics: " + str(e))
         try:
             create_reports()
         except Exception as e:
-            logger.error("Cannot Pre Populate Reports: "+str(e))
+            logger.error("Cannot Pre Populate Reports: " + str(e))
         try:
             create_orders()
         except Exception as e:
-            logger.error("Cannot Pre Populate Orders: "+str(e))
+            logger.error("Cannot Pre Populate Orders: " + str(e))

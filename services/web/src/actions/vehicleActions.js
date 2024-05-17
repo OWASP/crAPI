@@ -24,20 +24,27 @@ export const verifyVehicleAction = ({ callback, accessToken, ...data }) => {
   };
 };
 
-export const getMechanicsAction = ({ callback, accessToken }) => {
+export const getMechanicsAction = ({ callback, accessToken, ...data }) => {
   return {
     type: actionTypes.GET_MECHANICS,
     accessToken,
     callback,
+    ...data,
   };
 };
 
-export const getVehiclesAction = ({ callback, accessToken, email }) => {
+export const getVehiclesAction = ({
+  callback,
+  accessToken,
+  email,
+  ...data
+}) => {
   return {
     type: actionTypes.GET_VEHICLES,
     accessToken,
     callback,
     email,
+    ...data,
   };
 };
 

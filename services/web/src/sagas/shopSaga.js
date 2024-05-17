@@ -35,11 +35,15 @@ import {
  * callback : callback method
  */
 export function* getProducts(param) {
-  const { accessToken, callback } = param;
+  const { callback, accessToken } = param;
   let recievedResponse = {};
+  let offset = param.offset ? param.offset : 0;
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const getUrl = APIService.WORKSHOP_SERVICE + requestURLS.GET_PRODUCTS;
+    const getUrl =
+      APIService.WORKSHOP_SERVICE +
+      requestURLS.GET_PRODUCTS +
+      `?limit=30&offset=${offset}`;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -60,13 +64,18 @@ export function* getProducts(param) {
       });
       yield put({
         type: actionTypes.FETCHED_PRODUCTS,
-        payload: { products: ResponseJson.products },
+        payload: {
+          products: ResponseJson.products,
+          prevOffset: ResponseJson.previous_offset,
+          nextOffset: ResponseJson.next_offset,
+        },
       });
       callback(responseTypes.SUCCESS, ResponseJson);
     } else {
       callback(responseTypes.FAILURE, ResponseJson.message);
     }
   } catch (e) {
+    console.log(e);
     yield put({ type: actionTypes.FETCHED_DATA, payload: recievedResponse });
     callback(responseTypes.FAILURE, NO_PRODUCTS);
   }
@@ -74,7 +83,7 @@ export function* getProducts(param) {
 
 /**
  * buy a product
- * @param { accessToken, callback, product_id} param
+ * @param { callback, accessToken, product_id} param
  * accessToken: access token of the user
  * callback : callback method
  * product_id: id of the product which is to be bought
@@ -125,7 +134,11 @@ export function* getOrders(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    const getUrl = APIService.WORKSHOP_SERVICE + requestURLS.GET_ORDERS;
+    let offset = param.offset ? param.offset : 0;
+    const getUrl =
+      APIService.WORKSHOP_SERVICE +
+      requestURLS.GET_ORDERS +
+      `?limit=30&offset=${offset}`;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -142,7 +155,11 @@ export function* getOrders(param) {
     if (recievedResponse.ok) {
       yield put({
         type: actionTypes.FETCHED_ORDERS,
-        payload: { orders: ResponseJson.orders },
+        payload: {
+          orders: ResponseJson.orders,
+          prevOffset: ResponseJson.previous_offset,
+          nextOffset: ResponseJson.next_offset,
+        },
       });
       callback(responseTypes.SUCCESS, ResponseJson);
     } else {

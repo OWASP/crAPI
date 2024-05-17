@@ -16,7 +16,7 @@ contains all the test cases related to mechanic
 from unittest.mock import patch
 from utils.mock_methods import get_sample_mechanic_data, mock_jwt_auth_required
 
-patch('utils.jwt.jwt_auth_required', mock_jwt_auth_required).start()
+patch("utils.jwt.jwt_auth_required", mock_jwt_auth_required).start()
 
 from django.test import TestCase, Client
 from utils import messages
@@ -46,15 +46,19 @@ class MechanicSignUpTestCase(TestCase):
         should get an error response saying email already registered
         :return: None
         """
-        res = self.client.post('/workshop/api/mechanic/signup',
-                               self.mechanic,
-                               content_type="application/json")
+        res = self.client.post(
+            "/workshop/api/mechanic/signup",
+            self.mechanic,
+            content_type="application/json",
+        )
         self.assertEqual(res.status_code, 200)
-        res = self.client.post('/workshop/api/mechanic/signup',
-                               self.mechanic,
-                               content_type="application/json")
+        res = self.client.post(
+            "/workshop/api/mechanic/signup",
+            self.mechanic,
+            content_type="application/json",
+        )
         self.assertNotEqual(res.status_code, 200)
-        self.assertEqual(res.json()['message'], messages.EMAIL_ALREADY_EXISTS)
+        self.assertEqual(res.json()["message"], messages.EMAIL_ALREADY_EXISTS)
 
     def test_duplicate_mechanic_code(self):
         """
@@ -64,18 +68,21 @@ class MechanicSignUpTestCase(TestCase):
         should get an error response saying mechanic_code already exists
         :return: None
         """
-        res = self.client.post('/workshop/api/mechanic/signup',
-                               self.mechanic,
-                               content_type="application/json")
+        res = self.client.post(
+            "/workshop/api/mechanic/signup",
+            self.mechanic,
+            content_type="application/json",
+        )
         self.assertEqual(res.status_code, 200)
 
-        self.mechanic['email'] = 'abcd@example.com'
-        res = self.client.post('/workshop/api/mechanic/signup',
-                               self.mechanic,
-                               content_type="application/json")
+        self.mechanic["email"] = "abcd@example.com"
+        res = self.client.post(
+            "/workshop/api/mechanic/signup",
+            self.mechanic,
+            content_type="application/json",
+        )
         self.assertNotEqual(res.status_code, 200)
-        self.assertEqual(res.json()['message'],
-                         messages.MEC_CODE_ALREADY_EXISTS)
+        self.assertEqual(res.json()["message"], messages.MEC_CODE_ALREADY_EXISTS)
 
     def test_no_duplicate(self):
         """
@@ -85,20 +92,22 @@ class MechanicSignUpTestCase(TestCase):
         should get a valid response(200) on second signup also
         :return:
         """
-        res = self.client.post('/workshop/api/mechanic/signup',
-                               self.mechanic,
-                               content_type="application/json")
+        res = self.client.post(
+            "/workshop/api/mechanic/signup",
+            self.mechanic,
+            content_type="application/json",
+        )
         self.assertEqual(res.status_code, 200)
 
-        self.mechanic['email'] = 'abcd@example.com'
-        self.mechanic['mechanic_code'] = 'TRAC_MEC_4'
-        res = self.client.post('/workshop/api/mechanic/signup',
-                               self.mechanic,
-                               content_type="application/json")
+        self.mechanic["email"] = "abcd@example.com"
+        self.mechanic["mechanic_code"] = "TRAC_MEC_4"
+        res = self.client.post(
+            "/workshop/api/mechanic/signup",
+            self.mechanic,
+            content_type="application/json",
+        )
         self.assertEqual(res.status_code, 200)
-        self.assertIn(
-            messages.MEC_CREATED.split(':')[0],
-            res.json()['message'])
+        self.assertIn(messages.MEC_CREATED.split(":")[0], res.json()["message"])
 
     def test_jwt_token(self):
         """
@@ -110,18 +119,18 @@ class MechanicSignUpTestCase(TestCase):
         should get a valid response(200) of the api
         :return: None
         """
-        self.client.post('/workshop/api/mechanic/signup',
-                         self.mechanic,
-                         content_type="application/json")
+        self.client.post(
+            "/workshop/api/mechanic/signup",
+            self.mechanic,
+            content_type="application/json",
+        )
 
-        res = self.client.get('/workshop/api/mechanic/')
+        res = self.client.get("/workshop/api/mechanic/")
         self.assertNotEqual(res.status_code, 200)
-        self.assertEqual(res.json()['message'], messages.JWT_REQUIRED)
+        self.assertEqual(res.json()["message"], messages.JWT_REQUIRED)
 
-        auth_headers = {
-            'HTTP_AUTHORIZATION': 'Bearer ' + self.mechanic['email']
-        }
-        res = self.client.get('/workshop/api/mechanic/', **auth_headers)
+        auth_headers = {"HTTP_AUTHORIZATION": "Bearer " + self.mechanic["email"]}
+        res = self.client.get("/workshop/api/mechanic/", **auth_headers)
         self.assertEqual(res.status_code, 200)
 
     def test_invalid_jwt_token(self):
@@ -132,13 +141,13 @@ class MechanicSignUpTestCase(TestCase):
         should get an error response saying token invalid
         :return: None
         """
-        res = self.client.get('/workshop/api/mechanic/')
+        res = self.client.get("/workshop/api/mechanic/")
         self.assertNotEqual(res.status_code, 200)
 
-        auth_headers = {'HTTP_AUTHORIZATION': 'Bearer invalid.token'}
-        res = self.client.get('/workshop/api/mechanic/', **auth_headers)
+        auth_headers = {"HTTP_AUTHORIZATION": "Bearer invalid.token"}
+        res = self.client.get("/workshop/api/mechanic/", **auth_headers)
         self.assertNotEqual(res.status_code, 200)
-        self.assertEqual(res.json()['message'], messages.INVALID_TOKEN)
+        self.assertEqual(res.json()["message"], messages.INVALID_TOKEN)
 
     def test_bad_request(self):
         """
@@ -146,8 +155,10 @@ class MechanicSignUpTestCase(TestCase):
         should get a bad request response
         :return: None
         """
-        del [self.mechanic['password']]
-        res = self.client.post('/workshop/api/mechanic/signup',
-                               self.mechanic,
-                               content_type="application/json")
+        del [self.mechanic["password"]]
+        res = self.client.post(
+            "/workshop/api/mechanic/signup",
+            self.mechanic,
+            content_type="application/json",
+        )
         self.assertEqual(res.status_code, 400)

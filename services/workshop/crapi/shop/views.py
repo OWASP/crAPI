@@ -27,8 +27,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from utils.helper import basic_auth
-
-from crapi.shop.serializers import OrderSerializer, ProductSerializer, CouponSerializer, ProductQuantitySerializer
+from crapi.shop.serializers import (
+    OrderSerializer,
+    ProductSerializer,
+    CouponSerializer,
+    ProductQuantitySerializer,
+)
 from crapi.user.serializers import UserSerializer
 from utils.jwt import jwt_auth_required
 from utils import messages
@@ -36,11 +40,14 @@ from crapi.shop.models import Order, Product, AppliedCoupon, Coupon
 from crapi.user.models import UserDetails
 from utils.logging import log_error
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.pagination import LimitOffsetPagination
 
-class ProductView(APIView):
+
+class ProductView(APIView, LimitOffsetPagination):
     """
     Product Controller View
     """
+
     @jwt_auth_required
     def get(self, request, user):
         """
@@ -54,11 +61,21 @@ class ProductView(APIView):
             message and corresponding status if error
         """
         user_details = UserDetails.objects.get(user=user)
-        products = Product.objects.all()
-        serializer = ProductSerializer(products, many=True)
+        products = Product.objects.all().order_by("-id")
+        paginated = self.paginate_queryset(products, request, view=self)
+        serializer = ProductSerializer(paginated, many=True)
         response_data = dict(
             products=serializer.data,
             credit=user_details.available_credit,
+            next_offset=(
+                self.offset + self.limit
+                if self.offset + self.limit < self.count
+                else None
+            ),
+            previous_offset=(
+                self.offset - self.limit if self.offset - self.limit >= 0 else None
+            ),
+            count=self.get_count(paginated),
         )
         return Response(response_data, status=status.HTTP_200_OK)
 
@@ -88,6 +105,7 @@ class OrderControlView(APIView):
     """
     Order Controller View
     """
+
     def get(self, request, order_id=None, user=None):
         """
         order view for fetching  a particular order
@@ -109,35 +127,37 @@ class OrderControlView(APIView):
         try:
             user_dict = UserSerializer(user).data
             user_details = UserDetails.objects.get(user=user)
-            user_dict['name'] = user_details.name
+            user_dict["name"] = user_details.name
             gateway_endpoint = settings.API_GATEWAY_URL + "/v1/payment"
-            gateway_credential = basic_auth(settings.API_GATEWAY_USERNAME, settings.API_GATEWAY_PASSWORD)
+            gateway_credential = basic_auth(
+                settings.API_GATEWAY_USERNAME, settings.API_GATEWAY_PASSWORD
+            )
             logging.debug(gateway_endpoint)
-            data = {
-            }
-            data['user'] = user_dict
-            data['order'] = order_serializer.data
-            data['amount'] = float(order.product.price) * int(order.quantity)
+            data = {}
+            data["user"] = user_dict
+            data["order"] = order_serializer.data
+            data["amount"] = float(order.product.price) * int(order.quantity)
             payment_response = requests.post(
                 gateway_endpoint,
                 headers={
                     "Authorization": gateway_credential,
-                    "Content-Type": "application/json"
-                    },
+                    "Content-Type": "application/json",
+                },
                 json=data,
-                verify=False
+                verify=False,
             )
             if payment_response.status_code == 200:
                 payment = payment_response.json()
             else:
-                logging.error("Payment response error, {}: {}".format(payment_response.status_code, payment_response.content))
+                logging.error(
+                    "Payment response error, {}: {}".format(
+                        payment_response.status_code, payment_response.content
+                    )
+                )
             logging.debug("payment response: {}".format(payment))
         except Exception as e:
             logging.error(e, exc_info=True)
-        response_data = dict(
-            order=order_serializer.data,
-            payment=payment
-        )
+        response_data = dict(order=order_serializer.data, payment=payment)
         return Response(response_data, status=status.HTTP_200_OK)
 
     @jwt_auth_required
@@ -159,29 +179,37 @@ class OrderControlView(APIView):
         request_data = request.data
         serializer = ProductQuantitySerializer(data=request_data)
         if not serializer.is_valid():
-            log_error(request.path, request.data, status.HTTP_400_BAD_REQUEST, serializer.errors)
+            log_error(
+                request.path,
+                request.data,
+                status.HTTP_400_BAD_REQUEST,
+                serializer.errors,
+            )
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        product = Product.objects.get(id=request_data['product_id'])
+        product = Product.objects.get(id=request_data["product_id"])
         user_details = UserDetails.objects.get(user=user)
         if user_details.available_credit < product.price:
             return Response(
-                {'message': messages.INSUFFICIENT_BALANCE},
-                status=status.HTTP_400_BAD_REQUEST
+                {"message": messages.INSUFFICIENT_BALANCE},
+                status=status.HTTP_400_BAD_REQUEST,
             )
-        user_details.available_credit -= float(product.price * request_data['quantity'])
+        user_details.available_credit -= float(product.price * request_data["quantity"])
         order = Order.objects.create(
             user=user,
             product=product,
-            quantity=request_data['quantity'],
+            quantity=request_data["quantity"],
             created_on=timezone.now(),
             transaction_id=uuid.uuid4(),
         )
         user_details.save()
-        return Response({
-            'id': order.id,
-            'message': messages.ORDER_CREATED,
-            'credit': user_details.available_credit,
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {
+                "id": order.id,
+                "message": messages.ORDER_CREATED,
+                "credit": user_details.available_credit,
+            },
+            status=status.HTTP_200_OK,
+        )
 
     @jwt_auth_required
     def put(self, request, order_id=None, user=None):
@@ -202,29 +230,32 @@ class OrderControlView(APIView):
         request_data = request.data
         order = Order.objects.get(id=order_id)
         if user != order.user:
-            return Response({'message': messages.RESTRICTED}, status=status.HTTP_403_FORBIDDEN)
-        if 'quantity' in request_data:
-            order.quantity = request_data['quantity']
-        if 'status' in request_data and not Order.STATUS_CHOICES.has_value(request_data['status']):
             return Response(
-                {'message': messages.INVALID_STATUS},
-                status=status.HTTP_400_BAD_REQUEST
+                {"message": messages.RESTRICTED}, status=status.HTTP_403_FORBIDDEN
+            )
+        if "quantity" in request_data:
+            order.quantity = request_data["quantity"]
+        if "status" in request_data and not Order.STATUS_CHOICES.has_value(
+            request_data["status"]
+        ):
+            return Response(
+                {"message": messages.INVALID_STATUS}, status=status.HTTP_400_BAD_REQUEST
             )
         user_details = UserDetails.objects.get(user=order.user)
-        if 'status' in request_data and request_data['status'] != order.status:
-            order.status = request_data['status']
-            if request_data['status'] == Order.STATUS_CHOICES.RETURNED.value:
-                user_details.available_credit += float(order.quantity * order.product.price)
+        if "status" in request_data and request_data["status"] != order.status:
+            order.status = request_data["status"]
+            if request_data["status"] == Order.STATUS_CHOICES.RETURNED.value:
+                user_details.available_credit += float(
+                    order.quantity * order.product.price
+                )
                 user_details.save()
         order.save()
         serializer = OrderSerializer(order)
-        response_data = dict(
-            orders=serializer.data
-        )
+        response_data = dict(orders=serializer.data)
         return Response(response_data, status=status.HTTP_200_OK)
 
 
-class OrderDetailsView(APIView):
+class OrderDetailsView(APIView, LimitOffsetPagination):
     """
     Get the details of the orders.
     """
@@ -241,25 +272,20 @@ class OrderDetailsView(APIView):
             list of order object and 200 status if no error
             message and corresponding status if error
         """
-        limit = request.GET.get('limit', str(settings.DEFAULT_LIMIT))
-        offset = request.GET.get('offset', str(settings.DEFAULT_OFFSET))
-        if not limit.isdigit() or not offset.isdigit():
-            return Response(
-                {'message': messages.INVALID_LIMIT_OR_OFFSET},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        limit = int(limit)
-        offset = int(offset)
-        if limit > settings.MAX_LIMIT:
-            limit = 100
-        if limit < 0:
-            limit = settings.DEFAULT_LIMIT
-        if offset < 0:
-            offset = settings.DEFAULT_OFFSET
-        orders = Order.objects.filter(user=user).order_by('-id')[offset:offset+limit]
-        serializer = OrderSerializer(orders, many=True)
+        orders = Order.objects.filter(user=user).order_by("-id")
+        paginated = self.paginate_queryset(orders, request, view=self)
+        serializer = OrderSerializer(paginated, many=True)
         response_data = dict(
-            orders=serializer.data
+            orders=serializer.data,
+            next_offset=(
+                self.offset + self.limit
+                if self.offset + self.limit < self.count
+                else None
+            ),
+            previous_offset=(
+                self.offset - self.limit if self.offset - self.limit >= 0 else None
+            ),
+            count=self.get_count(paginated),
         )
         return Response(response_data, status=status.HTTP_200_OK)
 
@@ -268,6 +294,7 @@ class ReturnOrder(APIView):
     """
     Return Order View
     """
+
     @jwt_auth_required
     def post(self, request, user=None):
         """
@@ -280,35 +307,41 @@ class ReturnOrder(APIView):
             message and 200 status if no error
             message and corresponding status if error
         """
-        order = Order.objects.get(id=request.GET['order_id'])
+        order = Order.objects.get(id=request.GET["order_id"])
         if user != order.user:
-            return Response({'message': messages.RESTRICTED}, status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {"message": messages.RESTRICTED}, status=status.HTTP_403_FORBIDDEN
+            )
         if order.status == Order.STATUS_CHOICES.RETURNED.value:
             return Response(
-                {'message': messages.ORDER_ALREADY_RETURNED},
-                status=status.HTTP_400_BAD_REQUEST
+                {"message": messages.ORDER_ALREADY_RETURNED},
+                status=status.HTTP_400_BAD_REQUEST,
             )
         elif order.status == Order.STATUS_CHOICES.RETURN_PENDING.value:
             return Response(
-                {'message': messages.ORDER_RETURNED_PENDING},
-                status=status.HTTP_400_BAD_REQUEST
+                {"message": messages.ORDER_RETURNED_PENDING},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         qr_code_url = request.build_absolute_uri(reverse("shop-return-qr-code"))
         order.status = Order.STATUS_CHOICES.RETURN_PENDING.value
         order.save()
         serializer = OrderSerializer(order)
-        return Response({
-            'message': messages.ORDER_RETURNING,
-            'qr_code_url': qr_code_url,
-            'order': serializer.data
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {
+                "message": messages.ORDER_RETURNING,
+                "qr_code_url": qr_code_url,
+                "order": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
 
 
 class ReturnQRCodeView(APIView):
     """
     QR code image view
     """
+
     def get(self, request):
         """
         returns a qr code image
@@ -316,7 +349,7 @@ class ReturnQRCodeView(APIView):
             method allowed: GET
         :return: FileResponse
         """
-        img = open('utils/return-qr-code.png', 'rb')
+        img = open("utils/return-qr-code.png", "rb")
         return FileResponse(img)
 
 
@@ -324,6 +357,7 @@ class ApplyCouponView(APIView):
     """
     Apply Coupon View to increase the available credit
     """
+
     @jwt_auth_required
     def post(self, request, user=None):
         """
@@ -347,44 +381,49 @@ class ApplyCouponView(APIView):
         row = None
         with connection.cursor() as cursor:
             try:
-                cursor.execute("SELECT coupon_code from applied_coupon WHERE user_id = "\
-                        + str(user.id)\
-                        + " AND coupon_code = '"\
-                        + coupon_request_body['coupon_code']\
-                        + "'")
+                cursor.execute(
+                    "SELECT coupon_code from applied_coupon WHERE user_id = "
+                    + str(user.id)
+                    + " AND coupon_code = '"
+                    + coupon_request_body["coupon_code"]
+                    + "'"
+                )
                 row = cursor.fetchall()
             except Exception as e:
                 log_error(request.path, request.data, 500, e)
                 return Response(
-                    {'message': e},
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                    {"message": e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
 
         if row and row != None:
             return Response(
                 {
-                    'message': row[0][0] + " " + messages.COUPON_ALREADY_APPLIED,
+                    "message": row[0][0] + " " + messages.COUPON_ALREADY_APPLIED,
                 },
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         try:
-            coupon = Coupon.objects.using('mongodb').get(coupon_code=coupon_request_body['coupon_code'])
+            coupon = Coupon.objects.using("mongodb").get(
+                coupon_code=coupon_request_body["coupon_code"]
+            )
         except ObjectDoesNotExist as e:
             log_error(request.path, request.data, 400, e)
             return Response(
-                {'message': messages.COUPON_NOT_FOUND},
-                status=status.HTTP_400_BAD_REQUEST
+                {"message": messages.COUPON_NOT_FOUND},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         AppliedCoupon.objects.create(
-            user=user,
-            coupon_code=coupon_request_body['coupon_code']
+            user=user, coupon_code=coupon_request_body["coupon_code"]
         )
         user_details = UserDetails.objects.get(user=user)
-        user_details.available_credit += coupon_request_body['amount']
+        user_details.available_credit += coupon_request_body["amount"]
         user_details.save()
-        return Response({
-            'credit': user_details.available_credit,
-            'message': messages.COUPON_APPLIED
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {
+                "credit": user_details.available_credit,
+                "message": messages.COUPON_APPLIED,
+            },
+            status=status.HTTP_200_OK,
+        )
