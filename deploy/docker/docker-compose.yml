@@ -52,8 +52,6 @@ services:
         condition: service_healthy
       mongodb:
         condition: service_healthy
-      mailhog:
-        condition: service_healthy
     healthcheck:
       test: /app/health.sh
       interval: 15s
