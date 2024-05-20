@@ -78,7 +78,8 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
         }
       } else {
         tokenLogger.error(UserMessage.INVALID_CREDENTIALS);
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, UserMessage.INVALID_CREDENTIALS);}
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, UserMessage.INVALID_CREDENTIALS);
+      }
     } catch (Exception e) {
       tokenLogger.error("Can NOT set user authentication -> Message:%d", e);
     }
