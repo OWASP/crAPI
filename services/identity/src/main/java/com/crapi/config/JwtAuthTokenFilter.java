@@ -76,6 +76,9 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
           response.sendError(
               HttpServletResponse.SC_UNAUTHORIZED, UserMessage.ACCOUNT_LOCKED_MESSAGE);
         }
+      } else {
+        tokenLogger.error(UserMessage.INVALID_CREDENTIALS);
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, UserMessage.INVALID_CREDENTIALS);
       }
     } catch (Exception e) {
       tokenLogger.error("Can NOT set user authentication -> Message:%d", e);
@@ -122,10 +125,13 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
     String username = null;
     if (token != null) {
       if (apiType == ApiType.APIKEY) {
+        logger.debug("Token is api token");
         username = tokenProvider.getUserNameFromApiToken(token);
       } else {
-        tokenProvider.validateJwtToken(token);
-        username = tokenProvider.getUserNameFromJwtToken(token);
+        logger.debug("Token is jwt token");
+        if (tokenProvider.validateJwtToken(token)) {
+          username = tokenProvider.getUserNameFromJwtToken(token);
+        }
       }
       // checking username from token
       if (username != null) return username;

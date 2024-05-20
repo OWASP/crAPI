@@ -175,25 +175,26 @@ public class JwtProvider {
       SignedJWT signedJWT = SignedJWT.parse(authToken);
       JWSHeader header = signedJWT.getHeader();
       Algorithm alg = header.getAlgorithm();
-
+      boolean valid = false;
       // JWT Algorithm confusion vulnerability
-      logger.info("Algorithm: " + alg.getName());
+      logger.debug("Algorithm: " + alg.getName());
+      JWSVerifier verifier;
       if (Objects.equals(alg.getName(), "HS256")) {
         String secret = getJwtSecret(header);
-        logger.info("JWT Secret: " + secret);
-        JWSVerifier verifier = new MACVerifier(secret.getBytes(StandardCharsets.UTF_8));
-        return signedJWT.verify(verifier);
+        logger.debug("JWT Secret: " + secret);
+        verifier = new MACVerifier(secret.getBytes(StandardCharsets.UTF_8));
       } else {
         RSAKey verificationKey = getKeyFromJkuHeader(header);
-        JWSVerifier verifier;
         if (verificationKey == null) {
+          logger.debug("Key from JWKS: " + this.publicRSAKey.toJSONString());
           verifier = new RSASSAVerifier(this.publicRSAKey);
         } else {
-          logger.info("Key from JKU: " + verificationKey.toJSONString());
+          logger.debug("Key from JKU: " + verificationKey.toJSONString());
           verifier = new RSASSAVerifier(verificationKey);
         }
-
-        return signedJWT.verify(verifier);
+        valid = signedJWT.verify(verifier);
+        logger.info("JWT valid?: " + valid);
+        return valid;
       }
 
     } catch (ParseException e) {
