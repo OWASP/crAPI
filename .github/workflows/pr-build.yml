@@ -155,7 +155,7 @@ jobs:
         run: npm install -g newman
 
       - name: Run Postman Collection
-        run: (newman run "./postman_collections/crAPI.postman_collection.json" -e ./postman_collections/crAPI.postman_environment.json --verbose) || true
+        run: newman run "./postman_collections/crAPI.postman_collection.json" -e ./postman_collections/crAPI.postman_environment.json --verbose
 
       - name: Dump docker logs on failure
         if: failure()
