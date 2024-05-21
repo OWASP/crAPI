@@ -143,6 +143,11 @@ jobs:
       - name: Env seen
         run: env
 
+      - name: Cleanup docker before running
+        if: always()
+        continue-on-error: true
+        run:  docker-compose -f deploy/docker/docker-compose.yml down --volumes --remove-orphans
+
       - name: Run crAPI using built images
         run: VERSION=${{ env.TAG_NAME }} docker-compose -f deploy/docker/docker-compose.yml --compatibility up -d
 
