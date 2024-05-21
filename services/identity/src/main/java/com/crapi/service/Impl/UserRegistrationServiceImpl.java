@@ -26,15 +26,14 @@ import com.crapi.service.VehicleService;
 import com.crapi.utils.MailBody;
 import com.crapi.utils.SMTPMailServer;
 import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class UserRegistrationServiceImpl implements UserRegistrationService {
-  private static final Logger logger = LoggerFactory.getLogger(UserRegistrationServiceImpl.class);
 
   @Autowired UserRepository userRepository;
 
@@ -61,7 +60,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
       userDetails.setStatus(EStatus.ACTIVE.toString());
       return userDetails;
     } catch (Exception exception) {
-      logger.error("fail to create UserDetails  Message: %d", exception);
+      log.error("fail to create UserDetails  Message: %d", exception);
     }
     return null;
   }
@@ -95,12 +94,12 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             ERole.ROLE_USER);
     user = userRepository.save(user);
     if (user != null) {
-      logger.info("User registered successful with userId {}", user.getId());
+      log.info("User registered successful with userId {}", user.getId());
       // Creating User Details for same user
       userDetails = createUserDetails(signUpRequest.getName(), user);
       if (userDetails != null) {
         userDetailsRepository.save(userDetails);
-        logger.info("User Details Created successful with userId {}", userDetails.getId());
+        log.info("User Details Created successful with userId {}", userDetails.getId());
       }
 
       // Creating User Vehicle
@@ -119,7 +118,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
       throw new EntityNotFoundException(
           VehicleDetails.class, UserMessage.ERROR, signUpRequest.getName());
     }
-    logger.info("User registration failed {}", signUpRequest.getEmail());
+    log.info("User registration failed {}", signUpRequest.getEmail());
     return new CRAPIResponse(UserMessage.SIGN_UP_FAILED + signUpRequest.getEmail(), 400);
   }
 }

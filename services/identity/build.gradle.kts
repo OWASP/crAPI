@@ -73,5 +73,4 @@ dependencies {
     testImplementation("org.mockito:mockito-core:${mockito}")
     testImplementation("org.mockito:mockito-inline:${mockito}")
     testImplementation("junit:junit:4.13.2")
-    //implementation("org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}")
 }

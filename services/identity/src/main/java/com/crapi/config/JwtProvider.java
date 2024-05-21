@@ -38,8 +38,6 @@ import java.security.KeyPair;
 import java.text.ParseException;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -47,8 +45,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class JwtProvider {
-
-  private static final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
 
   @Autowired private UserRepository userRepository;
 
@@ -137,7 +133,7 @@ public class JwtProvider {
         URLConnection connection = jku.toURL().openConnection();
         JWKSet jwkSet = JWKSet.load(connection.getInputStream());
         connection.getInputStream().close();
-        logger.info("JWKSet from URL : " + jwkSet.toString(false));
+        log.info("JWKSet from URL : " + jwkSet.toString(false));
         JWK key = jwkSet.getKeyByKeyId(header.getKeyID());
         if (key != null && Objects.equals(key.getAlgorithm().getName(), "RS256")) {
           return key.toRSAKey().toPublicJWK();
@@ -177,30 +173,30 @@ public class JwtProvider {
       Algorithm alg = header.getAlgorithm();
       boolean valid = false;
       // JWT Algorithm confusion vulnerability
-      logger.debug("Algorithm: " + alg.getName());
+      log.debug("Algorithm: " + alg.getName());
       JWSVerifier verifier;
       if (Objects.equals(alg.getName(), "HS256")) {
         String secret = getJwtSecret(header);
-        logger.debug("JWT Secret: " + secret);
+        log.debug("JWT Secret: " + secret);
         verifier = new MACVerifier(secret.getBytes(StandardCharsets.UTF_8));
       } else {
         RSAKey verificationKey = getKeyFromJkuHeader(header);
         if (verificationKey == null) {
-          logger.debug("Key from JWKS: " + this.publicRSAKey.toJSONString());
+          log.debug("Key from JWKS: " + this.publicRSAKey.toJSONString());
           verifier = new RSASSAVerifier(this.publicRSAKey);
         } else {
-          logger.debug("Key from JKU: " + verificationKey.toJSONString());
+          log.debug("Key from JKU: " + verificationKey.toJSONString());
           verifier = new RSASSAVerifier(verificationKey);
         }
         valid = signedJWT.verify(verifier);
-        logger.info("JWT valid?: " + valid);
+        log.debug("JWT valid?: " + valid);
         return valid;
       }
 
     } catch (ParseException e) {
-      logger.error("Could not parse JWT Token -> Message: %d", e);
+      log.error("Could not parse JWT Token -> Message: %d", e);
     } catch (JOSEException e) {
-      logger.error("RSA JWK Extraction failed -> Message: %d", e);
+      log.error("RSA JWK Extraction failed -> Message: %d", e);
     }
 
     return false;
