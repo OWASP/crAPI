@@ -11,6 +11,7 @@ apiGatewayServiceInstall: true
 apiGatewayPassword:
 tlsEnabled: false
 jwtExpiration: 604800000
+logLevel: INFO
 
 waitForK8sResources:
   image: groundnuty/k8s-wait-for:v1.3

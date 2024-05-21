@@ -119,7 +119,7 @@ public class UserServiceImplTest {
     try {
       Mockito.when(jwtAuthTokenFilter.getUserFromToken(Mockito.any())).thenReturn(user.getEmail());
     } catch (ParseException e) {
-      logger.error("ParseException");
+      logger.error("Error in parsing token");
     }
     Assertions.assertEquals(userService.getUserFromToken(getMockHttpRequest()), user);
     Mockito.when(userRepository.findByEmail(Mockito.any())).thenReturn(user);

@@ -38,7 +38,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
   private static final long serialVersionUID = -3880069851908752573L;
-  // private static final Logger handlerLogger = LoggerFactory.getLogger(ExceptionHandler.class);
 
   @org.springframework.web.bind.annotation.ExceptionHandler({RuntimeException.class})
   public ResponseEntity<String> handleRunTimeException(RuntimeException e) {
