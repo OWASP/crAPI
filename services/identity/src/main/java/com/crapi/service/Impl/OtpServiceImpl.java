@@ -29,16 +29,14 @@ import com.crapi.utils.MailBody;
 import com.crapi.utils.OTPGenerator;
 import com.crapi.utils.SMTPMailServer;
 import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class OtpServiceImpl implements OtpService {
-
-  private static final Logger logger = LoggerFactory.getLogger(OtpServiceImpl.class);
 
   @Autowired OtpRepository otpRepository;
 
@@ -61,7 +59,7 @@ public class OtpServiceImpl implements OtpService {
       Otp saveOtp = otpRepository.save(otp);
       return true;
     } catch (Exception e) {
-      logger.error("Fail to invalidate otp -> Message: {}", e);
+      log.error("Fail to invalidate otp -> Message: {}", e);
       return false;
     }
   }

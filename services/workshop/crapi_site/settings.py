@@ -54,7 +54,10 @@ SECRET_KEY = get_env_value("SECRET_KEY")
 IS_TESTING = os.environ.get("IS_TESTING", False)
 
 # SECURITY WARNING: don't run with debug turned on in production!
+LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO").upper()
 DEBUG = os.environ.get("DEBUG", False)
+if LOG_LEVEL == "DEBUG":
+    DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -138,27 +141,27 @@ LOGGING = {
     },
     "handlers": {
         "file": {
-            "level": "DEBUG",
+            "level": LOG_LEVEL,
             "class": "logging.FileHandler",
             "filename": BASE_DIR + "/debug.log",
             "formatter": "standard",
         },
         "console": {
-            "level": "INFO",
+            "level": LOG_LEVEL,
             "class": "logging.StreamHandler",
             "formatter": "console",
         },
     },
     "root": {
         "handlers": ["file", "console"],
-        "level": "DEBUG",
+        "level": LOG_LEVEL,
     },
     "django.request": {
         "handlers": ["file"],
-        "level": "DEBUG",
+        "level": LOG_LEVEL,
     },
     "djongo": {
-        "level": "DEBUG",
+        "level": LOG_LEVEL,
         "handlers": ["console"],
         "propogate": True,
     },

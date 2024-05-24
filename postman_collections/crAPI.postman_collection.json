@@ -1,12 +1,12 @@
 {
   "collection": {
     "info": {
-      "_postman_id": "11111111-1111-1111-1111-111111111111",
+      "_postman_id": "abd11111-afc1-1a11-ab11-fb1b111aae1b",
       "name": "crAPI Accepted",
       "description": "crAPI Training Scripts",
       "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-      "updatedAt": "2024-01-09T18:25:19.000Z",
-      "uid": "11111111-1111-1111-1111-111111111111",
+      "updatedAt": "2024-05-21T09:06:43.000Z",
+      "uid": "11111111-abd11111-afc1-1a11-ab11-fb1b111aae1b",
       "createdAt": null,
       "lastUpdatedBy": null
     },
@@ -111,6 +111,7 @@
           {
             "listen": "test",
             "script": {
+              "id": "fc0cb347-ad16-46de-9985-207c5146d7c5",
               "exec": [
                 "",
                 "pm.test(\"Status code is 200\", function () {",
@@ -124,13 +125,13 @@
                 "});",
                 ""
               ],
-              "type": "text/javascript",
-              "id": "fc0cb347-ad16-46de-9985-207c5146d7c5"
+              "type": "text/javascript"
             }
           },
           {
             "listen": "prerequest",
             "script": {
+              "id": "c0a43741-3b36-48c0-be1a-9e5595f57c11",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -151,8 +152,7 @@
                 "});\r",
                 ""
               ],
-              "type": "text/javascript",
-              "id": "c0a43741-3b36-48c0-be1a-9e5595f57c11"
+              "type": "text/javascript"
             }
           }
         ],
@@ -346,6 +346,7 @@
           {
             "listen": "test",
             "script": {
+              "id": "eed6b360-55c8-43f2-ad6a-4f8e1e8a1da3",
               "exec": [
                 "",
                 "",
@@ -368,7 +369,7 @@
                 "    var jsonData = JSON.parse(responseBody);",
                 "    var mails = jsonData.items;",
                 "",
-                "    pm.test(\"Your test name\", function () {",
+                "    pm.test(\"Get OTP\", function () {",
                 "        pm.expect(mails.length).to.be.gt(0);",
                 "        var mail = mails[0];",
                 "        console.log(mail);",
@@ -387,12 +388,13 @@
                 ""
               ],
               "type": "text/javascript",
-              "id": "eed6b360-55c8-43f2-ad6a-4f8e1e8a1da3"
+              "packages": {}
             }
           },
           {
             "listen": "prerequest",
             "script": {
+              "id": "42443fb8-3a72-4d37-ab36-597308aff3d2",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -412,7 +414,7 @@
                 "});"
               ],
               "type": "text/javascript",
-              "id": "42443fb8-3a72-4d37-ab36-597308aff3d2"
+              "packages": {}
             }
           }
         ],
@@ -436,10 +438,6 @@
               "value": "*/*"
             }
           ],
-          "body": {
-            "mode": "raw",
-            "raw": ""
-          },
           "url": {
             "raw": "{{url_mail}}/api/v2/search?kind=to&query={{email}}&limit=10",
             "host": [
@@ -968,6 +966,7 @@
                 "    pm.response.to.have.status(200);",
                 "    var jsonData = pm.response.json();",
                 "    pm.collectionVariables.set(\"vehicle_id\", jsonData[0].uuid);",
+                "    pm.collectionVariables.set(\"VIN\", jsonData[0].vin);",
                 "});"
               ],
               "type": "text/javascript"
@@ -1047,12 +1046,12 @@
         "uid": "13872198-071e3d09-178d-4119-a4d2-cad20b48bbb5"
       },
       {
-        "name": "Get recent posts",
+        "name": "Get vehicle location",
         "event": [
           {
             "listen": "test",
             "script": {
-              "id": "38fb751f-d2f2-4868-9c73-fc603acfe23f",
+              "id": "1d1f1d9e-34e2-462a-8469-f3a48bfce052",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
@@ -1064,7 +1063,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "9b6b4be9-5cf3-460a-a34a-e92899854e58",
+              "id": "f13d8ca4-39d1-4003-bf2e-8d31f3b4a178",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -1087,7 +1086,7 @@
             }
           }
         ],
-        "id": "3672b547-3a8f-4d57-aad2-3e180d7fa47c",
+        "id": "7fe2e5da-ca18-46c5-b802-eb777841d76c",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
@@ -1118,7 +1117,104 @@
             }
           ],
           "url": {
-            "raw": "{{url}}/community/api/v2/community/posts/recent?limit=30&offset=0",
+            "raw": "{{url}}/identity/api/v2/vehicle/{{vehicle_id}}/location",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "identity",
+              "api",
+              "v2",
+              "vehicle",
+              "{{vehicle_id}}",
+              "location"
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-7fe2e5da-ca18-46c5-b802-eb777841d76c"
+      },
+      {
+        "name": "Validate coupon",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "6c7102fd-abfd-44a1-bd70-aaf2d46ee7f1",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "785896e4-8b48-4cec-957d-4b27ea74d5c3",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "443e66e0-34b9-4804-b761-bd62e7cc4288",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "POST",
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb25zdGVyQGRhcmt3ZWIuY29tIiwiaWF0IjoxNjA4MDMxMDk5LCJleHAiOjE2MDgxMTc0OTl9.lQr14VeNm_lOmKiOIKwO6mRu_47VEU8HVWEsyBzbeaVXzIthwnTC4mNmYb0qNW2--T20_P9sOjTWtMJjKRQCJA"
+            },
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\"coupon_code\":\"TRAC075\"}"
+          },
+          "url": {
+            "raw": "{{url}}/community/api/v2/coupon/validate-coupon",
             "host": [
               "{{url}}"
             ],
@@ -1126,24 +1222,92 @@
               "community",
               "api",
               "v2",
-              "community",
-              "posts",
-              "recent"
-            ],
-            "query": [
-              {
-                "key": "limit",
-                "value": "30"
-              },
-              {
-                "key": "offset",
-                "value": "0"
-              }
+              "coupon",
+              "validate-coupon"
             ]
           }
         },
         "response": [],
-        "uid": "13872198-3672b547-3a8f-4d57-aad2-3e180d7fa47c"
+        "uid": "13872198-443e66e0-34b9-4804-b761-bd62e7cc4288"
+      },
+      {
+        "name": "Apply coupon",
+        "event": [
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "51f8310b-533a-4f39-b7bc-c1da9906ae6f",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "b3bd0f55-5f8c-4ea6-bca3-94993a1d1804",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "POST",
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\"coupon_code\":\"TRAC075\",\"amount\":65}"
+          },
+          "url": {
+            "raw": "{{url}}/workshop/api/shop/apply_coupon",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "workshop",
+              "api",
+              "shop",
+              "apply_coupon"
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-b3bd0f55-5f8c-4ea6-bca3-94993a1d1804"
       },
       {
         "name": "Create post ",
@@ -1333,6 +1497,105 @@
         "uid": "13872198-6a434301-adbb-41ed-a2d9-b1599aac7dcc"
       },
       {
+        "name": "Get recent posts",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "38fb751f-d2f2-4868-9c73-fc603acfe23f",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "9b6b4be9-5cf3-460a-a34a-e92899854e58",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "3672b547-3a8f-4d57-aad2-3e180d7fa47c",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "GET",
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "url": {
+            "raw": "{{url}}/community/api/v2/community/posts/recent?limit=30&offset=0",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "community",
+              "api",
+              "v2",
+              "community",
+              "posts",
+              "recent"
+            ],
+            "query": [
+              {
+                "key": "limit",
+                "value": "30"
+              },
+              {
+                "key": "offset",
+                "value": "0"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-3672b547-3a8f-4d57-aad2-3e180d7fa47c"
+      },
+      {
         "name": "Post comment",
         "event": [
           {
@@ -1426,95 +1689,6 @@
         },
         "response": [],
         "uid": "13872198-f4da30f3-5f68-457e-9f52-57e744d638a0"
-      },
-      {
-        "name": "Get vehicle location",
-        "event": [
-          {
-            "listen": "test",
-            "script": {
-              "id": "1d1f1d9e-34e2-462a-8469-f3a48bfce052",
-              "exec": [
-                "pm.test(\"Status code is 200\", function () {",
-                "    pm.response.to.have.status(200);",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          },
-          {
-            "listen": "prerequest",
-            "script": {
-              "id": "f13d8ca4-39d1-4003-bf2e-8d31f3b4a178",
-              "exec": [
-                "const {Property} = require('postman-collection');\r",
-                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
-                "if (!xff){\r",
-                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
-                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
-                "    \r",
-                "}\r",
-                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
-                "pm.request.headers.remove('X-Forwarded-For');\r",
-                "pm.request.headers.add({ \r",
-                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
-                "    disabled: false,\r",
-                "    // Your header, effectively\r",
-                "    key: 'X-Forwarded-For', \r",
-                "    value: xff\r",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          }
-        ],
-        "id": "7fe2e5da-ca18-46c5-b802-eb777841d76c",
-        "protocolProfileBehavior": {
-          "disableBodyPruning": true
-        },
-        "request": {
-          "auth": {
-            "type": "bearer",
-            "bearer": [
-              {
-                "key": "token",
-                "value": "{{token}}",
-                "type": "string"
-              }
-            ]
-          },
-          "method": "GET",
-          "header": [
-            {
-              "key": "User-Agent",
-              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
-            },
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "Accept",
-              "value": "*/*"
-            }
-          ],
-          "url": {
-            "raw": "{{url}}/identity/api/v2/vehicle/{{vehicle_id}}/location",
-            "host": [
-              "{{url}}"
-            ],
-            "path": [
-              "identity",
-              "api",
-              "v2",
-              "vehicle",
-              "{{vehicle_id}}",
-              "location"
-            ]
-          }
-        },
-        "response": [],
-        "uid": "13872198-7fe2e5da-ca18-46c5-b802-eb777841d76c"
       },
       {
         "name": "Get All Mechanics",
@@ -2004,7 +2178,8 @@
                 "    console.log(\"Product ID \", productId);",
                 "});"
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "packages": {}
             }
           },
           {
@@ -2029,7 +2204,8 @@
                 "    value: xff\r",
                 "});"
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "packages": {}
             }
           }
         ],
@@ -2064,7 +2240,7 @@
             }
           ],
           "url": {
-            "raw": "{{url}}/workshop/api/shop/products",
+            "raw": "{{url}}/workshop/api/shop/products?limit=30&offset=0",
             "host": [
               "{{url}}"
             ],
@@ -2073,186 +2249,21 @@
               "api",
               "shop",
               "products"
+            ],
+            "query": [
+              {
+                "key": "limit",
+                "value": "30"
+              },
+              {
+                "key": "offset",
+                "value": "0"
+              }
             ]
           }
         },
         "response": [],
         "uid": "13872198-f76df6ed-a560-4517-ae32-9bf7d7518896"
-      },
-      {
-        "name": "Validate coupon",
-        "event": [
-          {
-            "listen": "test",
-            "script": {
-              "id": "6c7102fd-abfd-44a1-bd70-aaf2d46ee7f1",
-              "exec": [
-                "pm.test(\"Status code is 200\", function () {",
-                "    pm.response.to.have.status(200);",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          },
-          {
-            "listen": "prerequest",
-            "script": {
-              "id": "785896e4-8b48-4cec-957d-4b27ea74d5c3",
-              "exec": [
-                "const {Property} = require('postman-collection');\r",
-                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
-                "if (!xff){\r",
-                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
-                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
-                "    \r",
-                "}\r",
-                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
-                "pm.request.headers.remove('X-Forwarded-For');\r",
-                "pm.request.headers.add({ \r",
-                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
-                "    disabled: false,\r",
-                "    // Your header, effectively\r",
-                "    key: 'X-Forwarded-For', \r",
-                "    value: xff\r",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          }
-        ],
-        "id": "443e66e0-34b9-4804-b761-bd62e7cc4288",
-        "protocolProfileBehavior": {
-          "disableBodyPruning": true
-        },
-        "request": {
-          "auth": {
-            "type": "bearer",
-            "bearer": [
-              {
-                "key": "token",
-                "value": "{{token}}",
-                "type": "string"
-              }
-            ]
-          },
-          "method": "POST",
-          "header": [
-            {
-              "key": "Authorization",
-              "value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb25zdGVyQGRhcmt3ZWIuY29tIiwiaWF0IjoxNjA4MDMxMDk5LCJleHAiOjE2MDgxMTc0OTl9.lQr14VeNm_lOmKiOIKwO6mRu_47VEU8HVWEsyBzbeaVXzIthwnTC4mNmYb0qNW2--T20_P9sOjTWtMJjKRQCJA"
-            },
-            {
-              "key": "User-Agent",
-              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
-            },
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "Accept",
-              "value": "*/*"
-            }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\"coupon_code\":\"TRAC075\"}"
-          },
-          "url": {
-            "raw": "{{url}}/community/api/v2/coupon/validate-coupon",
-            "host": [
-              "{{url}}"
-            ],
-            "path": [
-              "community",
-              "api",
-              "v2",
-              "coupon",
-              "validate-coupon"
-            ]
-          }
-        },
-        "response": [],
-        "uid": "13872198-443e66e0-34b9-4804-b761-bd62e7cc4288"
-      },
-      {
-        "name": "Apply coupon",
-        "event": [
-          {
-            "listen": "prerequest",
-            "script": {
-              "id": "51f8310b-533a-4f39-b7bc-c1da9906ae6f",
-              "exec": [
-                "const {Property} = require('postman-collection');\r",
-                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
-                "if (!xff){\r",
-                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
-                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
-                "    \r",
-                "}\r",
-                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
-                "pm.request.headers.remove('X-Forwarded-For');\r",
-                "pm.request.headers.add({ \r",
-                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
-                "    disabled: false,\r",
-                "    // Your header, effectively\r",
-                "    key: 'X-Forwarded-For', \r",
-                "    value: xff\r",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          }
-        ],
-        "id": "b3bd0f55-5f8c-4ea6-bca3-94993a1d1804",
-        "protocolProfileBehavior": {
-          "disableBodyPruning": true
-        },
-        "request": {
-          "auth": {
-            "type": "bearer",
-            "bearer": [
-              {
-                "key": "token",
-                "value": "{{token}}",
-                "type": "string"
-              }
-            ]
-          },
-          "method": "POST",
-          "header": [
-            {
-              "key": "User-Agent",
-              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
-            },
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "Accept",
-              "value": "*/*"
-            }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\"coupon_code\":\"TRAC075\",\"amount\":65}"
-          },
-          "url": {
-            "raw": "{{url}}/workshop/api/shop/apply_coupon",
-            "host": [
-              "{{url}}"
-            ],
-            "path": [
-              "workshop",
-              "api",
-              "shop",
-              "apply_coupon"
-            ]
-          }
-        },
-        "response": [],
-        "uid": "13872198-b3bd0f55-5f8c-4ea6-bca3-94993a1d1804"
       },
       {
         "name": "Create Order",

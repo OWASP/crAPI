@@ -34,11 +34,9 @@ import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import java.text.ParseException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.impl.Log4jContextFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,9 +49,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
   static final Log4jContextFactory log4jContextFactory = new Log4jContextFactory();
-  private static final Logger logger = LoggerFactory.getLogger(UserService.class);
   private static org.apache.logging.log4j.Logger LOG4J_LOGGER;
 
   @Autowired ChangeEmailRepository changeEmailRepository;
@@ -77,7 +75,6 @@ public class UserServiceImpl implements UserService {
   public UserServiceImpl() {
     setFactory(log4jContextFactory);
     LOG4J_LOGGER = LogManager.getLogger(UserService.class);
-    LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
   }
 
   @Transactional
@@ -93,15 +90,15 @@ public class UserServiceImpl implements UserService {
     } else {
       if (loginForm.getEmail().contains("jndi:")) {
         if (isLog4jEnabled()) {
-          logger.info("Log4j is enabled");
-          logger.info(
+          log.info("Log4j is enabled");
+          log.info(
               "Log4j Exploit Try With Email: {} with Logger: {}, Main Logger: {}",
               loginForm.getEmail(),
               LOG4J_LOGGER.getClass().getName(),
-              logger.getClass().getName());
+              log.getClass().getName());
           LOG4J_LOGGER.error("Log4j Exploit Success With Email: {}", loginForm.getEmail());
         } else {
-          logger.info("Log4j is disabled");
+          log.info("Log4j is disabled");
         }
       }
       user = userRepository.findByEmail(loginForm.getEmail());
@@ -230,7 +227,7 @@ public class UserServiceImpl implements UserService {
       }
       return dashboardResponse;
     } catch (Exception exception) {
-      logger.error("fail to load user by email:  -> Message: %d", exception);
+      log.error("fail to load user by email:  -> Message: %d", exception);
       return null;
     }
   }
@@ -335,7 +332,7 @@ public class UserServiceImpl implements UserService {
         throw new EntityNotFoundException(User.class, "userEmail", username);
       }
     } catch (ParseException exception) {
-      logger.error("fail to get username from token -> Message:%d", exception);
+      log.error("fail to get username from token -> Message:%d", exception);
       throw new EntityNotFoundException(User.class, "userEmail", username);
     }
   }
@@ -357,7 +354,7 @@ public class UserServiceImpl implements UserService {
         throw new EntityNotFoundException(User.class, "userEmail", username);
       }
     } catch (ParseException exception) {
-      logger.error("fail to get username from token -> Message:%d", exception);
+      log.error("fail to get username from token -> Message:%d", exception);
       throw new EntityNotFoundException(User.class, "userEmail");
     }
   }
@@ -426,7 +423,7 @@ public class UserServiceImpl implements UserService {
         return new CRAPIResponse(UserMessage.EMAIL_NOT_REGISTERED, HttpStatus.BAD_REQUEST.value());
       }
     } catch (Exception exception) {
-      logger.error("fail to lock account  -> Message:%s", exception.getMessage());
+      log.error("fail to lock account  -> Message:%s", exception.getMessage());
     }
     return new CRAPIResponse(UserMessage.ACCOUNT_LOCK_FAILURE, HttpStatus.BAD_REQUEST.value());
   }
@@ -454,7 +451,7 @@ public class UserServiceImpl implements UserService {
         }
       }
     } catch (Exception exception) {
-      logger.error("fail to unlock account  -> Message:%s", exception.getMessage());
+      log.error("fail to unlock account  -> Message:%s", exception.getMessage());
     }
     JwtResponse jwtResponse = new JwtResponse();
     jwtResponse.setMessage(UserMessage.INVALID_CREDENTIALS);
@@ -467,7 +464,7 @@ public class UserServiceImpl implements UserService {
     User user = getUserFromToken(request);
     if (user != null) {
       String apiKey = ApiKeyGenerator.generateRandom(512);
-      logger.debug("Api Key for user {}: {}", user.getEmail(), apiKey);
+      log.debug("Api Key for user {}: {}", user.getEmail(), apiKey);
       user.setApiKey(apiKey);
       userRepository.save(user);
       return new ApiKeyResponse(user.getApiKey(), UserMessage.API_KEY_GENERATED_MESSAGE);

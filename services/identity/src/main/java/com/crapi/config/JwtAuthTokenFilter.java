@@ -23,8 +23,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,9 +36,8 @@ enum ApiType {
   APIKEY;
 }
 
+@Slf4j
 public class JwtAuthTokenFilter extends OncePerRequestFilter {
-
-  private static final Logger tokenLogger = LoggerFactory.getLogger(JwtAuthTokenFilter.class);
 
   @Autowired private JwtProvider tokenProvider;
 
@@ -62,7 +60,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
       if (username != null && !username.equalsIgnoreCase(EStatus.INVALID.toString())) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         if (userDetails == null) {
-          tokenLogger.error("User not found");
+          log.error("User not found");
           response.sendError(HttpServletResponse.SC_UNAUTHORIZED, UserMessage.INVALID_CREDENTIALS);
         }
         if (userDetails.isAccountNonLocked()) {
@@ -72,13 +70,13 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
           authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
           SecurityContextHolder.getContext().setAuthentication(authentication);
         } else {
-          tokenLogger.error(UserMessage.ACCOUNT_LOCKED_MESSAGE);
+          log.error(UserMessage.ACCOUNT_LOCKED_MESSAGE);
           response.sendError(
               HttpServletResponse.SC_UNAUTHORIZED, UserMessage.ACCOUNT_LOCKED_MESSAGE);
         }
       }
     } catch (Exception e) {
-      tokenLogger.error("Can NOT set user authentication -> Message:%d", e);
+      log.error("Can NOT set user authentication -> Message:%d", e);
     }
 
     filterChain.doFilter(request, response);
@@ -122,10 +120,13 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
     String username = null;
     if (token != null) {
       if (apiType == ApiType.APIKEY) {
+        log.debug("Token is api token");
         username = tokenProvider.getUserNameFromApiToken(token);
       } else {
-        tokenProvider.validateJwtToken(token);
-        username = tokenProvider.getUserNameFromJwtToken(token);
+        log.debug("Token is jwt token");
+        if (tokenProvider.validateJwtToken(token)) {
+          username = tokenProvider.getUserNameFromJwtToken(token);
+        }
       }
       // checking username from token
       if (username != null) return username;

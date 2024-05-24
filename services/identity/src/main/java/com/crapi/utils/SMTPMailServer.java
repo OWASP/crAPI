@@ -21,18 +21,16 @@ import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.*;
 import java.util.Date;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class SMTPMailServer {
   @Autowired MailConfiguration mailConfiguration;
 
   @Autowired MailHogConfiguration mailhogConfiguration;
-
-  private static final Logger logger = LoggerFactory.getLogger(SMTPMailServer.class);
 
   /**
    * @param sendMail
@@ -44,28 +42,27 @@ public class SMTPMailServer {
     Session session = mailhogConfiguration.sendmail();
     boolean useMailHog = false;
     try {
-      logger.info("sendMail  mhogDomain: {}, emails: {}", mhogDomain, sendMail);
+      log.info("sendMail  mhogDomain: {}, emails: {}", mhogDomain, sendMail);
       InternetAddress[] emails = InternetAddress.parse(sendMail);
       if (mhogDomain != null && !mhogDomain.isEmpty()) {
         if (mailConfiguration.getHost().trim().endsWith(mhogDomain)) {
-          logger.info(
+          log.info(
               "SMTP host matches MailHog host. Using MailHog Configuration for sending emails");
           useMailHog = true;
         }
         for (InternetAddress emailAddress : emails) {
           String email = emailAddress.toString();
           String domain = email.substring(email.indexOf("@") + 1).trim();
-          logger.debug(
-              "sendMail  mhogDomain: {}, email: {}, domain: {}", mhogDomain, email, domain);
+          log.debug("sendMail  mhogDomain: {}, email: {}, domain: {}", mhogDomain, email, domain);
           if (mhogDomain.trim().equals(domain)) {
-            logger.info("Using MailHog Configuration for sending email for domain: " + domain);
+            log.info("Using MailHog Configuration for sending email for domain: " + domain);
             useMailHog = true;
           }
         }
       }
       if (!useMailHog) {
         session = mailConfiguration.sendmail();
-        logger.info("Using Mail Configuration for sending email: " + sendMail);
+        log.info("Using Mail Configuration for sending email: " + sendMail);
       }
 
       Message msg = new MimeMessage(session);

@@ -20,6 +20,7 @@ services:
     volumes:
       - ./keys:/keys
     environment:
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - DB_NAME=crapi
       - DB_USER=admin
       - DB_PASSWORD=crapisecretpassword
@@ -52,6 +53,8 @@ services:
         condition: service_healthy
       mongodb:
         condition: service_healthy
+      mailhog:
+        condition: service_healthy
     healthcheck:
       test: /app/health.sh
       interval: 15s
@@ -69,6 +72,7 @@ services:
     #ports:
     #  - "${LISTEN_IP:-127.0.0.1}:8087:8087"
     environment:
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - IDENTITY_SERVICE=crapi-identity:${IDENTITY_SERVER_PORT:-8080}
       - DB_NAME=crapi
       - DB_USER=admin
@@ -108,6 +112,7 @@ services:
     #ports:
     #  - "${LISTEN_IP:-127.0.0.1}:8000:8000"
     environment:
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - IDENTITY_SERVICE=crapi-identity:${IDENTITY_SERVER_PORT:-8080}
       - DB_NAME=crapi
       - DB_USER=admin
