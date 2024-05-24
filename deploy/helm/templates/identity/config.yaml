@@ -8,7 +8,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
 data:
-  LOG_LEVEL: {{ .Values.identity.config.logLevel | upper }}
+  LOG_LEVEL: {{ .Values.logLevel | upper }}
   JWT_SECRET: {{ .Values.jwtSecret }} #Used for creating a JWT. Can be anything
   APP_NAME: {{ .Values.identity.config.appName }}
   ENABLE_SHELL_INJECTION: {{ .Values.enableShellInjection | quote }}
