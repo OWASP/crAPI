@@ -22,9 +22,17 @@ python3 manage.py migrate
 
 python3 manage.py check &&\
 python3 manage.py health_check
+if [ $? -ne 0 ]; then
+  echo "Django database check failed. Exiting."
+  exit 1
+fi
 
 echo "Seeding the database"
 python3 manage.py seed_database
+if [ $? -ne 0 ]; then
+  echo "Django database seeding failed. Exiting."
+  exit 1
+fi
 
 echo "Starting Django server"
 if [ "$TLS_ENABLED" = "true" ] || [ "$TLS_ENABLED" = "1" ]; then
