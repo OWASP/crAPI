@@ -276,7 +276,7 @@ services:
     #ports:
     #  - "${LISTEN_IP:-127.0.0.1}:8443:443" # https
     healthcheck:
-      test: echo -n "GET / HTTP/1.1\n\n" > /dev/tcp/127.0.0.1/443
+      test: echo -n "GET / HTTP/1.1\n\n\n" > /dev/tcp/127.0.0.1/443
       interval: 15s
       timeout: 15s
       retries: 15
