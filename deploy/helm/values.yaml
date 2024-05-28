@@ -14,6 +14,7 @@ jwtExpiration: 604800000
 logLevel: INFO
 
 waitForK8sResources:
+  enabled: True
   image: groundnuty/k8s-wait-for:v1.3
   imagePullPolicy: IfNotPresent
 

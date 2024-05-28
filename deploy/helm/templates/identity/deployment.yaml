@@ -18,6 +18,7 @@ spec:
         release: {{ .Release.Name }}
         {{- toYaml .Values.identity.podLabels | nindent 8 }}
     spec:
+      {{- if .Values.waitForK8sResources.enabled }}
       initContainers:
         - name: wait-for-postgres
           image: {{ .Values.waitForK8sResources.image }}
@@ -25,6 +26,13 @@ spec:
           args:
             - "service"
             - {{ .Values.postgresdb.service.name | quote }}
+        - name: wait-for-mailhog
+          image: {{ .Values.waitForK8sResources.image }}
+          imagePullPolicy: {{ .Values.waitForK8sResources.imagePullPolicy }}
+          args:
+            - "service"
+            - {{ .Values.mailhog.webService.name | quote }}
+      {{- end }}
       volumes:
         - name: jwt-key-secret
           secret:
