@@ -12,8 +12,10 @@ apiGatewayPassword:
 tlsEnabled: false
 jwtExpiration: 604800000
 openAIApiKey: ""
+logLevel: INFO
 
 waitForK8sResources:
+  enabled: True
   image: groundnuty/k8s-wait-for:v1.3
   imagePullPolicy: IfNotPresent
 

@@ -22,3 +22,4 @@ gradle-app.setting
 .classpath
 bin/
 test-results/
+/pkg/

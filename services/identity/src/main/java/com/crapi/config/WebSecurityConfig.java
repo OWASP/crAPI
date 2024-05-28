@@ -50,7 +50,6 @@ public class WebSecurityConfig {
   @Bean
   public DaoAuthenticationProvider authenticationProvider() {
     DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-
     authProvider.setUserDetailsService(userDetailsService);
     authProvider.setPasswordEncoder(passwordEncoder());
 
@@ -76,12 +75,7 @@ public class WebSecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChainWeb(HttpSecurity http) throws Exception {
-    http.cors(Customizer.withDefaults())
-        .csrf(
-            (csrf) -> {
-              csrf.disable();
-            })
-        .authorizeHttpRequests(
+    http.authorizeHttpRequests(
             (requests) ->
                 requests
                     .requestMatchers("/identity/api/auth/**")
@@ -99,6 +93,8 @@ public class WebSecurityConfig {
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .exceptionHandling(handling -> handling.authenticationEntryPoint(jwtUnauthorizedHandler));
     http.authenticationProvider(authenticationProvider());
+    http.csrf().disable();
+    http.cors(Customizer.withDefaults());
     return http.build();
   }
 }

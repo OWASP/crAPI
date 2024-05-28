@@ -17,6 +17,7 @@ Configuration for crapi application
 """
 import django
 import sys
+import time
 from django.apps import AppConfig
 import bcrypt
 from django.utils import timezone
@@ -26,6 +27,9 @@ import logging
 import traceback
 from django.core.management.base import BaseCommand
 from django.utils import timezone
+import psycopg2
+from crapi_site import settings
+import requests
 
 logger = logging.getLogger()
 
@@ -207,6 +211,22 @@ def create_orders():
         logger.info("Created Order for User %s: %s", user.email, order.__dict__)
 
 
+def ping_identity_server():
+    try:
+        identity_health_url = settings.IDENTITY_HEALTH
+        headers = {
+            "Accept": "*/*",
+        }
+        request = requests.get(identity_health_url, headers)
+        if request.status_code == 200:
+            return True
+        else:
+            return False
+    except Exception as e:
+        logger.error("Failed to ping identity server: " + str(e))
+        return False
+
+
 class Command(BaseCommand):
     help = "Seed the database with initial data."
 
@@ -216,6 +236,14 @@ class Command(BaseCommand):
         :return: None
         """
         logger.info("Pre Populating Model Data")
+        try:
+            if not ping_identity_server():
+                raise Exception("Identity Server is down")
+        except Exception as e:
+            logger.error("Cannot Pre Populate Data: " + str(e))
+            logger.error("Exiting in 5 seconds")
+            time.sleep(5)
+            sys.exit(1)
         try:
             create_products()
         except Exception as e:

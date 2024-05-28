@@ -32,8 +32,7 @@ import com.crapi.utils.UserData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -42,9 +41,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 @Component
+@Slf4j
 public class InitialDataConfig {
-
-  private static final Logger logger = LoggerFactory.getLogger(InitialDataConfig.class);
 
   private static long seed = 0;
 
@@ -136,7 +134,7 @@ public class InitialDataConfig {
                 userDetails.getLatitude(),
                 userDetails.getLongitude());
         if (!user) {
-          logger.error("Fail to create predefined users");
+          log.error("Fail to create predefined users");
         }
       }
     }
@@ -155,7 +153,7 @@ public class InitialDataConfig {
       vehicleDetails = vehicleDetailsRepository.save(vehicleDetails);
       vehicleDetails.setModel(vehicleModel);
       vehicleDetails = vehicleDetailsRepository.save(vehicleDetails);
-      logger.debug("Created vehicle for {} successfully", vehicleDetails);
+      log.debug("Created vehicle for {} successfully", vehicleDetails);
       return vehicleDetails;
     }
     return null;
@@ -186,7 +184,7 @@ public class InitialDataConfig {
         vehicleDetails.setOwner(user);
         vehicleDetailsRepository.save(vehicleDetails);
       } else {
-        logger.error("Fail to create vehicle for user {}", email);
+        log.error("Fail to create vehicle for user {}", email);
         return false;
       }
       // generate random bytes
@@ -199,7 +197,7 @@ public class InitialDataConfig {
       profileVideoRepository.save(profileVideo);
       return true;
     } catch (Exception e) {
-      logger.error("Fail to create user {}, Exception :: {}", email, e);
+      log.error("Fail to create user {}, Exception :: {}", email, e);
       return false;
     }
   }
