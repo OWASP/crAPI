@@ -47,15 +47,15 @@ var coupons = []models.Coupon{
 
 //initialize Post data
 var posts = []models.Post{
-	models.Post{
+	{
 		Title:   "Title 1",
 		Content: "Hello world 1",
 	},
-	models.Post{
+	{
 		Title:   "Title 2",
 		Content: "Hello world 2",
 	},
-	models.Post{
+	{
 		Title:   "Title 3",
 		Content: "Hello world 3",
 	},
