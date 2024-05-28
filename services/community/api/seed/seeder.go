@@ -93,4 +93,5 @@ func LoadMongoData(mongoClient *mongo.Client, db *gorm.DB) {
 			log.Println(postData) // Use the returned values as needed
 		}
 	}
+	log.Println("Data seeded successfully")
 }
