@@ -44,7 +44,11 @@ func identityServiceHealthCheck() {
 	}
 	var attempts = 0
 	for (attempts <= 5) {
+		tlsEnabled := os.Getenv("TLS_ENABLED")
 		identityHealthCheckUrl := fmt.Sprintf("http://%s/identity/health_check", os.Getenv("IDENTITY_SERVICE"))
+		if tlsEnabled == "true" {
+			identityHealthCheckUrl = fmt.Sprintf("https://%s/identity/health_check", os.Getenv("IDENTITY_SERVICE"))
+		}
 		resp, err := http.Get(identityHealthCheckUrl)
 		if err != nil {
 			log.Printf("Error while checking the health of identity service: %v", err)

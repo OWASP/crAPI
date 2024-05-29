@@ -251,3 +251,6 @@ if TLS_ENABLED and (TLS_ENABLED.lower() in ["true", "1", "yes"]):
     IDENTITY_LOGIN = "https://{}/identity/api/auth/login".format(
         get_env_value("IDENTITY_SERVICE")
     )
+    IDENTITY_HEALTH = "https://{}/identity/health_check".format(
+        get_env_value("IDENTITY_SERVICE")
+    )
