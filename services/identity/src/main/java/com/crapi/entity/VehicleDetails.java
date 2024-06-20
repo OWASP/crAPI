@@ -16,11 +16,11 @@ package com.crapi.entity;
 
 import com.crapi.enums.EStatus;
 import com.crapi.model.VehicleOwnership;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import javax.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -33,7 +33,7 @@ public class VehicleDetails {
   private long id;
 
   @Column(name = "uuid", updatable = false, nullable = false, unique = true)
-  private UUID uuid = UUID.randomUUID();
+  private UUID uuid;
 
   private String pincode;
   private String vin;
@@ -41,11 +41,11 @@ public class VehicleDetails {
   private EStatus status;
   @Transient List<VehicleOwnership> previousOwners;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "vehicle_model_id")
   private VehicleModel model;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "location_id")
   private VehicleLocation vehicleLocation;
 
@@ -54,7 +54,16 @@ public class VehicleDetails {
   private User owner;
 
   public VehicleDetails(String pincode, String vin) {
+    this.uuid = UUID.randomUUID();
+    this.pincode = pincode;
+    this.vin = vin;
+    this.status = EStatus.ACTIVE;
+    this.year = LocalDate.now().getYear();
+    this.previousOwners = Arrays.asList();
+  }
 
+  public VehicleDetails(String uuid, String pincode, String vin) {
+    this.uuid = UUID.fromString(uuid);
     this.pincode = pincode;
     this.vin = vin;
     this.status = EStatus.ACTIVE;

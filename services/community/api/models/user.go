@@ -16,13 +16,14 @@ package models
 
 import (
 	"errors"
+	"log"
 	"strings"
 	"time"
 
 	"github.com/badoux/checkmail"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
-	
+
 	"encoding/base64"
 )
 
@@ -61,36 +62,36 @@ func (u *Author) Validate(action string) error {
 	switch strings.ToLower(action) {
 	case "update":
 		if u.Nickname == "" {
-			return errors.New("Required Nickname")
+			return errors.New("required nickname")
 		}
 		if u.Email == "" {
-			return errors.New("Required Email")
+			return errors.New("required email")
 		}
 		if err := checkmail.ValidateFormat(u.Email); err != nil {
-			return errors.New("Invalid Email")
+			return errors.New("invalid email")
 		}
 		return nil
 
 	case "login":
 		if u.Nickname == "" {
-			return errors.New("Required Nickname")
+			return errors.New("required nickname")
 		}
 		if u.Email == "" {
-			return errors.New("Required Email")
+			return errors.New("required email")
 		}
 		if err := checkmail.ValidateFormat(u.Email); err != nil {
-			return errors.New("Invalid Email")
+			return errors.New("invalid email")
 		}
 		return nil
 	default:
 		if u.Nickname == "" {
-			return errors.New("Required Nickname")
+			return errors.New("required nickname")
 		}
 		if u.Email == "" {
-			return errors.New("Required Email")
+			return errors.New("required email")
 		}
 		if err := checkmail.ValidateFormat(u.Email); err != nil {
-			return errors.New("Invalid Email")
+			return errors.New("invalid email")
 		}
 		return nil
 	}
@@ -109,18 +110,27 @@ func FindAuthorByEmail(email string, db *gorm.DB) (*uint64, error) {
 	//fetch id and number from for token user
 	row := db.Table("user_login").Where("email LIKE ?", email).Select("id,number").Row()
 
-	row.Scan(&id, &number)
+	err = row.Scan(&id, &number)
+	if err != nil {
+		log.Println("Error in FindAuthorByEmail", err)
+	}
 
 	autherID = id
 	//fetch name and picture from for token user
 	row1 := db.Table("user_details").Where("user_id = ?", id).Select("name, lo_get(picture)").Row()
-	row1.Scan(&name, &picture)
+	err = row1.Scan(&name, &picture)
+	if err != nil {
+		log.Println("Error in FindAuthorByEmail", err)
+	}
 	if len(picture) > 0 {
 		picurl = "data:image/jpeg;base64," + base64.StdEncoding.EncodeToString(picture)
 	}
 	nickname = name
 	row2 := db.Table("vehicle_details").Where("owner_id = ?", id).Select("uuid").Row()
-	row2.Scan(&uuid)
+	err = row2.Scan(&uuid)
+	if err != nil {
+		log.Println("Error in FindAuthorByEmail", err)
+	}
 	vehicleID = uuid
 	return number, err
 }

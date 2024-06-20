@@ -24,14 +24,14 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import javax.net.ssl.SSLContext;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -40,9 +40,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
+@Slf4j
 public class VehicleOwnershipServiceImpl implements VehicleOwnershipService {
-
-  private static final Logger logger = LoggerFactory.getLogger(VehicleOwnershipServiceImpl.class);
 
   @Autowired VehicleModelRepository vehicleModelRepository;
 
@@ -74,8 +73,10 @@ public class VehicleOwnershipServiceImpl implements VehicleOwnershipService {
     SSLConnectionSocketFactory csf =
         new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
     CloseableHttpClient httpClient =
-        HttpClients.custom().setSSLContext(sslContext).setSSLSocketFactory(csf).build();
-    builder = builder.requestFactory(() -> new HttpComponentsClientHttpRequestFactory(httpClient));
+        HttpClients.custom().setSSLSocketFactory(csf).setSSLContext(sslContext).build();
+    builder =
+        builder.requestFactory(
+            () -> new HttpComponentsClientHttpRequestFactory((HttpClient) httpClient));
 
     // Add basic auth header
     builder = builder.basicAuthentication(apiGatewayUsername, apiGatewayPassword);
@@ -90,19 +91,19 @@ public class VehicleOwnershipServiceImpl implements VehicleOwnershipService {
   @Override
   public List<VehicleOwnership> getPreviousOwners(String vin) {
     try {
-      logger.info("Getting vehicle ownership details for vin: " + vin);
+      log.info("Getting vehicle ownership details for vin: " + vin);
       // get vehicle ownership from crapi. vin query param is required
       RestTemplate restTemplate = restTemplate();
       String ownershipUrl = apiGatewayURL + "/v1/vin/ownership?vin=" + vin;
       VehicleOwnership[] vehicleOwnerships =
           restTemplate.getForObject(ownershipUrl, VehicleOwnership[].class);
       if (vehicleOwnerships == null) {
-        logger.error("Fail to get vehicle ownerships");
+        log.error("Fail to get vehicle ownerships");
         return List.of();
       }
       return Arrays.asList(vehicleOwnerships);
     } catch (Exception e) {
-      logger.error("Fail to get vehicle ownerships -> Message: {}", e);
+      log.error("Fail to get vehicle ownerships -> Message: {}", e);
     }
     return List.of();
   }

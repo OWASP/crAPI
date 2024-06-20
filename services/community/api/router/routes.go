@@ -15,9 +15,11 @@
 package router
 
 import (
-	"fmt"
+	"log"
 	"net/http"
+	_ "net/http/pprof"
 	"os"
+	"time"
 
 	"crapi.proj/goservice/api/config"
 	"crapi.proj/goservice/api/controllers"
@@ -38,6 +40,9 @@ func (server *Server) InitializeRoutes() *mux.Router {
 	controller.Client = server.Client
 
 	server.Router.Use(middlewares.AccessControlMiddleware)
+	if os.Getenv("DEBUG") == "1" {
+		server.Router.PathPrefix("/debug/pprof/").Handler(http.DefaultServeMux)
+	}
 	// Post Route
 	server.Router.HandleFunc("/community/api/v2/community/posts/recent", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(controller.GetPost, server.DB))).Methods("GET", "OPTIONS")
 
@@ -58,7 +63,13 @@ func (server *Server) InitializeRoutes() *mux.Router {
 }
 
 func (server *Server) Run(addr string) {
-	fmt.Println("Listening to port " + os.Getenv("SERVER_PORT"))
+	log.Println("Listening to port " + os.Getenv("SERVER_PORT"))
+	srv := &http.Server{
+		Addr:    addr,
+		Handler: server.Router,
+		ReadTimeout:  30 * time.Second,
+		WriteTimeout: 30 * time.Second,
+	}
 	if utils.IsTLSEnabled() {
 		// Check if env variable TLS_CERTIFICATE is set then use it as certificate else default to certs/server.crt
 		certificate, is_cert := os.LookupEnv("TLS_CERTIFICATE")
@@ -70,14 +81,8 @@ func (server *Server) Run(addr string) {
 		if !is_key || key == "" {
 			key = "certs/server.key"
 		}
-		err := http.ListenAndServeTLS(addr, certificate, key, server.Router)
-		if err != nil {
-			fmt.Println(err)
-		}
+		log.Println(srv.ListenAndServeTLS(certificate, key))
 	} else {
-		err := http.ListenAndServe(addr, server.Router)
-		if err != nil {
-			fmt.Println(err)
-		}
+		log.Println(srv.ListenAndServe())
 	}
 }

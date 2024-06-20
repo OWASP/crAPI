@@ -56,6 +56,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -118,7 +119,7 @@ public class UserServiceImplTest {
     try {
       Mockito.when(jwtAuthTokenFilter.getUserFromToken(Mockito.any())).thenReturn(user.getEmail());
     } catch (ParseException e) {
-      logger.error("ParseException");
+      logger.error("Error in parsing token");
     }
     Assertions.assertEquals(userService.getUserFromToken(getMockHttpRequest()), user);
     Mockito.when(userRepository.findByEmail(Mockito.any())).thenReturn(user);
@@ -136,8 +137,8 @@ public class UserServiceImplTest {
     Mockito.when(jwtProvider.generateJwtToken(Mockito.any())).thenReturn(sampleJwtToken);
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(getDummyUser());
     Mockito.when(userRepository.saveAndFlush(Mockito.any())).thenReturn(user);
-    Assertions.assertEquals(
-        userService.authenticateUserLogin(loginForm).getToken(), sampleJwtToken);
+    ResponseEntity<JwtResponse> jwtResponse = userService.authenticateUserLogin(loginForm);
+    Assertions.assertEquals(jwtResponse.getBody().getToken(), sampleJwtToken);
     Mockito.verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
   }
 
@@ -154,8 +155,8 @@ public class UserServiceImplTest {
     Mockito.when(jwtProvider.generateJwtToken(Mockito.any())).thenReturn(sampleJwtToken);
     Mockito.when(userRepository.findByEmail(Mockito.anyString())).thenReturn(getDummyUser());
     Mockito.when(userRepository.saveAndFlush(Mockito.any())).thenReturn(user);
-    Assertions.assertEquals(
-        userService.authenticateUserLogin(loginForm).getToken(), sampleJwtToken);
+    ResponseEntity<JwtResponse> jwtResponse = userService.authenticateUserLogin(loginForm);
+    Assertions.assertEquals(jwtResponse.getBody().getToken(), sampleJwtToken);
     Mockito.verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
   }
 
@@ -167,7 +168,7 @@ public class UserServiceImplTest {
     LoginForm loginForm = getDummyLoginFormWithoutPassword();
 
     Assertions.assertEquals(
-        userService.authenticateUserLogin(loginForm).getMessage(),
+        userService.authenticateUserLogin(loginForm).getBody().getMessage(),
         UserMessage.EMAIL_NOT_REGISTERED);
   }
 
@@ -179,7 +180,8 @@ public class UserServiceImplTest {
     LoginForm loginForm = getDummyLoginFormByEmail(null);
 
     Assertions.assertEquals(
-        userService.authenticateUserLogin(loginForm).getMessage(), UserMessage.EMAIL_NOT_PROVIDED);
+        userService.authenticateUserLogin(loginForm).getBody().getMessage(),
+        UserMessage.EMAIL_NOT_PROVIDED);
   }
 
   @Test
@@ -187,7 +189,7 @@ public class UserServiceImplTest {
   public void testAuthenticateUserLoginInvalidEmail() throws UnsupportedEncodingException {
     LoginForm loginForm = getDummyLoginForm();
     Assertions.assertEquals(
-        userService.authenticateUserLogin(loginForm).getMessage(),
+        userService.authenticateUserLogin(loginForm).getBody().getMessage(),
         UserMessage.EMAIL_NOT_REGISTERED);
   }
 
@@ -202,7 +204,8 @@ public class UserServiceImplTest {
     Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(user);
     Mockito.when(jwtProvider.generateJwtToken(Mockito.any())).thenReturn(null);
     Assertions.assertEquals(
-        userService.authenticateUserLogin(loginForm).getMessage(), UserMessage.INVALID_CREDENTIALS);
+        userService.authenticateUserLogin(loginForm).getBody().getMessage(),
+        UserMessage.INVALID_CREDENTIALS);
   }
 
   @Test
@@ -440,7 +443,7 @@ public class UserServiceImplTest {
         .thenReturn(null);
     Mockito.when(userRepository.findByEmail(loginWithEmailToken.getEmail())).thenReturn(user);
     JwtResponse jwtResponse = userService.loginWithEmailTokenV2(loginWithEmailToken);
-    Assertions.assertEquals("", jwtResponse.getToken());
+    Assertions.assertEquals(null, jwtResponse.getToken());
     Assertions.assertEquals(expectedMessage, jwtResponse.getMessage());
   }
 
@@ -456,7 +459,7 @@ public class UserServiceImplTest {
         .thenReturn(changeEmailRequest);
     Mockito.when(userRepository.findByEmail(loginWithEmailToken.getEmail())).thenReturn(null);
     JwtResponse jwtResponse = userService.loginWithEmailTokenV2(loginWithEmailToken);
-    Assertions.assertEquals("", jwtResponse.getToken());
+    Assertions.assertEquals(null, jwtResponse.getToken());
     Assertions.assertEquals(expectedMessage, jwtResponse.getMessage());
   }
 
@@ -472,7 +475,7 @@ public class UserServiceImplTest {
         .thenReturn(changeEmailRequest);
     Mockito.when(userRepository.findByEmail(loginWithEmailToken.getEmail())).thenReturn(user);
     JwtResponse jwtResponse = userService.loginWithEmailTokenV2(loginWithEmailToken);
-    Assertions.assertEquals("", jwtResponse.getToken());
+    Assertions.assertEquals(null, jwtResponse.getToken());
     Assertions.assertEquals(expectedMessage, jwtResponse.getMessage());
   }
 

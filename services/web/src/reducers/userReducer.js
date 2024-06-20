@@ -50,6 +50,13 @@ const userReducer = (state = initialData, action) => {
         number: action.payload.user.number,
         role: action.payload.user.role,
       };
+    case actionTypes.UNLOCK_USER_REDIRECT:
+      return {
+        ...state,
+        fetchingData: false,
+        email: action.payload.email,
+        message: action.payload.message,
+      };
     case actionTypes.FETCHED_USER:
       return {
         ...state,

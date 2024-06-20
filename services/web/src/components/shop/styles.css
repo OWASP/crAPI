@@ -1,34 +1,34 @@
-.page-header{
+.page-header {
   padding-left: 0;
   padding-right: 0;
 }
 
-.balance-desc span{
+.balance-desc span {
   font-size: 20px;
   font-weight: bold;
 }
 
-.balance-desc .ant-descriptions-item-content{
+.balance-desc .ant-descriptions-item-content {
   color: darkgreen;
 }
 
-.product-card{
+.product-card {
   padding-top: 24px;
 }
 
-.product-avatar{
+.product-avatar {
   margin: auto;
 }
 
-.product-card .ant-page-header-heading-left{
+.product-card .ant-page-header-heading-left {
   margin: auto;
 }
 
-.product-card .ant-page-header-heading-title{
+.product-card .ant-page-header-heading-title {
   margin-right: 0;
 }
 
-.buy-btn{
+.buy-btn {
   width: 30%;
   margin: 0 35%;
 }

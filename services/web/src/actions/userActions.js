@@ -24,6 +24,26 @@ export const logInUserAction = ({ email, password, callback }) => {
   };
 };
 
+export const unlockUserAction = ({ email, code, callback }) => {
+  console.log("unlockUserAction", email, code, callback);
+  return {
+    type: actionTypes.UNLOCK_USER,
+    email,
+    code,
+    callback,
+  };
+};
+
+export const unlockRedirectUserAction = ({ email, message, callback }) => {
+  console.log("unlockRedirectUserAction", email, message, callback);
+  return {
+    type: actionTypes.UNLOCK_USER_REDIRECT,
+    email,
+    message,
+    callback,
+  };
+};
+
 export const signUpUserAction = ({
   name,
   email,
@@ -88,11 +108,12 @@ export const resetPasswordAction = ({
   };
 };
 
-export const getServicesAction = ({ callback, accessToken }) => {
+export const getServicesAction = ({ callback, accessToken, ...data }) => {
   return {
     type: actionTypes.GET_SERVICES,
     accessToken,
     callback,
+    ...data,
   };
 };
 

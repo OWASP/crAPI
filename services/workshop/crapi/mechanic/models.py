@@ -18,23 +18,25 @@ Mechanic and Service Request Models
 """
 from django.db import models
 
-from user.models import User, Vehicle
+from crapi.user.models import User, Vehicle
 from collections import OrderedDict
 from extended_choices import Choices
 from django_db_cascade.fields import ForeignKey, OneToOneField
 from django_db_cascade.deletions import DB_CASCADE
+
 
 class Mechanic(models.Model):
     """
     Mechanic Model
     represents a mechanic for the application
     """
+
     id = models.AutoField(primary_key=True)
     mechanic_code = models.CharField(max_length=100, null=False, unique=True)
     user = ForeignKey(User, DB_CASCADE)
 
     class Meta:
-        db_table = 'mechanic'
+        db_table = "mechanic"
 
     def __str__(self):
         return f"<Mechanic: {self.mechanic_code}>"
@@ -45,6 +47,7 @@ class ServiceRequest(models.Model):
     Service Request Model
     represents a service request in the application
     """
+
     id = models.AutoField(primary_key=True)
     mechanic = ForeignKey(Mechanic, DB_CASCADE)
     vehicle = ForeignKey(Vehicle, DB_CASCADE)
@@ -53,13 +56,14 @@ class ServiceRequest(models.Model):
     updated_on = models.DateTimeField(null=True)
 
     STATUS_CHOICES = Choices(
-        ('PEN', "Pending", "Pending"),
-        ('FIN', "Finished", "Finished")
+        ("PEN", "pending", "Pending"), ("FIN", "finished", "Finished")
     )
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=STATUS_CHOICES.PEN)
+    status = models.CharField(
+        max_length=10, choices=STATUS_CHOICES, default=STATUS_CHOICES.PEN
+    )
 
     class Meta:
-        db_table = 'service_request'
+        db_table = "service_request"
 
     def __str__(self):
-        return f'<ServiceRequest: {self.id}>'
+        return f"<ServiceRequest: {self.id}>"

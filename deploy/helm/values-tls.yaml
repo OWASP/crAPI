@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 replicaCount: 1
 imagePullPolicy: Always
-apiGatewayServiceUrl: https://api.tr4t.io
+apiGatewayServiceUrl: https://api.mypremiumdealership.com
 apiGatewayServiceInstall: false
 enableLog4j: true
 enableShellInjection: true

@@ -7,7 +7,7 @@ metadata:
 data:
   DB_HOST: postgresdb
   DB_DRIVER: postgresql
-  JWT_SECRET: crapi #Used for creating a JWT. Can be anything 
+  JWT_SECRET: crapi #Used for creating a JWT. Can be anything
   DB_USER: admin
   DB_PASSWORD: crapisecretpassword
   DB_NAME: crapi
@@ -24,6 +24,7 @@ data:
   SMTP_PASS: "xxxxxxxxxxxxxx"
   SMTP_FROM: "no-reply@example.com"
   SMTP_AUTH: "true"
+  JWT_EXPIRATION: "604800000"
   SMTP_STARTTLS: "true"
   SERVER_PORT: "8080"
   API_GATEWAY_URL: "https://api.crapi.io"

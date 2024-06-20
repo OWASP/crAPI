@@ -1,0 +1,50 @@
+# Licensed under the Apache License, Version 2.0 (the “License”);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an “AS IS” BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+services:
+
+  postgresdb:
+    container_name: postgresdb
+    image: 'postgres:14'
+    command: ["postgres", "-c", "max_connections=500"]
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: crapisecretpassword
+      POSTGRES_DB: crapi
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 15s
+      timeout: 15s
+      retries: 15
+
+  mongodb:
+    container_name: mongodb
+    image: 'mongo:4.4'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: crapisecretpassword
+    ports:
+      - "127.0.0.1:27017:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo mongodb:27017/test --quiet
+      interval: 15s
+      timeout: 15s
+      retries: 15
+      start_period: 20s
+
+
+
+
+
+

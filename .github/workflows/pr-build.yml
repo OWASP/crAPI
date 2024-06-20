@@ -1,0 +1,261 @@
+name: PR Build
+
+on:
+  pull_request:
+    paths:
+      - 'services/**'
+      - 'postman_collections/**'
+      - 'deploy/**'
+      - '.github/workflows/**'
+  workflow_dispatch:
+
+jobs:
+  build-context:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+  build:
+    needs: build-context
+    runs-on: ubuntu-latest
+    env:
+      PLATFORMS: "linux/amd64,linux/arm64"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Env seen prerun
+        run: env
+
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v8
+
+      - name: Current branch name
+        run: |
+          echo "Current Branch: ${{ steps.branch-name.outputs.current_branch }}"
+          echo "Target Branch: ${{ steps.branch-name.outputs.base_ref_branch }}"
+          echo "Tag if exist: ${{ steps.branch-name.outputs.tag }}"
+
+      - name: Running on a tag.
+        if: steps.branch-name.outputs.is_tag == 'true'
+        run: |
+          echo "TAG_NAME=${{ steps.branch-name.outputs.tag }}" >> ${GITHUB_ENV}
+          echo "TAG_LATEST=latest" >> ${GITHUB_ENV}
+
+      - name: Running on a branch and merge.
+        if: steps.branch-name.outputs.is_tag != 'true' && github.event_name == 'push' && steps.branch-name.outputs.current_branch != 'main'
+        run: |
+          echo "TAG_NAME=${{ steps.branch-name.outputs.current_branch }}" >> ${GITHUB_ENV}
+          echo "TAG_LATEST=${{ steps.branch-name.outputs.current_branch }}" >> ${GITHUB_ENV}
+
+      - name: Running on main branch.
+        if: steps.branch-name.outputs.is_tag != 'true' && github.event_name == 'push' && steps.branch-name.outputs.current_branch == 'main'
+        run: |
+          echo "TAG_NAME=${{ steps.branch-name.outputs.current_branch }}" >> ${GITHUB_ENV}
+          echo "TAG_LATEST=latest" >> ${GITHUB_ENV}
+
+      - name: Running on a branch and pull req.
+        if: steps.branch-name.outputs.is_tag != 'true' && github.event_name != 'push'
+        run: |
+          echo "TAG_NAME=${{ steps.branch-name.outputs.base_ref_branch }}" >> ${GITHUB_ENV}
+          echo "TAG_LATEST=${{ steps.branch-name.outputs.base_ref_branch }}" >> ${GITHUB_ENV}
+
+      # setup Docker build action
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Set up QEMU
+        id: qemu
+        uses: docker/setup-qemu-action@v3
+
+      - name: Build crapi-identity image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./services/identity
+          tags: crapi/crapi-identity:${{ env.TAG_LATEST }},crapi/crapi-identity:${{ env.TAG_NAME }}
+          push: false
+          load: true
+          platforms: linux/amd64
+          cache-from: type=gha,scope=identity-service
+          cache-to: type=gha,mode=max,scope=identity-service
+
+      - name: Build crapi-workshop image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./services/workshop
+          tags: crapi/crapi-workshop:${{ env.TAG_LATEST }},crapi/crapi-workshop:${{ env.TAG_NAME }}
+          push: false
+          load: true
+          platforms: linux/amd64
+          cache-from: type=gha,scope=workshop-service
+          cache-to: type=gha,mode=max,scope=workshop-service
+
+      - name: Build crapi-community image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./services/community
+          tags: crapi/crapi-community:${{ env.TAG_LATEST }},crapi/crapi-community:${{ env.TAG_NAME }}
+          push: false
+          load: true
+          platforms: linux/amd64
+          cache-from: type=gha,scope=community-service
+          cache-to: type=gha,mode=max,scope=community-service
+
+      - name: Build crapi-web image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./services/web
+          tags: crapi/crapi-web:${{ env.TAG_LATEST }},crapi/crapi-web:${{ env.TAG_NAME }}
+          push: false
+          load: true
+          platforms: linux/amd64
+          cache-from: type=gha,scope=web-service
+          cache-to: type=gha,mode=max,scope=web-service
+
+      - name: Build gateway-service image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./services/gateway-service
+          tags: crapi/gateway-service:${{ env.TAG_LATEST }},crapi/gateway-service:${{ env.TAG_NAME }}
+          push: false
+          load: true
+          platforms: linux/amd64
+          cache-from: type=gha,scope=gateway-service
+          cache-to: type=gha,mode=max,scope=gateway-service
+
+      - name: Build mailhog image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./services/mailhog
+          tags: crapi/mailhog:${{ env.TAG_LATEST }},crapi/mailhog:${{ env.TAG_NAME }}
+          push: false
+          load: true
+          platforms: linux/amd64
+          cache-from: type=gha,scope=mailhog-service
+          cache-to: type=gha,mode=max,scope=mailhog-service
+
+      - name: Show all images built
+        run: docker images
+
+      - name: Env seen
+        run: env
+
+      - name: Cleanup docker before running
+        if: always()
+        continue-on-error: true
+        run:  docker-compose -f deploy/docker/docker-compose.yml down --volumes --remove-orphans
+
+      - name: Run crAPI using built images
+        run: VERSION=${{ env.TAG_NAME }} docker-compose -f deploy/docker/docker-compose.yml --compatibility up -d
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install newman
+        run: npm install -g newman
+
+      - name: Run Postman Collection
+        run: newman run "./postman_collections/crAPI.postman_collection.json" -e ./postman_collections/crAPI.postman_environment.json --verbose
+
+      - name: Dump docker logs on failure
+        if: failure()
+        uses: jwalton/gh-docker-logs@v2
+
+      - name: Cleanup docker
+        if: always()
+        run:  docker-compose -f deploy/docker/docker-compose.yml down --volumes --remove-orphans
+
+
+  tests:
+    needs: build-context
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Start the database
+        run: docker-compose -f services/docker-database.yml up -d
+
+      - name: Run identity tests
+        run: |
+          cd services/identity
+          ./gradlew test
+
+      - name: Run community tests
+        run: |
+          cd services/community
+          go test -v ./...
+          mkdir test-results
+          go run gotest.tools/gotestsum@latest --format testname --junitfile test-results/unit-tests.xml
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          # Require: The version of golangci-lint to use.
+          # When `install-mode` is `binary` (default) the value can be v1.2 or v1.2.3 or `latest` to use the latest version.
+          # When `install-mode` is `goinstall` the value can be v1.2.3, `latest`, or the hash of a commit.
+          version: v1.54
+          working-directory: services/community
+
+
+      - name: Run workshop tests
+        run: |
+          cd services/workshop
+          pip3 install virtualenv
+          virtualenv venv
+          source venv/bin/activate
+          pip3 install -r requirements.txt
+          pip3 install -r dev-requirements.txt
+          mkdir -p test-results
+          source .env
+          IS_TESTING=True python3 manage.py test --no-input --testrunner xmlrunner.extra.djangotestrunner.XMLTestRunner
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: |
+            **/test-results/**/*.xml
+            **/test-results/**/*.json
+
+      - name: Run workshop coverage
+        run: |
+          cd services/workshop
+          source venv/bin/activate
+          source .env
+          IS_TESTING=True coverage run ./manage.py test --no-input crapi
+          coverage report
+          coverage xml -o coverage.xml
+
+      - name: Publish Coverage for workshop
+        uses: orgoro/coverage@v3.1
+        with:
+            coverageFile: services/workshop/coverage.xml
+            token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: node prettier
+        run: |
+          cd services/web
+          npm install
+          npm run lint

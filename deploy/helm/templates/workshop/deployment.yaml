@@ -20,6 +20,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
+      {{- if .Values.waitForK8sResources.enabled }}
       initContainers:
         - name: wait-for-crapi-identity
           image: {{ .Values.waitForK8sResources.image }}
@@ -33,6 +34,7 @@ spec:
           args:
             - "service"
             - {{ .Values.community.service.name | quote }}
+      {{- end }}
       containers:
         - name: {{ .Values.workshop.name }}
           image: {{ .Values.workshop.image }}:{{ .Chart.AppVersion }}

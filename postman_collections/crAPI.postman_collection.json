@@ -1,75 +1,23 @@
 {
   "collection": {
     "info": {
-      "_postman_id": "11111111-1111-1111-1111-111111111111",
+      "_postman_id": "abd11111-afc1-1a11-ab11-fb1b111aae1b",
       "name": "crAPI Accepted",
       "description": "crAPI Training Scripts",
       "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-      "updatedAt": "2023-02-15T20:57:41.000Z"
+      "updatedAt": "2024-05-21T09:06:43.000Z",
+      "uid": "11111111-abd11111-afc1-1a11-ab11-fb1b111aae1b",
+      "createdAt": null,
+      "lastUpdatedBy": null
     },
     "item": [
-      {
-        "name": "Reset Test Users",
-        "event": [
-          {
-            "listen": "test",
-            "script": {
-              "exec": [
-                "pm.test(\"Status code is 200\", function () {",
-                "    pm.response.to.have.status(200);",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          },
-          {
-            "listen": "prerequest",
-            "script": {
-              "exec": [
-                ""
-              ],
-              "type": "text/javascript"
-            }
-          }
-        ],
-        "request": {
-          "method": "POST",
-          "header": [
-            {
-              "key": "User-Agent",
-              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
-            },
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "Accept",
-              "value": "*/*"
-            }
-          ],
-          "url": {
-            "raw": "{{url}}/identity/api/auth/reset-test-users",
-            "host": [
-              "{{url}}"
-            ],
-            "path": [
-              "identity",
-              "api",
-              "auth",
-              "reset-test-users"
-            ]
-          }
-        },
-        "response": []
-      },
       {
         "name": "Signup example.com",
         "event": [
           {
             "listen": "test",
             "script": {
-              "id": "e857cde3-4585-4826-b7f4-c70ebb0eec03",
+              "id": "212edd4c-4269-4ec5-84f7-bcddae94fbf2",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
@@ -81,7 +29,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "4d9cddf8-786f-459f-9328-4e4d868532a7",
+              "id": "d91fc02a-4d94-4f60-a834-1508ba0d69a7",
               "exec": [
                 "const {Property} = require('postman-collection');",
                 "var xff = Property.replaceSubstitutions('{{$randomIP}}');",
@@ -114,7 +62,7 @@
             }
           }
         ],
-        "id": "95011fcb-1cf0-482d-95f8-6d6a64458924",
+        "id": "73c92330-9c81-4526-a720-242a647bd1fa",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
@@ -154,7 +102,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-73c92330-9c81-4526-a720-242a647bd1fa"
       },
       {
         "name": "Login",
@@ -162,7 +111,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "b3dabfb0-9e1e-4bb1-9036-db271ea9be42",
+              "id": "fc0cb347-ad16-46de-9985-207c5146d7c5",
               "exec": [
                 "",
                 "pm.test(\"Status code is 200\", function () {",
@@ -182,7 +131,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "dd734d51-fae8-4593-99ac-53b33a210333",
+              "id": "c0a43741-3b36-48c0-be1a-9e5595f57c11",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -207,7 +156,7 @@
             }
           }
         ],
-        "id": "6b3b62af-9854-40b8-a774-a0aad25723b9",
+        "id": "5f9c7b75-681c-43aa-9d80-448f7907669c",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
@@ -247,7 +196,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-5f9c7b75-681c-43aa-9d80-448f7907669c"
       },
       {
         "name": "Verify JWT Token",
@@ -261,11 +211,11 @@
                 "});"
               ],
               "type": "text/javascript",
-              "id": "e15ce32f-489c-4dd7-856f-302e4a0ddaca"
+              "id": "ed5c1a2a-44dd-4cd7-8adc-d094cd7fdae8"
             }
           }
         ],
-        "id": "227248d7-751c-4139-81d6-7e6bf00050ec",
+        "id": "c4ffff4d-e81c-405d-a8c0-caf9299b8020",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
@@ -297,7 +247,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-c4ffff4d-e81c-405d-a8c0-caf9299b8020"
       },
       {
         "name": "Forgot Password",
@@ -305,7 +256,6 @@
           {
             "listen": "test",
             "script": {
-              "id": "77220831-6b67-48f2-abce-62229adddb7a",
               "exec": [
                 "",
                 "pm.test(\"Status code is 200\", function () {",
@@ -317,13 +267,13 @@
                 "});",
                 ""
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "id": "01bbbbc5-87cd-4337-af44-5a9433e4bf1c"
             }
           },
           {
             "listen": "prerequest",
             "script": {
-              "id": "11239e51-1e5d-4433-a87a-f8a01f62e963",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -342,11 +292,12 @@
                 "    value: xff\r",
                 "});"
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "id": "902385be-d824-4990-8e17-022fe8a0313f"
             }
           }
         ],
-        "id": "4561e464-0591-4acb-94cd-8e6868bb4d93",
+        "id": "fff7f353-9fbc-457f-97c1-42b7fa4b1024",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
@@ -386,7 +337,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-fff7f353-9fbc-457f-97c1-42b7fa4b1024"
       },
       {
         "name": "SearchMailOTP",
@@ -394,7 +346,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "bb7b2f05-7128-4f51-88bd-1f90de8c5da1",
+              "id": "eed6b360-55c8-43f2-ad6a-4f8e1e8a1da3",
               "exec": [
                 "",
                 "",
@@ -417,7 +369,7 @@
                 "    var jsonData = JSON.parse(responseBody);",
                 "    var mails = jsonData.items;",
                 "",
-                "    pm.test(\"Your test name\", function () {",
+                "    pm.test(\"Get OTP\", function () {",
                 "        pm.expect(mails.length).to.be.gt(0);",
                 "        var mail = mails[0];",
                 "        console.log(mail);",
@@ -429,19 +381,20 @@
                 "        console.log(otpmatch);",
                 "        var otp = otpmatch[1]",
                 "        console.log(\"OTP: \"+ otp);",
-                "        pm.globals.set(\"OTP\", otp);",
+                "        pm.collectionVariables.set(\"OTP\", otp);",
                 "    });",
                 "    ",
                 "});",
                 ""
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "packages": {}
             }
           },
           {
             "listen": "prerequest",
             "script": {
-              "id": "1b1e2d29-0161-4461-b2af-d6ce6aa4bf3d",
+              "id": "42443fb8-3a72-4d37-ab36-597308aff3d2",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -460,11 +413,12 @@
                 "    value: xff\r",
                 "});"
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "packages": {}
             }
           }
         ],
-        "id": "38501ca0-531b-42ed-a3df-6a6a869a0eaf",
+        "id": "437e1354-581b-4a26-94a8-1ff508ac8420",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
@@ -484,10 +438,6 @@
               "value": "*/*"
             }
           ],
-          "body": {
-            "mode": "raw",
-            "raw": ""
-          },
           "url": {
             "raw": "{{url_mail}}/api/v2/search?kind=to&query={{email}}&limit=10",
             "host": [
@@ -514,7 +464,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-437e1354-581b-4a26-94a8-1ff508ac8420"
       },
       {
         "name": "Check OTP",
@@ -522,7 +473,6 @@
           {
             "listen": "test",
             "script": {
-              "id": "03dc20b1-db94-425f-8cd6-8cef62437579",
               "exec": [
                 "",
                 "pm.test(\"Status code is 200\", function () {",
@@ -530,13 +480,13 @@
                 "});",
                 ""
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "id": "a8af689c-e601-43b1-bb64-0b8224908bce"
             }
           },
           {
             "listen": "prerequest",
             "script": {
-              "id": "5c7e05d5-f2ee-4f56-82e9-b380b3c21781",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -555,11 +505,12 @@
                 "    value: xff\r",
                 "});"
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "id": "ba8abbec-945d-48f3-9f9a-d407cfbc2571"
             }
           }
         ],
-        "id": "e93361b7-2a6a-42bb-9e9c-66c12c2cdcb6",
+        "id": "a45abeb7-f6c3-405d-bd01-3c79786d321b",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
@@ -600,7 +551,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-a45abeb7-f6c3-405d-bd01-3c79786d321b"
       },
       {
         "name": "Resend vehicle email",
@@ -608,7 +560,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "0e8904cd-5bf5-452d-9f76-c0942e0e1ddd",
+              "id": "9c1dc5cd-e1d6-4c3b-8bfd-52ae448c4595",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
@@ -620,7 +572,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "2edb89b6-a1f8-452d-a3d8-44c480bd1194",
+              "id": "3eebacdf-ed5a-43f7-9ed5-fce2bd2447ce",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -643,11 +595,21 @@
             }
           }
         ],
-        "id": "b33396c1-6f43-405a-9d0f-2379cb1341d8",
+        "id": "598598c0-9905-4291-beef-3199c4a80ef7",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "POST",
           "header": [
             {
@@ -677,7 +639,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-598598c0-9905-4291-beef-3199c4a80ef7"
       },
       {
         "name": "SearchMailVehicle",
@@ -685,7 +648,6 @@
           {
             "listen": "test",
             "script": {
-              "id": "04f79757-0b2e-4572-a378-9ed71916f2cf",
               "exec": [
                 "",
                 "function dynamicSort(property) {",
@@ -729,13 +691,13 @@
                 "});",
                 ""
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "id": "e4b022af-785b-4fe5-b6ef-65ec4ea8d7a1"
             }
           },
           {
             "listen": "prerequest",
             "script": {
-              "id": "44894299-8190-41f3-b38d-02637870a0ce",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -754,11 +716,12 @@
                 "    value: xff\r",
                 "});"
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "id": "70271721-08c8-41f9-a5a4-f3b83093dad4"
             }
           }
         ],
-        "id": "50487bec-79e0-470f-97cc-60229e96aa22",
+        "id": "c0ef62ef-8ca0-4eaf-a3d8-44c1aa41a407",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
@@ -808,7 +771,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-c0ef62ef-8ca0-4eaf-a3d8-44c1aa41a407"
       },
       {
         "name": "Add Vehicle from Mail",
@@ -816,7 +780,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "fdaef0e3-04c3-4de2-902b-f511a77d34de",
+              "id": "aeb0161e-8372-4da8-b151-1ab732099cf8",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
@@ -828,7 +792,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "c2209f89-7827-4f88-aa0a-55222576d643",
+              "id": "aa6ed8be-83b9-4071-9c2e-ad35c08050f7",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -851,11 +815,21 @@
             }
           }
         ],
-        "id": "75ca2936-1a83-41ed-b9a6-361ec77b0158",
+        "id": "557cbaea-7709-4da6-8f18-36d05a49f3c5",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "POST",
           "header": [
             {
@@ -889,20 +863,19 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-557cbaea-7709-4da6-8f18-36d05a49f3c5"
       },
       {
-        "name": "Get vehicles",
+        "name": "Get Dashboard",
         "event": [
           {
             "listen": "test",
             "script": {
-              "id": "93cf51a1-5bf4-4147-b0b2-30e87faf8dd9",
+              "id": "94c6588b-1056-4828-8c7f-309bdd80a557",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
-                "    var jsonData = pm.response.json();",
-                "    pm.collectionVariables.set(\"vehicle_id\", jsonData[0].uuid);",
                 "});"
               ],
               "type": "text/javascript"
@@ -911,7 +884,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "d2d0e181-fe2a-4988-b879-6d59101d25bc",
+              "id": "15ed7adb-1256-4039-9d7a-2c81d5b9a764",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -934,11 +907,112 @@
             }
           }
         ],
-        "id": "e5ceaf9c-4baa-45b5-b18e-83e8eebcf68e",
+        "id": "51aeab4f-44d3-44f4-a68f-8ca534c76eb2",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "GET",
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "url": {
+            "raw": "{{url}}/identity/api/v2/user/dashboard",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "identity",
+              "api",
+              "v2",
+              "user",
+              "dashboard"
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-51aeab4f-44d3-44f4-a68f-8ca534c76eb2"
+      },
+      {
+        "name": "Get vehicles",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "94c6588b-1056-4828-8c7f-309bdd80a557",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "    var jsonData = pm.response.json();",
+                "    pm.collectionVariables.set(\"vehicle_id\", jsonData[0].uuid);",
+                "    pm.collectionVariables.set(\"VIN\", jsonData[0].vin);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "15ed7adb-1256-4039-9d7a-2c81d5b9a764",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "071e3d09-178d-4119-a4d2-cad20b48bbb5",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "GET",
           "header": [
             {
@@ -968,334 +1042,8 @@
             ]
           }
         },
-        "response": []
-      },
-      {
-        "name": "Get recent posts",
-        "event": [
-          {
-            "listen": "test",
-            "script": {
-              "id": "7cf01ed9-84bb-4848-b26c-28ca4fb3a1f2",
-              "exec": [
-                "pm.test(\"Status code is 200\", function () {",
-                "    pm.response.to.have.status(200);",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          },
-          {
-            "listen": "prerequest",
-            "script": {
-              "id": "05b8694a-1c5e-472a-a360-b6b5c089c8fd",
-              "exec": [
-                "const {Property} = require('postman-collection');\r",
-                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
-                "if (!xff){\r",
-                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
-                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
-                "    \r",
-                "}\r",
-                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
-                "pm.request.headers.remove('X-Forwarded-For');\r",
-                "pm.request.headers.add({ \r",
-                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
-                "    disabled: false,\r",
-                "    // Your header, effectively\r",
-                "    key: 'X-Forwarded-For', \r",
-                "    value: xff\r",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          }
-        ],
-        "id": "eff155f5-d633-4b52-a3a9-493a6753068b",
-        "protocolProfileBehavior": {
-          "disableBodyPruning": true
-        },
-        "request": {
-          "method": "GET",
-          "header": [
-            {
-              "key": "User-Agent",
-              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
-            },
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "Accept",
-              "value": "*/*"
-            }
-          ],
-          "url": {
-            "raw": "{{url}}/community/api/v2/community/posts/recent",
-            "host": [
-              "{{url}}"
-            ],
-            "path": [
-              "community",
-              "api",
-              "v2",
-              "community",
-              "posts",
-              "recent"
-            ]
-          }
-        },
-        "response": []
-      },
-      {
-        "name": "Create post ",
-        "event": [
-          {
-            "listen": "test",
-            "script": {
-              "id": "9f9b1e4d-c951-42eb-8858-1041141838b3",
-              "exec": [
-                "pm.test(\"Status code is 200\", function () {",
-                "    pm.response.to.have.status(200);",
-                "    var jsonData = JSON.parse(responseBody);",
-                "    var order = jsonData.id;",
-                "    pm.globals.set(\"post_id\", order);",
-                "    console.log(order);",
-                "});",
-                ""
-              ],
-              "type": "text/javascript"
-            }
-          },
-          {
-            "listen": "prerequest",
-            "script": {
-              "id": "0e710fbf-7bf4-4756-a98d-306ff290f5bd",
-              "exec": [
-                "const {Property} = require('postman-collection');\r",
-                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
-                "if (!xff){\r",
-                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
-                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
-                "    \r",
-                "}\r",
-                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
-                "pm.request.headers.remove('X-Forwarded-For');\r",
-                "pm.request.headers.add({ \r",
-                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
-                "    disabled: false,\r",
-                "    // Your header, effectively\r",
-                "    key: 'X-Forwarded-For', \r",
-                "    value: xff\r",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          }
-        ],
-        "id": "239d5ac0-6a05-43a8-bd58-4645860c30a3",
-        "protocolProfileBehavior": {
-          "disableBodyPruning": true
-        },
-        "request": {
-          "method": "POST",
-          "header": [
-            {
-              "key": "User-Agent",
-              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
-            },
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "Accept",
-              "value": "*/*"
-            }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\"title\":\"{{$randomLoremSentence}}\",\"content\":\"{{$randomLoremParagraph}}\"}"
-          },
-          "url": {
-            "raw": "{{url}}/community/api/v2/community/posts",
-            "host": [
-              "{{url}}"
-            ],
-            "path": [
-              "community",
-              "api",
-              "v2",
-              "community",
-              "posts"
-            ]
-          }
-        },
-        "response": []
-      },
-      {
-        "name": "Get post",
-        "event": [
-          {
-            "listen": "test",
-            "script": {
-              "id": "6c112c0a-5544-425b-a268-edf153569c81",
-              "exec": [
-                "pm.test(\"Status code is 200\", function () {",
-                "    pm.response.to.have.status(200);",
-                "    ",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          },
-          {
-            "listen": "prerequest",
-            "script": {
-              "id": "83e07b19-d6a7-47df-a8d6-30e82973b52d",
-              "exec": [
-                "const {Property} = require('postman-collection');\r",
-                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
-                "if (!xff){\r",
-                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
-                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
-                "    \r",
-                "}\r",
-                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
-                "pm.request.headers.remove('X-Forwarded-For');\r",
-                "pm.request.headers.add({ \r",
-                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
-                "    disabled: false,\r",
-                "    // Your header, effectively\r",
-                "    key: 'X-Forwarded-For', \r",
-                "    value: xff\r",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          }
-        ],
-        "id": "4f2474b3-f0a1-4941-bded-afc46afec0d9",
-        "protocolProfileBehavior": {
-          "disableBodyPruning": true
-        },
-        "request": {
-          "method": "GET",
-          "header": [
-            {
-              "key": "User-Agent",
-              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
-            },
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "Accept",
-              "value": "*/*"
-            }
-          ],
-          "url": {
-            "raw": "{{url}}/community/api/v2/community/posts/{{post_id}}",
-            "host": [
-              "{{url}}"
-            ],
-            "path": [
-              "community",
-              "api",
-              "v2",
-              "community",
-              "posts",
-              "{{post_id}}"
-            ]
-          }
-        },
-        "response": []
-      },
-      {
-        "name": "Post comment",
-        "event": [
-          {
-            "listen": "test",
-            "script": {
-              "id": "206f5f46-8078-4387-b33a-61fa50d53c4d",
-              "exec": [
-                "pm.test(\"Status code is 200\", function () {",
-                "    pm.response.to.have.status(200);",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          },
-          {
-            "listen": "prerequest",
-            "script": {
-              "id": "ec75a9d0-08d0-4296-bf9c-039b436472ef",
-              "exec": [
-                "const {Property} = require('postman-collection');\r",
-                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
-                "if (!xff){\r",
-                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
-                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
-                "    \r",
-                "}\r",
-                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
-                "pm.request.headers.remove('X-Forwarded-For');\r",
-                "pm.request.headers.add({ \r",
-                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
-                "    disabled: false,\r",
-                "    // Your header, effectively\r",
-                "    key: 'X-Forwarded-For', \r",
-                "    value: xff\r",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          }
-        ],
-        "id": "4f62b2d3-9645-4062-a675-b477d8cd45f4",
-        "protocolProfileBehavior": {
-          "disableBodyPruning": true
-        },
-        "request": {
-          "method": "POST",
-          "header": [
-            {
-              "key": "User-Agent",
-              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
-            },
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "Accept",
-              "value": "*/*"
-            }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\"content\":\"{{$randomLoremSentence}}\"}"
-          },
-          "url": {
-            "raw": "{{url}}/community/api/v2/community/posts/{{post_id}}/comment",
-            "host": [
-              "{{url}}"
-            ],
-            "path": [
-              "community",
-              "api",
-              "v2",
-              "community",
-              "posts",
-              "{{post_id}}",
-              "comment"
-            ]
-          },
-          "description": "Post comment"
-        },
-        "response": []
+        "response": [],
+        "uid": "13872198-071e3d09-178d-4119-a4d2-cad20b48bbb5"
       },
       {
         "name": "Get vehicle location",
@@ -1303,7 +1051,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "073fa9a9-f836-41b9-bde5-3db6e8d75790",
+              "id": "1d1f1d9e-34e2-462a-8469-f3a48bfce052",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
@@ -1315,7 +1063,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "336eec10-68c0-4ae2-9504-d68d97d65212",
+              "id": "f13d8ca4-39d1-4003-bf2e-8d31f3b4a178",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -1338,11 +1086,21 @@
             }
           }
         ],
-        "id": "d9b2f169-5409-4cb4-88bb-56c9e28d575e",
+        "id": "7fe2e5da-ca18-46c5-b802-eb777841d76c",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "GET",
           "header": [
             {
@@ -1373,263 +1131,8 @@
             ]
           }
         },
-        "response": []
-      },
-      {
-        "name": "Contact mechanic",
-        "event": [
-          {
-            "listen": "test",
-            "script": {
-              "id": "ae15ee18-59d9-4171-b6f1-8d2c7fd1579a",
-              "exec": [
-                "pm.test(\"Status code is 200\", function () {",
-                "    pm.response.to.have.status(200);",
-                "    var jsonData = pm.response.json();",
-                "    pm.collectionVariables.set(\"report_id\", jsonData.response_from_mechanic_api.id);",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          },
-          {
-            "listen": "prerequest",
-            "script": {
-              "id": "6b16a4ec-32b1-4c09-b052-ca2ab017f41b",
-              "exec": [
-                "const {Property} = require('postman-collection');\r",
-                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
-                "if (!xff){\r",
-                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
-                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
-                "    \r",
-                "}\r",
-                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
-                "pm.request.headers.remove('X-Forwarded-For');\r",
-                "pm.request.headers.add({ \r",
-                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
-                "    disabled: false,\r",
-                "    // Your header, effectively\r",
-                "    key: 'X-Forwarded-For', \r",
-                "    value: xff\r",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          }
-        ],
-        "id": "76b2378b-1d7f-4519-a642-c45fb209e0d4",
-        "protocolProfileBehavior": {
-          "disableBodyPruning": true
-        },
-        "request": {
-          "method": "POST",
-          "header": [
-            {
-              "key": "Authorization",
-              "value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb25zdGVyQGRhcmt3ZWIuY29tIiwiaWF0IjoxNjA4NTQzODI0LCJleHAiOjE2MDg2MzAyMjR9.AAIvhrtstlloPf7-NNCcmhEZm-XkO1aO3x3CLns1em7ft9U77B88LpK9jIrF8C-IH32JPWVazRFo0gBIBZ9FpA"
-            },
-            {
-              "key": "User-Agent",
-              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"
-            },
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "Accept",
-              "value": "*/*"
-            }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\"mechanic_code\":\"TRAC_JHN\",\"problem_details\":\"Hi Jhon\",\"vin\":\"{{VIN}}\",\"mechanic_api\":\"{{url}}/workshop/api/mechanic/receive_report\",\"repeat_request_if_failed\":false,\"number_of_repeats\":1}"
-          },
-          "url": {
-            "raw": "{{url}}/workshop/api/merchant/contact_mechanic",
-            "host": [
-              "{{url}}"
-            ],
-            "path": [
-              "workshop",
-              "api",
-              "merchant",
-              "contact_mechanic"
-            ]
-          }
-        },
-        "response": []
-      },
-      {
-        "name": "GetReport",
-        "event": [
-          {
-            "listen": "test",
-            "script": {
-              "id": "ae15ee18-59d9-4171-b6f1-8d2c7fd1579a",
-              "exec": [
-                "pm.test(\"Status code is 200\", function () {",
-                "    pm.response.to.have.status(200);",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          },
-          {
-            "listen": "prerequest",
-            "script": {
-              "id": "6b16a4ec-32b1-4c09-b052-ca2ab017f41b",
-              "exec": [
-                "const {Property} = require('postman-collection');\r",
-                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
-                "if (!xff){\r",
-                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
-                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
-                "    \r",
-                "}\r",
-                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
-                "pm.request.headers.remove('X-Forwarded-For');\r",
-                "pm.request.headers.add({ \r",
-                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
-                "    disabled: false,\r",
-                "    // Your header, effectively\r",
-                "    key: 'X-Forwarded-For', \r",
-                "    value: xff\r",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          }
-        ],
-        "id": "78b2749d-ecad-435f-b257-7d185f178682",
-        "protocolProfileBehavior": {
-          "disableBodyPruning": true
-        },
-        "request": {
-          "method": "GET",
-          "header": [
-            {
-              "key": "Authorization",
-              "value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb25zdGVyQGRhcmt3ZWIuY29tIiwiaWF0IjoxNjA4NTQzODI0LCJleHAiOjE2MDg2MzAyMjR9.AAIvhrtstlloPf7-NNCcmhEZm-XkO1aO3x3CLns1em7ft9U77B88LpK9jIrF8C-IH32JPWVazRFo0gBIBZ9FpA"
-            },
-            {
-              "key": "User-Agent",
-              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"
-            },
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "Accept",
-              "value": "*/*"
-            }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\"mechanic_code\":\"TRAC_JHN\",\"problem_details\":\"Hi Jhon\",\"vin\":\"{{VIN}}\",\"mechanic_api\":\"{{url}}/workshop/api/mechanic/receive_report\",\"repeat_request_if_failed\":false,\"number_of_repeats\":1}"
-          },
-          "url": {
-            "raw": "{{url}}/workshop/api/mechanic/mechanic_report?report_id={{report_id}}",
-            "host": [
-              "{{url}}"
-            ],
-            "path": [
-              "workshop",
-              "api",
-              "mechanic",
-              "mechanic_report"
-            ],
-            "query": [
-              {
-                "key": "report_id",
-                "value": "{{report_id}}"
-              }
-            ]
-          }
-        },
-        "response": []
-      },
-      {
-        "name": "Get products",
-        "event": [
-          {
-            "listen": "test",
-            "script": {
-              "id": "943760c1-3ffe-4236-903a-50b40d20d1d6",
-              "exec": [
-                "pm.test(\"Status code is 200\", function () {",
-                "    pm.response.to.have.status(200);",
-                "    var jsonData = pm.response.json();",
-                "    var productId = jsonData.products[0].id;",
-                "    pm.collectionVariables.set(\"product_id\", productId);",
-                "    console.log(\"Product ID \", productId);",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          },
-          {
-            "listen": "prerequest",
-            "script": {
-              "id": "8c7773ce-bfbf-4c89-90cb-1e8917fa3d78",
-              "exec": [
-                "const {Property} = require('postman-collection');\r",
-                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
-                "if (!xff){\r",
-                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
-                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
-                "    \r",
-                "}\r",
-                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
-                "pm.request.headers.remove('X-Forwarded-For');\r",
-                "pm.request.headers.add({ \r",
-                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
-                "    disabled: false,\r",
-                "    // Your header, effectively\r",
-                "    key: 'X-Forwarded-For', \r",
-                "    value: xff\r",
-                "});"
-              ],
-              "type": "text/javascript"
-            }
-          }
-        ],
-        "id": "c18a307b-b21b-4839-8403-3645e7d5b9c5",
-        "protocolProfileBehavior": {
-          "disableBodyPruning": true
-        },
-        "request": {
-          "method": "GET",
-          "header": [
-            {
-              "key": "User-Agent",
-              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
-            },
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "key": "Accept",
-              "value": "*/*"
-            }
-          ],
-          "url": {
-            "raw": "{{url}}/workshop/api/shop/products",
-            "host": [
-              "{{url}}"
-            ],
-            "path": [
-              "workshop",
-              "api",
-              "shop",
-              "products"
-            ]
-          }
-        },
-        "response": []
+        "response": [],
+        "uid": "13872198-7fe2e5da-ca18-46c5-b802-eb777841d76c"
       },
       {
         "name": "Validate coupon",
@@ -1637,7 +1140,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "1dabfe9e-bb80-4eb3-a436-7c322af4ad14",
+              "id": "6c7102fd-abfd-44a1-bd70-aaf2d46ee7f1",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
@@ -1649,7 +1152,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "d43ae7a4-bf74-49e1-9099-ac44ef6a8cb3",
+              "id": "785896e4-8b48-4cec-957d-4b27ea74d5c3",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -1672,11 +1175,21 @@
             }
           }
         ],
-        "id": "59d4b28e-3469-4791-b5e8-b72ab988b173",
+        "id": "443e66e0-34b9-4804-b761-bd62e7cc4288",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "POST",
           "header": [
             {
@@ -1714,7 +1227,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-443e66e0-34b9-4804-b761-bd62e7cc4288"
       },
       {
         "name": "Apply coupon",
@@ -1722,7 +1236,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "f81179f1-dede-49ec-9e87-fe68a7436dc7",
+              "id": "51f8310b-533a-4f39-b7bc-c1da9906ae6f",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -1745,11 +1259,21 @@
             }
           }
         ],
-        "id": "693df9e3-9e63-4cc6-be0c-c0caeafa1eea",
+        "id": "b3bd0f55-5f8c-4ea6-bca3-94993a1d1804",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "POST",
           "header": [
             {
@@ -1782,23 +1306,25 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-b3bd0f55-5f8c-4ea6-bca3-94993a1d1804"
       },
       {
-        "name": "Create Order",
+        "name": "Create post ",
         "event": [
           {
             "listen": "test",
             "script": {
-              "id": "494bc4be-eb14-4d81-8d3d-e3a796024a50",
+              "id": "b5458d72-88ae-423b-8ae2-46a26842fe38",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
                 "    var jsonData = JSON.parse(responseBody);",
                 "    var order = jsonData.id;",
-                "    pm.collectionVariables.set(\"order_id\", order);",
+                "    pm.collectionVariables.set(\"post_id\", order);",
                 "    console.log(order);",
-                "});"
+                "});",
+                ""
               ],
               "type": "text/javascript"
             }
@@ -1806,7 +1332,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "da7db3f5-09b9-4d88-8234-10253cd014a2",
+              "id": "f2aa7cd1-923a-4608-81fd-131c19e5c42b",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -1829,11 +1355,976 @@
             }
           }
         ],
-        "id": "b87d7feb-f128-4206-a8b7-d7f40815a1b0",
+        "id": "36850ebe-8a64-42b2-aeff-d5a36d0005d9",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "POST",
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\"title\":\"{{$randomLoremSentence}}\",\"content\":\"{{$randomLoremParagraph}}\"}"
+          },
+          "url": {
+            "raw": "{{url}}/community/api/v2/community/posts",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "community",
+              "api",
+              "v2",
+              "community",
+              "posts"
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-36850ebe-8a64-42b2-aeff-d5a36d0005d9"
+      },
+      {
+        "name": "Get post",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "49844a45-d740-4e48-b00b-bc89ffc12556",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "    ",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "2656982e-1f5a-4812-ba13-84539e8d5cd4",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "6a434301-adbb-41ed-a2d9-b1599aac7dcc",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "GET",
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "url": {
+            "raw": "{{url}}/community/api/v2/community/posts/{{post_id}}",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "community",
+              "api",
+              "v2",
+              "community",
+              "posts",
+              "{{post_id}}"
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-6a434301-adbb-41ed-a2d9-b1599aac7dcc"
+      },
+      {
+        "name": "Get recent posts",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "38fb751f-d2f2-4868-9c73-fc603acfe23f",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "9b6b4be9-5cf3-460a-a34a-e92899854e58",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "3672b547-3a8f-4d57-aad2-3e180d7fa47c",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "GET",
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "url": {
+            "raw": "{{url}}/community/api/v2/community/posts/recent?limit=30&offset=0",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "community",
+              "api",
+              "v2",
+              "community",
+              "posts",
+              "recent"
+            ],
+            "query": [
+              {
+                "key": "limit",
+                "value": "30"
+              },
+              {
+                "key": "offset",
+                "value": "0"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-3672b547-3a8f-4d57-aad2-3e180d7fa47c"
+      },
+      {
+        "name": "Post comment",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "4ed7e169-9c0a-4b2f-9900-931fde9cc253",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "7f7a041c-4686-497f-af7c-69d182486153",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "f4da30f3-5f68-457e-9f52-57e744d638a0",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "POST",
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\"content\":\"{{$randomLoremSentence}}\"}"
+          },
+          "url": {
+            "raw": "{{url}}/community/api/v2/community/posts/{{post_id}}/comment",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "community",
+              "api",
+              "v2",
+              "community",
+              "posts",
+              "{{post_id}}",
+              "comment"
+            ]
+          },
+          "description": "Post comment"
+        },
+        "response": [],
+        "uid": "13872198-f4da30f3-5f68-457e-9f52-57e744d638a0"
+      },
+      {
+        "name": "Get All Mechanics",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "1d1f1d9e-34e2-462a-8469-f3a48bfce052",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "f13d8ca4-39d1-4003-bf2e-8d31f3b4a178",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "76ff951b-e220-4784-a97b-8bf29a63b58f",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "GET",
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "url": {
+            "raw": "{{url}}/workshop/api/mechanic",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "workshop",
+              "api",
+              "mechanic"
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-76ff951b-e220-4784-a97b-8bf29a63b58f"
+      },
+      {
+        "name": "Contact mechanic",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "f0f39752-0671-4381-8df8-9cbe570e6925",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "    var jsonData = pm.response.json();",
+                "    pm.collectionVariables.set(\"report_id\", jsonData.response_from_mechanic_api.id);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "d470cb7e-2d7a-45e8-b610-da6a0d820882",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "66c46dc2-2386-44cf-890a-63d917d2ca23",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "POST",
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb25zdGVyQGRhcmt3ZWIuY29tIiwiaWF0IjoxNjA4NTQzODI0LCJleHAiOjE2MDg2MzAyMjR9.AAIvhrtstlloPf7-NNCcmhEZm-XkO1aO3x3CLns1em7ft9U77B88LpK9jIrF8C-IH32JPWVazRFo0gBIBZ9FpA"
+            },
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n    \"mechanic_code\": \"TRAC_JHN\",\r\n    \"problem_details\": \"Hi Jhon\",\r\n    \"vin\": \"{{VIN}}\",\r\n    \"mechanic_api\": \"{{url}}/workshop/api/mechanic/receive_report\",\r\n    \"repeat_request_if_failed\": false,\r\n    \"number_of_repeats\": 1\r\n}"
+          },
+          "url": {
+            "raw": "{{url}}/workshop/api/merchant/contact_mechanic",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "workshop",
+              "api",
+              "merchant",
+              "contact_mechanic"
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-66c46dc2-2386-44cf-890a-63d917d2ca23"
+      },
+      {
+        "name": "Mechanic Login",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "ecefadd8-d1fb-4415-a0b2-cfcae8216ac6",
+              "exec": [
+                "",
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "    var jsonData = JSON.parse(responseBody);",
+                "    pm.collectionVariables.set(\"mechanicToken\", jsonData.token);",
+                "    var token = pm.collectionVariables.get(\"mechanicToken\");",
+                "    pm.test(\"Token is set\", function () {",
+                "        pm.expect(jsonData.token).to.eql(token);",
+                "    });",
+                "});",
+                ""
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "96148952-7c1a-4316-8577-b7b0cc59fdb4",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For-Admin\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "0eeb2452-e86b-48f3-bf4f-082703f39884",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "noauth"
+          },
+          "method": "POST",
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\"email\":\"jhon@example.com\",\"password\":\"Admin1@#\"}"
+          },
+          "url": {
+            "raw": "{{url}}/identity/api/auth/login",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "identity",
+              "api",
+              "auth",
+              "login"
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-0eeb2452-e86b-48f3-bf4f-082703f39884"
+      },
+      {
+        "name": "Service Requests",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "f0f39752-0671-4381-8df8-9cbe570e6925",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "d470cb7e-2d7a-45e8-b610-da6a0d820882",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "dc6c5d9a-9cd1-493e-9226-41cb0d50b3a1",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{mechanicToken}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "GET",
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb25zdGVyQGRhcmt3ZWIuY29tIiwiaWF0IjoxNjA4NTQzODI0LCJleHAiOjE2MDg2MzAyMjR9.AAIvhrtstlloPf7-NNCcmhEZm-XkO1aO3x3CLns1em7ft9U77B88LpK9jIrF8C-IH32JPWVazRFo0gBIBZ9FpA"
+            },
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": ""
+          },
+          "url": {
+            "raw": "{{url}}/workshop/api/mechanic/service_requests?limit=30&offset=0",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "workshop",
+              "api",
+              "mechanic",
+              "service_requests"
+            ],
+            "query": [
+              {
+                "key": "limit",
+                "value": "30"
+              },
+              {
+                "key": "offset",
+                "value": "0"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-dc6c5d9a-9cd1-493e-9226-41cb0d50b3a1"
+      },
+      {
+        "name": "GetReport",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "4f6d9666-0933-4e5c-a4a1-efdd2e2c49aa",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "b30d69f4-b8cc-4e58-9acc-fe49d38a8a89",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "a992c051-2e26-42f6-8aba-52005b766363",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "GET",
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtb25zdGVyQGRhcmt3ZWIuY29tIiwiaWF0IjoxNjA4NTQzODI0LCJleHAiOjE2MDg2MzAyMjR9.AAIvhrtstlloPf7-NNCcmhEZm-XkO1aO3x3CLns1em7ft9U77B88LpK9jIrF8C-IH32JPWVazRFo0gBIBZ9FpA"
+            },
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": ""
+          },
+          "url": {
+            "raw": "{{url}}/workshop/api/mechanic/mechanic_report?report_id={{report_id}}",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "workshop",
+              "api",
+              "mechanic",
+              "mechanic_report"
+            ],
+            "query": [
+              {
+                "key": "report_id",
+                "value": "{{report_id}}"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-a992c051-2e26-42f6-8aba-52005b766363"
+      },
+      {
+        "name": "Get products",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "f58f20f7-878b-4ffa-b17a-835c779b561a",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "    var jsonData = pm.response.json();",
+                "    var productId = jsonData.products[0].id;",
+                "    pm.collectionVariables.set(\"product_id\", productId);",
+                "    console.log(\"Product ID \", productId);",
+                "});"
+              ],
+              "type": "text/javascript",
+              "packages": {}
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "200fbc66-8abc-4d88-8d38-787ee390c27a",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript",
+              "packages": {}
+            }
+          }
+        ],
+        "id": "f76df6ed-a560-4517-ae32-9bf7d7518896",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "GET",
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "url": {
+            "raw": "{{url}}/workshop/api/shop/products?limit=30&offset=0",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "workshop",
+              "api",
+              "shop",
+              "products"
+            ],
+            "query": [
+              {
+                "key": "limit",
+                "value": "30"
+              },
+              {
+                "key": "offset",
+                "value": "0"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-f76df6ed-a560-4517-ae32-9bf7d7518896"
+      },
+      {
+        "name": "Create Order",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "6a143464-3847-43eb-bed4-89cec5a83a72",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "    var jsonData = JSON.parse(responseBody);",
+                "    var order = jsonData.id;",
+                "    pm.collectionVariables.set(\"order_id\", order);",
+                "    console.log(order);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "71cce0c9-d934-4353-be0f-47a19817003e",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "776bef3d-b912-4847-a268-2e452f9b238b",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "POST",
           "header": [
             {
@@ -1866,7 +2357,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-776bef3d-b912-4847-a268-2e452f9b238b"
       },
       {
         "name": "Get orders",
@@ -1874,7 +2366,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "ec7ea74a-8799-4142-bdb7-ca74183b5455",
+              "id": "67a60d41-74e2-4d55-90bb-9434ed930515",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
@@ -1886,7 +2378,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "332c5a36-476b-4dfc-8e3c-c3da667914a3",
+              "id": "8737b250-4b38-4cd9-8da4-549bc83fcd8e",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -1909,11 +2401,21 @@
             }
           }
         ],
-        "id": "9094e2a9-d3b7-4ecb-a66d-2a87ec9ee421",
+        "id": "d8b2a762-c4ab-460d-91a9-c1f666897cb0",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "GET",
           "header": [
             {
@@ -1930,7 +2432,7 @@
             }
           ],
           "url": {
-            "raw": "{{url}}/workshop/api/shop/orders/all",
+            "raw": "{{url}}/workshop/api/shop/orders/all?limit=30&offset=0",
             "host": [
               "{{url}}"
             ],
@@ -1940,10 +2442,21 @@
               "shop",
               "orders",
               "all"
+            ],
+            "query": [
+              {
+                "key": "limit",
+                "value": "30"
+              },
+              {
+                "key": "offset",
+                "value": "0"
+              }
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-d8b2a762-c4ab-460d-91a9-c1f666897cb0"
       },
       {
         "name": "Get Order",
@@ -1951,7 +2464,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "fe055072-70ae-4dcf-9eeb-d762d914f5d5",
+              "id": "63c33dcb-8e01-49e8-b76f-dc552707b126",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
@@ -1963,7 +2476,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "272887d9-2467-4bbd-8b6c-c9ab22d847bb",
+              "id": "ee8efbbf-d317-4a0a-b6c2-9af346d11dfd",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -1986,11 +2499,21 @@
             }
           }
         ],
-        "id": "3d8817d4-0952-4ac1-84c1-3db35e28655c",
+        "id": "a42bff0b-3401-410e-855b-6fcff08178e1",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "GET",
           "header": [
             {
@@ -2020,7 +2543,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-a42bff0b-3401-410e-855b-6fcff08178e1"
       },
       {
         "name": "Return order",
@@ -2028,7 +2552,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "b23313b6-db41-4f4c-8444-f50a9ab45ce9",
+              "id": "95bf82ce-48af-4157-a4aa-8e11dcb386ef",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
@@ -2040,7 +2564,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "e56a6acb-682a-43e8-a6f5-c2a0a727d4fb",
+              "id": "e2c85c92-3844-459d-8355-4e182b9786ba",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -2063,11 +2587,21 @@
             }
           }
         ],
-        "id": "5dc85a94-3f8e-463c-9b40-66bbf9fa3f8f",
+        "id": "9bb458ba-48cf-4dab-b9f3-4b9789095b72",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "POST",
           "header": [
             {
@@ -2103,7 +2637,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-9bb458ba-48cf-4dab-b9f3-4b9789095b72"
       },
       {
         "name": "Add video",
@@ -2111,7 +2646,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "5895f73f-db45-415e-b872-f48d57468fb2",
+              "id": "f25025f1-7dd9-4ff2-b1df-90c34e74915f",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
@@ -2128,7 +2663,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "276fb107-06e0-444c-abdf-fe45a03e9c9a",
+              "id": "ca302a6a-c9b1-44c1-9ecc-66744ee10ba7",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -2151,14 +2686,24 @@
             }
           }
         ],
-        "id": "5fd1f6c8-6615-430a-9649-d6b069a2b9e2",
+        "id": "7bba9029-97f6-458e-9b7a-65edcd364ef8",
         "protocolProfileBehavior": {
-          "disableBodyPruning": true,
           "disabledSystemHeaders": {
             "content-type": true
-          }
+          },
+          "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "POST",
           "header": [
             {
@@ -2197,7 +2742,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-7bba9029-97f6-458e-9b7a-65edcd364ef8"
       },
       {
         "name": "Get Video",
@@ -2205,7 +2751,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "68aef3b9-bb21-4a31-ad68-9aadd266e719",
+              "id": "9610a1b1-fd62-4e42-9779-8c1cecb8b100",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
@@ -2217,7 +2763,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "db6cd700-8067-48d4-8059-3a7a7c71b2f0",
+              "id": "bc84846a-b858-49e9-b081-77b7c810596e",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -2240,11 +2786,21 @@
             }
           }
         ],
-        "id": "76c10078-a6df-4c94-b1f5-e255f58c97dd",
+        "id": "e5d8f95f-404d-45f5-8df0-b524a2d9dece",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "GET",
           "header": [
             {
@@ -2275,7 +2831,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-e5d8f95f-404d-45f5-8df0-b524a2d9dece"
       },
       {
         "name": "Change Video Name",
@@ -2283,7 +2840,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "460d5f47-867d-4c03-b5fa-48d6af29d8bb",
+              "id": "529e0248-a28e-49bc-aafc-d31d0701aa90",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
@@ -2295,7 +2852,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "ae043c78-80b8-40b0-8374-34cca47a7317",
+              "id": "7b194f02-d120-4d6a-b38e-1faf7606e8c0",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -2318,11 +2875,21 @@
             }
           }
         ],
-        "id": "1e741c34-e320-4a6d-9249-013b6f0eacdb",
+        "id": "66ef9d3e-6d22-4a6f-b2f2-73aec8c5f4cc",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "PUT",
           "header": [
             {
@@ -2357,7 +2924,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-66ef9d3e-6d22-4a6f-b2f2-73aec8c5f4cc"
       },
       {
         "name": "Share video",
@@ -2365,7 +2933,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "cd8a41fb-9621-431b-8520-bbaf7644ca54",
+              "id": "6d7b66b9-ee50-4b0b-b529-742a494211eb",
               "exec": [
                 "pm.test(\"Status code is 403\", function () {",
                 "    pm.response.to.have.status(403);",
@@ -2379,7 +2947,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "1567ead8-846c-446b-b788-3b0594cfcdb2",
+              "id": "b91969ad-e768-40fd-b3e4-8bb525f5061f",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -2402,11 +2970,21 @@
             }
           }
         ],
-        "id": "d465a93a-0fa5-4327-a683-9756f2e5fe32",
+        "id": "d74fc742-a4aa-4a80-b52a-f528d72164cb",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "GET",
           "header": [
             {
@@ -2443,7 +3021,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-d74fc742-a4aa-4a80-b52a-f528d72164cb"
       },
       {
         "name": "Get user dashboard",
@@ -2451,7 +3030,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "16d7908d-3cca-4e2f-9446-a9654d902984",
+              "id": "01630281-abcf-4238-b4a2-e38d2fec16c8",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
@@ -2463,7 +3042,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "9d59315a-e25d-4eb7-81db-684b043a074e",
+              "id": "c7d793e8-e008-4199-ba9a-6e47ac54746c",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -2486,11 +3065,21 @@
             }
           }
         ],
-        "id": "eff513a9-38e7-4d22-bf56-967c360f1d1b",
+        "id": "1482944a-48e9-4cb0-8bb8-35914843b76f",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "GET",
           "header": [
             {
@@ -2520,7 +3109,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-1482944a-48e9-4cb0-8bb8-35914843b76f"
       },
       {
         "name": "Add new video",
@@ -2528,7 +3118,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "5895f73f-db45-415e-b872-f48d57468fb2",
+              "id": "f25d8fc0-edb3-48f3-9721-0ac92825c681",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
@@ -2545,7 +3135,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "276fb107-06e0-444c-abdf-fe45a03e9c9a",
+              "id": "3510de26-4ffe-4a20-b77c-55b8c441a185",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -2568,11 +3158,21 @@
             }
           }
         ],
-        "id": "aad230d3-1318-44ca-acd7-c5a2de4d80f6",
+        "id": "e19ac072-9f09-4564-b23e-94729143cf78",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "POST",
           "header": [
             {
@@ -2606,7 +3206,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-e19ac072-9f09-4564-b23e-94729143cf78"
       },
       {
         "name": "Delete video",
@@ -2614,7 +3215,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "68aef3b9-bb21-4a31-ad68-9aadd266e719",
+              "id": "4569b343-c5be-4b72-9a94-f409dd6ce7bb",
               "exec": [
                 "pm.test(\"Status code is 403\", function () {",
                 "    pm.response.to.have.status(404);",
@@ -2626,7 +3227,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "f80b27fb-14f8-4b29-b3f1-3e7eb6407d28",
+              "id": "4670b368-098a-4935-b67a-ab518d0e78ce",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -2649,11 +3250,21 @@
             }
           }
         ],
-        "id": "339ba02c-b183-48f8-a2e9-f5c401de4167",
+        "id": "68c9d559-1009-4a99-bdf8-7376ae05f0f2",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "DELETE",
           "header": [
             {
@@ -2684,7 +3295,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-68c9d559-1009-4a99-bdf8-7376ae05f0f2"
       },
       {
         "name": "Admin Login",
@@ -2692,7 +3304,6 @@
           {
             "listen": "test",
             "script": {
-              "id": "9f78ac74-9343-43a2-93b9-08ac1e0e3495",
               "exec": [
                 "",
                 "pm.test(\"Status code is 200\", function () {",
@@ -2706,13 +3317,13 @@
                 "});",
                 ""
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "id": "ecefadd8-d1fb-4415-a0b2-cfcae8216ac6"
             }
           },
           {
             "listen": "prerequest",
             "script": {
-              "id": "08e257a1-3205-45e4-a75f-0c8f6cfe0113",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
@@ -2726,11 +3337,12 @@
                 "    value: xff\r",
                 "});"
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "id": "96148952-7c1a-4316-8577-b7b0cc59fdb4"
             }
           }
         ],
-        "id": "7035a54a-536c-4dc7-ab8c-2b5d50af06a7",
+        "id": "29cdda38-7bdf-471c-9a17-9217e4749ce2",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
@@ -2770,18 +3382,23 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-29cdda38-7bdf-471c-9a17-9217e4749ce2"
       },
       {
-        "name": "Delete video by admin",
+        "name": "Add Product",
         "event": [
           {
             "listen": "test",
             "script": {
-              "id": "68aef3b9-bb21-4a31-ad68-9aadd266e719",
+              "id": "f58f20f7-878b-4ffa-b17a-835c779b561a",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
+                "    var jsonData = pm.response.json();",
+                "    var productId = jsonData.id;",
+                "    pm.collectionVariables.set(\"product_id\", productId);",
+                "    console.log(\"Product ID \", productId);",
                 "});"
               ],
               "type": "text/javascript"
@@ -2790,7 +3407,97 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "b064fb58-e796-44da-8d55-460fac7f5213",
+              "id": "200fbc66-8abc-4d88-8d38-787ee390c27a",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "c9414a2a-aac8-4db6-be4d-b501931922d7",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{adminToken}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "POST",
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"name\": \"NewSeat\",\n    \"price\": 100,\n    \"image_url\": \"images/seat.svg\"\n}"
+          },
+          "url": {
+            "raw": "{{url}}/workshop/api/shop/products",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "workshop",
+              "api",
+              "shop",
+              "products"
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-c9414a2a-aac8-4db6-be4d-b501931922d7"
+      },
+      {
+        "name": "Delete video by admin",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "});"
+              ],
+              "type": "text/javascript",
+              "id": "7ec00694-305a-425c-a234-38349add316d"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For-Admin');\r",
@@ -2809,11 +3516,12 @@
                 "    value: xff\r",
                 "});"
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "id": "20b3646f-e7ed-47c8-9aa0-d0ac7428f675"
             }
           }
         ],
-        "id": "b1895b03-74bc-4366-b974-88456ffc60c0",
+        "id": "62277a20-07b8-4954-8188-e41729cf4f39",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
@@ -2858,7 +3566,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-62277a20-07b8-4954-8188-e41729cf4f39"
       },
       {
         "name": "ReAdd new video",
@@ -2866,7 +3575,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "5895f73f-db45-415e-b872-f48d57468fb2",
+              "id": "77752d0e-50d9-4a7f-bf6c-80dabacd5563",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
@@ -2883,7 +3592,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "276fb107-06e0-444c-abdf-fe45a03e9c9a",
+              "id": "7e0b3d53-0e0e-4d88-829c-541c5ecdae2b",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -2906,11 +3615,21 @@
             }
           }
         ],
-        "id": "c65d9d61-0670-488f-9de5-4c31174d2bd2",
+        "id": "0eaef3a1-e5b8-4756-bbe7-1eaefa4173d8",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "POST",
           "header": [
             {
@@ -2944,19 +3663,25 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-0eaef3a1-e5b8-4756-bbe7-1eaefa4173d8"
       },
       {
-        "name": "Change email",
+        "name": "Get Workshop User Details",
         "event": [
           {
             "listen": "test",
             "script": {
-              "id": "2f5e6a1e-61b9-4f70-9358-77bb62890c36",
+              "id": "77752d0e-50d9-4a7f-bf6c-80dabacd5563",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
-                "});"
+                "    var jsonData = JSON.parse(responseBody);",
+                "    var video_id = jsonData.id;",
+                "    pm.collectionVariables.set(\"video_id\", video_id);",
+                "    console.log(video_id);",
+                "});",
+                ""
               ],
               "type": "text/javascript"
             }
@@ -2964,7 +3689,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "596bd2dd-bbf9-40a8-a761-cdcfe43d85ec",
+              "id": "7e0b3d53-0e0e-4d88-829c-541c5ecdae2b",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -2987,11 +3712,123 @@
             }
           }
         ],
-        "id": "c4a08b50-4d6d-4e89-9c3a-f39920170032",
+        "id": "b5d507ef-ece1-4b81-b3ab-67d14f15e56c",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{adminToken}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "GET",
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36"
+            },
+            {
+              "key": "Content-Type",
+              "value": "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW"
+            },
+            {
+              "key": "Accept",
+              "value": "*/*"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"file\"; filename=\"abc.mp4\"\r\nContent-Type: video/mp4\r\n\r\nhakfhas\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--"
+          },
+          "url": {
+            "raw": "{{url}}/workshop/api/management/users/all?limit=30&offset=0",
+            "host": [
+              "{{url}}"
+            ],
+            "path": [
+              "workshop",
+              "api",
+              "management",
+              "users",
+              "all"
+            ],
+            "query": [
+              {
+                "key": "limit",
+                "value": "30"
+              },
+              {
+                "key": "offset",
+                "value": "0"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "uid": "13872198-b5d507ef-ece1-4b81-b3ab-67d14f15e56c"
+      },
+      {
+        "name": "Change email",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "38a418ce-9e8e-4ceb-9ad5-ee89ee0af464",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          },
+          {
+            "listen": "prerequest",
+            "script": {
+              "id": "21130742-f16a-44cd-ac8b-190d25fcdf54",
+              "exec": [
+                "const {Property} = require('postman-collection');\r",
+                "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
+                "if (!xff){\r",
+                "    xff = Property.replaceSubstitutions('{{$randomIP}}');\r",
+                "    console.log(\"X-Forwarded-For  setting XFF to \"+xff);\r",
+                "    \r",
+                "}\r",
+                "pm.collectionVariables.set(\"X-Forwarded-For\", xff);\r",
+                "pm.request.headers.remove('X-Forwarded-For');\r",
+                "pm.request.headers.add({ \r",
+                "    // These keys appears when you set a header by hand. Just for fun they are here\r",
+                "    disabled: false,\r",
+                "    // Your header, effectively\r",
+                "    key: 'X-Forwarded-For', \r",
+                "    value: xff\r",
+                "});"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "id": "14fa4db8-ea42-40ff-ae75-cb9b1c6f5f78",
+        "protocolProfileBehavior": {
+          "disableBodyPruning": true
+        },
+        "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "POST",
           "header": [
             {
@@ -3025,7 +3862,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-14fa4db8-ea42-40ff-ae75-cb9b1c6f5f78"
       },
       {
         "name": "SearchMailVerificationToken",
@@ -3033,7 +3871,6 @@
           {
             "listen": "test",
             "script": {
-              "id": "fe2c7752-b716-4787-89c8-95587a2ad57e",
               "exec": [
                 "",
                 "",
@@ -3071,13 +3908,13 @@
                 "});",
                 ""
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "id": "e7a12935-7dcc-4524-a0ca-47500df1041d"
             }
           },
           {
             "listen": "prerequest",
             "script": {
-              "id": "6c4ddaff-ff87-43fa-8acf-219a455dc3c3",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -3096,11 +3933,12 @@
                 "    value: xff\r",
                 "});"
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "id": "8104da9e-1e65-4741-957c-1b60715198d3"
             }
           }
         ],
-        "id": "eae8cd29-3263-45e2-8c0d-9778a2cdc2db",
+        "id": "9bdb45a6-0cbc-416b-813b-c63513a9fb78",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
@@ -3150,7 +3988,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-9bdb45a6-0cbc-416b-813b-c63513a9fb78"
       },
       {
         "name": "Verify email token",
@@ -3158,7 +3997,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "1e128817-13c7-4d26-9094-bc5c5c8bc846",
+              "id": "9bd693bc-3f61-4b0e-a1de-fbb852f1bc1b",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
@@ -3170,7 +4009,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "32c4af06-26c1-4843-b928-242193ce338f",
+              "id": "20995566-89c9-424f-a135-8035330f6f22",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -3193,11 +4032,21 @@
             }
           }
         ],
-        "id": "07386f04-f0e8-4ffd-9312-0789534eb826",
+        "id": "a2543f67-c10e-450e-8f43-1ce3bff4a5e4",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "POST",
           "header": [
             {
@@ -3231,7 +4080,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-a2543f67-c10e-450e-8f43-1ce3bff4a5e4"
       },
       {
         "name": "Login Back",
@@ -3239,7 +4089,6 @@
           {
             "listen": "test",
             "script": {
-              "id": "efbd6318-e2ca-4a1c-9c7d-5f76124c039a",
               "exec": [
                 "",
                 "pm.test(\"Status code is 200\", function () {",
@@ -3253,13 +4102,13 @@
                 "});",
                 ""
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "id": "f63d459c-2004-4718-9d85-cfabe679c33f"
             }
           },
           {
             "listen": "prerequest",
             "script": {
-              "id": "2c56ed4f-eb1c-4daa-ac6b-0e08ca6e3f28",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -3278,11 +4127,12 @@
                 "    value: xff\r",
                 "});"
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "id": "113f6e16-a21c-4cfb-9c8e-da3dff482826"
             }
           }
         ],
-        "id": "5d58c4ba-58e5-4bb8-b811-d269bea71f8f",
+        "id": "1db55c21-1d59-4477-98d9-fe5640fff62c",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
@@ -3322,7 +4172,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-1db55c21-1d59-4477-98d9-fe5640fff62c"
       },
       {
         "name": "Change email Back",
@@ -3330,7 +4181,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "70415a06-9323-4c41-a7e6-f969182bf66d",
+              "id": "c848598b-7d28-4806-8ad5-0d7e20a9d950",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
@@ -3342,7 +4193,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "11b8f9ff-9c82-4f2f-9680-feb981b2d7f7",
+              "id": "3ff5d22f-d710-4ed7-afa4-d115e85ea824",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -3365,11 +4216,21 @@
             }
           }
         ],
-        "id": "13149265-d58c-439f-be95-9919e3246bf0",
+        "id": "e09f649c-7215-4aca-9b50-1b1acb8c7f95",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "POST",
           "header": [
             {
@@ -3403,7 +4264,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-e09f649c-7215-4aca-9b50-1b1acb8c7f95"
       },
       {
         "name": "SearchMailVerificationToken Back",
@@ -3411,7 +4273,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "c15e8800-1d01-401e-8931-03b5d8952041",
+              "id": "77bac1af-c8c4-4989-b04c-1e351c8fd482",
               "exec": [
                 "",
                 "function dynamicSort(property) {",
@@ -3454,7 +4316,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "4500a35d-a34a-419b-a641-a63deb9a35a1",
+              "id": "b2332f48-9202-415b-baa4-43e43d9ecd55",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -3477,11 +4339,14 @@
             }
           }
         ],
-        "id": "52e03cf6-c401-4ce3-8e74-bc1da604af14",
+        "id": "d4e9595d-f33f-4548-bae5-b852749ad857",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "noauth"
+          },
           "method": "GET",
           "header": [
             {
@@ -3523,7 +4388,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-d4e9595d-f33f-4548-bae5-b852749ad857"
       },
       {
         "name": "Verify email token Back",
@@ -3531,7 +4397,7 @@
           {
             "listen": "test",
             "script": {
-              "id": "8ce19507-6497-462d-b850-32b4bae603b6",
+              "id": "71747391-89fb-4364-bd0b-aea2c2d8a71e",
               "exec": [
                 "pm.test(\"Status code is 200\", function () {",
                 "    pm.response.to.have.status(200);",
@@ -3543,7 +4409,7 @@
           {
             "listen": "prerequest",
             "script": {
-              "id": "913f1dfe-9f4a-4a67-a191-fd505def4101",
+              "id": "3f45fffa-8639-49d8-be61-203d91dd3e6b",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -3566,11 +4432,21 @@
             }
           }
         ],
-        "id": "5c96d385-7d37-46ab-93f5-bb96bb14a7a9",
+        "id": "4c8b0ba7-01f8-4070-9f0c-11c187878ca7",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
         "request": {
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+              }
+            ]
+          },
           "method": "POST",
           "header": [
             {
@@ -3604,7 +4480,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-4c8b0ba7-01f8-4070-9f0c-11c187878ca7"
       },
       {
         "name": "Login",
@@ -3612,7 +4489,6 @@
           {
             "listen": "test",
             "script": {
-              "id": "9f78ac74-9343-43a2-93b9-08ac1e0e3495",
               "exec": [
                 "",
                 "pm.test(\"Status code is 200\", function () {",
@@ -3626,13 +4502,13 @@
                 "});",
                 ""
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "id": "d00789ea-c0b8-4df0-bb89-dd64aa184034"
             }
           },
           {
             "listen": "prerequest",
             "script": {
-              "id": "7cba83e4-7c91-45cf-92bd-583d22882cad",
               "exec": [
                 "const {Property} = require('postman-collection');\r",
                 "var xff = pm.collectionVariables.get('X-Forwarded-For');\r",
@@ -3651,11 +4527,12 @@
                 "    value: xff\r",
                 "});"
               ],
-              "type": "text/javascript"
+              "type": "text/javascript",
+              "id": "5db56e2d-beea-4c35-ad5c-0821e4827c89"
             }
           }
         ],
-        "id": "1c3bdecd-846e-482d-aef5-8cf9957af323",
+        "id": "2814846e-5762-42e8-adef-a47c76acb06c",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
@@ -3695,7 +4572,8 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-2814846e-5762-42e8-adef-a47c76acb06c"
       },
       {
         "name": "Get Public Key",
@@ -3709,11 +4587,11 @@
                 "});"
               ],
               "type": "text/javascript",
-              "id": "13612403-9af5-4248-b79f-53294102aab5"
+              "id": "2824bbc2-dcc8-49d3-bbf5-593d32de8651"
             }
           }
         ],
-        "id": "3f18f71e-dff2-4e6c-887f-530f5b8dd901",
+        "id": "a29f188e-0ad9-46d8-9282-473d63ab1cbb",
         "protocolProfileBehavior": {
           "disableBodyPruning": true
         },
@@ -3743,24 +4621,15 @@
             ]
           }
         },
-        "response": []
+        "response": [],
+        "uid": "13872198-a29f188e-0ad9-46d8-9282-473d63ab1cbb"
       }
     ],
-    "auth": {
-      "type": "bearer",
-      "bearer": [
-        {
-          "key": "token",
-          "value": "{{token}}",
-          "type": "string"
-        }
-      ]
-    },
     "event": [
       {
         "listen": "prerequest",
         "script": {
-          "id": "e843b75c-a27d-4c6f-bd54-60870722d8d8",
+          "id": "4be90437-8204-4d9d-918d-09768b990a8e",
           "type": "text/javascript",
           "exec": [
             "const {Property} = require('postman-collection');",
@@ -3785,7 +4654,7 @@
       {
         "listen": "test",
         "script": {
-          "id": "f1f15ef0-b0ac-4b31-967f-03e8b2e80fb5",
+          "id": "86278886-cc27-487e-afcd-d3b28158991c",
           "type": "text/javascript",
           "exec": [
             ""
@@ -3795,93 +4664,87 @@
     ],
     "variable": [
       {
-        "id": "976b8d4c-2b5c-4199-bd21-fddf0e9c9204",
         "key": "X-Forwarded-For",
         "value": ""
       },
       {
-        "id": "b0be61d8-3e49-46ec-8f34-9751bae846c4",
         "key": "X-Forwarded-For-Admin",
         "value": ""
       },
       {
-        "id": "2115e633-b732-4edb-aa53-d037fb45d512",
         "key": "vehicle_id",
         "value": ""
       },
       {
-        "id": "5f6e435d-677f-439d-9a83-f6a17ddbd406",
         "key": "name",
         "value": ""
       },
       {
-        "id": "c583957b-eb70-4989-8692-eb9170d1b6ec",
         "key": "new_name",
         "value": ""
       },
       {
-        "id": "ba19d5ef-b2ec-4be1-a48e-891f208f67d4",
         "key": "email",
         "value": ""
       },
       {
-        "id": "d11f3965-a5b0-4bb6-9cce-26f5ab1ece95",
         "key": "new_email",
         "value": ""
       },
       {
-        "id": "74164c23-852f-4d8f-9cbf-d315b653962c",
         "key": "password",
         "value": ""
       },
       {
-        "id": "b8a812fa-9fb3-4906-934e-988999236b46",
         "key": "phone",
         "value": ""
       },
       {
-        "id": "23de9e91-4ef8-4544-959d-82e9333bf74a",
         "key": "token",
         "value": ""
       },
       {
-        "id": "3ca15d6a-41fe-4f2a-9b29-70eaa64a5638",
         "key": "VIN",
         "value": ""
       },
       {
-        "id": "fe426f51-690f-470f-8bc0-a4d8e2987e54",
         "key": "PIN",
         "value": ""
       },
       {
-        "id": "8510b1ab-0fb8-4e2b-8649-7c53717b75e2",
         "key": "report_id",
         "value": ""
       },
       {
-        "id": "04a90206-9df3-4270-ab46-d891ec756ce2",
         "key": "product_id",
         "value": ""
       },
       {
-        "id": "839cfae5-b1f7-4ba4-ad76-bd1b54a4f32e",
         "key": "order_id",
         "value": ""
       },
       {
-        "id": "e9edb208-a992-4df9-936a-bc87d9eefed3",
         "key": "video_id",
         "value": ""
       },
       {
-        "id": "e9f45f5f-2733-4115-882c-23f2715a598e",
         "key": "adminToken",
         "value": ""
       },
       {
-        "id": "83d244c7-b3e5-4292-ab77-d4f297cc08e1",
         "key": "email_token",
+        "value": ""
+      },
+      {
+        "key": "OTP",
+        "value": ""
+      },
+      {
+        "key": "post_id",
+        "value": ""
+      },
+      {
+        "key": "mechanicToken",
         "value": ""
       }
     ]

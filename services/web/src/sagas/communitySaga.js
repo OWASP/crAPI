@@ -37,8 +37,15 @@ export function* getPosts(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-
-    const getUrl = APIService.GO_MICRO_SERVICES + requestURLS.GET_POSTS;
+    let offset = 0;
+    if (param.offset) {
+      offset = param.offset;
+    }
+    const getUrl =
+      APIService.COMMUNITY_SERVICE +
+      requestURLS.GET_POSTS +
+      "?limit=30&offset=" +
+      offset;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -78,8 +85,8 @@ export function* getPostById(param) {
   let recievedResponse = {};
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    
-    const getUrl = APIService.GO_MICRO_SERVICES + requestURLS.GET_POST_BY_ID;
+
+    const getUrl = APIService.COMMUNITY_SERVICE + requestURLS.GET_POST_BY_ID;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -120,8 +127,8 @@ export function* addPost(param) {
   const { accessToken, callback, post } = param;
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
-    
-    const postUrl = APIService.GO_MICRO_SERVICES + requestURLS.ADD_NEW_POST;
+
+    const postUrl = APIService.COMMUNITY_SERVICE + requestURLS.ADD_NEW_POST;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -160,7 +167,7 @@ export function* addComment(param) {
   try {
     yield put({ type: actionTypes.FETCHING_DATA });
 
-    const postUrl = APIService.GO_MICRO_SERVICES + requestURLS.ADD_COMMENT;
+    const postUrl = APIService.COMMUNITY_SERVICE + requestURLS.ADD_COMMENT;
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,

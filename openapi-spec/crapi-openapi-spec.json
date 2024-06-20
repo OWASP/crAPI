@@ -1,0 +1,3411 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "OWASP crAPI API",
+    "version" : "1-oas3"
+  },
+  "externalDocs" : {
+    "description" : "Completely Ridiculous API (crAPI)",
+    "url" : "https://github.com/OWASP/crAPI"
+  },
+  "servers" : [ {
+    "url" : "http://localhost:8888"
+  } ],
+  "paths" : {
+    "/identity/api/auth/signup" : {
+      "post" : {
+        "operationId" : "signup",
+        "summary" : "Sign up",
+        "description" : "Used to create an account",
+        "tags" : [ "Identity / Auth" ],
+        "security" : [ ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "email", "name", "number", "password" ],
+                "properties" : {
+                  "email" : {
+                    "type" : "string",
+                    "example" : "Cristobal.Weissnat@example.com"
+                  },
+                  "name" : {
+                    "type" : "string",
+                    "example" : "Cristobal.Weissnat"
+                  },
+                  "number" : {
+                    "type" : "string",
+                    "example" : "6915656974"
+                  },
+                  "password" : {
+                    "type" : "string",
+                    "example" : "5hmb0gvyC__hVQg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : "User successfully registered"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : ""
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : ""
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/identity/api/auth/login" : {
+      "post" : {
+        "operationId" : "login",
+        "summary" : "Login",
+        "tags" : [ "Identity / Auth" ],
+        "security" : [ ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "email", "password" ],
+                "properties" : {
+                  "email" : {
+                    "type" : "string",
+                    "example" : "test@example.com"
+                  },
+                  "password" : {
+                    "type" : "string",
+                    "example" : "Test!123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/JwtResponse"
+                }
+              }
+            },
+            "description" : ""
+          },
+          "500" : {
+            "content" : {
+              "text/plain" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : ""
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/identity/api/auth/forget-password" : {
+      "post" : {
+        "operationId" : "forgot_password",
+        "summary" : "Forgot Password",
+        "description" : "Sends an OTP to email to reset password",
+        "tags" : [ "Identity / Auth" ],
+        "security" : [ ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "email" ],
+                "properties" : {
+                  "email" : {
+                    "type" : "string",
+                    "example" : "adam007@example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : "Successfully send OTP"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : "Email address not registered"
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/identity/api/auth/v3/check-otp" : {
+      "post" : {
+        "operationId" : "check_otp_v3",
+        "summary" : "Check OTP - Version 3",
+        "description" : "To validate the One-Time-Password sent using `forgot password`",
+        "tags" : [ "Identity / Auth" ],
+        "security" : [ ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OtpForm"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : "OTP successfully verified"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : "Invalid OTP"
+          },
+          "503" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : "Number of attempts exceeded"
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/identity/api/auth/v2/check-otp" : {
+      "post" : {
+        "operationId" : "check_otp_v2",
+        "summary" : "Check OTP - Version 2",
+        "description" : "To validate the One-Time-Password sent using `forgot password`",
+        "tags" : [ "Identity / Auth" ],
+        "security" : [ ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OtpForm"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OTP verified successfully",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Invalid OTP",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/identity/api/auth/v4.0/user/login-with-token" : {
+      "post" : {
+        "operationId" : "login_with_token",
+        "summary" : "Login with email token",
+        "tags" : [ "Identity / Auth" ],
+        "security" : [ ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LoginWithEmailToken"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "400" : {
+            "description" : "Email or Password missing",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/identity/api/auth/v2.7/user/login-with-token" : {
+      "post" : {
+        "operationId" : "login_with_token_v2_7",
+        "summary" : "Login with email token - v2.7",
+        "tags" : [ "Identity / Auth" ],
+        "security" : [ ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LoginWithEmailToken"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/JwtResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/identity/api/v2/user/reset-password" : {
+      "post" : {
+        "operationId" : "reset_password",
+        "summary" : "Reset Password",
+        "description" : "Reset user password using JWT token",
+        "tags" : [ "Identity / User" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "email" : {
+                    "type" : "string"
+                  },
+                  "password" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : ""
+          },
+          "500" : {
+            "content" : {
+              "text/plain" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : ""
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/identity/api/v2/user/change-email" : {
+      "post" : {
+        "operationId" : "change_email",
+        "summary" : "Change user email",
+        "description" : "Sends token to new email",
+        "tags" : [ "Identity / User" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "new_email", "old_email" ],
+                "properties" : {
+                  "new_email" : {
+                    "type" : "string",
+                    "example" : "Sofia.Predovic@example.com"
+                  },
+                  "old_email" : {
+                    "type" : "string",
+                    "example" : "Cristobal.Weissnat@example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : ""
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/identity/api/v2/user/verify-email-token" : {
+      "post" : {
+        "operationId" : "verify_email_token",
+        "summary" : "Verify Email Token",
+        "description" : "Verify token sent for changing email",
+        "tags" : [ "Identity / User" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "old_email", "new_email", "token" ],
+                "properties" : {
+                  "old_email" : {
+                    "type" : "string",
+                    "example" : "Einar.Swaniawski@example.com"
+                  },
+                  "new_email" : {
+                    "type" : "string",
+                    "example" : "Danielle.Ankunding@example.com"
+                  },
+                  "token" : {
+                    "type" : "string",
+                    "example" : "T9O2s6i3C7o2E8l7X5Y4"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : ""
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/identity/api/v2/user/dashboard" : {
+      "get" : {
+        "operationId" : "get_dashboard",
+        "summary" : "Get user dashboard data",
+        "tags" : [ "Identity / User" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "available_credit", "email", "id", "name", "number", "picture_url", "role", "video_id", "video_name", "video_url" ],
+                  "properties" : {
+                    "id" : {
+                      "type" : "number"
+                    },
+                    "name" : {
+                      "type" : "string"
+                    },
+                    "email" : {
+                      "type" : "string"
+                    },
+                    "number" : {
+                      "type" : "string"
+                    },
+                    "role" : {
+                      "type" : "string"
+                    },
+                    "available_credit" : {
+                      "type" : "number"
+                    },
+                    "video_id" : {
+                      "type" : "number"
+                    },
+                    "video_name" : { },
+                    "video_url" : { },
+                    "picture_url" : { }
+                  },
+                  "example" : {
+                    "id" : 35,
+                    "name" : "Jasen.Hamill",
+                    "email" : "Jasen.Hamill@example.com",
+                    "number" : "7005397357",
+                    "picture_url" : null,
+                    "video_url" : null,
+                    "video_name" : null,
+                    "available_credit" : 155,
+                    "video_id" : 0,
+                    "role" : "ROLE_USER"
+                  }
+                }
+              }
+            },
+            "description" : ""
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : "Email not registered"
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/identity/api/v2/user/pictures" : {
+      "post" : {
+        "operationId" : "update_profile_pic",
+        "summary" : "Update user profile picture",
+        "tags" : [ "Identity / User" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "file" : {
+                    "type" : "string",
+                    "format" : "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "available_credit", "id", "name", "picture", "status", "user" ],
+                  "properties" : {
+                    "name" : {
+                      "type" : "string"
+                    },
+                    "available_credit" : {
+                      "type" : "number"
+                    },
+                    "id" : {
+                      "type" : "number"
+                    },
+                    "status" : {
+                      "type" : "string"
+                    },
+                    "picture" : {
+                      "type" : "string"
+                    },
+                    "user" : { }
+                  }
+                }
+              }
+            },
+            "description" : ""
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/identity/api/v2/user/videos" : {
+      "post" : {
+        "summary" : "Upload User profile video",
+        "operationId" : "upload_profile_video",
+        "tags" : [ "Identity / User" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "required" : [ "file" ],
+                "type" : "object",
+                "properties" : {
+                  "file" : {
+                    "type" : "string",
+                    "format" : "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProfileVideo"
+                }
+              }
+            }
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/identity/api/v2/user/videos/{video_id}" : {
+      "get" : {
+        "operationId" : "get_profile_video",
+        "summary" : "Get User Profile Video",
+        "description" : "Get the video associated with the user's profile.",
+        "tags" : [ "Identity / User" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "video_id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "example" : 1
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProfileVideo"
+                }
+              }
+            }
+          },
+          "204" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : "Video not found"
+          }
+        }
+      },
+      "put" : {
+        "summary" : "Update User Profile Video by video_id",
+        "description" : "Update the video identified by video_id in this user's profile.",
+        "operationId" : "update_profile_video",
+        "tags" : [ "Identity / User" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "video_id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "example" : 10
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/VideoForm"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProfileVideo"
+                }
+              }
+            }
+          },
+          "204" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : "Video not found"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete Profile Video by video_id",
+        "description" : "Delete the video identified by video_id from this user's profile.",
+        "operationId" : "delete_profile_video",
+        "tags" : [ "Identity / User" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "video_id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "example" : 1
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            }
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : "Video not found"
+          }
+        }
+      }
+    },
+    "/identity/api/v2/user/videos/convert_video" : {
+      "get" : {
+        "summary" : "Convert Profile Video",
+        "description" : "Convert the format for the specified video.",
+        "operationId" : "convert_profile_video",
+        "tags" : [ "Identity / User" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "video_id",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "example" : 1
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/identity/api/v2/admin/videos/{video_id}" : {
+      "delete" : {
+        "summary" : "Delete Profile Video Admin",
+        "description" : "Delete profile video of other users by video_id as admin",
+        "operationId" : "admin_delete_profile_video",
+        "tags" : [ "Identity / Admin" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "video_id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "example" : 12345
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            }
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : "Video not found"
+          }
+        }
+      }
+    },
+    "/identity/api/v2/vehicle/vehicles" : {
+      "get" : {
+        "operationId" : "get_vehicles",
+        "summary" : "Get user vehicles",
+        "tags" : [ "Identity / Vehicle" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "object",
+                    "required" : [ "id", "model", "owner", "pincode", "status", "uuid", "vehicleLocation", "vin", "year" ],
+                    "properties" : {
+                      "id" : {
+                        "type" : "number"
+                      },
+                      "uuid" : {
+                        "type" : "string"
+                      },
+                      "year" : {
+                        "type" : "number"
+                      },
+                      "status" : {
+                        "type" : "string"
+                      },
+                      "vin" : {
+                        "type" : "string"
+                      },
+                      "pincode" : {
+                        "type" : "string"
+                      },
+                      "owner" : {
+                        "$ref" : "#/components/schemas/User"
+                      },
+                      "model" : {
+                        "type" : "object",
+                        "required" : [ "fuel_type", "id", "model", "vehicle_img", "vehiclecompany" ],
+                        "properties" : {
+                          "model" : {
+                            "type" : "string"
+                          },
+                          "fuel_type" : {
+                            "type" : "string"
+                          },
+                          "vehicle_img" : {
+                            "type" : "string"
+                          },
+                          "id" : {
+                            "type" : "number"
+                          },
+                          "vehiclecompany" : {
+                            "type" : "object",
+                            "required" : [ "id", "name" ],
+                            "properties" : {
+                              "id" : {
+                                "type" : "number"
+                              },
+                              "name" : {
+                                "type" : "string"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "vehicleLocation" : {
+                        "type" : "object",
+                        "required" : [ "id", "latitude", "longitude" ],
+                        "properties" : {
+                          "id" : {
+                            "type" : "number"
+                          },
+                          "latitude" : {
+                            "type" : "string"
+                          },
+                          "longitude" : {
+                            "type" : "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description" : ""
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/identity/api/v2/vehicle/add_vehicle" : {
+      "post" : {
+        "operationId" : "add_vehicle",
+        "summary" : "Add the user vehicle",
+        "tags" : [ "Identity / Vehicle" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "pincode", "vin" ],
+                "properties" : {
+                  "pincode" : {
+                    "type" : "string",
+                    "example" : "9896"
+                  },
+                  "vin" : {
+                    "type" : "string",
+                    "example" : "0IOJO38SMVL663989"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : ""
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : ""
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/identity/api/v2/vehicle/{vehicleId}/location" : {
+      "get" : {
+        "operationId" : "get_location",
+        "summary" : "Get Vehicle Location",
+        "description" : "Get user's vehicle location",
+        "tags" : [ "Identity / Vehicle" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "carId", "fullName", "vehicleLocation" ],
+                  "properties" : {
+                    "carId" : {
+                      "type" : "string"
+                    },
+                    "fullName" : {
+                      "type" : "string"
+                    },
+                    "vehicleLocation" : {
+                      "type" : "object",
+                      "required" : [ "id", "latitude", "longitude" ],
+                      "properties" : {
+                        "id" : {
+                          "type" : "number"
+                        },
+                        "latitude" : {
+                          "type" : "string"
+                        },
+                        "longitude" : {
+                          "type" : "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description" : ""
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : "Invalid vehicle_id for User"
+          }
+        }
+      },
+      "parameters" : [ {
+        "in" : "path",
+        "name" : "vehicleId",
+        "required" : true,
+        "schema" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "1929186d-8b67-4163-a208-de52a41f7301"
+        }
+      } ]
+    },
+    "/identity/api/v2/vehicle/resend_email" : {
+      "post" : {
+        "operationId" : "vehicle_resend_email",
+        "summary" : "Resend Vehicle Details Email",
+        "description" : "Resend vehicles details to be added to the user dashboard",
+        "tags" : [ "Identity / Vehicle" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CRAPIResponse"
+                }
+              }
+            },
+            "description" : ""
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/community/api/v2/community/posts/{postId}" : {
+      "get" : {
+        "operationId" : "get_post",
+        "summary" : "Get Post",
+        "description" : "Used to get a specific post in the forum",
+        "tags" : [ "Community / Posts" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Post"
+                }
+              }
+            },
+            "description" : ""
+          }
+        }
+      },
+      "parameters" : [ {
+        "in" : "path",
+        "name" : "postId",
+        "required" : true,
+        "schema" : {
+          "type" : "string",
+          "example" : "tiSTSUzh4BwtvYSLWPsqu9"
+        }
+      } ]
+    },
+    "/community/api/v2/community/posts" : {
+      "post" : {
+        "operationId" : "create_post",
+        "summary" : "Create Post",
+        "description" : "Used to create a new post in the forum",
+        "tags" : [ "Community / Posts" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "content" : {
+                    "type" : "string",
+                    "example" : "Est maiores voluptas velit. Necessitatibus vero veniam quos nobis."
+                  },
+                  "title" : {
+                    "type" : "string",
+                    "example" : "Velit quia minima."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "CreatedAt", "author", "authorid", "comments", "content", "id", "title" ],
+                  "properties" : {
+                    "author" : {
+                      "type" : "object",
+                      "required" : [ "created_at", "email", "nickname", "profile_pic_url", "vehicleid" ],
+                      "properties" : {
+                        "vehicleid" : {
+                          "type" : "string",
+                          "format" : "uuid"
+                        },
+                        "email" : {
+                          "type" : "string"
+                        },
+                        "created_at" : {
+                          "type" : "string"
+                        },
+                        "profile_pic_url" : {
+                          "type" : "string"
+                        },
+                        "nickname" : {
+                          "type" : "string"
+                        }
+                      }
+                    },
+                    "id" : {
+                      "type" : "string"
+                    },
+                    "authorid" : {
+                      "type" : "number"
+                    },
+                    "content" : {
+                      "type" : "string"
+                    },
+                    "CreatedAt" : {
+                      "type" : "string"
+                    },
+                    "title" : {
+                      "type" : "string"
+                    },
+                    "comments" : {
+                      "type" : "array",
+                      "items" : { }
+                    }
+                  }
+                }
+              }
+            },
+            "description" : ""
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/community/api/v2/community/posts/{postId}/comment" : {
+      "post" : {
+        "operationId" : "post_comment",
+        "summary" : "Post Comment",
+        "description" : "Used to add a comment to an existing post in the forum",
+        "tags" : [ "Community / Posts" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "content" : {
+                    "type" : "string",
+                    "example" : "Porro aut ratione et."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "CreatedAt", "author", "authorid", "comments", "content", "id", "title" ],
+                  "properties" : {
+                    "author" : {
+                      "type" : "object",
+                      "required" : [ "created_at", "email", "nickname", "profile_pic_url", "vehicleid" ],
+                      "properties" : {
+                        "vehicleid" : {
+                          "type" : "string",
+                          "format" : "uuid"
+                        },
+                        "email" : {
+                          "type" : "string"
+                        },
+                        "created_at" : {
+                          "type" : "string"
+                        },
+                        "profile_pic_url" : {
+                          "type" : "string"
+                        },
+                        "nickname" : {
+                          "type" : "string"
+                        }
+                      }
+                    },
+                    "id" : {
+                      "type" : "string"
+                    },
+                    "authorid" : {
+                      "type" : "number"
+                    },
+                    "content" : {
+                      "type" : "string"
+                    },
+                    "CreatedAt" : {
+                      "type" : "string"
+                    },
+                    "title" : {
+                      "type" : "string"
+                    },
+                    "comments" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "required" : [ "CreatedAt", "author", "content", "id" ],
+                        "properties" : {
+                          "CreatedAt" : {
+                            "type" : "string"
+                          },
+                          "author" : {
+                            "type" : "object",
+                            "required" : [ "created_at", "email", "nickname", "profile_pic_url", "vehicleid" ],
+                            "properties" : {
+                              "vehicleid" : {
+                                "type" : "string",
+                                "format" : "uuid"
+                              },
+                              "email" : {
+                                "type" : "string"
+                              },
+                              "created_at" : {
+                                "type" : "string"
+                              },
+                              "profile_pic_url" : {
+                                "type" : "string"
+                              },
+                              "nickname" : {
+                                "type" : "string"
+                              }
+                            }
+                          },
+                          "content" : {
+                            "type" : "string"
+                          },
+                          "id" : {
+                            "type" : "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description" : ""
+          }
+        }
+      },
+      "parameters" : [ {
+        "in" : "path",
+        "name" : "postId",
+        "required" : true,
+        "schema" : {
+          "type" : "string",
+          "example" : "tiSTSUzh4BwtvYSLWPsqu9"
+        }
+      } ]
+    },
+    "/community/api/v2/community/posts/recent" : {
+      "get" : {
+        "operationId" : "get_recent_posts",
+        "summary" : "Get Recent Posts",
+        "description" : "Used to fetch the most recent posts in the forum.",
+        "tags" : [ "Community / Posts" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "example" : "30"
+          }
+        }, {
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "example" : "0"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "headers" : {
+              "Transfer-Encoding" : {
+                "content" : {
+                  "text/plain" : {
+                    "schema" : {
+                      "type" : "string",
+                      "example" : "chunked"
+                    },
+                    "example" : "chunked"
+                  }
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "content" : {
+                  "text/plain" : {
+                    "schema" : {
+                      "type" : "string",
+                      "example" : "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"
+                    },
+                    "example" : "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"
+                  }
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "content" : {
+                  "text/plain" : {
+                    "schema" : {
+                      "type" : "string",
+                      "example" : "POST, GET, OPTIONS, PUT, DELETE"
+                    },
+                    "example" : "POST, GET, OPTIONS, PUT, DELETE"
+                  }
+                }
+              },
+              "Access-Control-Allow-Origin" : {
+                "content" : {
+                  "text/plain" : {
+                    "schema" : {
+                      "type" : "string",
+                      "example" : "*"
+                    },
+                    "example" : "*"
+                  }
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Post"
+                  },
+                  "description" : "Array of forum posts"
+                },
+                "example" : [ {
+                  "id" : "ConZLXacq3MqhbLQDrbNLf",
+                  "title" : "Title 3",
+                  "content" : "Hello world 3",
+                  "author" : {
+                    "nickname" : "Hacker",
+                    "email" : "hacker@darkweb.com",
+                    "vehicleid" : "abac4018-5a38-466c-ab7f-361908afeab6",
+                    "profile_pic_url" : "",
+                    "created_at" : "2021-09-16T01:46:32.432Z"
+                  },
+                  "comments" : [ ],
+                  "authorid" : 3,
+                  "CreatedAt" : "2021-09-16T01:46:32.432Z"
+                }, {
+                  "id" : "rj2md2VVDBjYUGNG6LmQ9e",
+                  "title" : "Title 2",
+                  "content" : "Hello world 2",
+                  "author" : {
+                    "nickname" : "Victim Two",
+                    "email" : "victim.two@example.com",
+                    "vehicleid" : "8b9edbde-d74d-4773-8c9f-adb65c6056fc",
+                    "profile_pic_url" : "",
+                    "created_at" : "2021-09-16T01:46:32.429Z"
+                  },
+                  "comments" : [ ],
+                  "authorid" : 2,
+                  "CreatedAt" : "2021-09-16T01:46:32.429Z"
+                }, {
+                  "id" : "C68Hgjaow2jieF59LWzqTH",
+                  "title" : "Title 1",
+                  "content" : "Hello world 1",
+                  "author" : {
+                    "nickname" : "Victim One",
+                    "email" : "victim.one@example.com",
+                    "vehicleid" : "649acfac-10ea-43b3-907f-752e86eff2b6",
+                    "profile_pic_url" : "",
+                    "created_at" : "2021-09-16T01:46:32.413Z"
+                  },
+                  "comments" : [ ],
+                  "authorid" : 1,
+                  "CreatedAt" : "2021-09-16T01:46:32.413Z"
+                } ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/community/api/v2/coupon/new-coupon" : {
+      "post" : {
+        "operationId" : "add_new_coupon",
+        "summary" : "Add a New Coupon",
+        "description" : "Used to add a new coupon to the shop database",
+        "tags" : [ "Community / Coupon" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "description" : "Coupon",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AddCouponRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Coupon Added in database",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AddCouponResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/community/api/v2/coupon/validate-coupon" : {
+      "post" : {
+        "operationId" : "validate_coupon",
+        "summary" : "Validate Coupon",
+        "description" : "Used to validate the provided discount coupon code",
+        "tags" : [ "Community / Coupon" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "description" : "Coupon",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ValidateCouponRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Validate coupon response",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ValidateCouponResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workshop/api/shop/products" : {
+      "parameters" : [ ],
+      "get" : {
+        "operationId" : "get_products",
+        "summary" : "Get Products",
+        "description" : "Used to get products for the shop",
+        "tags" : [ "Workshop / Shop" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "credit", "products" ],
+                  "properties" : {
+                    "credit" : {
+                      "type" : "number"
+                    },
+                    "products" : {
+                      "$ref" : "#/components/schemas/Products"
+                    }
+                  }
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        }
+      },
+      "post" : {
+        "operationId" : "add_new_product",
+        "summary" : "Add A New Product",
+        "description" : "Used to add the specified product to the product catalog.",
+        "tags" : [ "Workshop / Shop" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/NewProduct"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Product"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "description" : "Bad Request!",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "additionalProperties" : true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workshop/api/shop/orders" : {
+      "post" : {
+        "operationId" : "create_order",
+        "summary" : "Create Order",
+        "description" : "Used to create a new order for a product in the shop.",
+        "tags" : [ "Workshop / Shop" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ProductQuantity"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "id", "message", "credit" ],
+                  "properties" : {
+                    "id" : {
+                      "type" : "integer"
+                    },
+                    "message" : {
+                      "type" : "string"
+                    },
+                    "credit" : {
+                      "type" : "number",
+                      "format" : "float"
+                    }
+                  },
+                  "example" : {
+                    "id" : 30,
+                    "message" : "Order sent successfully.",
+                    "credit" : 155
+                  }
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "message" ],
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  },
+                  "example" : {
+                    "message" : "Insufficient Balance. Please apply coupons to get more\nbalance!"
+                  }
+                }
+              }
+            },
+            "description" : "Bad Request!"
+          }
+        }
+      }
+    },
+    "/workshop/api/shop/orders/{order_id}" : {
+      "put" : {
+        "operationId" : "update_order",
+        "summary" : "Update Order",
+        "description" : "Used to update the order specified by the order_id.",
+        "tags" : [ "Workshop / Shop" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "order_id",
+          "schema" : {
+            "type" : "integer"
+          },
+          "required" : true,
+          "example" : 1
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ProductQuantity"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "orders" ],
+                  "properties" : {
+                    "orders" : {
+                      "$ref" : "#/components/schemas/Order"
+                    }
+                  }
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "message" ],
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  },
+                  "example" : {
+                    "message" : "The value of 'status' has to be 'delivered', 'return pending' or 'returned'"
+                  }
+                }
+              }
+            },
+            "description" : "Bad Request!"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "message" ],
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  },
+                  "example" : {
+                    "message" : "You are not allowed to access this resource!'"
+                  }
+                }
+              }
+            },
+            "description" : "Forbidden!"
+          }
+        }
+      },
+      "get" : {
+        "operationId" : "get_order_byID",
+        "summary" : "Get Order Based on ID",
+        "description" : "Used to get the order details for order identified by order_id.",
+        "tags" : [ "Workshop / Shop" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "order_id",
+          "schema" : {
+            "type" : "integer"
+          },
+          "required" : true,
+          "example" : 1
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "orders" ],
+                  "properties" : {
+                    "orders" : {
+                      "$ref" : "#/components/schemas/Order"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "message" ],
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  },
+                  "example" : {
+                    "message" : "You are not allowed to access this resource!'"
+                  }
+                }
+              }
+            },
+            "description" : "Forbidden!"
+          }
+        }
+      }
+    },
+    "/workshop/api/shop/orders/all" : {
+      "get" : {
+        "operationId" : "get_orders",
+        "summary" : "Get Orders",
+        "description" : "Used to get user's past orders",
+        "tags" : [ "Workshop / Shop" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "limit",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "example" : 30
+          }
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "example" : 0
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "orders" ],
+                  "properties" : {
+                    "orders" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "required" : [ "created_on", "id", "product", "quantity", "status", "user" ],
+                        "properties" : {
+                          "quantity" : {
+                            "type" : "number"
+                          },
+                          "id" : {
+                            "type" : "number"
+                          },
+                          "status" : {
+                            "type" : "string"
+                          },
+                          "created_on" : {
+                            "type" : "string"
+                          },
+                          "user" : {
+                            "type" : "object",
+                            "required" : [ "email", "number" ],
+                            "properties" : {
+                              "email" : {
+                                "type" : "string"
+                              },
+                              "number" : {
+                                "type" : "string"
+                              }
+                            }
+                          },
+                          "product" : {
+                            "type" : "object",
+                            "required" : [ "id", "image_url", "name", "price" ],
+                            "properties" : {
+                              "id" : {
+                                "type" : "number"
+                              },
+                              "image_url" : {
+                                "type" : "string"
+                              },
+                              "name" : {
+                                "type" : "string"
+                              },
+                              "price" : {
+                                "type" : "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description" : ""
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/workshop/api/shop/orders/return_order" : {
+      "post" : {
+        "operationId" : "return_order",
+        "summary" : "Return Order",
+        "description" : "Used to return order specified by the order_id",
+        "tags" : [ "Workshop / Shop" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "order_id",
+          "schema" : {
+            "type" : "integer",
+            "example" : 33
+          },
+          "required" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "message", "order", "qr_code_url" ],
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    },
+                    "order" : {
+                      "$ref" : "#/components/schemas/Order"
+                    },
+                    "qr_code_url" : {
+                      "type" : "string",
+                      "format" : "url"
+                    }
+                  }
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "message" ],
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  },
+                  "example" : {
+                    "message" : "This order has already been returned!"
+                  }
+                }
+              }
+            },
+            "description" : "Bad Request!"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "message" ],
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  },
+                  "example" : {
+                    "message" : "You are not allowed to access this resource!'"
+                  }
+                }
+              }
+            },
+            "description" : "Forbidden!"
+          }
+        }
+      }
+    },
+    "/workshop/api/shop/apply_coupon" : {
+      "post" : {
+        "operationId" : "apply_coupon",
+        "summary" : "Apply Coupon",
+        "description" : "Used to apply the coupon for the current user.",
+        "tags" : [ "Workshop / Shop" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ApplyCouponRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApplyCouponResponse"
+                }
+              }
+            },
+            "description" : ""
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "message" ],
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description" : ""
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/workshop/api/shop/return_qr_code" : {
+      "get" : {
+        "operationId" : "get_workshop_qr_code",
+        "summary" : "Get Workshop",
+        "description" : "Used to get the return qr code image for UPS shipments.",
+        "tags" : [ "Workshop / Shop" ],
+        "security" : [ { } ],
+        "parameters" : [ {
+          "name" : "Accept",
+          "in" : "header",
+          "description" : "The server doesn't like image/png in accept!",
+          "required" : true,
+          "style" : "simple",
+          "schema" : {
+            "type" : "string",
+            "example" : "*/*"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              }
+            },
+            "description" : "QR Code PNG Image"
+          }
+        }
+      }
+    },
+    "/workshop/api/management/users/all" : {
+      "get" : {
+        "operationId" : "get_workshop_users_all",
+        "summary" : "Get Workshop Users Detail",
+        "description" : "Used to get all the users in the workshop database.",
+        "tags" : [ "Workshop / Shop" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "example" : "30"
+          }
+        }, {
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "example" : "0"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "headers" : {
+              "Transfer-Encoding" : {
+                "content" : {
+                  "text/plain" : {
+                    "schema" : {
+                      "type" : "string"
+                    },
+                    "example" : "chunked"
+                  }
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "users" ],
+                  "properties" : {
+                    "users" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "required" : [ "user", "available_credit" ],
+                        "properties" : {
+                          "available_credit" : {
+                            "type" : "integer",
+                            "format" : "float"
+                          },
+                          "user" : {
+                            "type" : "object",
+                            "required" : [ "email", "number" ],
+                            "properties" : {
+                              "email" : {
+                                "type" : "string"
+                              },
+                              "number" : {
+                                "type" : "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example" : {
+                  "users" : [ {
+                    "user" : {
+                      "email" : "adam007@example.com",
+                      "number" : "9876895423"
+                    },
+                    "available_credit" : 100
+                  }, {
+                    "user" : {
+                      "email" : "pogba006@example.com",
+                      "number" : "9876570006"
+                    },
+                    "available_credit" : 100
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workshop/api/mechanic/" : {
+      "get" : {
+        "operationId" : "get_mechanics",
+        "summary" : "Get Mechanics",
+        "description" : "Used to get all the available mechanics",
+        "tags" : [ "Workshop / Mechanic" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "headers" : {
+              "Transfer-Encoding" : {
+                "content" : {
+                  "text/plain" : {
+                    "schema" : {
+                      "type" : "string"
+                    },
+                    "example" : "chunked"
+                  }
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "mechanics" ],
+                  "properties" : {
+                    "mechanics" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "required" : [ "id", "mechanic_code", "user" ],
+                        "properties" : {
+                          "id" : {
+                            "type" : "number"
+                          },
+                          "mechanic_code" : {
+                            "type" : "string"
+                          },
+                          "user" : {
+                            "type" : "object",
+                            "required" : [ "email", "number" ],
+                            "properties" : {
+                              "email" : {
+                                "type" : "string"
+                              },
+                              "number" : {
+                                "type" : "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example" : {
+                  "mechanics" : [ {
+                    "id" : 1,
+                    "mechanic_code" : "TRAC_MECH1",
+                    "user" : {
+                      "email" : "mechanic.one@example.com",
+                      "number" : ""
+                    }
+                  }, {
+                    "id" : 2,
+                    "mechanic_code" : "TRAC_MECH2",
+                    "user" : {
+                      "email" : "mechanic.two@example.com",
+                      "number" : ""
+                    }
+                  } ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/workshop/api/merchant/contact_mechanic" : {
+      "post" : {
+        "operationId" : "contact_mechanic",
+        "summary" : "Contact Mechanic",
+        "description" : "Used to contact a mechanic for a service request on your vehicle",
+        "tags" : [ "Workshop / Mechanic" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "mechanic_api", "mechanic_code", "number_of_repeats", "problem_details", "repeat_request_if_failed", "vin" ],
+                "properties" : {
+                  "number_of_repeats" : {
+                    "type" : "number"
+                  },
+                  "mechanic_api" : {
+                    "type" : "string"
+                  },
+                  "vin" : {
+                    "type" : "string"
+                  },
+                  "repeat_request_if_failed" : {
+                    "type" : "boolean"
+                  },
+                  "problem_details" : {
+                    "type" : "string"
+                  },
+                  "mechanic_code" : {
+                    "type" : "string"
+                  }
+                }
+              },
+              "example" : {
+                "mechanic_api" : "http://localhost:8000/workshop/api/mechanic/receive_report",
+                "mechanic_code" : "TRAC_JHN",
+                "number_of_repeats" : 1,
+                "repeat_request_if_failed" : false,
+                "problem_details" : "Hi Jhon",
+                "vin" : "8UOLV89RGKL908077"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "response_from_mechanic_api", "status" ],
+                  "properties" : {
+                    "response_from_mechanic_api" : {
+                      "type" : "object",
+                      "required" : [ "id", "sent", "report_link" ],
+                      "properties" : {
+                        "id" : {
+                          "type" : "integer",
+                          "format" : "int32"
+                        },
+                        "sent" : {
+                          "type" : "boolean"
+                        },
+                        "report_link" : {
+                          "type" : "string"
+                        }
+                      }
+                    },
+                    "status" : {
+                      "type" : "integer",
+                      "format" : "int32"
+                    }
+                  }
+                },
+                "example" : {
+                  "response_from_mechanic_api" : {
+                    "id" : 17,
+                    "sent" : true,
+                    "report_link" : "http://localhost:8888/workshop/api/mechanic/mechanic_report?report_id=17"
+                  },
+                  "status" : 200
+                }
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "message" ],
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description" : "Bad Request!"
+          },
+          "503" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "message" ],
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            },
+            "description" : "Service Unavailable"
+          }
+        }
+      },
+      "parameters" : [ ]
+    },
+    "/workshop/api/mechanic/receive_report" : {
+      "get" : {
+        "operationId" : "create_service_report",
+        "summary" : "Create and Assign a Service Report",
+        "description" : "Used to create the service report and assign to the mechanic",
+        "tags" : [ "Workshop / Mechanic" ],
+        "security" : [ ],
+        "parameters" : [ {
+          "name" : "mechanic_code",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "TRAC_MECH1"
+          }
+        }, {
+          "name" : "problem_details",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "My car has engine trouble, and I need urgent help!"
+          }
+        }, {
+          "name" : "vin",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "0BZCX25UTBJ987271"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "id", "sent", "report_link" ],
+                  "properties" : {
+                    "id" : {
+                      "type" : "integer"
+                    },
+                    "sent" : {
+                      "type" : "string"
+                    },
+                    "report_link" : {
+                      "type" : "string",
+                      "format" : "url"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request!",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "additionalProperties" : true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workshop/api/mechanic/mechanic_report" : {
+      "get" : {
+        "operationId" : "get_report_byID",
+        "summary" : "Get Service Report",
+        "description" : "Used to get the service report specified by the report_id",
+        "tags" : [ "Workshop / Mechanic" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "report_id",
+          "in" : "query",
+          "description" : "",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "example" : 2
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "headers" : {
+              "Server" : {
+                "content" : {
+                  "text/plain" : {
+                    "schema" : {
+                      "type" : "string"
+                    },
+                    "example" : "openresty/1.17.8.2"
+                  }
+                }
+              },
+              "Date" : {
+                "content" : {
+                  "text/plain" : {
+                    "schema" : {
+                      "type" : "string"
+                    },
+                    "example" : "Tue, 21 Sep 2021 22:33:37 GMT"
+                  }
+                }
+              },
+              "Transfer-Encoding" : {
+                "content" : {
+                  "text/plain" : {
+                    "schema" : {
+                      "type" : "string"
+                    },
+                    "example" : "chunked"
+                  }
+                }
+              },
+              "Allow" : {
+                "content" : {
+                  "text/plain" : {
+                    "schema" : {
+                      "type" : "string"
+                    },
+                    "example" : "GET, HEAD, OPTIONS"
+                  }
+                }
+              },
+              "Vary" : {
+                "content" : {
+                  "text/plain" : {
+                    "schema" : {
+                      "type" : "string"
+                    },
+                    "example" : "Origin, Cookie"
+                  }
+                }
+              },
+              "X-Frame-Options" : {
+                "content" : {
+                  "text/plain" : {
+                    "schema" : {
+                      "type" : "string"
+                    },
+                    "example" : "SAMEORIGIN"
+                  }
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "title" : "Service Request",
+                  "required" : [ "id", "mechanic", "vehicle", "problem_details", "status", "created_on" ],
+                  "type" : "object",
+                  "properties" : {
+                    "id" : {
+                      "type" : "integer",
+                      "format" : "int32"
+                    },
+                    "mechanic" : {
+                      "title" : "Mechanic",
+                      "required" : [ "id", "mechanic_code", "user" ],
+                      "type" : "object",
+                      "properties" : {
+                        "id" : {
+                          "type" : "integer",
+                          "format" : "int32"
+                        },
+                        "mechanic_code" : {
+                          "type" : "string"
+                        },
+                        "user" : {
+                          "title" : "user",
+                          "required" : [ "email", "number" ],
+                          "type" : "object",
+                          "properties" : {
+                            "email" : {
+                              "type" : "string"
+                            },
+                            "number" : {
+                              "type" : "string"
+                            }
+                          }
+                        }
+                      },
+                      "example" : {
+                        "id" : 1,
+                        "mechanic_code" : "TRAC_MECH1",
+                        "user" : {
+                          "email" : "mechanic.one@example.com",
+                          "number" : "415-654-3212"
+                        }
+                      }
+                    },
+                    "vehicle" : {
+                      "title" : "vehicle",
+                      "required" : [ "id", "vin", "owner" ],
+                      "type" : "object",
+                      "properties" : {
+                        "id" : {
+                          "type" : "integer",
+                          "format" : "int32"
+                        },
+                        "vin" : {
+                          "type" : "string"
+                        },
+                        "owner" : {
+                          "title" : "owner",
+                          "required" : [ "email", "number" ],
+                          "type" : "object",
+                          "properties" : {
+                            "email" : {
+                              "type" : "string"
+                            },
+                            "number" : {
+                              "type" : "string"
+                            }
+                          }
+                        }
+                      },
+                      "example" : {
+                        "id" : 3,
+                        "vin" : "1G1OP124017231334",
+                        "owner" : {
+                          "email" : "victim.one@example.com",
+                          "number" : "4156895423"
+                        }
+                      }
+                    },
+                    "problem_details" : {
+                      "type" : "string"
+                    },
+                    "status" : {
+                      "type" : "string"
+                    },
+                    "created_on" : {
+                      "type" : "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workshop/api/mechanic/service_requests" : {
+      "get" : {
+        "operationId" : "get_service_requests_for_mechanic",
+        "summary" : "Get Service Reports for a Mechanic",
+        "description" : "Fetch all service requests assigned to this specific mechanic.",
+        "tags" : [ "Workshop / Mechanic" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "limit",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "example" : 30
+          }
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "example" : 0
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServiceRequests"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  },
+                  "required" : [ "message" ]
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  },
+                  "required" : [ "message" ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workshop/api/mechanic/signup" : {
+      "post" : {
+        "operationId" : "mechanic_signup",
+        "summary" : "New Mechanic Signup",
+        "description" : "Used to register a new mechanic in the workshop.",
+        "tags" : [ "Workshop / Mechanic" ],
+        "security" : [ ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "name" : {
+                    "type" : "string"
+                  },
+                  "email" : {
+                    "type" : "string",
+                    "format" : "email"
+                  },
+                  "number" : {
+                    "type" : "string"
+                  },
+                  "password" : {
+                    "type" : "string"
+                  },
+                  "mechanic_code" : {
+                    "type" : "string"
+                  }
+                },
+                "required" : [ "email", "mechanic_code", "name", "number", "password" ]
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "message" ],
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  },
+                  "example" : {
+                    "message" : "Mechanic created with email: john@workshop.com"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "message" ],
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    }
+                  },
+                  "example" : {
+                    "message" : "Mechanic code already exists!'"
+                  }
+                }
+              }
+            },
+            "description" : "Bad Request!"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Order" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "readOnly" : true
+          },
+          "user" : {
+            "$ref" : "#/components/schemas/User"
+          },
+          "product" : {
+            "$ref" : "#/components/schemas/Product"
+          },
+          "quantity" : {
+            "type" : "integer"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/OrderStatusEnum"
+          },
+          "created_on" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        },
+        "required" : [ "created_on", "id", "product", "user" ]
+      },
+      "User" : {
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string"
+          },
+          "number" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        },
+        "required" : [ "email" ]
+      },
+      "NewProduct" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "price" : {
+            "type" : "string",
+            "format" : "decimal",
+            "pattern" : "^\\d{0,18}(\\.\\d{0,2})?$"
+          },
+          "image_url" : {
+            "type" : "string",
+            "format" : "url"
+          }
+        },
+        "required" : [ "image_url", "name", "price" ],
+        "example" : {
+          "name" : "WheelBase",
+          "image_url" : "http://example.com/wheelbase.png",
+          "price" : "10.12"
+        }
+      },
+      "Products" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/Product"
+        }
+      },
+      "Product" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "readOnly" : true
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "price" : {
+            "type" : "string",
+            "format" : "decimal",
+            "pattern" : "^\\d{0,18}(\\.\\d{0,2})?$"
+          },
+          "image_url" : {
+            "type" : "string",
+            "format" : "url"
+          }
+        },
+        "required" : [ "id", "image_url", "name", "price" ],
+        "example" : {
+          "id" : 1,
+          "name" : "Seat",
+          "price" : "10.00",
+          "image_url" : "images/seat.svg"
+        }
+      },
+      "OrderStatusEnum" : {
+        "enum" : [ "delivered", "return pending", "returned" ],
+        "type" : "string"
+      },
+      "ProductQuantity" : {
+        "type" : "object",
+        "properties" : {
+          "product_id" : {
+            "type" : "integer",
+            "example" : 1
+          },
+          "quantity" : {
+            "type" : "integer",
+            "example" : 1
+          }
+        },
+        "required" : [ "product_id", "quantity" ]
+      },
+      "Post" : {
+        "title" : "Post",
+        "required" : [ "id", "title", "content", "author", "comments", "authorid", "CreatedAt" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "content" : {
+            "type" : "string"
+          },
+          "author" : {
+            "$ref" : "#/components/schemas/Author"
+          },
+          "comments" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            },
+            "description" : ""
+          },
+          "authorid" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "CreatedAt" : {
+            "type" : "string"
+          }
+        },
+        "example" : {
+          "id" : "ConZLXacq3MqhbLQDrbNLf",
+          "title" : "Title 3",
+          "content" : "Hello world 3",
+          "author" : {
+            "nickname" : "Hacker",
+            "email" : "hacker@darkweb.com",
+            "vehicleid" : "abac4018-5a38-466c-ab7f-361908afeab6",
+            "profile_pic_url" : "",
+            "created_at" : "2021-09-16T01:46:32.432Z"
+          },
+          "comments" : [ ],
+          "authorid" : 3,
+          "CreatedAt" : "2021-09-16T01:46:32.432Z"
+        }
+      },
+      "Author" : {
+        "title" : "Author",
+        "required" : [ "nickname", "email", "vehicleid", "profile_pic_url", "created_at" ],
+        "type" : "object",
+        "properties" : {
+          "nickname" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "vehicleid" : {
+            "type" : "string"
+          },
+          "profile_pic_url" : {
+            "type" : "string"
+          },
+          "created_at" : {
+            "type" : "string"
+          }
+        },
+        "example" : {
+          "nickname" : "Hacker",
+          "email" : "hacker@darkweb.com",
+          "vehicleid" : "4bae9968-ec7f-4de3-a3a0-ba1b2ab5e5e5",
+          "profile_pic_url" : "",
+          "created_at" : "2021-09-16T01:46:32.432Z"
+        }
+      },
+      "VideoForm" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "videoName" : {
+            "type" : "string"
+          },
+          "video_url" : {
+            "type" : "string"
+          },
+          "conversion_params" : {
+            "type" : "string"
+          }
+        }
+      },
+      "CRAPIResponse" : {
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "OtpForm" : {
+        "required" : [ "email", "otp", "password" ],
+        "type" : "object",
+        "properties" : {
+          "otp" : {
+            "maxLength" : 4,
+            "minLength" : 3,
+            "type" : "string",
+            "example" : "9969"
+          },
+          "password" : {
+            "maxLength" : 30,
+            "minLength" : 5,
+            "type" : "string",
+            "example" : "5hmb0gvyC__hVQg"
+          },
+          "email" : {
+            "maxLength" : 30,
+            "minLength" : 5,
+            "type" : "string",
+            "example" : "Cristobal.Weissnat@example.com"
+          }
+        }
+      },
+      "JwtResponse" : {
+        "type" : "object",
+        "properties" : {
+          "token" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "role" : {
+            "type" : "string",
+            "enum" : [ "ROLE_UNDEFINED", "ROLE_USER", "ROLE_MECHANIC", "ROLE_ADMIN" ]
+          }
+        }
+      },
+      "LoginWithEmailToken" : {
+        "required" : [ "email", "token" ],
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "maxLength" : 60,
+            "minLength" : 3,
+            "type" : "string"
+          },
+          "token" : {
+            "maxLength" : 60,
+            "minLength" : 3,
+            "type" : "string"
+          }
+        }
+      },
+      "ProfileVideo" : {
+        "type" : "object",
+        "required" : [ "id", "video_name", "converstion_params", "video", "user" ],
+        "properties" : {
+          "id" : {
+            "type" : "number"
+          },
+          "video_name" : {
+            "type" : "string"
+          },
+          "conversion_params" : {
+            "type" : "string"
+          },
+          "video" : {
+            "type" : "string"
+          },
+          "user" : {
+            "$ref" : "#/components/schemas/User"
+          }
+        },
+        "example" : {
+          "id" : 1,
+          "video_name" : "abc.mp4",
+          "conversion_params" : "-v codec h264",
+          "profileVideo" : "data:image/jpeg;base64,aGFrZmhhcw=="
+        }
+      },
+      "ApplyCouponRequest" : {
+        "type" : "object",
+        "properties" : {
+          "amount" : {
+            "type" : "integer"
+          },
+          "coupon_code" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "amount", "coupon_code" ],
+        "example" : {
+          "coupon_code" : "TRAC075",
+          "amount" : 75
+        }
+      },
+      "ApplyCouponResponse" : {
+        "type" : "object",
+        "properties" : {
+          "credit" : {
+            "type" : "integer"
+          },
+          "message" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "credit", "message" ],
+        "example" : {
+          "credit" : 165,
+          "message" : "Coupon successfully applied!"
+        }
+      },
+      "AddCouponRequest" : {
+        "type" : "object",
+        "properties" : {
+          "coupon_code" : {
+            "type" : "string"
+          },
+          "amount" : {
+            "type" : "integer"
+          }
+        },
+        "required" : [ "coupon_code", "amount" ],
+        "example" : {
+          "coupon_code" : "TRAC075",
+          "amount" : 75
+        }
+      },
+      "AddCouponResponse" : {
+        "type" : "object",
+        "properties" : {
+          "amount" : {
+            "type" : "string"
+          },
+          "coupon_code" : {
+            "type" : "string"
+          },
+          "createdAt" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "amount", "coupon_code", "CreatedAt" ],
+        "example" : {
+          "coupon_code" : "TRAC075",
+          "amount" : "75",
+          "CreatedAt" : "2023-12-07T14:22:29.832Z"
+        }
+      },
+      "ValidateCouponRequest" : {
+        "type" : "object",
+        "properties" : {
+          "coupon_code" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "coupon_code" ],
+        "example" : {
+          "coupon_code" : "TRAC075"
+        }
+      },
+      "ValidateCouponResponse" : {
+        "type" : "object",
+        "properties" : {
+          "amount" : {
+            "type" : "string"
+          },
+          "coupon_code" : {
+            "type" : "string"
+          },
+          "createdAt" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "amount", "coupon_code", "CreatedAt" ],
+        "example" : {
+          "coupon_code" : "TRAC075",
+          "amount" : "75",
+          "CreatedAt" : "2023-12-07T14:22:29.832Z"
+        }
+      },
+      "ServiceRequests" : {
+        "title" : "Service Requests",
+        "type" : "object",
+        "required" : [ "service_requests" ],
+        "properties" : {
+          "service_requests" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "required" : [ "created_on", "id", "mechanic", "vehicle" ],
+              "properties" : {
+                "id" : {
+                  "type" : "integer",
+                  "readOnly" : true
+                },
+                "mechanic" : {
+                  "type" : "object",
+                  "required" : [ "id", "mechanic_code", "user" ],
+                  "properties" : {
+                    "id" : {
+                      "type" : "integer",
+                      "readOnly" : true
+                    },
+                    "mechanic_code" : {
+                      "type" : "string"
+                    },
+                    "user" : {
+                      "type" : "object",
+                      "required" : [ "email" ],
+                      "properties" : {
+                        "email" : {
+                          "type" : "string"
+                        },
+                        "number" : {
+                          "type" : "string",
+                          "nullable" : true
+                        }
+                      }
+                    }
+                  }
+                },
+                "vehicle" : {
+                  "type" : "object",
+                  "properties" : {
+                    "id" : {
+                      "type" : "integer",
+                      "readOnly" : true
+                    },
+                    "vin" : {
+                      "type" : "string"
+                    },
+                    "owner" : {
+                      "type" : "object",
+                      "properties" : {
+                        "email" : {
+                          "type" : "string"
+                        },
+                        "number" : {
+                          "type" : "string",
+                          "nullable" : true
+                        }
+                      },
+                      "required" : [ "email" ]
+                    }
+                  },
+                  "required" : [ "id", "owner", "vin" ]
+                },
+                "problem_details" : {
+                  "type" : "string"
+                },
+                "status" : {
+                  "enum" : [ "Pending", "Finished" ],
+                  "type" : "string"
+                },
+                "created_on" : {
+                  "type" : "string",
+                  "format" : "date-time"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    }
+  }
+}

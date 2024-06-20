@@ -47,7 +47,7 @@ func CommentOnPost(client *mongo.Client, postComment Comments) (Post, error) {
 		//Add comment in post
 		updatePost.Comments = append(updatePost.Comments, comments)
 
-		update := bson.D{{"$set", bson.D{{"comments", updatePost.Comments}}}}
+		update := bson.D{{Key: "$set", Value: bson.D{{Key: "comments", Value: updatePost.Comments}}}}
 
 		collection := client.Database("crapi").Collection("post")
 

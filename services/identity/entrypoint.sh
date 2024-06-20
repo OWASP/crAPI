@@ -7,7 +7,6 @@ else
   echo "Loading default JWKS file."
   JWKS=$(openssl base64 -in /default_jwks.json -A)
 fi
-
 java -jar /app/identity-service-1.0-SNAPSHOT.jar --app.jwksJson=$JWKS
 
 exec "$@"

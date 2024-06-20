@@ -28,13 +28,8 @@ import responseTypes from "../../constants/responseTypes";
 import { FAILURE_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 
 const DashboardContainer = (props) => {
-  const {
-    history,
-    accessToken,
-    getVehicles,
-    resendMail,
-    refreshLocation,
-  } = props;
+  const { history, accessToken, getVehicles, resendMail, refreshLocation } =
+    props;
 
   useEffect(() => {
     const callback = () => {};

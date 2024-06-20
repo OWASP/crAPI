@@ -77,7 +77,13 @@ const Profile = (props) => {
       </Menu>
     ) : (
       <div className="upload-video-button">
-      <Button className="button" type="text" onClick={() => videoInputRef.current.click()}>Upload Video</Button>
+        <Button
+          className="button"
+          type="text"
+          onClick={() => videoInputRef.current.click()}
+        >
+          Upload Video
+        </Button>
       </div>
     );
   };

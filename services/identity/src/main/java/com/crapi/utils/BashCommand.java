@@ -17,12 +17,10 @@ package com.crapi.utils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class BashCommand {
-
-  private static final Logger logger = LoggerFactory.getLogger(BashCommand.class);
 
   /**
    * Execute a bash command. We can handle complex bash commands including multiple executions (; |
@@ -34,7 +32,7 @@ public class BashCommand {
   public String executeBashCommand(String command) throws IOException {
     BufferedReader b = null;
     StringBuilder output;
-    logger.info("Executing BASH command:\n   ", command);
+    log.info("Executing BASH command:\n   ", command);
     Runtime r = Runtime.getRuntime();
     // Use bash -c so we can handle things like multi commands separated by ; and
     // things like quotes, $, |, and \. My tests show that command comes as
@@ -46,16 +44,17 @@ public class BashCommand {
       Process p = r.exec(commands);
 
       p.waitFor();
-      b = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
+      InputStreamReader data = new InputStreamReader(p.getInputStream());
+      b = new BufferedReader(data);
       String line = "";
       output = new StringBuilder();
       while ((line = b.readLine()) != null) {
         output.append(line + "\n");
       }
+      b.close();
       return (output != null ? String.valueOf(output) : "command not found");
     } catch (Exception e) {
-      logger.error("Failed to execute bash with command: " + command);
+      log.error("Failed to execute bash with command: " + command);
       e.printStackTrace();
     } finally {
       b.close();

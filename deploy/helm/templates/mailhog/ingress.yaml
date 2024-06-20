@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.mailhog.webService.name }}
+  name: {{ .Values.mailhog.webService.name }}-ingress
   namespace: {{ .Values.mailhog.namespace }}
   labels:
     release: {{ .Release.Name }}

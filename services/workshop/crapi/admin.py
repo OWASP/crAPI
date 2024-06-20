@@ -19,7 +19,7 @@ from django.contrib import admin
 
 from crapi.mechanic.models import ServiceRequest, Mechanic
 from crapi.shop.models import Order, Product, AppliedCoupon
-from user.models import User, UserDetails, Vehicle
+from crapi.user.models import User, UserDetails, Vehicle
 
 admin.site.register(Order)
 admin.site.register(User)

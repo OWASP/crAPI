@@ -12,7 +12,7 @@
 
 
 # GoLang Build
-FROM golang:alpine AS builder
+FROM golang:1.21-alpine AS builder
 ENV GO111MODULE=on \
     CGO_ENABLED=0
 WORKDIR /build
@@ -39,6 +39,8 @@ COPY certs /app/certs
 COPY health.sh /app/health.sh
 RUN ls -al /app
 
-ARG SERVER_PORT 
+ARG SERVER_PORT
 EXPOSE ${SERVER_PORT}
+# Expose profiling port
+EXPOSE 6060
 CMD /app/main

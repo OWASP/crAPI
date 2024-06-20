@@ -54,7 +54,9 @@ const Navbar = (props) => {
   const menuSidebar = () => (
     <Menu onClick={(key) => takeMenuAction(key)}>
       <Menu.Item key="password">Change Password</Menu.Item>
-      <Menu.Item key="logout"><LogoutOutlined /> Logout</Menu.Item>
+      <Menu.Item key="logout">
+        <LogoutOutlined /> Logout
+      </Menu.Item>
     </Menu>
   );
 
@@ -64,9 +66,12 @@ const Navbar = (props) => {
     else if (input.key === "forum") history.push(`/forum`);
   };
 
-
   const menuNavigation = () => (
-    <Menu onClick={(key) => takeNavigationAction(key)} mode="horizontal" theme="dark">
+    <Menu
+      onClick={(key) => takeNavigationAction(key)}
+      mode="horizontal"
+      theme="dark"
+    >
       <Menu.Item key="dashboard">Dashboard</Menu.Item>
       <Menu.Item key="shop">Shop</Menu.Item>
       <Menu.Item key="forum">Community</Menu.Item>
@@ -79,8 +84,7 @@ const Navbar = (props) => {
         <div className="logo-text" onClick={() => history.push("/")}>
           crAPI
         </div>
-        {isLoggedIn ? menuNavigation() : (<div />)
-        }
+        {isLoggedIn ? menuNavigation() : <div />}
       </Space>
       {isLoggedIn ? (
         <Space className="top-nav-right">

@@ -16,8 +16,9 @@ package com.crapi.service;
 
 import com.crapi.entity.User;
 import com.crapi.model.*;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseEntity;
 
 public interface UserService {
 
@@ -44,5 +45,12 @@ public interface UserService {
 
   JwtResponse loginWithEmailTokenV2(LoginWithEmailToken loginWithEmailToken);
 
-  JwtResponse authenticateUserLogin(LoginForm loginForm) throws UnsupportedEncodingException;
+  ResponseEntity<JwtResponse> authenticateUserLogin(LoginForm loginForm)
+      throws UnsupportedEncodingException;
+
+  JwtResponse unlockAccount(HttpServletRequest request, UnlockAccountForm unlockAccountForm);
+
+  CRAPIResponse lockAccount(HttpServletRequest request, LockAccountForm lockAccountForm);
+
+  ApiKeyResponse generateApiKey(HttpServletRequest request);
 }

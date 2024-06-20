@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.mailhog.webService.name }}
+  namespace: {{ .Values.mailhog.namespace }}
+  labels:
+    release: {{ .Release.Name }}
+    {{- with .Values.mailhog.webService.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  ports:
+  - name: smtp
+    port: {{ .Values.mailhog.webPort }}
+    protocol: TCP
+  selector:
+    {{- toYaml .Values.mailhog.serviceSelectorLabels | nindent 4 }}
+  sessionAffinity: None
+  type: ClusterIP

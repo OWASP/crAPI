@@ -37,12 +37,13 @@ const { Meta } = Card;
 const { Paragraph } = Typography;
 
 const Forum = (props) => {
-  const { posts } = props;
+  const { posts, prevOffset, nextOffset } = props;
 
   const renderAvatar = (url) => (
     <Avatar src={url || defaultProficPic} size="large" />
   );
-
+  console.log("Prev offset", prevOffset);
+  console.log("Next offset", nextOffset);
   return (
     <Layout className="page-container">
       <PageHeader
@@ -90,6 +91,26 @@ const Forum = (props) => {
             </Col>
           ))}
         </Row>
+        <Row justify="center">
+          <Button
+            type="primary"
+            shape="round"
+            size="large"
+            onClick={() => props.handleOffsetChange(prevOffset)}
+            disabled={prevOffset === null}
+          >
+            Previous
+          </Button>
+          <Button
+            type="primary"
+            shape="round"
+            size="large"
+            onClick={() => props.handleOffsetChange(nextOffset)}
+            disabled={!nextOffset}
+          >
+            Next
+          </Button>
+        </Row>
       </Content>
     </Layout>
   );
@@ -98,10 +119,15 @@ const Forum = (props) => {
 Forum.propTypes = {
   history: PropTypes.object,
   posts: PropTypes.array,
+  prevOffset: PropTypes.number,
+  nextOffset: PropTypes.number,
+  handleOffsetChange: PropTypes.func,
 };
 
-const mapStateToProps = ({ communityReducer: { posts } }) => {
-  return { posts };
+const mapStateToProps = ({
+  communityReducer: { posts, prevOffset, nextOffset },
+}) => {
+  return { posts, prevOffset, nextOffset };
 };
 
 export default connect(mapStateToProps)(Forum);

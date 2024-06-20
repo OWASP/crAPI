@@ -56,10 +56,10 @@ const mapDispatchToProps = {
 MechanicDashboardContainer.propTypes = {
   accessToken: PropTypes.string,
   getServices: PropTypes.func,
-  history: PropTypes.object
+  history: PropTypes.object,
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(MechanicDashboardContainer);

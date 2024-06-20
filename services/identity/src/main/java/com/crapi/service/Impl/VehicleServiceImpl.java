@@ -27,18 +27,16 @@ import com.crapi.service.VehicleService;
 import com.crapi.utils.GenerateVIN;
 import com.crapi.utils.MailBody;
 import com.crapi.utils.SMTPMailServer;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import java.util.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class VehicleServiceImpl implements VehicleService {
-
-  private static final Logger logger = LoggerFactory.getLogger(VehicleServiceImpl.class);
 
   @Autowired VehicleModelRepository vehicleModelRepository;
 
@@ -69,12 +67,12 @@ public class VehicleServiceImpl implements VehicleService {
           vehicleDetails.setOwner(user);
           vehicleDetails.setStatus(EStatus.INACTIVE);
           vehicleDetailsRepository.save(vehicleDetails);
-          logger.info("Success Owner updated in vehicle details");
+          log.info("Success Owner updated in vehicle details");
           return true;
         }
       }
     } catch (Exception e) {
-      logger.error("Fail to save vehicle details -> Message: {}", e);
+      log.error("Fail to save vehicle details -> Message: {}", e);
     }
     return false;
   }
@@ -131,7 +129,7 @@ public class VehicleServiceImpl implements VehicleService {
         }
       }
     } catch (Exception exception) {
-      logger.error(
+      log.error(
           "Fail to get List of vehicle for user->{} -> Message: {}", user.getEmail(), exception);
     }
     throw new CRAPIExceptionHandler(
@@ -160,12 +158,13 @@ public class VehicleServiceImpl implements VehicleService {
               new VehicleLocationResponse(
                   carId,
                   (userDetails != null ? userDetails.getName() : null),
+                  (userDetails != null ? userDetails.getUser().getEmail() : null),
                   vehicleDetails.getVehicleLocation());
           return vehicleLocationForm;
         }
       }
     } catch (Exception exception) {
-      logger.error("Fail to get vehicle location-> Message: {}", exception);
+      log.error("Fail to get vehicle location-> Message: {}", exception);
     }
     return null;
   }
@@ -187,7 +186,7 @@ public class VehicleServiceImpl implements VehicleService {
         checkVehicle.setOwner(user);
         checkVehicle.setStatus(EStatus.INACTIVE);
         vehicleDetailsRepository.save(checkVehicle);
-        logger.info("Success Owner updated in vehicle details");
+        log.info("Success Owner updated in vehicle details");
         return new CRAPIResponse(UserMessage.VEHICLE_SAVED_SUCCESSFULLY, 200);
       }
     }
@@ -236,7 +235,7 @@ public class VehicleServiceImpl implements VehicleService {
     if (vehicleLocation != null && !vehicleLocation.isEmpty()) {
       return vehicleLocation.get(random.nextInt(vehicleLocation.size()));
     } else {
-      logger.error("Location list is empty");
+      log.error("Location list is empty");
     }
     return new VehicleLocation("33.7967129", "-84.3909149");
   }

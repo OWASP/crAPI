@@ -15,52 +15,57 @@
 package com.crapi.config;
 
 import com.crapi.service.Impl.UserDetailsServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@Slf4j
 @ComponentScan(basePackages = {"com.crapi"})
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
 
   @Autowired UserDetailsServiceImpl userDetailsService;
 
-  @Autowired private JwtAuthEntryPoint unauthorizedHandler;
+  @Autowired JwtAuthEntryPoint jwtUnauthorizedHandler;
 
   @Bean
   public JwtAuthTokenFilter authenticationJwtTokenFilter() {
     return new JwtAuthTokenFilter();
   }
 
-  /**
-   * @param authenticationManagerBuilder
-   * @throws Exception
-   */
-  @Override
-  public void configure(AuthenticationManagerBuilder authenticationManagerBuilder)
-      throws Exception {
-    authenticationManagerBuilder
-        .userDetailsService(userDetailsService)
-        .passwordEncoder(passwordEncoder());
+  @Bean
+  public DaoAuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    authProvider.setUserDetailsService(userDetailsService);
+    authProvider.setPasswordEncoder(passwordEncoder());
+
+    return authProvider;
   }
 
   @Bean
-  @Override
-  public AuthenticationManager authenticationManagerBean() throws Exception {
-    return super.authenticationManagerBean();
+  public AuthenticationManager authenticationManager() throws Exception {
+    DaoAuthenticationProvider authProvider = authenticationProvider();
+    return new AuthenticationManager() {
+      @Override
+      public Authentication authenticate(Authentication authentication)
+          throws org.springframework.security.core.AuthenticationException {
+        return authProvider.authenticate(authentication);
+      }
+    };
   }
 
   @Bean
@@ -68,30 +73,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     return new BCryptPasswordEncoder();
   }
 
-  /**
-   * @param http
-   * @throws Exception
-   */
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    http.cors()
-        .and()
-        .csrf()
-        .disable()
-        .authorizeRequests()
-        .antMatchers(
-            "/identity/api/auth/**", "/identity/health_check", "/identity/api/v2/user/dashboard")
-        .permitAll()
-        .anyRequest()
-        .authenticated()
-        .and()
-        .exceptionHandling()
-        .authenticationEntryPoint(unauthorizedHandler)
-        .and()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-    http.addFilterBefore(
-        authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+  @Bean
+  public SecurityFilterChain securityFilterChainWeb(HttpSecurity http) throws Exception {
+    http.authorizeHttpRequests(
+            (requests) ->
+                requests
+                    .requestMatchers("/identity/api/auth/**")
+                    .permitAll()
+                    .requestMatchers("/identity/health_check")
+                    .permitAll()
+                    .requestMatchers("/identity/api/v2/user/dashboard")
+                    .permitAll()
+                    .requestMatchers("/identity/management/**")
+                    .hasRole("ADMIN")
+                    .anyRequest()
+                    .authenticated())
+        .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .exceptionHandling(handling -> handling.authenticationEntryPoint(jwtUnauthorizedHandler));
+    http.authenticationProvider(authenticationProvider());
+    http.csrf().disable();
+    http.cors(Customizer.withDefaults());
+    return http.build();
   }
 }

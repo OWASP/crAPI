@@ -10,7 +10,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 services:
 
   crapi-identity:
@@ -21,6 +20,7 @@ services:
     volumes:
       - ./keys:/keys
     environment:
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - DB_NAME=crapi
       - DB_USER=admin
       - DB_PASSWORD=crapisecretpassword
@@ -39,8 +39,9 @@ services:
       - SMTP_FROM=no-reply@example.com
       - SMTP_AUTH=true
       - SMTP_STARTTLS=true
+      - JWT_EXPIRATION=604800000
       - ENABLE_LOG4J=${ENABLE_LOG4J:-false}
-      - API_GATEWAY_URL=https://api.crapi.io
+      - API_GATEWAY_URL=https://api.mypremiumdealership.com
       - TLS_ENABLED=${TLS_ENABLED:-false}
       - TLS_KEYSTORE_TYPE=PKCS12
       - TLS_KEYSTORE=classpath:certs/server.p12
@@ -52,11 +53,13 @@ services:
         condition: service_healthy
       mongodb:
         condition: service_healthy
+      mailhog:
+        condition: service_healthy
     healthcheck:
-        test: /app/health.sh
-        interval: 15s
-        timeout: 15s
-        retries: 15
+      test: /app/health.sh
+      interval: 15s
+      timeout: 15s
+      retries: 15
     deploy:
       resources:
         limits:
@@ -69,6 +72,7 @@ services:
     #ports:
     #  - "${LISTEN_IP:-127.0.0.1}:8087:8087"
     environment:
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - IDENTITY_SERVICE=crapi-identity:${IDENTITY_SERVER_PORT:-8080}
       - DB_NAME=crapi
       - DB_USER=admin
@@ -92,15 +96,15 @@ services:
       crapi-identity:
         condition: service_healthy
     healthcheck:
-        test: /app/health.sh
-        interval: 15s
-        timeout: 15s
-        retries: 15
+      test: /app/health.sh
+      interval: 15s
+      timeout: 15s
+      retries: 15
     deploy:
       resources:
         limits:
           cpus: '0.3'
-          memory: 128M
+          memory: 192M
 
   crapi-workshop:
     container_name: crapi-workshop
@@ -108,6 +112,7 @@ services:
     #ports:
     #  - "${LISTEN_IP:-127.0.0.1}:8000:8000"
     environment:
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - IDENTITY_SERVICE=crapi-identity:${IDENTITY_SERVER_PORT:-8080}
       - DB_NAME=crapi
       - DB_USER=admin
@@ -121,7 +126,7 @@ services:
       - MONGO_DB_PASSWORD=crapisecretpassword
       - MONGO_DB_NAME=crapi
       - SECRET_KEY=crapi
-      - API_GATEWAY_URL=https://api.crapi.io
+      - API_GATEWAY_URL=https://api.mypremiumdealership.com
       - TLS_ENABLED=${TLS_ENABLED:-false}
       - TLS_CERTIFICATE=certs/server.crt
       - TLS_KEY=certs/server.key
@@ -135,10 +140,10 @@ services:
       crapi-community:
         condition: service_healthy
     healthcheck:
-        test: /app/health.sh
-        interval: 15s
-        timeout: 15s
-        retries: 15
+      test: /app/health.sh
+      interval: 15s
+      timeout: 15s
+      retries: 15
     deploy:
       resources:
         limits:
@@ -155,6 +160,7 @@ services:
       - COMMUNITY_SERVICE=crapi-community:${COMMUNITY_SERVER_PORT:-8087}
       - IDENTITY_SERVICE=crapi-identity:${IDENTITY_SERVER_PORT:-8080}
       - WORKSHOP_SERVICE=crapi-workshop:${WORKSHOP_SERVER_PORT:-8000}
+      - MAILHOG_WEB_SERVICE=mailhog:8025
       - TLS_ENABLED=${TLS_ENABLED:-false}
     depends_on:
       crapi-community:
@@ -164,10 +170,10 @@ services:
       crapi-workshop:
         condition: service_healthy
     healthcheck:
-        test: curl 0.0.0.0:80/web/health
-        interval: 15s
-        timeout: 15s
-        retries: 15
+      test: curl 0.0.0.0:80/web/health
+      interval: 15s
+      timeout: 15s
+      retries: 15
     deploy:
       resources:
         limits:
@@ -177,6 +183,7 @@ services:
   postgresdb:
     container_name: postgresdb
     image: 'postgres:14'
+    command: ["postgres", "-c", "max_connections=500"]
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: crapisecretpassword
@@ -184,17 +191,17 @@ services:
     #ports:
     #  - "${LISTEN_IP:-127.0.0.1}:5432:5432"
     healthcheck:
-        test: ["CMD-SHELL", "pg_isready"]
-        interval: 15s
-        timeout: 15s
-        retries: 15
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 15s
+      timeout: 15s
+      retries: 15
     volumes:
       - postgresql-data:/var/lib/postgresql/data/
     deploy:
       resources:
         limits:
-          cpus: '0.3'
-          memory: 128M
+          cpus: '0.5'
+          memory: 256M
 
   mongodb:
     container_name: mongodb
@@ -205,11 +212,11 @@ services:
     #ports:
     #  - "${LISTEN_IP:-127.0.0.1}:27017:27017"
     healthcheck:
-        test: echo 'db.runCommand("ping").ok' | mongo mongodb:27017/test --quiet
-        interval: 15s
-        timeout: 15s
-        retries: 15
-        start_period: 20s
+      test: echo 'db.runCommand("ping").ok' | mongo mongodb:27017/test --quiet
+      interval: 15s
+      timeout: 15s
+      retries: 15
+      start_period: 20s
     volumes:
       - mongodb-data:/data/db
     deploy:
@@ -226,30 +233,30 @@ services:
       MH_MONGO_URI: admin:crapisecretpassword@mongodb:27017
       MH_STORAGE: mongodb
     ports:
-    #  - "127.0.0.1:1025:1025" # smtp server
+      #  - "127.0.0.1:1025:1025" # smtp server
       - "${LISTEN_IP:-127.0.0.1}:8025:8025" # Mail ui
     healthcheck:
-        test: ["CMD", "nc", "-z", "localhost", "8025"]
-        interval: 15s
-        timeout: 15s
-        retries: 15
+      test: [ "CMD", "nc", "-z", "localhost", "8025" ]
+      interval: 15s
+      timeout: 15s
+      retries: 15
     deploy:
       resources:
         limits:
           cpus: '0.3'
           memory: 128M
 
-  api.crapi.io:
-    container_name: api.crapi.io
+  api.mypremiumdealership.com:
+    container_name: api.mypremiumdealership.com
     image: crapi/gateway-service:${VERSION:-latest}
     #ports:
     #  - "${LISTEN_IP:-127.0.0.1}:8443:443" # https
     healthcheck:
-        test: curl -vk 0.0.0.0:443
-        interval: 15s
-        timeout: 15s
-        retries: 15
-        start_period: 15s
+      test: echo -n "GET / HTTP/1.1\n\n" > /dev/tcp/127.0.0.1/443
+      interval: 15s
+      timeout: 15s
+      retries: 15
+      start_period: 15s
     deploy:
       resources:
         limits:

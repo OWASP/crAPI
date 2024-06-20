@@ -143,6 +143,7 @@ public class VehicleServiceImplTest {
         vehicleService.getVehicleLocation(vehicleDetails.getUuid());
     Assertions.assertNotNull(vehicleLocationResponse);
     Assertions.assertEquals(userDetails.getName(), vehicleLocationResponse.getFullName());
+    Assertions.assertEquals(userDetails.getUser().getEmail(), vehicleLocationResponse.getEmail());
   }
 
   @Test

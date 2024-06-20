@@ -15,14 +15,12 @@
 package com.crapi.utils;
 
 import java.util.regex.Pattern;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 public class ProfileValidator {
-
-  private static final Logger logger = LoggerFactory.getLogger(ProfileValidator.class);
 
   /**
    * @param givenString
@@ -53,11 +51,11 @@ public class ProfileValidator {
     try {
       // Check if the file's name contains invalid characters
       if (fileName.contains("..")) {
-        logger.info("Sorry! Filename contains invalid path sequence " + fileName);
+        log.info("Sorry! Filename contains invalid path sequence " + fileName);
       }
       return file.getBytes();
     } catch (Exception e) {
-      logger.error("unable to upload video -> Message: %d ", e);
+      log.error("unable to upload video -> Message: %d ", e);
     }
     return null;
   }

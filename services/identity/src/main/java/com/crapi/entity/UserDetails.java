@@ -16,8 +16,8 @@ package com.crapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import java.util.Base64;
-import javax.persistence.*;
 
 @Entity
 @Table(name = "user_details")

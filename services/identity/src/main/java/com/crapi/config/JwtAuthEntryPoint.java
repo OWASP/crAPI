@@ -14,10 +14,12 @@
 
 package com.crapi.config;
 
+import com.crapi.model.CRAPIResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -37,10 +39,12 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
       HttpServletRequest request,
       HttpServletResponse response,
       AuthenticationException authenticationException)
-      throws IOException, ServletException {
-
+      throws IOException, ServletException, LockedException {
+    CRAPIResponse crapiResponse = new CRAPIResponse();
+    crapiResponse.setMessage("Invalid Token");
+    crapiResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     response.setContentType("application/json");
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-    response.getOutputStream().println("{ \"error\": \"Invalid Token\" }");
+    response.getWriter().println(crapiResponse);
   }
 }

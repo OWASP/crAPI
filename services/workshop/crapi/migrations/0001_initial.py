@@ -19,87 +19,264 @@ from django.conf import settings
 import django.db.models.deletion
 import django_db_cascade
 
+
 class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        ('user', '0001_initial'),
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Mechanic',
+            name="User",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('mechanic_code', models.CharField(max_length=100, unique=True)),
-                ('user', django_db_cascade.fields.ForeignKey(on_delete=django_db_cascade.deletions.DB_CASCADE, to='user.User')),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("created_on", models.DateTimeField()),
+                ("email", models.CharField(max_length=255, unique=True)),
+                ("jwt_token", models.CharField(max_length=500, null=True, unique=True)),
+                ("number", models.CharField(max_length=255, null=True)),
+                ("password", models.CharField(max_length=255)),
+                (
+                    "role",
+                    models.IntegerField(
+                        choices=[(1, "User"), (2, "Mechanic"), (3, "Admin")], default=1
+                    ),
+                ),
+            ],
+            options={"db_table": "user_login", "managed": settings.IS_TESTING},
+        ),
+        migrations.CreateModel(
+            name="VehicleCompany",
+            fields=[
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("name", models.CharField(max_length=255)),
+            ],
+            options={"db_table": "vehicle_company", "managed": settings.IS_TESTING},
+        ),
+        migrations.CreateModel(
+            name="VehicleModel",
+            fields=[
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("fuel_type", models.BigIntegerField()),
+                ("model", models.CharField(max_length=255)),
+                ("vehicle_img", models.CharField(max_length=255, null=True)),
+                (
+                    "vehiclecompany",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="crapi.VehicleCompany",
+                    ),
+                ),
+            ],
+            options={"db_table": "vehicle_model", "managed": settings.IS_TESTING},
+        ),
+        migrations.CreateModel(
+            name="Vehicle",
+            fields=[
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("pincode", models.CharField(max_length=255, null=True)),
+                ("vin", models.CharField(max_length=255)),
+                ("year", models.BigIntegerField(null=True)),
+                (
+                    "vehicle_model",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="crapi.VehicleModel",
+                    ),
+                ),
+                ("status", models.CharField(max_length=255)),
+                ("location_id", models.BigIntegerField(null=True)),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="crapi.User"
+                    ),
+                ),
+            ],
+            options={"db_table": "vehicle_details", "managed": settings.IS_TESTING},
+        ),
+        migrations.CreateModel(
+            name="UserDetails",
+            fields=[
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("available_credit", models.FloatField()),
+                ("name", models.CharField(max_length=255, null=True)),
+                ("status", models.CharField(max_length=255, null=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="crapi.User"
+                    ),
+                ),
+            ],
+            options={"db_table": "user_details", "managed": settings.IS_TESTING},
+        ),
+        migrations.CreateModel(
+            name="Mechanic",
+            fields=[
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("mechanic_code", models.CharField(max_length=100, unique=True)),
+                (
+                    "user",
+                    django_db_cascade.fields.ForeignKey(
+                        on_delete=django_db_cascade.deletions.DB_CASCADE,
+                        to="crapi.User",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'mechanic',
+                "db_table": "mechanic",
             },
         ),
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('price', models.DecimalField(decimal_places=2, max_digits=20)),
-                ('image_url', models.CharField(max_length=255)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("price", models.DecimalField(decimal_places=2, max_digits=20)),
+                ("image_url", models.CharField(max_length=255)),
             ],
             options={
-                'db_table': 'product',
+                "db_table": "product",
             },
         ),
         migrations.CreateModel(
-            name='ServiceRequest',
+            name="ServiceRequest",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('problem_details', models.CharField(blank=True, max_length=500)),
-                ('created_on', models.DateTimeField()),
-                ('updated_on', models.DateTimeField(null=True)),
-                ('status', models.CharField(choices=[('Pending', 'Pending'), ('Finished', 'Finished')], default='Pending', max_length=10)),
-                ('mechanic', django_db_cascade.fields.ForeignKey(on_delete=django_db_cascade.deletions.DB_CASCADE, to='crapi.Mechanic')),
-                ('vehicle', django_db_cascade.fields.ForeignKey(on_delete=django_db_cascade.deletions.DB_CASCADE, to='user.Vehicle')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("problem_details", models.CharField(blank=True, max_length=500)),
+                ("created_on", models.DateTimeField()),
+                ("updated_on", models.DateTimeField(null=True)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[("pending", "Pending"), ("finished", "Finished")],
+                        default="pending",
+                        max_length=10,
+                    ),
+                ),
+                (
+                    "mechanic",
+                    django_db_cascade.fields.ForeignKey(
+                        on_delete=django_db_cascade.deletions.DB_CASCADE,
+                        to="crapi.Mechanic",
+                    ),
+                ),
+                (
+                    "vehicle",
+                    django_db_cascade.fields.ForeignKey(
+                        on_delete=django_db_cascade.deletions.DB_CASCADE,
+                        to="crapi.Vehicle",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'service_request',
+                "db_table": "service_request",
             },
         ),
         migrations.CreateModel(
-            name='Order',
+            name="Order",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.IntegerField(default=1)),
-                ('created_on', models.DateTimeField()),
-                ('status', models.CharField(choices=[('delivered', 'delivered'), ('return pending', 'return pending'), ('returned', 'returned')], default='delivered', max_length=20)),
-                ('product', django_db_cascade.fields.ForeignKey(on_delete=django_db_cascade.deletions.DB_CASCADE, to='crapi.Product')),
-                ('user', django_db_cascade.fields.ForeignKey(on_delete=django_db_cascade.deletions.DB_CASCADE, to='user.User')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("quantity", models.IntegerField(default=1)),
+                ("created_on", models.DateTimeField()),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("delivered", "delivered"),
+                            ("return pending", "return pending"),
+                            ("returned", "returned"),
+                        ],
+                        default="delivered",
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "product",
+                    django_db_cascade.fields.ForeignKey(
+                        on_delete=django_db_cascade.deletions.DB_CASCADE,
+                        to="crapi.Product",
+                    ),
+                ),
+                (
+                    "user",
+                    django_db_cascade.fields.ForeignKey(
+                        on_delete=django_db_cascade.deletions.DB_CASCADE,
+                        to="crapi.User",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'order',
+                "db_table": "order",
             },
         ),
         migrations.CreateModel(
-            name='AppliedCoupon',
+            name="AppliedCoupon",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('coupon_code', models.CharField(max_length=255)),
-                ('user', django_db_cascade.fields.ForeignKey(on_delete=django_db_cascade.deletions.DB_CASCADE, to='user.User')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("coupon_code", models.CharField(max_length=255)),
+                (
+                    "user",
+                    django_db_cascade.fields.ForeignKey(
+                        on_delete=django_db_cascade.deletions.DB_CASCADE,
+                        to="crapi.User",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'applied_coupon',
+                "db_table": "applied_coupon",
             },
         ),
         migrations.CreateModel(
-            name='Coupon',
+            name="Coupon",
             fields=[
-                ('coupon_code', models.CharField(primary_key=True, max_length=255)),
-                ('amount', models.CharField(max_length=255)),
+                (
+                    "coupon_code",
+                    models.CharField(max_length=255, primary_key=True, serialize=False),
+                ),
+                ("amount", models.CharField(max_length=255)),
             ],
-            options={
-                'db_table': 'coupons',
-                'managed': settings.IS_TESTING
-            },
+            options={"db_table": "coupons", "managed": settings.IS_TESTING},
         ),
     ]

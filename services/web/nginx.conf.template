@@ -66,6 +66,23 @@ server {
     proxy_pass ${HTTP_PROTOCOL}://${IDENTITY_SERVICE}/identity/api/auth/jwks.json;
   }
 
+  location /mailhog/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "http://${MAILHOG_WEB_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  http://${MAILHOG_WEB_SERVICE}/;
+    proxy_set_header Host ${MAILHOG_WEB_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+    sub_filter_types application/json text/html;
+    sub_filter "http://${MAILHOG_WEB_SERVICE}" "$scheme://$http_host";
+    sub_filter_once off;
+  }
+
   location / {
     try_files $uri /index.html =404;
     add_header Last-Modified $date_gmt;
@@ -137,6 +154,23 @@ server {
 
   location /.well-known/jwks.json {
     proxy_pass ${HTTP_PROTOCOL}://${IDENTITY_SERVICE}/identity/api/auth/jwks.json;
+  }
+
+  location /mailhog/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "http://${MAILHOG_WEB_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  http://${MAILHOG_WEB_SERVICE}/;
+    proxy_set_header Host ${MAILHOG_WEB_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+    sub_filter_types application/json text/html;
+    sub_filter "http://${MAILHOG_WEB_SERVICE}" "$scheme://$http_host";
+    sub_filter_once off;
   }
 
   location / {

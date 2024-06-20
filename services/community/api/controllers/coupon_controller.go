@@ -16,9 +16,9 @@ package controllers
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
+	"log"
 	"net/http"
-	"fmt"
 
 	"crapi.proj/goservice/api/models"
 	"crapi.proj/goservice/api/responses"
@@ -29,7 +29,8 @@ import (
 //@params ResponseWriter, Request
 //Server have database connection
 func (s *Server) AddNewCoupon(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
+	defer r.Body.Close()
 	if err != nil {
 		responses.ERROR(w, http.StatusBadRequest, err)
 		return
@@ -56,26 +57,27 @@ func (s *Server) AddNewCoupon(w http.ResponseWriter, r *http.Request) {
 //@params ResponseWriter, Request
 //Server have database connection
 func (s *Server) ValidateCoupon(w http.ResponseWriter, r *http.Request) {
-	
+
 	//coupon := models.CouponBody{}
 	var bsonMap bson.M
 
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
+	defer r.Body.Close()
 	if err != nil {
 		responses.ERROR(w, http.StatusBadRequest, err)
-		fmt.Println("No payload for ValidateCoupon", body, err)
+		log.Println("No payload for ValidateCoupon", body, err)
 		return
 	}
 	err = json.Unmarshal(body, &bsonMap)
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
-		fmt.Println("Failed to read json body", err)
+		log.Println("Failed to read json body", err)
 		return
 	}
 	couponData, err := models.ValidateCode(s.Client, s.DB, bsonMap)
 
 	if err != nil {
-		fmt.Println("Error fetching Coupon", couponData, err)
+		log.Println("Error fetching Coupon", couponData, err)
 		responses.JSON(w, http.StatusInternalServerError, err)
 		return
 	}

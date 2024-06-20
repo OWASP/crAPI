@@ -44,7 +44,7 @@ func (server *Server) InitializeMongo(DbDriver, DbUser string, DbPassword string
 			log.Fatal(err)
 		}
 
-		fmt.Println("Connected to MongoDB!")
+		log.Println("Connected to MongoDB!")
 
 	}
 

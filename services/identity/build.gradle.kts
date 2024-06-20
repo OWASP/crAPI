@@ -1,7 +1,7 @@
 plugins {
-  id("java")
   application
-  id("org.springframework.boot") version "2.6.1"
+  id("java")
+  id("org.springframework.boot") version "3.2.2"
   id("io.spring.dependency-management") version "1.0.11.RELEASE"
   id("com.diffplug.spotless") version "5.9.0"
 }
@@ -14,11 +14,13 @@ repositories {
 }
 
 application {
-    mainClassName = "com.crapi.CRAPIBootApplication"
+    mainClass.set("com.crapi.CRAPIBootApplication")
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_11
-
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 pluginManager.withPlugin("java") {
     apply(plugin = "com.diffplug.spotless")
     configure<com.diffplug.gradle.spotless.SpotlessExtension> {
@@ -32,39 +34,43 @@ pluginManager.withPlugin("java") {
     }
 }
 dependencies {
-    val lombokVersion = "1.18.12"
-    val mockito = "3.7.7"
-    val springBootVersion = "2.6.1"
+    val lombokVersion = "1.18.30"
+    val mockito = "5.2.0"
+    val springBootVersion = "3.2.2"
+    val springSecurityVersion = "6.0.3"
     val log4jVersion = "2.14.0"
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
     testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    annotationProcessor("javax.annotation:javax.annotation-api:1.3.2")
+    annotationProcessor("jakarta.annotation:jakarta.annotation-api:2.1.1")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    testImplementation("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor("jakarta.xml.bind:jakarta.xml.bind-api:4.0.1")
     testAnnotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
-    implementation("org.springframework.boot:spring-boot-starter:${springBootVersion}") 
-    implementation("org.springframework.boot:spring-boot-starter-web:${springBootVersion}") 
-    implementation("org.springframework.boot:spring-boot-starter-security:${springBootVersion}") 
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}") 
+    implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.1")
+    implementation("org.springframework.boot:spring-boot-starter:${springBootVersion}")
+    implementation("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+    implementation("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
     implementation("org.springframework.boot:spring-boot-starter-mail:${springBootVersion}")
-    implementation("org.springframework.boot:spring-boot-starter-validation:${springBootVersion}") 
-    testImplementation("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
-    implementation("io.jsonwebtoken:jjwt:0.9.1")
-    implementation("com.nimbusds:nimbus-jose-jwt:9.25.6")
-    implementation("javax.validation:validation-api:2.0.1.Final")
+    implementation("org.springframework.boot:spring-boot-starter-validation:${springBootVersion}")
+    implementation("org.springframework.security:spring-security-config:${springSecurityVersion}")
+    implementation("io.jsonwebtoken:jjwt:0.12.5")
+    implementation("com.nimbusds:nimbus-jose-jwt:9.37.3")
+    implementation("jakarta.validation:jakarta.validation-api:3.0.2")
     implementation("org.postgresql:postgresql:runtime")
     implementation("org.postgresql:postgresql:42.4.0")
     implementation("com.google.cloud:google-cloud-storage:2.10.0")
     implementation("org.apache.logging.log4j:log4j-api:${log4jVersion}")
     implementation("org.apache.logging.log4j:log4j-core:${log4jVersion}")
     implementation("org.apache.logging.log4j:log4j-web:${log4jVersion}")
-    implementation("com.google.cloud:libraries-bom:25.4.0")
+    implementation("com.google.cloud:libraries-bom:26.32.0")
     implementation("org.apache.httpcomponents:httpclient:4.5.13")
     implementation("com.google.cloud:google-cloud-storage:2.10.0")
+    implementation("org.apache.httpcomponents.client5:httpclient5:5.3")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+    testImplementation("org.projectlombok:lombok:${lombokVersion}")
     testImplementation("org.mockito:mockito-junit-jupiter:${mockito}")
     testImplementation("org.mockito:mockito-core:${mockito}")
     testImplementation("org.mockito:mockito-inline:${mockito}")
-    testImplementation("junit:junit:4.13.1")
-    //implementation("org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}")
+    testImplementation("junit:junit:4.13.2")
 }

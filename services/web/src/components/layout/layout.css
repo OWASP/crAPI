@@ -1,11 +1,11 @@
-.layout-content{
+.layout-content {
   padding: 0 50px;
 }
 
-.spinner{
+.spinner {
   z-index: 1100;
 }
 
-.ant-spin{
+.ant-spin {
   z-index: 1100;
 }

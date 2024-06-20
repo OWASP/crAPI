@@ -22,6 +22,7 @@ class ContactMechanicSerializer(serializers.Serializer):
     """
     Serializer for Contact Mechanic model.
     """
+
     mechanic_api = serializers.CharField()
-    repeat_request_if_failed = serializers.BooleanField()
-    number_of_repeats = serializers.IntegerField()
+    repeat_request_if_failed = serializers.BooleanField(required=False)
+    number_of_repeats = serializers.IntegerField(required=False)

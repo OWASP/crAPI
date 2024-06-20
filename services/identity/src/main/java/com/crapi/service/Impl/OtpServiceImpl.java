@@ -28,17 +28,15 @@ import com.crapi.service.OtpService;
 import com.crapi.utils.MailBody;
 import com.crapi.utils.OTPGenerator;
 import com.crapi.utils.SMTPMailServer;
-import javax.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class OtpServiceImpl implements OtpService {
-
-  private static final Logger logger = LoggerFactory.getLogger(OtpServiceImpl.class);
 
   @Autowired OtpRepository otpRepository;
 
@@ -61,7 +59,7 @@ public class OtpServiceImpl implements OtpService {
       Otp saveOtp = otpRepository.save(otp);
       return true;
     } catch (Exception e) {
-      logger.error("Fail to invalidate otp -> Message: {}", e);
+      log.error("Fail to invalidate otp -> Message: {}", e);
       return false;
     }
   }
@@ -134,14 +132,13 @@ public class OtpServiceImpl implements OtpService {
   @Override
   public CRAPIResponse generateOtp(ForgetPassword forgetPassword) {
     CRAPIResponse forgetPasswordResponse = null;
-    OTPGenerator otpGenerator = new OTPGenerator();
     Otp checkOtpEnteryForUser = null;
     User user = null;
     String otp = "";
     user = userRepository.findByEmail(forgetPassword.getEmail());
     if (user != null) {
       // Generate random 4 digit otp
-      otp = otpGenerator.generateRandom(4);
+      otp = OTPGenerator.generateRandom(4);
       if (otp != null) {
         // Check OTP entry for user in database.
         checkOtpEnteryForUser = otpRepository.findByUser(user);

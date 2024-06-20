@@ -20,34 +20,37 @@ import uuid
 from django.db import models
 from django.conf import settings
 
-from user.models import User
+from crapi.user.models import User
 from extended_choices import Choices
 from django_db_cascade.fields import ForeignKey, OneToOneField
 from django_db_cascade.deletions import DB_CASCADE
 from django.db.models import DO_NOTHING, SET_NULL
+
 
 class Product(models.Model):
     """
     Product Model
     represents a product in the application
     """
+
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=20, decimal_places=2)
     image_url = models.CharField(max_length=255)
 
     class Meta:
-        db_table = 'product'
+        db_table = "product"
 
     def __str__(self):
         return f"{self.name} - {self.price}"
 
-    
+
 class Order(models.Model):
     """
     Order Model
     represents an order in the application
     """
+
     id = models.AutoField(primary_key=True)
     user = ForeignKey(User, DB_CASCADE)
     product = ForeignKey(Product, DB_CASCADE)
@@ -58,42 +61,48 @@ class Order(models.Model):
     STATUS_CHOICES = Choices(
         ("DELIVERED", "delivered", "delivered"),
         ("RETURN_PENDING", "return pending", "return pending"),
-        ("RETURNED", "returned", "returned")
+        ("RETURNED", "returned", "returned"),
     )
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_CHOICES.DELIVERED)
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default=STATUS_CHOICES.DELIVERED
+    )
 
     class Meta:
-        db_table = 'order'
+        db_table = "order"
 
     def __str__(self):
         return f"{self.user.email} - {self.product.name} "
+
 
 class Coupon(models.Model):
     """
     AppliedCoupon Model
     represents a mapping between coupon_code and user
     """
+
     coupon_code = models.CharField(max_length=255, primary_key=True)
     amount = models.CharField(max_length=255)
 
     class Meta:
-        db_table = 'coupons'
+        db_table = "coupons"
         managed = settings.IS_TESTING
 
     def __str__(self):
         return f"{self.coupon_code} - {self.amount}"
+
 
 class AppliedCoupon(models.Model):
     """
     AppliedCoupon Model
     represents a mapping between coupon_code and user
     """
+
     id = models.AutoField(primary_key=True)
     user = ForeignKey(User, DB_CASCADE)
     coupon_code = models.CharField(max_length=255)
 
     class Meta:
-        db_table = 'applied_coupon'
+        db_table = "applied_coupon"
 
     def __str__(self):
         return f"{self.user.email} - {self.coupon_code} "

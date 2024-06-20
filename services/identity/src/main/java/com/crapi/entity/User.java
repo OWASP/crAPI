@@ -15,8 +15,8 @@
 package com.crapi.entity;
 
 import com.crapi.enums.ERole;
+import jakarta.persistence.*;
 import java.time.LocalDate;
-import javax.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -39,7 +39,12 @@ public class User {
   @Column(length = 500)
   private String jwtToken;
 
+  @Column(length = 1000)
+  private String apiKey;
+
   private LocalDate createdOn = LocalDate.now();
+
+  private String code;
 
   // @OneToOne
   private ERole role;
@@ -52,5 +57,10 @@ public class User {
     this.email = email;
     this.number = number;
     this.role = userRole;
+    this.code = "";
+  }
+
+  public boolean isMfaRequired() {
+    return code != null && !code.isEmpty();
   }
 }

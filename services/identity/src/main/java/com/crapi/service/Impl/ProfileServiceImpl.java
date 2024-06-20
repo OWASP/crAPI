@@ -28,12 +28,11 @@ import com.crapi.service.ProfileService;
 import com.crapi.service.UserService;
 import com.crapi.utils.BashCommand;
 import com.crapi.utils.ProfileValidator;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.util.Optional;
-import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -41,9 +40,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@Slf4j
 public class ProfileServiceImpl implements ProfileService {
-
-  private static final Logger logger = LoggerFactory.getLogger(ProfileServiceImpl.class);
 
   @Autowired UserService userService;
   @Autowired ProfileVideoRepository profileVideoRepository;
@@ -79,7 +77,7 @@ public class ProfileServiceImpl implements ProfileService {
       userDetailsRepository.save(userDetails);
       return userDetails;
     } catch (IOException exception) {
-      logger.error("unable to upload image -> Message: %d", exception);
+      log.error("unable to upload image -> Message: %d", exception);
       throw new IOExceptionHandler(ProfileServiceImpl.class, UserMessage.CUSTOM_IO_EXCEPTION);
     }
   }
@@ -104,11 +102,12 @@ public class ProfileServiceImpl implements ProfileService {
         profileVideo.setVideo_name(file.getOriginalFilename());
       } else {
         profileVideo = new ProfileVideo(file.getOriginalFilename(), file.getBytes(), user);
+        profileVideo.setConversion_params(conversionParam);
       }
       profileVideoRepository.save(profileVideo);
       return profileVideo;
     } catch (IOException exception) {
-      logger.error("unable to upload video -> Message: {} ", exception);
+      log.error("unable to upload video -> Message: {} ", exception);
       throw new IOExceptionHandler(ProfileServiceImpl.class, UserMessage.CUSTOM_IO_EXCEPTION);
     }
   }
@@ -211,7 +210,7 @@ public class ProfileServiceImpl implements ProfileService {
     if (scheme == null) {
       scheme = request.getScheme();
     }
-    logger.debug(
+    log.debug(
         "Convert video {}, host: {}, xForwardedHost: {}, scheme: {}",
         videoId,
         host,
@@ -248,7 +247,7 @@ public class ProfileServiceImpl implements ProfileService {
         return new CRAPIResponse(UserMessage.CONVERT_VIDEO_INTERNAL_USE_ONLY, 403);
       }
     } catch (IOException exception) {
-      logger.error("unable to convert video -> Message: %d ", exception);
+      log.error("unable to convert video -> Message: %d ", exception);
       throw new IOExceptionHandler(ProfileServiceImpl.class, UserMessage.ERROR);
     }
   }

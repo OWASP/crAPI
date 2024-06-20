@@ -19,19 +19,21 @@ import com.crapi.constant.TestUsers;
 import com.crapi.constant.UserMessage;
 import com.crapi.entity.User;
 import com.crapi.model.*;
-import com.crapi.model.SeedUser;
 import com.crapi.service.OtpService;
 import com.crapi.service.UserRegistrationService;
 import com.crapi.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import javax.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @CrossOrigin
 @RestController
 @RequestMapping("/identity/api/auth")
@@ -54,18 +56,11 @@ public class AuthController {
   public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginForm loginForm)
       throws UnsupportedEncodingException {
     try {
-
-      JwtResponse jwtToken = userService.authenticateUserLogin(loginForm);
-
-      if (jwtToken.getToken() != null) {
-        return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
-      } else {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(jwtToken);
-      }
-
+      return userService.authenticateUserLogin(loginForm);
     } catch (BadCredentialsException e) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(new JwtResponse("", UserMessage.INVALID_CREDENTIALS));
+      JwtResponse jwtResponse = new JwtResponse();
+      jwtResponse.setMessage(UserMessage.INVALID_CREDENTIALS);
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(jwtResponse);
     }
   }
 
@@ -194,5 +189,22 @@ public class AuthController {
     }
     return ResponseEntity.status(HttpStatus.OK)
         .body(new CRAPIResponse("Test Users Password Resetted", 200));
+  }
+
+  /**
+   * @param unlockAccountForm contains code to unlock the account
+   * @param request getting jwt token for user from request header
+   * @return unlock account for the user. first verify token, validate code and then unlock
+   */
+  @PostMapping("/unlock")
+  public ResponseEntity<JwtResponse> unlockAccount(
+      @RequestBody UnlockAccountForm unlockAccountForm, HttpServletRequest request)
+      throws UnsupportedEncodingException {
+
+    JwtResponse jwt = userService.unlockAccount(request, unlockAccountForm);
+    if (jwt != null && jwt.getToken() != null) {
+      return ResponseEntity.ok().body(jwt);
+    }
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(jwt);
   }
 }

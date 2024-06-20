@@ -23,18 +23,26 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.db import models
+from crapi_site import settings
 from utils.jwt import jwt_auth_required
 from utils import messages
-from user.models import User, Vehicle, UserDetails
+from crapi.user.models import User, Vehicle, UserDetails
 from utils.logging import log_error
 from .models import Mechanic, ServiceRequest
-from .serializers import MechanicSerializer, ServiceRequestSerializer, ReceiveReportSerializer, SignUpSerializer
+from .serializers import (
+    MechanicSerializer,
+    ServiceRequestSerializer,
+    ReceiveReportSerializer,
+    SignUpSerializer,
+)
+from rest_framework.pagination import LimitOffsetPagination
 
 
 class SignUpView(APIView):
     """
     Used to add a new mechanic
     """
+
     @csrf_exempt
     def post(self, request):
         """
@@ -48,52 +56,69 @@ class SignUpView(APIView):
         """
         serializer = SignUpSerializer(data=request.data)
         if not serializer.is_valid():
-            log_error(request.path, request.data, status.HTTP_400_BAD_REQUEST, serializer.errors)
+            log_error(
+                request.path,
+                request.data,
+                status.HTTP_400_BAD_REQUEST,
+                serializer.errors,
+            )
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         mechanic_details = serializer.data
 
-        if User.objects.filter(email=mechanic_details['email']).exists():
-            return Response({'message': messages.EMAIL_ALREADY_EXISTS}, status=status.HTTP_400_BAD_REQUEST)
-        if Mechanic.objects.filter(mechanic_code=mechanic_details['mechanic_code']).exists():
-            return Response({'message': messages.MEC_CODE_ALREADY_EXISTS}, status=status.HTTP_400_BAD_REQUEST)
+        if User.objects.filter(email=mechanic_details["email"]).exists():
+            return Response(
+                {"message": messages.EMAIL_ALREADY_EXISTS},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if Mechanic.objects.filter(
+            mechanic_code=mechanic_details["mechanic_code"]
+        ).exists():
+            return Response(
+                {"message": messages.MEC_CODE_ALREADY_EXISTS},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         try:
-            user_id = User.objects.aggregate(models.Max('id'))['id__max'] + 1
+            user_id = User.objects.aggregate(models.Max("id"))["id__max"] + 1
         except TypeError:
             user_id = 1
 
         user = User.objects.create(
             id=user_id,
-            email=mechanic_details['email'],
-            number=mechanic_details['number'],
+            email=mechanic_details["email"],
+            number=mechanic_details["number"],
             password=bcrypt.hashpw(
-                mechanic_details['password'].encode('utf-8'),
-                bcrypt.gensalt()
+                mechanic_details["password"].encode("utf-8"), bcrypt.gensalt()
             ).decode(),
             role=User.ROLE_CHOICES.MECH,
-            created_on=timezone.now()
+            created_on=timezone.now(),
         )
         Mechanic.objects.create(
-            mechanic_code=mechanic_details['mechanic_code'],
-            user=user
+            mechanic_code=mechanic_details["mechanic_code"], user=user
         )
         try:
-            user_details_id = UserDetails.objects.aggregate(models.Max('id'))['id__max'] + 1
+            user_details_id = (
+                UserDetails.objects.aggregate(models.Max("id"))["id__max"] + 1
+            )
         except TypeError:
             user_details_id = 1
         UserDetails.objects.create(
             id=user_details_id,
             available_credit=0,
-            name=mechanic_details['name'],
-            status='ACTIVE',
-            user=user
+            name=mechanic_details["name"],
+            status="ACTIVE",
+            user=user,
         )
-        return Response({'message': messages.MEC_CREATED.format(user.email)}, status=status.HTTP_200_OK)
+        return Response(
+            {"message": messages.MEC_CREATED.format(user.email)},
+            status=status.HTTP_200_OK,
+        )
 
 
-class MechanicView(APIView):
+class MechanicView(APIView, LimitOffsetPagination):
     """
     Mechanic view to fetch all the mechanics
     """
+
     @jwt_auth_required
     def get(self, request, user=None):
         """
@@ -106,10 +131,24 @@ class MechanicView(APIView):
             mechanics list and 200 status if no error
             message and corresponding status if error
         """
-        mechanics = Mechanic.objects.all()
-        serializer = MechanicSerializer(mechanics, many=True)
+        mechanics = Mechanic.objects.all().order_by("id")
+        paginated = self.paginate_queryset(mechanics, request)
+        if paginated is None:
+            return Response(
+                {"message": messages.NO_OBJECT_FOUND},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        serializer = MechanicSerializer(paginated, many=True)
         response_data = dict(
-            mechanics=serializer.data
+            mechanics=serializer.data,
+            previous_offset=(
+                self.offset - self.limit if self.offset - self.limit >= 0 else None
+            ),
+            next_offset=(
+                self.offset + self.limit
+                if self.offset + self.limit < self.count
+                else None
+            ),
         )
         return Response(response_data, status=status.HTTP_200_OK)
 
@@ -118,6 +157,7 @@ class ReceiveReportView(APIView):
     """
     View to receive report from contact mechanic feature
     """
+
     def get(self, request):
         """
         receive_report endpoint for mechanic
@@ -130,31 +170,38 @@ class ReceiveReportView(APIView):
         """
         serializer = ReceiveReportSerializer(data=request.GET)
         if not serializer.is_valid():
-            log_error(request.path, request.data, status.HTTP_400_BAD_REQUEST, serializer.errors)
+            log_error(
+                request.path,
+                request.data,
+                status.HTTP_400_BAD_REQUEST,
+                serializer.errors,
+            )
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         report_details = serializer.data
-        mechanic = Mechanic.objects.get(mechanic_code=report_details['mechanic_code'])
-        vehicle = Vehicle.objects.get(vin=report_details['vin'])
+        mechanic = Mechanic.objects.get(mechanic_code=report_details["mechanic_code"])
+        vehicle = Vehicle.objects.get(vin=report_details["vin"])
         service_request = ServiceRequest.objects.create(
             vehicle=vehicle,
             mechanic=mechanic,
-            problem_details=report_details['problem_details'],
-            created_on=timezone.now()
+            problem_details=report_details["problem_details"],
+            created_on=timezone.now(),
         )
         service_request.save()
-        report_link = "{}?report_id={}".format(reverse("get-mechanic-report"), service_request.id)
+        report_link = "{}?report_id={}".format(
+            reverse("get-mechanic-report"), service_request.id
+        )
         report_link = request.build_absolute_uri(report_link)
-        return Response({
-            'id': service_request.id,
-            'sent': True,
-            'report_link': report_link
-        }, status=status.HTTP_200_OK)
+        return Response(
+            {"id": service_request.id, "sent": True, "report_link": report_link},
+            status=status.HTTP_200_OK,
+        )
 
 
 class GetReportView(APIView):
     """
     View to get only particular service request
     """
+
     @jwt_auth_required
     def get(self, request, user=None):
         """
@@ -165,33 +212,38 @@ class GetReportView(APIView):
             service request object and 200 status if no error
             message and corresponding status if error
         """
-        report_id = request.GET['report_id']
+        report_id = request.GET["report_id"]
         if not report_id:
             return Response(
-                {'message': messages.REPORT_ID_MISSING},
-                status=status.HTTP_400_BAD_REQUEST
+                {"message": messages.REPORT_ID_MISSING},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         if not report_id.isnumeric():
             return Response(
-                {'message': messages.INVALID_REPORT_ID},
-                status=status.HTTP_400_BAD_REQUEST
+                {"message": messages.INVALID_REPORT_ID},
+                status=status.HTTP_400_BAD_REQUEST,
             )
         service_request = ServiceRequest.objects.filter(id=report_id).first()
         if not service_request:
             return Response(
-                {'message': messages.REPORT_DOES_NOT_EXIST},
-                status=status.HTTP_400_BAD_REQUEST
+                {"message": messages.REPORT_DOES_NOT_EXIST},
+                status=status.HTTP_400_BAD_REQUEST,
             )
         serializer = ServiceRequestSerializer(service_request)
         response_data = dict(serializer.data)
         return Response(response_data, status=status.HTTP_200_OK)
 
 
-class ServiceRequestsView(APIView):
+class ServiceRequestsView(APIView, LimitOffsetPagination):
     """
     View to return all the service requests
     """
+
+    def __init__(self):
+        super(ServiceRequestsView, self).__init__()
+        self.default_limit = settings.DEFAULT_LIMIT
+
     @jwt_auth_required
     def get(self, request, user=None):
         """
@@ -204,9 +256,27 @@ class ServiceRequestsView(APIView):
             list of service request object and 200 status if no error
             message and corresponding status if error
         """
-        service_requests = ServiceRequest.objects.filter(mechanic__user=user)
+
+        service_requests = ServiceRequest.objects.filter(mechanic__user=user).order_by(
+            "id"
+        )
+        paginated = self.paginate_queryset(service_requests, request)
+        if paginated is None:
+            return Response(
+                {"message": messages.NO_OBJECT_FOUND},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         serializer = ServiceRequestSerializer(service_requests, many=True)
         response_data = dict(
-            service_requests=serializer.data
+            service_requests=serializer.data,
+            next_offset=(
+                self.offset + self.limit
+                if self.offset + self.limit < self.count
+                else None
+            ),
+            previous_offset=(
+                self.offset - self.limit if self.offset - self.limit >= 0 else None
+            ),
+            count=self.get_count(paginated),
         )
         return Response(response_data, status=status.HTTP_200_OK)

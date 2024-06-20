@@ -15,8 +15,8 @@
 package com.crapi.entity;
 
 import com.crapi.enums.EFuelType;
+import jakarta.persistence.*;
 import java.io.Serializable;
-import javax.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -32,7 +32,7 @@ public class VehicleModel implements Serializable {
   private EFuelType fuel_type;
   private String vehicle_img;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @ManyToOne(cascade = CascadeType.ALL)
   private VehicleCompany vehiclecompany;
 
   public VehicleModel() {}
