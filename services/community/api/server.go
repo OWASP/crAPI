@@ -15,6 +15,7 @@
 package api
 
 import (
+	"crypto/tls"
 	"fmt"
 	"log"
 	"net/http"
@@ -43,6 +44,7 @@ func identityServiceHealthCheck() {
 		log.Fatal("IDENTITY_SERVICE is not set")
 	}
 	var attempts = 0
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	for (attempts <= 5) {
 		tlsEnabled := os.Getenv("TLS_ENABLED")
 		identityHealthCheckUrl := fmt.Sprintf("http://%s/identity/health_check", os.Getenv("IDENTITY_SERVICE"))
