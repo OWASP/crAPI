@@ -1291,7 +1291,7 @@
           ],
           "body": {
             "mode": "raw",
-            "raw": "{\"coupon_code\":\"TRAC075\",\"amount\":65}"
+            "raw": "{\"coupon_code\":\"TRAC075\",\"amount\":75}"
           },
           "url": {
             "raw": "{{url}}/workshop/api/shop/apply_coupon",
