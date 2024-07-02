@@ -137,24 +137,28 @@ class OrderControlView(APIView):
             data["user"] = user_dict
             data["order"] = order_serializer.data
             data["amount"] = float(order.product.price) * int(order.quantity)
-            payment_response = requests.post(
-                gateway_endpoint,
-                headers={
-                    "Authorization": gateway_credential,
-                    "Content-Type": "application/json",
-                },
-                json=data,
-                verify=False,
-            )
-            if payment_response.status_code == 200:
-                payment = payment_response.json()
-            else:
-                logging.error(
-                    "Payment response error, {}: {}".format(
-                        payment_response.status_code, payment_response.content
-                    )
+            try:
+                payment_response = requests.post(
+                    gateway_endpoint,
+                    headers={
+                        "Authorization": gateway_credential,
+                        "Content-Type": "application/json",
+                    },
+                    json=data,
+                    verify=False,
+                    timeout=5,
                 )
-            logging.debug("payment response: {}".format(payment))
+                if payment_response.status_code == 200:
+                    payment = payment_response.json()
+                else:
+                    logging.error(
+                        "Payment response error, {}: {}".format(
+                            payment_response.status_code, payment_response.content
+                        )
+                    )
+                logging.debug("payment response: {}".format(payment))
+            except Exception as e:
+                logging.error(e, exc_info=True)
         except Exception as e:
             logging.error(e, exc_info=True)
         response_data = dict(order=order_serializer.data, payment=payment)
