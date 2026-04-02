@@ -226,9 +226,13 @@ Use the tools only if you don't know the answer.
     toolkit = SQLDatabaseToolkit(db=postgresdb, llm=llm)
     logger.debug("SQL Database toolkit created")
 
-    mcp_client = get_mcp_client(user_jwt)
-    mcp_tools = await mcp_client.get_tools()
-    logger.debug("MCP tools loaded: %d tools", len(mcp_tools))
+    mcp_tools = []
+    try:
+        mcp_client = get_mcp_client(user_jwt)
+        mcp_tools = await mcp_client.get_tools()
+        logger.debug("MCP tools loaded: %d tools", len(mcp_tools))
+    except Exception as e:
+        logger.error("Failed to load MCP tools, continuing without them: %s", e)
 
     db_tools = toolkit.get_tools()
     logger.debug("Database tools loaded: %d tools", len(db_tools))

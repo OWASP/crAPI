@@ -97,7 +97,7 @@ public class OtpServiceImplTest {
     CRAPIResponse crapiAPIResponse = otpService.validateOtp(otpForm);
     Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.any());
     Mockito.verify(otpRepository, Mockito.times(1)).save(Mockito.any());
-    Assertions.assertEquals(UserMessage.OTP_VARIFIED_SUCCESS, crapiAPIResponse.getMessage());
+    Assertions.assertEquals(UserMessage.OTP_VERIFIED_SUCCESS, crapiAPIResponse.getMessage());
     Assertions.assertEquals(HttpStatus.OK.value(), crapiAPIResponse.getStatus());
   }
 
@@ -128,7 +128,7 @@ public class OtpServiceImplTest {
     CRAPIResponse crapiAPIResponse = otpService.secureValidateOtp(otpForm);
     Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.any());
     Mockito.verify(otpRepository, Mockito.times(1)).save(Mockito.any());
-    Assertions.assertEquals(UserMessage.OTP_VARIFIED_SUCCESS, crapiAPIResponse.getMessage());
+    Assertions.assertEquals(UserMessage.OTP_VERIFIED_SUCCESS, crapiAPIResponse.getMessage());
     Assertions.assertEquals(HttpStatus.OK.value(), crapiAPIResponse.getStatus());
   }
 

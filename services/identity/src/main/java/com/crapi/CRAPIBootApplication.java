@@ -16,6 +16,7 @@ package com.crapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /*
  * Need to give path for application.properties file
@@ -25,6 +26,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         @PropertySource(value = "file:/home/hasher/Music/resources/application.properties", ignoreResourceNotFound = true)
 })*/
 @SpringBootApplication(scanBasePackages = {"com.crapi"})
+@EnableScheduling
 public class CRAPIBootApplication {
 
   public static void main(String[] args) {

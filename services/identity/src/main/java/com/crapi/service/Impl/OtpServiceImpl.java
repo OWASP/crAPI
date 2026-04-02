@@ -79,9 +79,10 @@ public class OtpServiceImpl implements OtpService {
       otp = otpRepository.findByUser(user);
       if (validateOTPAndEmail(otp, otpForm)) {
         user.setPassword(encoder.encode(otpForm.getPassword()));
+        user.setPasswordUpdatedAt(java.time.LocalDate.now());
         userRepository.save(user);
         otp.setStatus(EStatus.INACTIVE.toString());
-        validateOTPResponse = new CRAPIResponse(UserMessage.OTP_VARIFIED_SUCCESS, 200);
+        validateOTPResponse = new CRAPIResponse(UserMessage.OTP_VERIFIED_SUCCESS, 200);
       } else {
         otp.setCount(otp.getCount() + 1);
         validateOTPResponse = new CRAPIResponse(UserMessage.INVALID_OTP, 500);
@@ -103,9 +104,10 @@ public class OtpServiceImpl implements OtpService {
       otp = otpRepository.findByUser(user);
       if (validateOTPAndEmail(otp, otpForm)) {
         user.setPassword(encoder.encode(otpForm.getPassword()));
+        user.setPasswordUpdatedAt(java.time.LocalDate.now());
         userRepository.save(user);
         otp.setStatus(EStatus.INACTIVE.toString());
-        validateOTPResponse = new CRAPIResponse(UserMessage.OTP_VARIFIED_SUCCESS, 200);
+        validateOTPResponse = new CRAPIResponse(UserMessage.OTP_VERIFIED_SUCCESS, 200);
       } else if (otp.getCount() == 9) {
         otp.setCount(otp.getCount() + 1);
         invalidateOtp(otp);

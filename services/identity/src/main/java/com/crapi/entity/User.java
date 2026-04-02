@@ -44,6 +44,8 @@ public class User {
 
   private LocalDate createdOn = LocalDate.now();
 
+  private LocalDate passwordUpdatedAt = LocalDate.of(2000, 1, 1);
+
   private String code;
 
   // @OneToOne

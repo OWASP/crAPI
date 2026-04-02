@@ -30,16 +30,18 @@ API_KEY = None
 
 def get_api_key():
     global API_KEY
-    # Try 5 times to get client auth
-    MAX_ATTEMPTS = 5
+    if API_KEY is not None:
+        return API_KEY
+    # Try multiple times to get client auth (identity service may not be ready yet)
+    MAX_ATTEMPTS = 10
     for i in range(MAX_ATTEMPTS):
         logger.info(f"Attempt {i+1} to get API key...")
-        if API_KEY is None:
-            login_body = {"email": Config.API_USER, "password": Config.API_PASSWORD}
-            auth_url = f"{BASE_IDENTITY_URL}/identity/management/user/apikey"
-            headers = {
-                "Content-Type": "application/json",
-            }
+        login_body = {"email": Config.API_USER, "password": Config.API_PASSWORD}
+        auth_url = f"{BASE_IDENTITY_URL}/identity/management/user/apikey"
+        headers = {
+            "Content-Type": "application/json",
+        }
+        try:
             with httpx.Client(
                 base_url=BASE_URL,
                 headers=headers,
@@ -47,23 +49,33 @@ def get_api_key():
             ) as client:
                 response = client.post(auth_url, json=login_body)
                 if response.status_code != 200:
-                    if i == MAX_ATTEMPTS - 1:
-                        logger.error(
-                            f"Failed to get API key after {i+1} attempts: {response.status_code} {response.text}"
-                        )
-                        raise Exception(
-                            f"Failed to get API key after {i+1} attempts: {response.status_code} {response.text}"
-                        )
                     logger.error(
-                        f"Failed to get API key in attempt {i+1}: {response.status_code} {response.text}. Sleeping for {i} seconds..."
+                        f"Failed to get API key in attempt {i+1}: {response.status_code} {response.text}. Sleeping for {i+1} seconds..."
                     )
-                    time.sleep(i)
+                    # Reset test users if credentials are rejected
+                    try:
+                        reset_url = f"{BASE_IDENTITY_URL}/identity/api/auth/reset-test-users"
+                        reset_resp = client.post(reset_url)
+                        logger.info(f"Reset test users response: {reset_resp.status_code}")
+                    except Exception as reset_err:
+                        logger.error(f"Failed to reset test users: {reset_err}")
+                    if i == MAX_ATTEMPTS - 1:
+                        raise Exception(
+                            f"Failed to get API key after {MAX_ATTEMPTS} attempts: {response.status_code} {response.text}"
+                        )
+                    time.sleep(i + 1)
+                    continue
                 response_json = response.json()
-                logger.info(f"Response: {response_json}")
                 API_KEY = response_json.get("apiKey")
                 if API_KEY:
-                    logger.debug("MCP Server API Key obtained successfully.")
-                return API_KEY
+                    logger.info("MCP Server API Key obtained successfully.")
+                    return API_KEY
+                logger.error(f"API key not found in response: {response_json}")
+        except httpx.HTTPError as e:
+            logger.error(f"HTTP error in attempt {i+1}: {e}")
+            if i == MAX_ATTEMPTS - 1:
+                raise
+        time.sleep(i + 1)
     return API_KEY
 
 

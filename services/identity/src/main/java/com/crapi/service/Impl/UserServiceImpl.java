@@ -33,6 +33,7 @@ import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import java.text.ParseException;
+import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.impl.Log4jContextFactory;
@@ -172,6 +173,7 @@ public class UserServiceImpl implements UserService {
     User user = userRepository.findByEmail(email);
     if (user != null) {
       user.setPassword(encoder.encode(password));
+      user.setPasswordUpdatedAt(LocalDate.now());
       userRepository.saveAndFlush(user);
     }
     return user;
@@ -188,6 +190,7 @@ public class UserServiceImpl implements UserService {
     User user = getUserFromToken(request);
     if (user != null) {
       user.setPassword(encoder.encode(loginForm.getPassword()));
+      user.setPasswordUpdatedAt(LocalDate.now());
       userRepository.saveAndFlush(user);
       return new CRAPIResponse(UserMessage.PASSWORD_GOT_RESET, 200);
     }

@@ -49,7 +49,7 @@ public class UserMessage {
   public static final String EMAIL_NOT_REGISTERED = "Given Email is not registered! ";
   public static final String INVALID_OTP = "Invalid OTP! Please try again..";
   public static final String ERROR = "ERROR..";
-  public static final String OTP_VARIFIED_SUCCESS = "OTP verified";
+  public static final String OTP_VERIFIED_SUCCESS = "OTP verified";
   public static final String OTP_SEND_SUCCESS_ON_EMAIL = "OTP Sent on the provided email, ";
   public static final String EXCEED_NUMBER_OF_ATTEMPS = "You've exceeded the number of attempts.";
   public static final String PASSWORD_GOT_RESET = "Password reset successful.";
