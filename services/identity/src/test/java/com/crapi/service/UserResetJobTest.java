@@ -2,7 +2,6 @@ package com.crapi.service;
 
 import com.crapi.constant.TestUsers;
 import com.crapi.entity.User;
-import com.crapi.enums.ERole;
 import com.crapi.model.SeedUser;
 import com.crapi.repository.UserRepository;
 import java.time.LocalDate;
@@ -31,7 +30,8 @@ public class UserResetJobTest {
   public void resetSkipsWhenPasswordNotChanged() {
     ArrayList<SeedUser> testUsers = new TestUsers().getUsers();
     for (SeedUser seedUser : testUsers) {
-      User user = new User(seedUser.getEmail(), seedUser.getNumber(), "encoded", seedUser.getRole());
+      User user =
+          new User(seedUser.getEmail(), seedUser.getNumber(), "encoded", seedUser.getRole());
       user.setPasswordUpdatedAt(DEFAULT_PASSWORD_DATE);
       Mockito.when(userRepository.findByEmail(seedUser.getEmail())).thenReturn(user);
     }
@@ -47,7 +47,8 @@ public class UserResetJobTest {
     SeedUser firstUser = testUsers.get(0);
 
     // First user has changed password (non-default date)
-    User changedUser = new User(firstUser.getEmail(), firstUser.getNumber(), "encoded", firstUser.getRole());
+    User changedUser =
+        new User(firstUser.getEmail(), firstUser.getNumber(), "encoded", firstUser.getRole());
     changedUser.setPasswordUpdatedAt(LocalDate.now());
     Mockito.when(userRepository.findByEmail(firstUser.getEmail())).thenReturn(changedUser);
     Mockito.when(encoder.encode(firstUser.getPassword())).thenReturn("resetEncoded");
@@ -56,7 +57,8 @@ public class UserResetJobTest {
     // Remaining users have default date
     for (int i = 1; i < testUsers.size(); i++) {
       SeedUser seedUser = testUsers.get(i);
-      User user = new User(seedUser.getEmail(), seedUser.getNumber(), "encoded", seedUser.getRole());
+      User user =
+          new User(seedUser.getEmail(), seedUser.getNumber(), "encoded", seedUser.getRole());
       user.setPasswordUpdatedAt(DEFAULT_PASSWORD_DATE);
       Mockito.when(userRepository.findByEmail(seedUser.getEmail())).thenReturn(user);
     }
@@ -72,7 +74,8 @@ public class UserResetJobTest {
   public void resetResetsAllWhenAllPasswordsChanged() {
     ArrayList<SeedUser> testUsers = new TestUsers().getUsers();
     for (SeedUser seedUser : testUsers) {
-      User user = new User(seedUser.getEmail(), seedUser.getNumber(), "encoded", seedUser.getRole());
+      User user =
+          new User(seedUser.getEmail(), seedUser.getNumber(), "encoded", seedUser.getRole());
       user.setPasswordUpdatedAt(LocalDate.now());
       Mockito.when(userRepository.findByEmail(seedUser.getEmail())).thenReturn(user);
       Mockito.when(userRepository.saveAndFlush(Mockito.any())).thenReturn(user);
@@ -100,7 +103,8 @@ public class UserResetJobTest {
   public void resetSkipsWhenPasswordUpdatedAtNull() {
     ArrayList<SeedUser> testUsers = new TestUsers().getUsers();
     for (SeedUser seedUser : testUsers) {
-      User user = new User(seedUser.getEmail(), seedUser.getNumber(), "encoded", seedUser.getRole());
+      User user =
+          new User(seedUser.getEmail(), seedUser.getNumber(), "encoded", seedUser.getRole());
       user.setPasswordUpdatedAt(null);
       Mockito.when(userRepository.findByEmail(seedUser.getEmail())).thenReturn(user);
     }
