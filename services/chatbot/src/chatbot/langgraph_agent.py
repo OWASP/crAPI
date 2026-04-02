@@ -11,7 +11,7 @@ from langchain_groq import ChatGroq
 from langchain_mistralai import ChatMistralAI
 from langchain_openai import AzureChatOpenAI, ChatOpenAI
 
-from .agent_utils import truncate_tool_messages
+from .agent_utils import trim_messages_to_token_limit, truncate_tool_messages
 from .aws_credentials import get_bedrock_credentials_kwargs
 from .config import Config
 from .extensions import postgresdb
@@ -263,6 +263,7 @@ async def execute_langgraph_agent(
         len(messages),
     )
     agent = await build_langgraph_agent(api_key, model_name, user_jwt)
+    messages = trim_messages_to_token_limit(messages)
     logger.debug("Invoking agent with %d messages", len(messages))
     response = await agent.ainvoke({"messages": messages})
     logger.info(

@@ -3,6 +3,7 @@ from uuid import uuid4
 
 from langgraph.graph.message import Messages
 
+from .agent_utils import trim_messages_to_token_limit
 from .config import Config
 from .extensions import db
 from .langgraph_agent import execute_langgraph_agent
@@ -80,8 +81,7 @@ async def process_user_message(session_id, user_message, api_key, model_name, us
     )
     logger.debug("Added messages to Chroma collection - session_id: %s", session_id)
 
-    # Limit chat history to last 20 messages
-    history = history[-20:]
+    history = trim_messages_to_token_limit(history)
     await update_chat_history(session_id, history)
     logger.info(
         "Message processing complete - session_id: %s, response_id: %s, history_count: %d",

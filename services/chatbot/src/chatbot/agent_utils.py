@@ -1,4 +1,5 @@
 import json
+import logging
 
 from langchain.agents import AgentState
 from langchain.agents.middleware.types import before_model
@@ -7,7 +8,11 @@ from langgraph.runtime import Runtime
 
 from .config import Config
 
+logger = logging.getLogger(__name__)
+
 INDIVIDUAL_MIN_LENGTH = 100
+# Approximate characters per token across providers
+CHARS_PER_TOKEN = 4
 
 
 def collect_long_strings(obj):
@@ -88,3 +93,53 @@ def truncate_tool_messages(state: AgentState, runtime: Runtime) -> AgentState:
         else:
             modified_messages.append(msg)
     return {"messages": modified_messages}
+
+
+def _estimate_tokens(text):
+    """Estimate token count using character-based approximation."""
+    return len(text) // CHARS_PER_TOKEN
+
+
+def _message_content(msg):
+    """Extract text content from a message dict or object."""
+    if isinstance(msg, dict):
+        return msg.get("content", "")
+    return getattr(msg, "content", "")
+
+
+def trim_messages_to_token_limit(messages):
+    """
+    Trim conversation history from the oldest messages to fit within the token
+    budget derived from MAX_CONTENT_LENGTH.
+    The most recent message (the new user turn) is always kept.
+    """
+    max_tokens = Config.MAX_CONTENT_LENGTH // CHARS_PER_TOKEN
+
+    if not messages:
+        return messages
+
+    # Estimate per-message tokens
+    token_counts = [_estimate_tokens(_message_content(m)) for m in messages]
+    total_tokens = sum(token_counts)
+
+    if total_tokens <= max_tokens:
+        return messages
+
+    # Always keep the last message; trim from the front
+    trimmed = list(messages)
+    trimmed_tokens = list(token_counts)
+
+    while len(trimmed) > 1 and sum(trimmed_tokens) > max_tokens:
+        trimmed.pop(0)
+        trimmed_tokens.pop(0)
+
+    logger.info(
+        "Trimmed conversation history from %d to %d messages "
+        "(estimated tokens: %d -> %d, limit: %d)",
+        len(messages),
+        len(trimmed),
+        total_tokens,
+        sum(trimmed_tokens),
+        max_tokens,
+    )
+    return trimmed

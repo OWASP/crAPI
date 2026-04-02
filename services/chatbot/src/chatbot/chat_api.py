@@ -4,6 +4,7 @@ from uuid import uuid4
 
 from quart import Blueprint, jsonify, request
 
+from .agent_utils import trim_messages_to_token_limit
 from .chat_service import (delete_chat_history, get_chat_history,
                            process_user_message)
 from .config import Config
@@ -229,8 +230,7 @@ async def state():
             "Provider API key for session %s: %s", session_id, provider_api_key[:5]
         )
         chat_history = await get_chat_history(session_id)
-        # Limit chat history to last 20 messages
-        chat_history = chat_history[-20:]
+        chat_history = trim_messages_to_token_limit(chat_history)
         return (
             jsonify(
                 {
@@ -259,8 +259,7 @@ async def history():
     provider_api_key = await get_api_key(session_id)
     if provider in {"openai", "anthropic"} and provider_api_key:
         chat_history = await get_chat_history(session_id)
-        # Limit chat history to last 20 messages
-        chat_history = chat_history[-20:]
+        chat_history = trim_messages_to_token_limit(chat_history)
         return jsonify({"chat_history": chat_history}), 200
     if provider in {"openai", "anthropic"}:
         return (
@@ -268,7 +267,7 @@ async def history():
             200,
         )
     chat_history = await get_chat_history(session_id)
-    chat_history = chat_history[-20:] if chat_history else []
+    chat_history = trim_messages_to_token_limit(chat_history) if chat_history else []
     return jsonify({"chat_history": chat_history}), 200
 
 

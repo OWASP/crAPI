@@ -34,6 +34,6 @@ class Config:
     AWS_ROLE_SESSION_NAME = os.getenv("AWS_ROLE_SESSION_NAME", "crapi-chatbot-session")
     VERTEX_PROJECT = os.getenv("VERTEX_PROJECT", "")
     VERTEX_LOCATION = os.getenv("VERTEX_LOCATION", "")
-    MAX_CONTENT_LENGTH = int(os.getenv("MAX_CONTENT_LENGTH", 50000))
+    MAX_CONTENT_LENGTH = int(os.getenv("MAX_CONTENT_LENGTH", 100000))
     CHROMA_HOST = CHROMA_HOST
     CHROMA_PORT = CHROMA_PORT
