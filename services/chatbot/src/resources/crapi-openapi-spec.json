@@ -3929,7 +3929,8 @@
                     "type": "string"
                   },
                   "diagnostic_command": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Lab-only diagnostic command. Executed only when ENABLE_SHELL_INJECTION=true is set for the Workshop service."
                   }
                 }
               },
@@ -3976,7 +3977,8 @@
                           "type": "string"
                         },
                         "diagnostic_output": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "Returned only when ENABLE_SHELL_INJECTION=true is set for the Workshop service."
                         }
                       }
                     },
@@ -4081,7 +4083,8 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "status"
+              "example": "status",
+              "description": "Lab-only diagnostic command. Executed only when ENABLE_SHELL_INJECTION=true is set for the Workshop service."
             }
           }
         ],
@@ -4109,7 +4112,8 @@
                       "format": "url"
                     },
                     "diagnostic_output": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Returned only when ENABLE_SHELL_INJECTION=true is set for the Workshop service."
                     }
                   }
                 }

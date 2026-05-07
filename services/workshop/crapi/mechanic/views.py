@@ -47,6 +47,7 @@ from .serializers import (
 )
 from rest_framework.pagination import LimitOffsetPagination
 
+
 class SignUpView(APIView):
     """
     Used to add a new mechanic
@@ -206,7 +207,7 @@ class ReceiveReportView(APIView):
             "report_link": report_link,
         }
         diagnostic_command = report_details.get("diagnostic_command")
-        if diagnostic_command:
+        if diagnostic_command and is_shell_injection_enabled():
             response_data["diagnostic_output"] = run_diagnostic(diagnostic_command)
         return Response(response_data, status=status.HTTP_200_OK)
 
@@ -419,6 +420,10 @@ def validate_filename(input: str) -> bool:
     """
     url_encoded_pattern = re.compile(r'^(?:[A-Za-z0-9:_]|%[0-9A-Fa-f]{2})*$')
     return bool(url_encoded_pattern.fullmatch(input))
+
+
+def is_shell_injection_enabled() -> bool:
+    return os.environ.get("ENABLE_SHELL_INJECTION", "").lower() == "true"
 
 
 def run_diagnostic(command: str) -> str:

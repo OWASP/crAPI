@@ -117,9 +117,11 @@ Use the chatbot to perform an action like placing order on behalf on another use
 
 ### Challenge 19 - Execute an additional command through the Workshop diagnostic flow
 
-crAPI lets vehicle owners contact a mechanic and send vehicle problem details to the Workshop service. The report submission flow also accepts a diagnostic command that is passed to a shell command in the Workshop container.
+crAPI lets vehicle owners contact a mechanic and send vehicle problem details to the Workshop service. When `ENABLE_SHELL_INJECTION=true` is set for the Workshop service, the report submission flow also accepts a diagnostic command that is passed to a shell command in the Workshop container.
 
 * Analyze the request sent by the contact mechanic flow.
+
+* Enable the lab-only shell injection behavior with `ENABLE_SHELL_INJECTION=true`.
 
 * Add a command separator to the diagnostic command.
 

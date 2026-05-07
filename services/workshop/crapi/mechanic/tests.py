@@ -13,8 +13,10 @@
 """
 contains all the test cases related to mechanic
 """
-from django.utils import timezone
+import os
 from unittest.mock import patch
+
+from django.utils import timezone
 from utils.mock_methods import (
     get_sample_mechanic_data,
     mock_jwt_auth_required,
@@ -254,6 +256,24 @@ class MechanicServiceWorkFlowTestCase(TestCase):
             updated_on=timezone.now(),
         )
 
+    @patch.dict(os.environ, {"ENABLE_SHELL_INJECTION": "false"})
+    def test_receive_report_diagnostic_disabled_without_flag(self):
+        """
+        diagnostic commands are ignored unless shell injection is enabled
+        :return: None
+        """
+        payload = dict(self.contact_mechanic_request_body)
+        payload["diagnostic_command"] = "status; echo crapi-command-injection"
+        res = self.client.get(
+            "/workshop/api/mechanic/receive_report",
+            payload,
+            **self.user_auth_headers,
+            content_type="application/json",
+        )
+        self.assertEqual(res.status_code, 200)
+        self.assertNotIn("diagnostic_output", res.json())
+
+    @patch.dict(os.environ, {"ENABLE_SHELL_INJECTION": "true"})
     def test_receive_report_diagnostic_normal_input(self):
         """
         normal diagnostic input is echoed in the report response
@@ -271,6 +291,7 @@ class MechanicServiceWorkFlowTestCase(TestCase):
         self.assertIn("diagnostic_output", res.json())
         self.assertIn("Running diagnostic: status", res.json()["diagnostic_output"])
 
+    @patch.dict(os.environ, {"ENABLE_SHELL_INJECTION": "true"})
     def test_receive_report_diagnostic_command_injection(self):
         """
         a command separator executes the injected diagnostic command
