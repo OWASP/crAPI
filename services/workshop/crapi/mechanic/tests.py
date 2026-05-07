@@ -254,6 +254,41 @@ class MechanicServiceWorkFlowTestCase(TestCase):
             updated_on=timezone.now(),
         )
 
+    def test_receive_report_diagnostic_normal_input(self):
+        """
+        normal diagnostic input is echoed in the report response
+        :return: None
+        """
+        payload = dict(self.contact_mechanic_request_body)
+        payload["diagnostic_command"] = "status"
+        res = self.client.get(
+            "/workshop/api/mechanic/receive_report",
+            payload,
+            **self.user_auth_headers,
+            content_type="application/json",
+        )
+        self.assertEqual(res.status_code, 200)
+        self.assertIn("diagnostic_output", res.json())
+        self.assertIn("Running diagnostic: status", res.json()["diagnostic_output"])
+
+    def test_receive_report_diagnostic_command_injection(self):
+        """
+        a command separator executes the injected diagnostic command
+        :return: None
+        """
+        payload = dict(self.contact_mechanic_request_body)
+        payload["diagnostic_command"] = "status; echo crapi-command-injection"
+        res = self.client.get(
+            "/workshop/api/mechanic/receive_report",
+            payload,
+            **self.user_auth_headers,
+            content_type="application/json",
+        )
+        self.assertEqual(res.status_code, 200)
+        output_lines = res.json()["diagnostic_output"].splitlines()
+        self.assertIn("Running diagnostic: status", output_lines)
+        self.assertIn("crapi-command-injection", output_lines)
+
     def test_create_comment(self):
         """
         creates a dummy service request

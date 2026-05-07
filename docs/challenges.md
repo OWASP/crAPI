@@ -113,6 +113,18 @@ Extract the credentials of another user and check their orders.
 
 Use the chatbot to perform an action like placing order on behalf on another user. 
 
+## Command Injection
+
+### Challenge 19 - Execute an additional command through the Workshop diagnostic flow
+
+crAPI lets vehicle owners contact a mechanic and send vehicle problem details to the Workshop service. The report submission flow also accepts a diagnostic command that is passed to a shell command in the Workshop container.
+
+* Analyze the request sent by the contact mechanic flow.
+
+* Add a command separator to the diagnostic command.
+
+* Confirm that the response includes output from the additional command.
+
 ## << 3 secret challenges >>
 
 There are two more secret challenges in crAPI, that are pretty complex, and for now we don’t share details about them, except the fact they are really cool. 

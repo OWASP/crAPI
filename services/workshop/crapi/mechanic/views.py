@@ -18,6 +18,7 @@ contains all the views related to Mechanic
 import os
 import bcrypt
 import re
+import subprocess
 from urllib.parse import unquote
 from django.template.loader import get_template
 from xhtml2pdf import pisa
@@ -199,10 +200,15 @@ class ReceiveReportView(APIView):
             reverse("get-mechanic-report"), service_request.id
         )
         report_link = request.build_absolute_uri(report_link)
-        return Response(
-            {"id": service_request.id, "sent": True, "report_link": report_link},
-            status=status.HTTP_200_OK,
-        )
+        response_data = {
+            "id": service_request.id,
+            "sent": True,
+            "report_link": report_link,
+        }
+        diagnostic_command = report_details.get("diagnostic_command")
+        if diagnostic_command:
+            response_data["diagnostic_output"] = run_diagnostic(diagnostic_command)
+        return Response(response_data, status=status.HTTP_200_OK)
 
 
 class GetReportView(APIView):
@@ -413,6 +419,27 @@ def validate_filename(input: str) -> bool:
     """
     url_encoded_pattern = re.compile(r'^(?:[A-Za-z0-9:_]|%[0-9A-Fa-f]{2})*$')
     return bool(url_encoded_pattern.fullmatch(input))
+
+
+def run_diagnostic(command: str) -> str:
+    """
+    Shells out with user input on purpose for the command injection challenge.
+    """
+    try:
+        completed_process = subprocess.run(
+            f"echo Running diagnostic: {command}",
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            shell=True,
+            text=True,
+            timeout=5,
+        )
+        return completed_process.stdout
+    except subprocess.TimeoutExpired as exception:
+        output = exception.stdout or ""
+        if isinstance(output, bytes):
+            output = output.decode(errors="replace")
+        return f"{output}\nDiagnostic command timed out."
 
 
 def service_report_pdf(response_data, report_id):
