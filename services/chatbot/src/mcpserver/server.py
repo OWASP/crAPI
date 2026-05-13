@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import ssl
 import time
 
 import httpx
@@ -35,10 +36,13 @@ def get_api_key():
             headers = {
                 "Content-Type": "application/json",
             }
+            _ssl_ctx = ssl.create_default_context()
+            _ssl_ctx.check_hostname = False
+            _ssl_ctx.verify_mode = ssl.CERT_NONE
             with httpx.Client(
-                base_url=BASE_URL,
                 headers=headers,
-                verify=False,
+                verify=_ssl_ctx,
+                trust_env=False,
             ) as client:
                 response = client.post(auth_url, json=login_body)
                 if response.status_code != 200:
