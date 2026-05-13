@@ -1,7 +1,7 @@
 import chromadb
 from langchain_chroma import Chroma as ChromaClient
 from langchain_core.documents import Document
-from langchain_core.tools import create_retriever_tool
+from langchain_core.tools import StructuredTool
 from langchain_openai import OpenAIEmbeddings
 
 from .config import Config
@@ -58,16 +58,20 @@ def add_to_chroma_collection(
 def get_retriever_tool(api_key):
     vectorstore = get_chroma_vectorstore(api_key)
     retriever = vectorstore.as_retriever()
-    retriever_tool = create_retriever_tool(
-        retriever,
+
+    def chat_rag(query: str) -> str:
+        docs = retriever.invoke(query)
+        return "\n\n".join(doc.page_content for doc in docs)
+
+    return StructuredTool.from_function(
+        func=chat_rag,
         name="chat_rag",
         description="""
         Use this to answer questions based on user chat history (summarized and semantically indexed).
         Use this when the user asks about prior chats, what they asked earlier, or wants a summary of past conversations.
-        
-        Use this tool when the user refers to anything mentioned before, asks for a summary of previous messages or sessions, 
+
+        Use this tool when the user refers to anything mentioned before, asks for a summary of previous messages or sessions,
         or references phrases like 'what I said earlier', 'things we discussed', 'my earlier question', 'until now', 'till date', 'all my conversations' or 'previously mentioned'.
         The chat history is semantically indexed and summarized using vector search.
         """,
     )
-    return retriever_tool

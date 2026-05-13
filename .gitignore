@@ -6,3 +6,4 @@ deploy/vagrant/.vagrant
 services/chatbot/db
 services/certs/
 docker-compose.local.yml
+deploy/docker/docker-compose.yml

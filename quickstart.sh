@@ -128,7 +128,7 @@ parse_args() {
 }
 
 #------------------------------------------------------------------------------
-# Semver comparison — pure bash, no external forks
+# Sever comparison — pure bash, no external forks
 #------------------------------------------------------------------------------
 version_ge() {  # §8 brace-form function to allow `local`
     debug "version_ge $1 >= $2"  # §5 debug at function start
