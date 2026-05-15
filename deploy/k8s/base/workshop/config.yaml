@@ -18,6 +18,7 @@ data:
     MONGO_DB_PASSWORD: crapisecretpassword
     MONGO_DB_NAME: crapi
     SERVER_PORT: "8000"
+    ENABLE_SHELL_INJECTION: "false"
     API_GATEWAY_URL: "https://api.mypremiumdealership.com"
     # Gunicorn configuration for better performance under load
     GUNICORN_WORKERS: "4"
