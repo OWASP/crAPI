@@ -12,6 +12,39 @@
 
 services:
 
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:24.0
+    command: start-dev
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=adminsecretpassword
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://postgresdb:5432/crapi
+      - KC_DB_USERNAME=admin
+      - KC_DB_PASSWORD=crapisecretpassword
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgresdb:
+        condition: service_healthy
+
+    # Bổ sung API Gateway (Kong) làm lớp chặn ngoài cùng
+  api-gateway:
+    container_name: api-gateway
+    image: kong:3.4
+    environment:
+      - KONG_DATABASE=off
+      - KONG_DECLARATIVE_CONFIG=/opt/kong/kong.yml
+      - KONG_LOG_LEVEL=info
+      - KONG_PROXY_LISTEN=0.0.0.0:8000, 0.0.0.0:8443 ssl
+    volumes:
+      - ./kong:/opt/kong
+    ports:
+      - "8888:8000" # Cổng nhận request từ bên ngoài thay thế cho crapi-web trực tiếp
+    depends_on:
+      - crapi-web
+      - keycloak
   crapi-identity:
     container_name: crapi-identity
     image: crapi/crapi-identity:${VERSION:-latest}
@@ -162,7 +195,7 @@ services:
     container_name: crapi-chatbot
     image: crapi/crapi-chatbot:${VERSION:-latest}
     ports:
-      - "${LISTEN_IP:-127.0.0.1}:5500:5500" # MCP server
+      - "8001:5500" # MCP server
     environment:
       - TLS_ENABLED=${TLS_ENABLED:-false}
       - SERVER_PORT=${CHATBOT_SERVER_PORT:-5002}
@@ -225,11 +258,11 @@ services:
   crapi-web:
     container_name: crapi-web
     image: crapi/crapi-web:${VERSION:-latest}
-    ports:
-      - "${LISTEN_IP:-127.0.0.1}:8888:80"
-      - "${LISTEN_IP:-127.0.0.1}:30080:80"
-      - "${LISTEN_IP:-127.0.0.1}:8443:443"
-      - "${LISTEN_IP:-127.0.0.1}:30443:443"
+    # ports:
+    #   - "${LISTEN_IP:-127.0.0.1}:8888:80"
+    #   - "${LISTEN_IP:-127.0.0.1}:30080:80"
+    #   - "${LISTEN_IP:-127.0.0.1}:8443:443"
+    #   - "${LISTEN_IP:-127.0.0.1}:30443:443"
     environment:
       - COMMUNITY_SERVICE=crapi-community:${COMMUNITY_SERVER_PORT:-8087}
       - IDENTITY_SERVICE=crapi-identity:${IDENTITY_SERVER_PORT:-8080}
@@ -325,7 +358,7 @@ services:
       MH_STORAGE: mongodb
     ports:
       #  - "127.0.0.1:1025:1025" # smtp server
-      - "${LISTEN_IP:-127.0.0.1}:8025:8025" # Mail ui
+      - "8025:8025" # Mail ui
     healthcheck:
       test: [ "CMD", "nc", "-z", "localhost", "8025" ]
       interval: 15s

@@ -1,0 +1,35 @@
+_format_version: "3.0"
+_transform: true
+
+services:
+  - name: crapi-backend-service
+    url: http://crapi-web:80
+    routes:
+      - name: crapi-secure-route
+        paths:
+          - /
+        protocols: 
+          - http
+          - https
+        strip_path: false
+
+plugins:
+  # Sử dụng plugin JWT để validate Access Token gửi lên từ Client (Token do Keycloak cấp)
+  - name: jwt
+    route: crapi-secure-route
+    config:
+      uri_param_names:
+        - jwt
+      cookie_names: []
+      key_claim_name: iss
+      secret_is_base64: false
+
+  # Cấu hình một cơ chế Request Transformer để chèn mã bí mật hoặc token chuyển đổi
+  # (Trong thực tế doanh nghiệp, bước này sẽ gọi một hàm Serverless hoặc Plugin tùy biến 
+  # để sinh ngược ra chuỗi JWT có chữ ký mã 'crapi' dựa trên thông tin định danh của Keycloak)
+  - name: request-transformer
+    route: crapi-secure-route
+    config:
+      add:
+        headers:
+          - "X-Gateway-Validated: True"
