@@ -6,6 +6,7 @@ from uuid import uuid4
 from quart import Blueprint, jsonify, request
 
 from .agent_utils import trim_messages_to_token_limit
+from .auth import validate_user_jwt
 from .chat_service import (delete_chat_history, get_chat_history,
                            process_user_message)
 from .config import Config
@@ -151,6 +152,10 @@ async def chat():
     provider_api_key = await get_api_key(session_id)
     model_name = await get_model_name(session_id)
     user_jwt = await get_user_jwt()
+
+    if not user_jwt or not await validate_user_jwt(user_jwt):
+        logger.warning("Unauthorized chat request - session_id: %s", session_id)
+        return jsonify({"message": "Authentication required"}), 401
 
     logger.info(
         "=== CHAT AI CONFIG === session_id: %s, provider: %s, model_name: %s, has_api_key: %s, has_jwt: %s",

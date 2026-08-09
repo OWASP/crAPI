@@ -38,3 +38,5 @@ class Config:
     CHROMA_HOST = CHROMA_HOST
     CHROMA_PORT = CHROMA_PORT
     CHATBOT_LIFE = int(os.getenv("CHATBOT_LIFE", "1"))
+    TLS_ENABLED = os.getenv("TLS_ENABLED", "false").lower() in ("true", "1", "yes")
+    IDENTITY_SERVICE = os.getenv("IDENTITY_SERVICE", "crapi-identity:8080")

@@ -5,7 +5,6 @@ from langchain.agents import create_agent
 from langchain_anthropic import ChatAnthropic
 from langchain_aws import ChatBedrock
 from langchain_cohere import ChatCohere
-from langchain_community.agent_toolkits import SQLDatabaseToolkit
 from langchain_google_vertexai import ChatVertexAI
 from langchain_groq import ChatGroq
 from langchain_mistralai import ChatMistralAI
@@ -14,8 +13,6 @@ from langchain_openai import AzureChatOpenAI, ChatOpenAI
 from .agent_utils import trim_messages_to_token_limit, truncate_tool_messages
 from .aws_credentials import get_bedrock_credentials_kwargs
 from .config import Config
-from .extensions import postgresdb
-from .mcp_client import get_mcp_client
 from .retriever_utils import get_retriever_tool
 
 logger = logging.getLogger(__name__)
@@ -223,27 +220,10 @@ Use the tools only if you don't know the answer.
     llm = _build_llm(api_key, model_name)
     logger.debug("LLM instance created successfully")
 
-    toolkit = SQLDatabaseToolkit(db=postgresdb, llm=llm)
-    logger.debug("SQL Database toolkit created")
-
-    mcp_tools = []
-    try:
-        mcp_client = get_mcp_client(user_jwt)
-        mcp_tools = await mcp_client.get_tools()
-        logger.debug("MCP tools loaded: %d tools", len(mcp_tools))
-    except Exception as e:
-        logger.error("Failed to load MCP tools, continuing without them: %s", e)
-
-    db_tools = toolkit.get_tools()
-    logger.debug("Database tools loaded: %d tools", len(db_tools))
-
-    tools = mcp_tools + db_tools
     retriever_tool = get_retriever_tool(api_key, Config.LLM_PROVIDER, model_name)
-    tools.append(retriever_tool)
+    tools = [retriever_tool]
     logger.info(
-        "Agent tools prepared - mcp_tools: %d, db_tools: %d, retriever_tool: 1, total: %d",
-        len(mcp_tools),
-        len(db_tools),
+        "Agent tools prepared - retriever_tool: 1, total: %d",
         len(tools),
     )
 
