@@ -23,12 +23,12 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - DB_NAME=crapi
       - DB_USER=admin
-      - DB_PASSWORD=crapisecretpassword
+      - DB_PASSWORD=af368bf8b0d9b3054029b1577ab0ba6a1c0c0b9fc37b6b5f
       - DB_HOST=postgresdb
       - DB_PORT=5432
       - SERVER_PORT=${IDENTITY_SERVER_PORT:-8080}
       - ENABLE_SHELL_INJECTION=${ENABLE_SHELL_INJECTION:-false}
-      - JWT_SECRET=crapi
+      - JWT_SECRET=1b59c63133e85aa7c0c03a6b0f455be54c7cf895d6b53ff0
       - MAILHOG_HOST=mailhog
       - MAILHOG_PORT=1025
       - MAILHOG_DOMAIN=example.com
@@ -76,14 +76,14 @@ services:
       - IDENTITY_SERVICE=crapi-identity:${IDENTITY_SERVER_PORT:-8080}
       - DB_NAME=crapi
       - DB_USER=admin
-      - DB_PASSWORD=crapisecretpassword
+      - DB_PASSWORD=af368bf8b0d9b3054029b1577ab0ba6a1c0c0b9fc37b6b5f
       - DB_HOST=postgresdb
       - DB_PORT=5432
       - SERVER_PORT=${COMMUNITY_SERVER_PORT:-8087}
       - MONGO_DB_HOST=mongodb
       - MONGO_DB_PORT=27017
       - MONGO_DB_USER=admin
-      - MONGO_DB_PASSWORD=crapisecretpassword
+      - MONGO_DB_PASSWORD=af368bf8b0d9b3054029b1577ab0ba6a1c0c0b9fc37b6b5f
       - MONGO_DB_NAME=crapi
       - TLS_ENABLED=${TLS_ENABLED:-false}
       - TLS_CERTIFICATE=certs/server.crt
@@ -116,16 +116,16 @@ services:
       - IDENTITY_SERVICE=crapi-identity:${IDENTITY_SERVER_PORT:-8080}
       - DB_NAME=crapi
       - DB_USER=admin
-      - DB_PASSWORD=crapisecretpassword
+      - DB_PASSWORD=af368bf8b0d9b3054029b1577ab0ba6a1c0c0b9fc37b6b5f
       - DB_HOST=postgresdb
       - DB_PORT=5432
       - SERVER_PORT=${WORKSHOP_SERVER_PORT:-8000}
       - MONGO_DB_HOST=mongodb
       - MONGO_DB_PORT=27017
       - MONGO_DB_USER=admin
-      - MONGO_DB_PASSWORD=crapisecretpassword
+      - MONGO_DB_PASSWORD=af368bf8b0d9b3054029b1577ab0ba6a1c0c0b9fc37b6b5f
       - MONGO_DB_NAME=crapi
-      - SECRET_KEY=crapi
+      - SECRET_KEY=6c99fbace6bb3f2611e56e30854494b7658db5e318f41e91
       - API_GATEWAY_URL=https://api.mypremiumdealership.com
       - TLS_ENABLED=${TLS_ENABLED:-false}
       - TLS_CERTIFICATE=certs/server.crt
@@ -170,16 +170,16 @@ services:
       - IDENTITY_SERVICE=crapi-identity:${IDENTITY_SERVER_PORT:-8080}
       - DB_NAME=crapi
       - DB_USER=admin
-      - DB_PASSWORD=crapisecretpassword
+      - DB_PASSWORD=af368bf8b0d9b3054029b1577ab0ba6a1c0c0b9fc37b6b5f
       - DB_HOST=postgresdb
       - DB_PORT=5432
       - MONGO_DB_HOST=mongodb
       - MONGO_DB_PORT=27017
       - MONGO_DB_USER=admin
-      - MONGO_DB_PASSWORD=crapisecretpassword
+      - MONGO_DB_PASSWORD=af368bf8b0d9b3054029b1577ab0ba6a1c0c0b9fc37b6b5f
       - MONGO_DB_NAME=crapi
       - API_USER=admin@example.com
-      - API_PASSWORD=Admin!123
+      - API_PASSWORD=wZNwhfvIPbhb7SKQD3vHDwI57tBceGxE
       - OPENAPI_SPEC=/app/resources/crapi-openapi-spec.json
       - CHATBOT_LIFE=${CHATBOT_LIFE:-1}
       - CHATBOT_LLM_PROVIDER=${CHATBOT_LLM_PROVIDER:-openai}
@@ -261,7 +261,7 @@ services:
     command: ["postgres", "-c", "max_connections=500"]
     environment:
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: crapisecretpassword
+      POSTGRES_PASSWORD: af368bf8b0d9b3054029b1577ab0ba6a1c0c0b9fc37b6b5f
       POSTGRES_DB: crapi
     #ports:
     #  - "${LISTEN_IP:-127.0.0.1}:5432:5432"
@@ -283,7 +283,7 @@ services:
     image: 'mongo:4.4'
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: crapisecretpassword
+      MONGO_INITDB_ROOT_PASSWORD: af368bf8b0d9b3054029b1577ab0ba6a1c0c0b9fc37b6b5f
     #ports:
     #  - "${LISTEN_IP:-127.0.0.1}:27017:27017"
     healthcheck:
@@ -321,7 +321,7 @@ services:
     container_name: mailhog
     image: crapi/mailhog:${VERSION:-latest}
     environment:
-      MH_MONGO_URI: admin:crapisecretpassword@mongodb:27017
+      MH_MONGO_URI: admin:af368bf8b0d9b3054029b1577ab0ba6a1c0c0b9fc37b6b5f@mongodb:27017
       MH_STORAGE: mongodb
     ports:
       #  - "127.0.0.1:1025:1025" # smtp server
