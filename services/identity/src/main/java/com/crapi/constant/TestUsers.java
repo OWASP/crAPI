@@ -25,10 +25,10 @@ public class TestUsers {
   public TestUsers() {
     users.add(
         new SeedUser(
-            "Adam",
-            "adam007@example.com",
+            "ShopEaseUser1",
+            "shopease_user1@shopease.local",
             "9876895423",
-            "adam007!123",
+            "ShopEasePass1!2026",
             ERole.ROLE_PREDEFINE,
             "f89b5f21-7829-45cb-a650-299a61090378",
             "7ECOX34KJTV359804",
@@ -37,10 +37,10 @@ public class TestUsers {
             "-91.919243"));
     users.add(
         new SeedUser(
-            "Pogba",
-            "pogba006@example.com",
+            "ShopEaseUser2",
+            "shopease_user2@shopease.local",
             "9876570006",
-            "pogba006!123",
+            "ShopEasePass2!2026",
             ERole.ROLE_PREDEFINE,
             "cd515c12-0fc1-48ae-8b61-9230b70a845b",
             "8VAUI03PRUQ686911",
@@ -49,10 +49,10 @@ public class TestUsers {
             "-92.471176"));
     users.add(
         new SeedUser(
-            "Robot",
-            "robot001@example.com",
+            "ShopEaseBot",
+            "shopease_bot@shopease.local",
             "9876570001",
-            "robot001!123",
+            "ShopEaseBotPass!2026",
             ERole.ROLE_PREDEFINE,
             "4bae9968-ec7f-4de3-a3a0-ba1b2ab5e5e5",
             "0NKPZ09IHOP508673",
@@ -61,10 +61,10 @@ public class TestUsers {
             "-84.301460"));
     users.add(
         new SeedUser(
-            "Test",
-            "test@example.com",
+            "ShopEaseTester",
+            "shopease_tester@shopease.local",
             "9876540001",
-            "Test!123",
+            "ShopEaseTestPass!2026",
             ERole.ROLE_USER,
             "1929186d-8b67-4163-a208-de52a41f7301",
             "8IGEF39BZUJ159285",
@@ -73,10 +73,10 @@ public class TestUsers {
             "-84.270172"));
     users.add(
         new SeedUser(
-            "Admin",
-            "admin@example.com",
+            "ShopEaseAdmin",
+            "shopease_admin@shopease.local",
             "9010203040",
-            "Admin!123",
+            "ShopEaseAdminPass!2026",
             ERole.ROLE_ADMIN,
             "f5c506f5-3af2-4120-926c-64ad8b10ddc2",
             "6NBBY70FWUM324316",

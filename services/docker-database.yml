@@ -18,8 +18,8 @@ services:
     command: ["postgres", "-c", "max_connections=500"]
     environment:
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: crapisecretpassword
-      POSTGRES_DB: crapi
+      POSTGRES_PASSWORD: shopeasesecretpassword2026
+      POSTGRES_DB: shopease
     ports:
       - "127.0.0.1:5432:5432"
     healthcheck:
@@ -33,7 +33,7 @@ services:
     image: 'mongo:4.4'
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: crapisecretpassword
+      MONGO_INITDB_ROOT_PASSWORD: shopeasesecretpassword2026
     ports:
       - "127.0.0.1:27017:27017"
     healthcheck:
@@ -42,9 +42,3 @@ services:
       timeout: 15s
       retries: 15
       start_period: 20s
-
-
-
-
-
-

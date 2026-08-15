@@ -50,7 +50,7 @@ interface NavbarProps extends PropsFromRedux {}
  * top navigation bar that contains
  * if not logged in:
  * Login button,
- * crAPI icon,
+ * ShopEase icon,
  * if logged in :
  * dropdown to navigate to change Password or My Profile
  * dropdown alos consists the logout button
@@ -116,7 +116,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
     <Header>
       <Space className="top-nav-left">
         <div className="logo-text" onClick={() => navigate("/")}>
-          crAPI
+          ShopEase
         </div>
         {isLoggedIn ? menuNavigation() : <div />}
       </Space>
