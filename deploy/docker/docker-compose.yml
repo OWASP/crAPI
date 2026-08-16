@@ -127,6 +127,8 @@ services:
       - MONGO_DB_NAME=crapi
       - SECRET_KEY=6c99fbace6bb3f2611e56e30854494b7658db5e318f41e91
       - API_GATEWAY_URL=https://api.mypremiumdealership.com
+      - API_GATEWAY_USERNAME=${API_GATEWAY_USERNAME}
+      - API_GATEWAY_PASSWORD=${API_GATEWAY_PASSWORD}
       - TLS_ENABLED=${TLS_ENABLED:-false}
       - TLS_CERTIFICATE=certs/server.crt
       - TLS_KEY=certs/server.key
@@ -344,6 +346,9 @@ services:
     image: crapi/gateway-service:${VERSION:-latest}
     #ports:
     #  - "${LISTEN_IP:-127.0.0.1}:8443:443" # https
+    environment:
+      API_GATEWAY_USERNAME: ${API_GATEWAY_USERNAME}
+      API_GATEWAY_PASSWORD: ${API_GATEWAY_PASSWORD}
     healthcheck:
       test: bash -c 'echo -n "GET / HTTP/1.1\n\n" > /dev/tcp/127.0.0.1/443'
       interval: 15s

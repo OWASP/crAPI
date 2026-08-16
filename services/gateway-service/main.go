@@ -4,16 +4,16 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/bradfitz/iter"
+	"github.com/dustin/go-humanize"
+	"github.com/jaswdr/faker"
 	"hash/fnv"
 	"log"
 	"math/rand"
 	"net/http"
+	"os"
 	"strings"
 	"time"
-
-	"github.com/bradfitz/iter"
-	"github.com/dustin/go-humanize"
-	"github.com/jaswdr/faker"
 )
 
 type VINOwner struct {
@@ -151,10 +151,8 @@ func GetPayMentInfo(w http.ResponseWriter, r *http.Request) {
 }
 
 func checkCreds(user string, pass string) bool {
-	if user == "vendorcrapi" && pass == "Pa$$4Vendor_1" {
-		return true
-	}
-	return false
+	return user == os.Getenv("API_GATEWAY_USERNAME") &&
+		pass == os.Getenv("API_GATEWAY_PASSWORD")
 }
 
 func maskLeft(s string) string {
