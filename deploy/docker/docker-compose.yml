@@ -224,7 +224,9 @@ services:
 
   crapi-web:
     container_name: crapi-web
-    image: crapi/crapi-web:${VERSION:-latest}
+    # image: crapi/crapi-web:${VERSION:-latest}
+    build:
+      context: ../../services/web
     ports:
       - "${LISTEN_IP:-127.0.0.1}:8888:80"
       - "${LISTEN_IP:-127.0.0.1}:30080:80"

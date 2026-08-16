@@ -194,7 +194,7 @@ const ChatBotComponent: React.FC<ChatBotComponentProps> = (props) => {
   // React Chatbotify flow configuration
   const flow = {
     start: {
-      message: "Welcome to crAPI! How can I assist you today?",
+      message: "Welcome to ShopEase! How can I assist you today?",
       transition: { duration: 1000 },
       path: "check_initialization",
     },
@@ -283,7 +283,7 @@ const ChatBotComponent: React.FC<ChatBotComponentProps> = (props) => {
             }
             return "show_options";
           case "Help":
-            await params.injectMessage(`**crAPI Chatbot Help**
+            await params.injectMessage(`**ShopEase Chatbot Help**
 
 **Available Commands:**
 - **Initialize**: Set up the chatbot with your OpenAI API key
@@ -292,7 +292,7 @@ const ChatBotComponent: React.FC<ChatBotComponentProps> = (props) => {
 
 **Usage:**
 1. First, initialize the chatbot with your OpenAI API key
-2. Once initialized, you can ask questions about crAPI
+2. Once initialized, you can ask questions about ShopEase
 3. Use the Clear option to reset your chat history
 
 What would you like to do next?`);
@@ -344,7 +344,7 @@ What would you like to do next?`);
             );
           } else {
             await params.injectMessage(
-              "✅ Chatbot initialized successfully! Ready to chat! Ask me anything about crAPI.",
+              "✅ Chatbot initialized successfully! Ready to chat! Ask me anything about ShopEase.",
             );
           }
           return "chat";
@@ -418,7 +418,7 @@ What would you like to do next?`);
           <span
             style={{ fontSize: "18px", fontWeight: "600", color: "#1f2937" }}
           >
-            crAPI ChatBot
+            ShopEase ChatBot
           </span>
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <button
@@ -431,7 +431,7 @@ What would you like to do next?`);
 
                 confirm({
                   title:
-                    "Are you sure you want to clear the chat history from crAPI servers?",
+                    "Are you sure you want to clear the chat history from ShopEase servers?",
                   content: "This action cannot be undone.",
                   onOk: async () => {
                     // Clear UI immediately by forcing re-render
