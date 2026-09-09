@@ -220,14 +220,12 @@ const Dashboard: React.FC<DashboardProps> = ({
           {vehicles.map((vehicle) => (
             <Col span={24} key={vehicle.vin}>
               <Card className="vehicle-card">
-                <Meta
-                  title={vehicleCardHeader(
-                    vehicle,
-                    handleVehicleServiceClick,
-                    handleContactMechanic,
-                  )}
-                  description={vehicleCardContent(vehicle)}
-                />
+                {vehicleCardHeader(
+                  vehicle,
+                  handleVehicleServiceClick,
+                  handleContactMechanic,
+                )}
+                {vehicleCardContent(vehicle)}
               </Card>
             </Col>
           ))}
