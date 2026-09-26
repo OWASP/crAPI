@@ -130,4 +130,17 @@ The above challenge was completed using Burp Suite Community Edition.
      - `AA==` is the Base64 encoded form of Hex null byte `00`
    - This JWT will be accepted as a valid JWT Token by crAPI
 
+## Command Injection
+
+### [Challenge 19 - Execute an additional command through the Workshop diagnostic flow](challenges.md#challenge-19---execute-an-additional-command-through-the-workshop-diagnostic-flow)
+
+#### Detailed solution
+
+1. Login to crAPI and add a vehicle.
+2. Start the Workshop service with `ENABLE_SHELL_INJECTION=true` in the lab environment.
+3. Open the *Contact Mechanic* flow and observe the request to `/workshop/api/merchant/contact_mechanic`.
+4. Add `diagnostic_command` to the request body with a normal value such as `status`.
+5. Change `diagnostic_command` to `status; echo crapi-command-injection`.
+6. Send the request and confirm that `diagnostic_output` contains `crapi-command-injection`.
+
 ## << 2 secret challenges >>

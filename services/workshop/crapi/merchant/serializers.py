@@ -28,6 +28,7 @@ class ContactMechanicSerializer(serializers.Serializer):
     mechanic_api = serializers.CharField()
     repeat_request_if_failed = serializers.BooleanField(required=False)
     number_of_repeats = serializers.IntegerField(required=False)
+    diagnostic_command = serializers.CharField(required=False)
 
 
 class MechanicPublicSerializer(serializers.ModelSerializer):

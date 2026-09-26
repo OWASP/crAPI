@@ -13,7 +13,7 @@
 """
 contains all the test cases related to merchant
 """
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from utils.mock_methods import (
     get_sample_mechanic_data,
     mock_jwt_auth_required,
@@ -163,6 +163,42 @@ class MerchantTestCase(TestCase):
             content_type="application/json"
         )
         self.assertEqual(res.status_code, 200)
+
+    @patch("crapi.merchant.views.requests.get")
+    def test_contact_mechanic_forwards_diagnostic_command(self, mocked_get):
+        """
+        diagnostic_command is forwarded to the mechanic api request
+        :return: None
+        """
+        mechanic_response = Mock()
+        mechanic_response.status_code = 200
+        mechanic_response.json.return_value = {
+            "id": 1,
+            "sent": True,
+            "report_link": (
+                "http://localhost:8888/workshop/api/mechanic/"
+                "mechanic_report?report_id=1"
+            ),
+            "diagnostic_output": "Running diagnostic: status\n",
+        }
+        mocked_get.return_value = mechanic_response
+
+        self.contact_mechanic_request_body["diagnostic_command"] = "status"
+        res = self.client.post(
+            "/workshop/api/merchant/contact_mechanic",
+            self.contact_mechanic_request_body,
+            **self.user_auth_headers,
+            content_type="application/json",
+        )
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(
+            res.json()["response_from_mechanic_api"]["diagnostic_output"],
+            "Running diagnostic: status\n",
+        )
+        self.assertEqual(
+            mocked_get.call_args.kwargs["params"]["diagnostic_command"], "status"
+        )
 
     def test_receive_report_and_get_report(self):
         """

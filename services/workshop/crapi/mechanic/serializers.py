@@ -81,6 +81,7 @@ class ReceiveReportSerializer(serializers.Serializer):
     problem_details = serializers.CharField()
     vin = serializers.CharField()
     owner_id = serializers.CharField(required=False)
+    diagnostic_command = serializers.CharField(required=False)
 
 
 class SignUpSerializer(serializers.Serializer):

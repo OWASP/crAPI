@@ -120,6 +120,7 @@ services:
       - DB_HOST=postgresdb
       - DB_PORT=5432
       - SERVER_PORT=${WORKSHOP_SERVER_PORT:-8000}
+      - ENABLE_SHELL_INJECTION=${ENABLE_SHELL_INJECTION:-false}
       - MONGO_DB_HOST=mongodb
       - MONGO_DB_PORT=27017
       - MONGO_DB_USER=admin
