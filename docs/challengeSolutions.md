@@ -39,6 +39,18 @@ The above challenge was completed using Burp Suite Community Edition.
 ## Broken User Authentication
 
 ### Challenge 3 - Reset the password of a different user
+#### Detailed solution
+
+1. From the login page, click on "Forgot Password" and enter the email of the target user to trigger an OTP.
+2. Attempt to submit a random 4-digit OTP and observe the intercepted POST request to `/identity/api/auth/v3/check-otp`. 
+3. Note that the `v3` endpoint enforces rate-limiting and will lock out the user after a few failed attempts.
+4. Send the intercepted request to Burp Suite Repeater (or save it for a CLI fuzzer) and change the API version in the URL path from `/v3/` to the legacy `/v2/` endpoint (`/identity/api/auth/v2/check-otp`).
+5. Observe that the `v2` endpoint still processes OTP validations but fails to enforce the attempt limit.
+6. Send the `v2` request to Burp Suite Intruder (or use `ffuf`) and set a numeric payload on the `otp` JSON field. 
+7. Configure the payload from `0000` to `9999` and start the brute-force attack.
+8. The correct OTP will return a `200 OK` , which successfully change the victim's password.
+
+The above challenge was completed using Burp Suite Community Edition and FFUF.
 
 ## Excessive Data Exposure
 
