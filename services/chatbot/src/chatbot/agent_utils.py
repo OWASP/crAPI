@@ -40,11 +40,36 @@ def collect_long_strings(obj):
     return field_info
 
 
+def _truncate_json_string(value, encoded_budget):
+    """Find the longest fitting prefix, or retain the minimum for later fields."""
+    low = INDIVIDUAL_MIN_LENGTH
+    high = len(value) - 1
+    best = value[:low] + f"... [TRUNCATED: {len(value) - low} chars removed]"
+
+    while low <= high:
+        retained = (low + high) // 2
+        candidate = (
+            value[:retained] + f"... [TRUNCATED: {len(value) - retained} chars removed]"
+        )
+        if len(json.dumps(candidate)) <= encoded_budget:
+            best = candidate
+            low = retained + 1
+        else:
+            high = retained - 1
+
+    return best
+
+
 def truncate_by_length(content, max_length):
     """
     Truncate JSON content by recursively truncating the longest fields until content is under limit.
     Preserves structure and smaller fields with minimum loss of information.
     """
+    if max_length <= 0:
+        return ""
+    if len(content) <= max_length:
+        return content
+
     try:
         data = json.loads(content)
         field_info = sorted(collect_long_strings(data), key=lambda x: x["length"])
@@ -52,20 +77,25 @@ def truncate_by_length(content, max_length):
         cur_length = len(json.dumps(data))
         while field_info and cur_length - max_length > 0:
             longest = field_info.pop()
-            excess = cur_length - max_length
-            new_length = max(INDIVIDUAL_MIN_LENGTH, longest["length"] - excess)
-            cur_length -= longest["length"] - new_length
-            longest["dict"][longest["key"]] = (
-                longest["dict"][longest["key"]][:new_length]
-                + f"... [TRUNCATED: {longest['length'] - new_length} chars removed]"
+            value = longest["dict"][longest["key"]]
+            old_length = len(json.dumps(value))
+            replacement = _truncate_json_string(
+                value, max_length - (cur_length - old_length)
             )
+            new_length = len(json.dumps(replacement))
+            if new_length < old_length:
+                longest["dict"][longest["key"]] = replacement
+                cur_length += new_length - old_length
 
         if cur_length <= max_length:
             return json.dumps(data)
-    except (json.JSONDecodeError, Exception):
+    except (json.JSONDecodeError, RecursionError):
         pass
 
-    return content[:max_length] + "\n... [TRUNCATED]"
+    marker = "\n... [TRUNCATED]"
+    if max_length <= len(marker):
+        return content[:max_length]
+    return content[: max_length - len(marker)] + marker
 
 
 @before_model(state_schema=AgentState)

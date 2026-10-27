@@ -1,4 +1,6 @@
-"""Tests for trim_messages_to_token_limit and supporting helpers."""
+"""Tests for tool-output truncation, history trimming and supporting helpers."""
+
+import json
 import sys
 from types import ModuleType
 from unittest.mock import MagicMock, patch
@@ -10,12 +12,18 @@ import pytest
 # ---------------------------------------------------------------------------
 _STUBS = {}
 for mod_name in [
-    "langchain", "langchain.agents", "langchain.agents.middleware",
+    "langchain",
+    "langchain.agents",
+    "langchain.agents.middleware",
     "langchain.agents.middleware.types",
-    "langchain_core", "langchain_core.messages",
-    "langgraph", "langgraph.runtime",
-    "motor", "motor.motor_asyncio",
-    "langchain_community", "langchain_community.agent_toolkits",
+    "langchain_core",
+    "langchain_core.messages",
+    "langgraph",
+    "langgraph.runtime",
+    "motor",
+    "motor.motor_asyncio",
+    "langchain_community",
+    "langchain_community.agent_toolkits",
     "langchain_community.utilities",
     "pymongo",
 ]:
@@ -26,8 +34,8 @@ for mod_name in [
 
 # Provide the decorator used by agent_utils at import time
 sys.modules["langchain.agents"].AgentState = dict
-sys.modules["langchain.agents.middleware.types"].before_model = (
-    lambda **kw: (lambda fn: fn)
+sys.modules["langchain.agents.middleware.types"].before_model = lambda **kw: (
+    lambda fn: fn
 )
 sys.modules["langchain_core.messages"].ToolMessage = type("ToolMessage", (), {})
 sys.modules["langgraph.runtime"].Runtime = type("Runtime", (), {})
@@ -51,21 +59,65 @@ from chatbot.agent_utils import (
     _estimate_tokens,
     _message_content,
     trim_messages_to_token_limit,
+    truncate_by_length,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _make_msg(role, content):
     """Return a plain dict message like those stored in chat history."""
     return {"role": role, "content": content}
 
 
+class TestTruncateByLength:
+    @pytest.mark.parametrize(
+        "value, limit",
+        [("x" * 1000, 500), ("\n" * 1000, 500), ("é" * 1000, 900)],
+        ids=["ascii", "escaped", "unicode"],
+    )
+    def test_json_result_includes_marker_and_escaping_in_budget(self, value, limit):
+        content = json.dumps({"description": value, "id": 7})
+        result = truncate_by_length(content, limit)
+        assert len(result) <= limit
+        data = json.loads(result)
+        assert data["id"] == 7
+        assert "[TRUNCATED:" in data["description"]
+
+    def test_multiple_nested_fields_fit_budget(self):
+        content = json.dumps(
+            {"items": [{"description": "a" * 1000}, {"description": "b" * 1000}]}
+        )
+        result = truncate_by_length(content, 400)
+        assert len(result) <= 400
+        assert len(json.loads(result)["items"]) == 2
+
+    @pytest.mark.parametrize("limit", [0, 1, 10, 15, 50, 100])
+    @pytest.mark.parametrize(
+        "content",
+        ["plain text " * 100, json.dumps([1] * 100)],
+        ids=["text", "json-array"],
+    )
+    def test_fallback_includes_marker_in_budget(self, content, limit):
+        result = truncate_by_length(content, limit)
+        assert len(result) == limit
+        marker = "\n... [TRUNCATED]"
+        if limit > len(marker):
+            assert result == content[: limit - len(marker)] + marker
+        else:
+            assert result == content[:limit]
+
+    @pytest.mark.parametrize("content", ["hello", '{"id":7}', '  {"id": 7}  '])
+    def test_content_that_fits_is_unchanged(self, content):
+        assert truncate_by_length(content, 100) == content
+
+
 # ---------------------------------------------------------------------------
 # _estimate_tokens
 # ---------------------------------------------------------------------------
+
 
 class TestEstimateTokens:
     def test_empty_string(self):
@@ -83,6 +135,7 @@ class TestEstimateTokens:
 # _message_content
 # ---------------------------------------------------------------------------
 
+
 class TestMessageContent:
     def test_dict_message(self):
         assert _message_content({"role": "user", "content": "hello"}) == "hello"
@@ -93,11 +146,13 @@ class TestMessageContent:
     def test_object_message(self):
         class Msg:
             content = "from object"
+
         assert _message_content(Msg()) == "from object"
 
     def test_object_no_content(self):
         class Msg:
             pass
+
         assert _message_content(Msg()) == ""
 
 
@@ -173,8 +228,10 @@ class TestTrimMessagesToTokenLimit:
         """After trimming, estimated tokens must be <= budget."""
         token_budget = MAX_CONTENT_LENGTH // CHARS_PER_TOKEN
         # 20 messages each ~2500 tokens = 50000 tokens, well over 25000 budget
-        msgs = [_make_msg("user" if i % 2 == 0 else "assistant", "x" * 10000)
-                for i in range(20)]
+        msgs = [
+            _make_msg("user" if i % 2 == 0 else "assistant", "x" * 10000)
+            for i in range(20)
+        ]
         result = trim_messages_to_token_limit(msgs)
         result_tokens = sum(_estimate_tokens(m["content"]) for m in result)
         assert result_tokens <= token_budget
