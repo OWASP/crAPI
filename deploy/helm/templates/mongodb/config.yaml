@@ -8,5 +8,5 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
 data:
-  MONGO_INITDB_ROOT_USERNAME: {{ .Values.mongodb.config.mongoUser }}
-  MONGO_INITDB_ROOT_PASSWORD: {{ .Values.mongodb.config.mongoPassword }}
+  MONGO_INITDB_ROOT_USERNAME: {{ .Values.mongodb.config.mongoUser | quote }}
+  MONGO_INITDB_ROOT_PASSWORD: {{ .Values.mongodb.config.mongoPassword | quote }}

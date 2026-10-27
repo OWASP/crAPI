@@ -8,6 +8,6 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
 data:
-  POSTGRES_USER: {{ .Values.postgresdb.config.postgresUser }}
-  POSTGRES_PASSWORD: {{ .Values.postgresdb.config.postgresPassword }}
-  POSTGRES_DB: {{ .Values.postgresdb.config.postgresDbName }}
+  POSTGRES_USER: {{ .Values.postgresdb.config.postgresUser | quote }}
+  POSTGRES_PASSWORD: {{ .Values.postgresdb.config.postgresPassword | quote }}
+  POSTGRES_DB: {{ .Values.postgresdb.config.postgresDbName | quote }}

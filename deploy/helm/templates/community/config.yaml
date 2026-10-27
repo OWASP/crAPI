@@ -11,14 +11,14 @@ data:
     LOG_LEVEL: {{ .Values.logLevel | upper }}
     IDENTITY_SERVICE: {{ .Values.identity.service.name }}:{{ .Values.identity.port }}
     DB_HOST: {{ .Values.postgresdb.service.name }}
-    DB_USER: {{ .Values.postgresdb.config.postgresUser }}
-    DB_PASSWORD: {{ .Values.postgresdb.config.postgresPassword }}
-    DB_NAME: {{ .Values.postgresdb.config.postgresDbName }}
+    DB_USER: {{ .Values.postgresdb.config.postgresUser | quote }}
+    DB_PASSWORD: {{ .Values.postgresdb.config.postgresPassword | quote }}
+    DB_NAME: {{ .Values.postgresdb.config.postgresDbName | quote }}
     DB_PORT: {{ .Values.postgresdb.port | quote }}
     MONGO_DB_HOST: {{ .Values.mongodb.service.name }}
     MONGO_DB_PORT: {{ .Values.mongodb.port | quote }}
-    MONGO_DB_USER: {{ .Values.mongodb.config.mongoUser }}
-    MONGO_DB_PASSWORD: {{ .Values.mongodb.config.mongoPassword }}
-    MONGO_DB_NAME: {{ .Values.mongodb.config.mongoDbName }}
+    MONGO_DB_USER: {{ .Values.mongodb.config.mongoUser | quote }}
+    MONGO_DB_PASSWORD: {{ .Values.mongodb.config.mongoPassword | quote }}
+    MONGO_DB_NAME: {{ .Values.mongodb.config.mongoDbName | quote }}
     SERVER_PORT: {{ .Values.community.port | quote }}
     TLS_ENABLED: {{ .Values.tlsEnabled | quote }}
