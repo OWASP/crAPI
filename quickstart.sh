@@ -274,7 +274,7 @@ check_health() {
     debug "check_health"  # §5 debug at function start
     local service  # §8 local variable
     HEALTHY=true
-    if curl -s -f http://localhost:8888/health > /dev/null 2>&1; then
+    if curl -s -f http://localhost:8889/health > /dev/null 2>&1; then
         printf '%b\n' "${GREEN}[✓]${NC} Web interface is ready"
     else
         printf '%b\n' "${YELLOW}[!]${NC} Web interface not responding yet"
@@ -303,7 +303,7 @@ print_summary() {
     printf '%b\n' "${GREEN}════════════════════════════════════════════════════════${NC}"
     echo ""
     printf '%b\n' "${CYAN}Access Points:${NC}"
-    printf '%b\n' "  Web UI:        ${GREEN}http://localhost:8888${NC}"
+    printf '%b\n' "  Web UI:        ${GREEN}http://localhost:8889${NC}"
     printf '%b\n' "  Web UI (TLS):  ${GREEN}https://localhost:8443${NC}"
     printf '%b\n' "  Mailhog:       ${GREEN}http://localhost:8025${NC}"
     echo ""

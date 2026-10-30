@@ -142,7 +142,7 @@ hacking_lab_quickstart() {
 show_hacking_info() {
     echo -e "\n${CYAN}========== Hacking Lab Information ==========${NC}"
     echo -e "${GREEN}Access Points:${NC}"
-    echo "  Web UI: http://localhost:8888 (or https://localhost:8443)"
+    echo "  Web UI: http://localhost:8889 (or https://localhost:8443)"
     echo "  Mailhog: http://localhost:8025"
     echo ""
     echo -e "${GREEN}API Endpoints:${NC}"
@@ -221,7 +221,7 @@ docker_start() {
     if [ $? -eq 0 ]; then
         print_success "crAPI started successfully!"
         echo -e "\nAccess points:"
-        echo "  Web UI: http://localhost:8888"
+        echo "  Web UI: http://localhost:8889"
         echo "  Mailhog: http://localhost:8025"
     else
         print_error "Failed to start crAPI"
@@ -430,7 +430,7 @@ health_check() {
     echo -e "\nChecking service health:"
     
     # Web interface
-    if curl -s -f http://localhost:8888/health > /dev/null 2>&1; then
+    if curl -s -f http://localhost:8889/health > /dev/null 2>&1; then
         print_success "Web interface: Healthy"
     else
         print_error "Web interface: Not responding"
@@ -534,7 +534,7 @@ test_api_endpoint() {
     print_info "Testing API endpoints..."
     
     # Check if crAPI is running
-    if ! curl -s -f http://localhost:8888/health > /dev/null 2>&1; then
+    if ! curl -s -f http://localhost:8889/health > /dev/null 2>&1; then
         print_error "crAPI is not running. Please start it first."
         return
     fi
@@ -550,7 +550,7 @@ test_api_endpoint() {
     case $endpoint_choice in
         1)
             print_info "Testing Web UI health..."
-            curl -s http://localhost:8888/health | jq . 2>/dev/null || curl -s http://localhost:8888/health
+            curl -s http://localhost:8889/health | jq . 2>/dev/null || curl -s http://localhost:8889/health
             ;;
         2)
             print_info "Testing Identity service..."
