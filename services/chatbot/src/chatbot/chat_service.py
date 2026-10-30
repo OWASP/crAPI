@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from langgraph.graph.message import Messages
 
-from .agent_utils import trim_messages_to_token_limit
+from .agent_utils import message_content_to_text, trim_messages_to_token_limit
 from .config import Config
 from .extensions import db
 from .langgraph_agent import execute_langgraph_agent
@@ -64,9 +64,12 @@ async def process_user_message(session_id, user_message, api_key, model_name, us
     logger.debug("Response messages count: %d", len(response.get("messages", [])))
 
     reply: Messages = response.get("messages", [{}])[-1]
+    # Newer models can return `content` as a list of structured blocks rather
+    # than a plain string; normalize it before storing / serializing it.
+    reply_text = message_content_to_text(reply.content)
     response_message_id = uuid4().int & (1 << 63) - 1
     history.append(
-        {"id": response_message_id, "role": "assistant", "content": reply.content}
+        {"id": response_message_id, "role": "assistant", "content": reply_text}
     )
     logger.debug(
         "Added assistant response to history - message_id: %s", response_message_id
@@ -75,7 +78,7 @@ async def process_user_message(session_id, user_message, api_key, model_name, us
     add_to_chroma_collection(
         api_key,
         session_id,
-        [{"user": user_message}, {"assistant": reply.content}],
+        [{"user": user_message}, {"assistant": reply_text}],
         Config.LLM_PROVIDER,
         model_name,
     )
@@ -89,4 +92,4 @@ async def process_user_message(session_id, user_message, api_key, model_name, us
         response_message_id,
         len(history),
     )
-    return reply.content, response_message_id
+    return reply_text, response_message_id

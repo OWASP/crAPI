@@ -50,6 +50,7 @@ from chatbot.agent_utils import (
     CHARS_PER_TOKEN,
     _estimate_tokens,
     _message_content,
+    message_content_to_text,
     trim_messages_to_token_limit,
 )
 
@@ -190,3 +191,44 @@ class TestTrimMessagesToTokenLimit:
         original_len = len(msgs)
         trim_messages_to_token_limit(msgs)
         assert len(msgs) == original_len
+
+
+# ---------------------------------------------------------------------------
+# message_content_to_text
+# ---------------------------------------------------------------------------
+
+class TestMessageContentToText:
+    def test_plain_string_passthrough(self):
+        assert message_content_to_text("hello") == "hello"
+
+    def test_list_of_text_blocks(self):
+        # Newer Anthropic models return signed text blocks as a list.
+        content = [{"type": "text", "text": "OK", "signature": "CAQS..."}]
+        assert message_content_to_text(content) == "OK"
+
+    def test_skips_non_text_blocks(self):
+        # thinking / tool_use blocks must be dropped, text kept and joined.
+        content = [
+            {"type": "thinking", "thinking": "...", "signature": "x"},
+            {"type": "tool_use", "name": "sql", "input": {}},
+            {"type": "text", "text": "Answer"},
+        ]
+        assert message_content_to_text(content) == "Answer"
+
+    def test_joins_multiple_text_blocks(self):
+        content = [{"type": "text", "text": "a"}, {"type": "text", "text": "b"}]
+        assert message_content_to_text(content) == "ab"
+
+    def test_list_with_bare_strings(self):
+        assert message_content_to_text(["a", "b"]) == "ab"
+
+    def test_none_returns_empty_string(self):
+        assert message_content_to_text(None) == ""
+
+    def test_other_types_coerced_to_str(self):
+        assert message_content_to_text(123) == "123"
+
+    def test_result_is_always_a_string(self):
+        # The contract the callers rely on (Document(page_content=...) needs str).
+        for value in ["x", [{"type": "text", "text": "y"}], None, 1, []]:
+            assert isinstance(message_content_to_text(value), str)
