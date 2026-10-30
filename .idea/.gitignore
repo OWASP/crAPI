@@ -6,3 +6,5 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+# Claude Code IDE plugin session state (per-user)
+/claudeCodeEditorTabs.xml
