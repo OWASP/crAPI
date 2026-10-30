@@ -19,6 +19,10 @@ NC='\033[0m' # No Color
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$SCRIPT_DIR"
 
+# Platform detection and Docker runtime bootstrap (Colima on macOS), shared with quickstart.sh
+# shellcheck source=scripts/lib/platform.sh
+source "$SCRIPT_DIR/scripts/lib/platform.sh"
+
 # Function to print colored output
 print_info() {
     echo -e "${BLUE}[INFO]${NC} $1"
@@ -36,15 +40,14 @@ print_warning() {
     echo -e "${YELLOW}[WARNING]${NC} $1"
 }
 
-# Function to check if Docker is installed
+# Function to check Docker is installed and its engine is running (starts Colima on macOS)
 check_docker() {
-    if ! command -v docker &> /dev/null; then
-        print_error "Docker is not installed. Please install Docker first."
-        exit 1
-    fi
+    [[ -n "$PLATFORM_OS" ]] || detect_platform
+    ensure_docker_runtime
     
     if ! command -v docker-compose &> /dev/null && ! docker compose version &> /dev/null; then
-        print_error "Docker Compose is not installed. Please install Docker Compose first."
+        print_error "Docker Compose is not installed. Install it, then rerun:"
+        print_compose_install_hint
         exit 1
     fi
 }
