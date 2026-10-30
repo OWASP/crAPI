@@ -167,22 +167,7 @@ jobs:
       - name: Run crAPI using built images
         run: |
              cd deploy/docker
-             VERSION=${{ env.TAG_NAME }} docker compose -f docker-compose.yml --compatibility up -d --wait --wait-timeout 300
-
-      - name: Wait for crAPI gateway to be ready
-        run: |
-          echo "Waiting for crAPI gateway on port 30080..."
-          for i in $(seq 1 60); do
-            if curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:30080/health 2>/dev/null | grep -qE '(200|301|302|404)'; then
-              echo "crAPI gateway is ready!"
-              exit 0
-            fi
-            echo "Attempt $i/60: gateway not ready yet, waiting 5s..."
-            sleep 5
-          done
-          echo "crAPI gateway failed to become ready within 300s"
-          docker compose -f deploy/docker/docker-compose.yml ps
-          exit 1
+             VERSION=${{ env.TAG_NAME }} docker compose -f docker-compose.yml --compatibility up -d
 
       - name: Install Node
         uses: actions/setup-node@v3
