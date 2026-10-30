@@ -15,6 +15,31 @@ INDIVIDUAL_MIN_LENGTH = 100
 CHARS_PER_TOKEN = 4
 
 
+def message_content_to_text(content) -> str:
+    """Normalize an LLM message's ``content`` to plain text.
+
+    The OpenAI provider and older models return ``content`` as a ``str``, but
+    newer models (e.g. recent Anthropic Claude models) return it as a list of
+    structured content blocks (text / thinking / tool-use / signed text).
+    Downstream the value is stored in the Mongo chat history and passed to
+    ``Document(page_content=...)``, which requires a ``str`` -- a list makes it
+    raise ``pydantic.ValidationError`` and the whole turn is lost (chat appears
+    to fail and nothing is persisted). Join the text blocks and drop the rest
+    so output from any provider is handled.
+    """
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts = []
+        for block in content:
+            if isinstance(block, str):
+                parts.append(block)
+            elif isinstance(block, dict) and block.get("type") == "text":
+                parts.append(block.get("text", ""))
+        return "".join(parts)
+    return "" if content is None else str(content)
+
+
 def collect_long_strings(obj):
     field_info = []
 
