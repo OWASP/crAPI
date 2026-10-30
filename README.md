@@ -32,7 +32,8 @@ This is a fork of [OWASP/crAPI](https://github.com/OWASP/crAPI), set up to run o
    - [Vagrant](#vagrant)
    - [Kubernetes and other options](#kubernetes-and-other-options)
 5. [Challenges and Documentation](#challenges-and-documentation)
-6. [Getting Help](#getting-help)
+6. [Development Workflow and Releases](#development-workflow-and-releases)
+7. [Getting Help](#getting-help)
 
 ---
 
@@ -386,6 +387,46 @@ See [the setup instructions](docs/setup.md), including [Kubernetes][setup-k8s], 
 | [Chatbot API Key Flow](docs/chatbot-api-key-flow.md) | Flowchart of how the chatbot's LLM key (any provider) is sourced and kept out of git (this fork) |
 | [Setup](docs/setup.md) / [Teardown](docs/teardown.md) | All deployment options |
 | [Troubleshooting](docs/troubleshooting.md) | General install and runtime issues |
+
+[↑ Back to contents](#table-of-contents)
+
+---
+
+## Development Workflow and Releases
+
+| Branch | Purpose |
+| --- | --- |
+| `main` | Protected and always deployable. Changes arrive only through merge requests from `develop`. Releases are tagged here. |
+| `develop` | Where all changes are made and pushed. |
+
+1. **Make changes on `develop`** and push. GitLab CI runs on every push ([`.gitlab-ci.yml`](.gitlab-ci.yml)):
+
+   | Job | Checks |
+   | --- | --- |
+   | `shellcheck` | `quickstart.sh`, `scripts/lib/platform.sh` (all warnings), `crapi-dev.sh` (errors) |
+   | `bash-3.2-syntax` | The scripts parse under bash 3.2, the bash a stock Mac runs |
+   | `compose-config` | `docker-compose.yml` validates with no `llm.env.local`, as in a fresh clone |
+   | `chatbot-python` | The chatbot source compiles |
+   | `secret_detection` | GitLab's gitleaks scan for committed keys |
+   | `chatbot-image` | Builds the chatbot image and checks both LLM client libraries and the offline embedding model. Runs on merge requests, `main` and tags |
+
+2. **Open a merge request from `develop` to `main`.** From the command line:
+
+   ```bash
+   git push -o merge_request.create -o merge_request.target=main origin develop
+   ```
+
+   Merge it once its pipeline passes.
+
+3. **Release** from an up-to-date `main`. First add a `## [vX.Y.Z] - YYYY-MM-DD` section at the top of [`CHANGELOG.md`](CHANGELOG.md) (on `develop`, merged like any change). Then:
+
+   ```bash
+   git switch main && git pull
+   git tag -a vX.Y.Z -m "crAPI lab vX.Y.Z"
+   git push origin vX.Y.Z
+   ```
+
+   The tag pipeline's `release` job creates the GitLab release, with that version's `CHANGELOG.md` section as its notes. Releases are listed under **Deploy > Releases** in GitLab.
 
 [↑ Back to contents](#table-of-contents)
 

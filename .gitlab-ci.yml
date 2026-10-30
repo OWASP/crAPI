@@ -1,0 +1,110 @@
+# GitLab CI/CD for the crAPI lab fork.
+#
+# Branch flow: work happens on `develop`, reaches protected `main` through a
+# merge request, and releases are cut by pushing a vX.Y.Z tag on `main`.
+#
+#   every pipeline        lint (shellcheck, bash 3.2 syntax, compose, python) + secret detection
+#   MR / main / tags      build the crapi-chatbot image and smoke-test it
+#   vX.Y.Z tag            create a GitLab release with notes from CHANGELOG.md
+#
+# The other services run upstream's prebuilt images, so only the chatbot, which
+# quickstart.sh builds from local source, is built here.
+
+workflow:
+  rules:
+    # One pipeline per change: MR pipelines when an MR is open, branch pipelines otherwise
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG
+
+stages:
+  - lint
+  - test
+  - build
+  - release
+
+include:
+  # GitLab-maintained gitleaks scan (all tiers); fails the pipeline view on committed keys
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+
+variables:
+  DOCKER_VERSION: "27.3.1"
+
+#------------------------------------------------------------------------------
+# lint
+#------------------------------------------------------------------------------
+shellcheck:
+  stage: lint
+  image: koalaman/shellcheck-alpine:v0.10.0
+  script:
+    - shellcheck -x quickstart.sh scripts/lib/platform.sh
+    # crapi-dev.sh predates the style rules; gate on errors only
+    - shellcheck -x -S error crapi-dev.sh
+
+# quickstart.sh runs under macOS's /bin/bash 3.2, so the scripts must parse there
+bash-3.2-syntax:
+  stage: lint
+  image: bash:3.2
+  script:
+    - for f in quickstart.sh crapi-dev.sh scripts/lib/platform.sh; do bash -n "$f" && echo "ok $f"; done
+
+compose-config:
+  stage: lint
+  image: docker:${DOCKER_VERSION}-cli
+  script:
+    - cd deploy/docker
+    - docker compose version
+    # Validates without llm.env.local, exactly as a fresh clone would
+    - docker compose config --quiet
+    - test ! -e llm.env.local
+
+chatbot-python:
+  stage: lint
+  image: python:3.11-slim
+  script:
+    - python -m compileall -q services/chatbot/src
+
+#------------------------------------------------------------------------------
+# build
+#------------------------------------------------------------------------------
+chatbot-image:
+  stage: build
+  image: docker:${DOCKER_VERSION}
+  services:
+    - docker:${DOCKER_VERSION}-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_TAG
+  script:
+    - docker build -t "crapi-chatbot:${CI_COMMIT_SHORT_SHA}" services/chatbot
+    # Both LLM client libraries import, and the local embedding model is baked in (works offline)
+    - >-
+      docker run --rm --network none --entrypoint python "crapi-chatbot:${CI_COMMIT_SHORT_SHA}" -c
+      "import langchain_openai, langchain_anthropic;
+      from chatbot.retriever_utils import LocalEmbeddings;
+      print('embedding dims:', len(LocalEmbeddings().embed_query('crapi')))"
+
+#------------------------------------------------------------------------------
+# release
+#------------------------------------------------------------------------------
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/cli:latest   # GitLab requires the glab image for `release:`
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/
+  script:
+    # This tag's section of CHANGELOG.md, from its "## [vX.Y.Z]" heading to the next "## ["
+    - >-
+      awk -v tag="## [${CI_COMMIT_TAG}]" 'index($0, tag) == 1 {found=1; next} found && /^## \[/ {exit} found {print}'
+      CHANGELOG.md > release_notes.md
+    - test -s release_notes.md || echo "Release ${CI_COMMIT_TAG}. See CHANGELOG.md." > release_notes.md
+    - cat release_notes.md
+  release:
+    tag_name: $CI_COMMIT_TAG
+    name: "crAPI lab $CI_COMMIT_TAG"
+    description: ./release_notes.md
