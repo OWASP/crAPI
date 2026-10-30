@@ -27,6 +27,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Logged-in user API under {@code /identity/api/v2/user}.
+ *
+ * <p>{@code GET /dashboard} returns the profile the web UI shows after login (name, email, role,
+ * picture, and the user's available credit, which Workshop's shop and coupon flows adjust). {@code
+ * POST /reset-password} changes the password for the caller identified by the token. Both resolve
+ * the user through {@code UserService.getUserFromToken}; the dashboard route is also whitelisted in
+ * {@code WebSecurityConfig}.
+ *
+ * <p>Email and phone changes live in {@code ChangeEmailController} / {@code ChangePhoneController};
+ * profile media is in {@code ProfileController}.
+ */
 @CrossOrigin
 @RestController
 @RequestMapping("/identity/api/v2/user")

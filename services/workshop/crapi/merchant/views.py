@@ -13,7 +13,19 @@
 
 
 """
-contains all the views related to Merchant
+Customer-facing service-request views of the Workshop service, served under
+/workshop/api/merchant/.
+
+- ContactMechanicView: the SSRF challenge. It takes a ``mechanic_api`` URL in
+  the request body and performs a server-side GET to it, forwarding the
+  caller's Authorization header and the whole body as query parameters, then
+  returns whatever came back. The intended target is this service's own
+  mechanic/receive_report endpoint, but any URL reachable from the container
+  works, including the internal-only services and api.mypremiumdealership.com.
+  ``repeat_request_if_failed`` / ``number_of_repeats`` let it retry up to 100
+  times.
+- UserServiceRequestsView: a vehicle owner's service requests, looked up by VIN.
+- UserServiceCommentView: comments on one of those requests.
 """
 import logging
 import requests

@@ -40,6 +40,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+/**
+ * Seeds the database the first time the Identity service starts.
+ *
+ * <p>Listens for {@code ApplicationReadyEvent}, then inserts the vehicle companies/models and the
+ * predefined accounts from {@code constant.TestUsers} (admin, the example users, their vehicles
+ * with VINs and GPS locations) when the user table is empty. These are the accounts the challenge
+ * walkthroughs, the Postman collection and the chatbot's MCP server ({@code admin@example.com}) all
+ * rely on, so a change here changes what every other service sees.
+ */
 @Component
 @Slf4j
 public class InitialDataConfig {

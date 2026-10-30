@@ -12,6 +12,13 @@
  * limitations under the License.
  */
 
+// Server type and the PostgreSQL connection for the Community service.
+//
+// Server bundles the mux router, the gorm DB handle and the Mongo client; the
+// router and controllers packages alias it. Initialize opens Postgres with the
+// DB_* environment variables from docker-compose. The database is the same one
+// Identity owns, which is how this service resolves token subjects to users.
+
 package config
 
 import (

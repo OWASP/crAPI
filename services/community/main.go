@@ -12,6 +12,11 @@
  * limitations under the License.
  */
 
+// Entry point of the Community service (container crapi-community, Go).
+//
+// Everything of substance lives in the api package; this just calls api.Run,
+// which connects to Postgres and Mongo, waits for crapi-identity to be healthy,
+// seeds the forum data and starts the HTTP router on SERVER_PORT (8087).
 package main
 
 import (

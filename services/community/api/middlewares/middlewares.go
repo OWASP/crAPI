@@ -12,6 +12,13 @@
  * limitations under the License.
  */
 
+// Package middlewares holds the handler wrappers applied in router/routes.go.
+//
+// SetMiddlewareJSON sets the JSON content type and CORS headers.
+// SetMiddlewareAuthentication is the gate on every API route: it pulls the
+// Bearer token off the request and asks auth.ExtractTokenID to validate it
+// (which defers to the Identity service), rejecting with 401 otherwise.
+// AccessControlMiddleware answers CORS preflight requests.
 package middlewares
 
 import (

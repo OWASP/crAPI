@@ -1,3 +1,23 @@
+"""
+The LLM agent itself. This is where the chatbot's behaviour, and therefore
+the LLM challenge set (prompt injection, credential extraction, action
+hijacking), is defined.
+
+build_llm creates the chat model through LangChain's init_chat_model, so the
+provider is whatever Config.LLM_PROVIDER says (openai, any OpenAI-compatible
+API via LLM_BASE_URL, or anthropic). build_langgraph_agent then assembles a
+LangGraph agent with the system prompt below and three tool sources:
+
+1. the crAPI REST API, as MCP tools fetched from the local MCP server through
+   mcp_client.py (these run with the admin API key, see mcpserver/server.py);
+2. a SQLDatabaseToolkit over the shared Postgres database (extensions.postgresdb),
+   giving the model direct SQL access;
+3. the chat_rag retriever over ChromaDB from retriever_utils.py.
+
+agent_utils.truncate_tool_messages trims oversized tool output before each
+model call. execute_langgraph_agent is the entry point chat_service.py uses.
+"""
+
 import textwrap
 
 from langchain.agents import create_agent

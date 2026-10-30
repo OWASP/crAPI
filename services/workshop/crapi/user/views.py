@@ -13,7 +13,13 @@
 
 
 """
-contains all the views related to Merchant
+Admin user-management view of the Workshop service, served under
+/workshop/api/management/.
+
+AdminUserView lists every user (paginated) from the user tables that Identity
+owns and this service maps read-only in crapi/user/models.py. Whether the
+caller is actually an admin is left to the view, which is the point of the
+challenge.
 """
 import logging
 import requests

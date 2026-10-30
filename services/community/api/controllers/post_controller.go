@@ -12,6 +12,16 @@
  * limitations under the License.
  */
 
+// FORUM HANDLERS: THE SOCIAL "COMMUNITY" FEATURE OF CRAPI.
+//
+// AddNewPost, GetPost (paginated recent posts), GetPostByID and Comment are the
+// request handlers behind /community/api/v2/community/posts. They validate
+// input, stamp the post or comment with the author resolved from the token
+// (models.Prepare) and persist through the models package into MongoDB.
+// Every post is returned with its full embedded author, including the
+// author's email and vehicle id; that leak is what the vehicle-location BOLA
+// walkthrough (challenge 1) uses to find other users' vehicle ids.
+
 package controllers
 
 import (

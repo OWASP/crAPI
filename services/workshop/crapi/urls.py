@@ -13,7 +13,17 @@
 
 
 """
-crAPI URL Configuration
+Top-level URL configuration for the Workshop service.
+
+crapi-web proxies /workshop/ here, and this file splits the API into the four
+Django apps under crapi/, each with its own urls.py and views.py:
+
+- api/mechanic/   mechanic signup/listing, service requests and reports
+- api/merchant/   contact_mechanic (the SSRF endpoint) and user-side
+                  service-request views
+- api/shop/       products, orders, returns, coupons
+- api/management/ admin user listing
+
 The `urlpatterns` list routes URLs to URLConf.
 """
 from django.urls import path, include

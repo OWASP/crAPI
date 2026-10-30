@@ -1,3 +1,14 @@
+"""
+Runtime configuration for the chatbot API process, read from environment
+variables (docker-compose plus the optional deploy/docker/llm.env.local).
+
+The LLM settings are the ones that matter for running the lab: LLM_PROVIDER,
+DEFAULT_MODEL, LLM_BASE_URL, the API key (CHATBOT_LLM_API_KEY, or upstream's
+CHATBOT_OPENAI_API_KEY) and EMBEDDINGS_PROVIDER. Database locations come from
+dbconnections.py. Consumed by langgraph_agent.py (model), retriever_utils.py
+(embeddings) and session_service.py (default key and model).
+"""
+
 import os
 
 from dotenv import load_dotenv

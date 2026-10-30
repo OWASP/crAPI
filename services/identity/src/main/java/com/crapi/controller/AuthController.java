@@ -33,6 +33,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Public authentication API under {@code /identity/api/auth} (no token required, see {@code
+ * WebSecurityConfig}).
+ *
+ * <p>Endpoints: {@code /signup}, {@code /login} (returns the JWT), {@code /forget-password} (mails
+ * an OTP via Mailhog), {@code /v2/check-otp} (unlimited attempts: the OTP brute-force challenge)
+ * and {@code /v3/check-otp} (locks after 10 failures), {@code /v2.7} and {@code /v4.0} {@code
+ * login-with-token}, {@code /verify} (the internal endpoint Community and Workshop POST tokens to),
+ * {@code /jwks.json} (served publicly through {@code crapi-web}) and {@code /reset-test-users}.
+ *
+ * <p>Thin layer: delegates to {@code UserService}, {@code UserRegistrationService} and {@code
+ * OtpService} and uses {@code JwtProvider} for the JWKS.
+ */
 @Slf4j
 @CrossOrigin
 @RestController

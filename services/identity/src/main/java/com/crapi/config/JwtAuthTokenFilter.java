@@ -36,6 +36,18 @@ enum ApiType {
   APIKEY;
 }
 
+/**
+ * Servlet filter that turns the {@code Authorization} header into a Spring Security principal.
+ *
+ * <p>Runs once per request, ahead of the standard filters (see {@link WebSecurityConfig}). It
+ * strips the {@code Bearer } / {@code ApiKey } prefix, asks {@link JwtProvider} for the subject
+ * (API keys skip signature validation entirely, JWTs go through {@code validateJwtToken}), loads
+ * the user via {@code UserDetailsServiceImpl}, and, if the account is not locked, stores the
+ * authentication in the {@code SecurityContext}. Any failure is logged and the request continues
+ * unauthenticated, so the route rules decide whether it gets a 401.
+ *
+ * <p>The services also call {@link #getUserFromToken} directly to find out who is making a request.
+ */
 @Slf4j
 public class JwtAuthTokenFilter extends OncePerRequestFilter {
 

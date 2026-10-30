@@ -11,7 +11,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """
-Contains all the methods related to jwt token
+Authentication for the Workshop service: the jwt_auth_required decorator.
+
+Every protected view in crapi/*/views.py is wrapped with it. The decorator
+reads the Bearer token from the Authorization header and POSTs it to the
+Identity service (settings.IDENTITY_VERIFY, i.e.
+http://crapi-identity:8080/identity/api/auth/verify). Only if Identity answers
+200 does it decode the token (without verifying the signature) to get the
+subject email, load the matching crapi.user.models.User from the Postgres
+table that Identity maintains, and pass it to the view as the ``user`` kwarg.
+Otherwise the request gets a 401.
+
+Nothing here validates a signature, so Identity's JWT weaknesses
+(services/identity/.../config/JwtProvider.java) apply to this service too.
 """
 import requests
 import jwt

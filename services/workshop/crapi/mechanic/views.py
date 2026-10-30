@@ -13,7 +13,22 @@
 
 
 """
-contains all the views related to Mechanic
+Mechanic-side views of the Workshop service, served under /workshop/api/mechanic/.
+
+- SignUpView: creates a mechanic with a mechanic_code (no auth required).
+- MechanicView: paginated list of mechanics, used by the web UI's
+  contact-mechanic form.
+- ReceiveReportView: GET endpoint that creates a ServiceRequest from query
+  parameters (mechanic_code, vin, problem_details). It is the URL that the
+  merchant ContactMechanicView is meant to call, and it answers with a
+  report_link that embeds the numeric report id.
+- GetReportView: returns a service request by that id with no ownership
+  check: the mechanic-report BOLA challenge.
+- MechanicServiceRequestsView / ServiceCommentView: a mechanic's queue of
+  requests and comments on them.
+
+Models live in crapi/mechanic/models.py (Mechanic, ServiceRequest,
+ServiceComment); vehicles are looked up by VIN in the tables Identity seeds.
 """
 import os
 import bcrypt

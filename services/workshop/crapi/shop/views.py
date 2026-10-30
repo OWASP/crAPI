@@ -13,7 +13,25 @@
 
 
 """
-contains views related to Shop APIs
+Shop views of the Workshop service, served under /workshop/api/shop/.
+
+- ProductView: list products; POST lets any authenticated user add one.
+- OrderControlView: POST places an order, debiting available credit by
+  price * quantity with no check that quantity is positive (a negative
+  quantity raises the balance: challenges 8 and 9). GET fetches any order
+  by id with no ownership check and, while doing so, POSTs the order to the
+  fake dealership API at API_GATEWAY_URL/v1/payment (services/gateway-service)
+  to attach card details to the response. PUT, owner-checked, changes an
+  order's quantity or status.
+- OrderDetailsView: the caller's past orders.
+- ReturnOrder / ReturnQRCodeView: start a return and serve its QR code.
+- ApplyCouponView: redeems a coupon. It checks applied_coupon with a
+  string-concatenated SQL query (SQL injection challenge), then reads the
+  coupon itself from the MongoDB collection that the Community service
+  writes, and credits the amount to the user.
+
+Models are in crapi/shop/models.py; the user and credit come from the
+Identity-owned tables via utils/jwt.py.
 """
 import logging
 import uuid

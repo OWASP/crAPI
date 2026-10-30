@@ -27,6 +27,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Account-management API under {@code /identity/management}.
+ *
+ * <p>{@code POST /admin/lockUser} locks an account (ADMIN role, enforced in {@code
+ * WebSecurityConfig}). {@code POST /user/apikey} exchanges an email/password for a never-expiring
+ * API key, a JWT signed by {@code JwtProvider} and sent back as {@code Authorization: ApiKey ...}.
+ * The chatbot's MCP server ({@code services/chatbot/src/mcpserver/server.py}) calls this endpoint
+ * with the hardcoded admin credentials at startup, so every chatbot tool runs with that key.
+ *
+ * <p>Delegates to {@code UserService}.
+ */
 @Slf4j
 @CrossOrigin
 @RestController

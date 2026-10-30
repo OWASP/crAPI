@@ -34,6 +34,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * One-time-password logic for the forgot-password flow in {@code AuthController}.
+ *
+ * <p>{@link #generateOtp} creates a 4-digit code with {@code utils.OTPGenerator}, stores it in the
+ * {@code Otp} table and mails it through {@code SMTPMailServer} (readable in Mailhog). Two
+ * validators back the two API versions: {@link #validateOtp} ({@code /v2/check-otp}) counts wrong
+ * attempts but never locks the OTP, so a 4-digit code can be brute-forced (the password-reset
+ * challenge); {@link #secureValidateOtp} ({@code /v3/check-otp}) invalidates it after 10 failures.
+ * On success the user's password is reset.
+ */
 @Service
 @Slf4j
 public class OtpServiceImpl implements OtpService {

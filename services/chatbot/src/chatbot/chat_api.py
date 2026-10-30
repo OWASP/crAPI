@@ -1,3 +1,24 @@
+"""
+HTTP endpoints of the chatbot, mounted at /chatbot/genai by app.py.
+
+Each request is tied to a chat session by the chat_session_id cookie
+(session_service). The endpoints:
+
+- POST /init     store the caller's LLM API key for the session (skipped
+                 when the container already has one from CHATBOT_LLM_API_KEY)
+- POST /model    pick the model name for the session
+- POST /ask      run one user message through the LangGraph agent
+                 (chat_service.process_user_message) and return the reply
+- GET  /state    whether the session is initialised, plus recent history
+- GET  /history  the last 20 messages
+- POST /reset    delete the session's history
+- GET  /health
+
+The caller's own Bearer JWT, if present, is read by session_service and
+forwarded to the MCP server, but the tools themselves run with the admin API
+key obtained in mcpserver/server.py regardless of who is chatting.
+"""
+
 import logging
 from uuid import uuid4
 

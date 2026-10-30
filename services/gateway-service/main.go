@@ -1,3 +1,17 @@
+// The fake third-party "premium dealership" API (container
+// api.mypremiumdealership.com, HTTPS only on 443 with a self-signed cert).
+//
+// It stands in for an external vendor so crAPI has something to call out to:
+//
+//	GET  /v1/vin/ownership?vin=...  previous owners of a vehicle (called by
+//	                                Identity's VehicleOwnershipServiceImpl)
+//	POST /v1/payment                "charges" an order and returns card
+//	                                details (called by Workshop's shop views)
+//
+// Both need HTTP basic auth with the hardcoded vendorcrapi credentials. No
+// database: every response is generated with jaswdr/faker seeded from the
+// input (VIN or phone number), so the same input always yields the same PII.
+// It is reachable from Workshop by design; that is the SSRF challenge target.
 package main
 
 import (

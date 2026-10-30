@@ -31,6 +31,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Vehicle API under {@code /identity/api/v2/vehicle}.
+ *
+ * <p>{@code register_vehicle} creates a vehicle with a generated VIN and mails its details through
+ * Mailhog; {@code add_vehicle} attaches that VIN/pin code to the caller's account; {@code
+ * resend_email} re-sends the details; {@code vehicles} lists the caller's vehicles, each enriched
+ * with its previous owners fetched from the premium dealership API ({@code
+ * VehicleOwnershipService}). {@code GET /vehicle/{carId}/location} returns any vehicle's GPS
+ * position with no ownership check: this is the BOLA challenge.
+ *
+ * <p>Vehicle rows seeded here are what Workshop's mechanic and service-request flows reference by
+ * VIN. Delegates to {@code VehicleService} and {@code VehicleOwnershipService}.
+ */
 @CrossOrigin
 @RestController
 @RequestMapping("/identity/api/v2")

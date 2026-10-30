@@ -39,6 +39,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Profile media logic behind {@code ProfileController}.
+ *
+ * <p>Stores profile pictures on {@code UserDetails} and videos as {@code ProfileVideo} rows, keyed
+ * to the caller resolved through {@code UserService.getUserFromToken}. {@link #updateProfileVideo}
+ * accepts {@code conversion_params} from the client (mass assignment), and {@link #convertVideo}
+ * builds an {@code ffmpeg} command line from them; when {@code app.enable_shell_injection} is true
+ * it is executed with {@code utils.BashCommand}, otherwise only echoed back. {@link
+ * #deleteAdminProfileVideo} is the admin delete behind the BFLA challenge.
+ */
 @Service
 @Slf4j
 public class ProfileServiceImpl implements ProfileService {

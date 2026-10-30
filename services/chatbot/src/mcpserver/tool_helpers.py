@@ -1,3 +1,14 @@
+"""
+Helpers that make resources/crapi-openapi-spec.json consumable by FastMCP.
+
+OpenAPIRefResolver inlines every ``$ref`` so each tool's schema is
+self-contained, and fix_array_responses_in_spec removes top-level array
+response schemas, which FastMCP's OpenAPI import rejects. server.py applies
+both before FastMCP.from_openapi. get_any_api_key returns an LLM key (from the
+environment or any stored chat session in Mongo) for code paths that need one
+outside a request.
+"""
+
 from chatbot.config import Config
 from chatbot.extensions import db
 

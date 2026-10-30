@@ -47,6 +47,21 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Core account logic behind {@code AuthController}, {@code UserController}, {@code
+ * ChangeEmailController}, {@code ChangePhoneController} and {@code ManagementControlller}.
+ *
+ * <p>Login (authenticates through Spring's {@code AuthenticationManager}, issues the JWT with
+ * {@code JwtProvider}, and feeds the email into Log4j when the Log4Shell toggle is on), the {@code
+ * /verify} check used by the other services, password reset, dashboard data, change-email and
+ * change-phone flows with their mailed tokens/OTPs ({@code SMTPMailServer} to Mailhog), account
+ * lock/unlock, and API-key generation.
+ *
+ * <p>Also the common helper the rest of the service uses to resolve the caller: {@link
+ * #getUserFromToken} (validated) and {@link #getUserFromTokenWithoutValidation}. Persists via the
+ * JPA repositories for {@code User}, {@code UserDetails}, {@code ChangeEmailRequest} and {@code
+ * ChangePhoneRequest}.
+ */
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {

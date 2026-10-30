@@ -12,6 +12,12 @@
  * limitations under the License.
  */
 
+// Package seed loads the default forum content on startup.
+//
+// LoadMongoData (called from api.Run) inserts the predefined coupons and the
+// sample posts, attributing each post to one of the seeded Identity users
+// (adam007, pogba006, robot001) looked up in Postgres. It skips collections
+// that already have data, so re-running the stack keeps user-created posts.
 package seed
 
 import (

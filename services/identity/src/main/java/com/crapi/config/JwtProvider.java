@@ -43,6 +43,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * Creates and validates every token crAPI uses. This is the heart of the JWT challenge set.
+ *
+ * <p>Loads the RSA key pair from {@code jwks.json} ({@code app.jwksJson}) at startup and uses it to
+ * sign login JWTs ({@link #generateJwtToken}) and never-expiring API keys ({@link
+ * #generateApiKey}), and to publish the public JWKS that {@code crapi-web} serves at {@code
+ * /.well-known/jwks.json}.
+ *
+ * <p>{@link #validateJwtToken} is deliberately permissive: an {@code HS256} token is verified with
+ * the base64 RSA public key as the HMAC secret (algorithm confusion), a {@code kid} containing
+ * {@code /dev/null} switches the secret to a known constant, a {@code jku} header makes the service
+ * fetch the verification key from an attacker-controlled URL, and an unsigned token parses as
+ * valid. {@link #getUserNameFromJwtToken} reads the subject without checking the signature at all.
+ *
+ * <p>Used by {@link JwtAuthTokenFilter} on every request and by the auth/user services when they
+ * issue tokens. Community and Workshop end up here too, via {@code /identity/api/auth/verify}.
+ */
 @Slf4j
 @Component
 public class JwtProvider {

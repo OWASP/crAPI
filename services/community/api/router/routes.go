@@ -12,6 +12,22 @@
  * limitations under the License.
  */
 
+// Package router is the Community service's route table.
+//
+// InitializeRoutes binds every public path to its controller, wrapped in the
+// JSON and authentication middlewares:
+//
+//	GET  /community/api/v2/community/posts/recent
+//	GET  /community/api/v2/community/posts/{postID}
+//	POST /community/api/v2/community/posts
+//	POST /community/api/v2/community/posts/{postID}/comment
+//	POST /community/api/v2/coupon/new-coupon
+//	POST /community/api/v2/coupon/validate-coupon
+//	GET  /community/home            (unauthenticated health page)
+//
+// Run then serves them, over TLS when TLS_ENABLED is set. These paths are
+// what crapi-web's /community/ location proxies to and what the web UI's
+// communitySaga.ts and shopSaga.ts call.
 package router
 
 import (

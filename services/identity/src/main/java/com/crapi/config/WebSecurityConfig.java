@@ -32,6 +32,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Spring Security configuration: decides which Identity routes are public and which need a token.
+ *
+ * <p>Builds the stateless security filter chain. {@code /identity/api/auth/**}, the health check,
+ * the dashboard and {@code /identity/management/user/**} are open; {@code
+ * /identity/management/admin/**} needs the ADMIN role; everything else just needs to be
+ * authenticated. Authentication itself happens in {@link JwtAuthTokenFilter}, which this class
+ * inserts ahead of Spring's username/password filter, and failures are answered by {@link
+ * JwtAuthEntryPoint}. Also exposes the BCrypt {@code PasswordEncoder} and the {@code
+ * AuthenticationManager} that the login flow in {@code UserServiceImpl} uses.
+ */
 @Configuration
 @EnableWebSecurity
 @Slf4j

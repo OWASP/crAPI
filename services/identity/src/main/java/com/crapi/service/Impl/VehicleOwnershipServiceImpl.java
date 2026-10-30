@@ -39,6 +39,17 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * Identity's only outbound call to another service: previous-owner lookups against the fake
+ * third-party dealership API.
+ *
+ * <p>{@link #getPreviousOwners} sends {@code GET {api.gateway.url}/v1/vin/ownership?vin=...} with
+ * HTTP basic auth ({@code api.gateway.username/password}) over a {@code RestTemplate} that trusts
+ * any certificate. The target is {@code services/gateway-service} (container {@code
+ * api.mypremiumdealership.com}), which fabricates deterministic owner PII from the VIN. Called from
+ * {@code VehicleController.getVehicle} for every vehicle in the caller's list; failures are logged
+ * and an empty list returned, so the gateway being down does not break the dashboard.
+ */
 @Service
 @Slf4j
 public class VehicleOwnershipServiceImpl implements VehicleOwnershipService {

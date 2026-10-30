@@ -1,3 +1,15 @@
+"""
+Quart application object for the chatbot API (the uvicorn process started by
+entrypoint.sh).
+
+Mounts chat_api.chat_bp under /chatbot/genai, so the full paths are
+/chatbot/genai/{init,model,ask,state,history,reset,health}, which is what
+crapi-web's /chatbot/ location proxies and what the web UI's
+components/bot/Bot.tsx calls. Also enables CORS for any origin and loads
+Config. Importing this module imports extensions, which opens the Mongo and
+Postgres connections.
+"""
+
 from quart import Blueprint, Quart, jsonify
 from quart_cors import cors
 

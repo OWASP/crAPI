@@ -12,6 +12,10 @@
  * limitations under the License.
  */
 
+// MongoDB connection for the Community service. InitializeMongo connects using
+// the MONGO_DB_* environment variables and returns the client that the models
+// package uses for posts, comments and coupons.
+
 package config
 
 import (

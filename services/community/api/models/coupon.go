@@ -12,6 +12,14 @@
  * limitations under the License.
  */
 
+// Coupon model and its MongoDB persistence.
+//
+// SaveCoupon writes to the "coupons" collection. ValidateCode runs whatever
+// bson.M filter the controller hands it, so an attacker-controlled body such as
+// {"coupon_code": {"$ne": ""}} matches any coupon; this is the NoSQL injection
+// challenge. Workshop reads the same collection (crapi/shop/views.py) when a
+// coupon is applied to a user's balance.
+
 package models
 
 import (

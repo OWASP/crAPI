@@ -12,6 +12,11 @@
  * limitations under the License.
  */
 
+// Defines the controllers.Server type the other handler files hang off (it
+// carries the router, the gorm Postgres handle and the Mongo client set up in
+// api/config) and the unauthenticated GET /community/home used as a liveness
+// check by health.sh and the compose healthcheck.
+
 package controllers
 
 import (

@@ -1,3 +1,22 @@
+"""
+The MCP server: crAPI's own REST API exposed to the LLM as tools.
+
+Started by entrypoint.sh as a background process on MCP_SERVER_PORT (5500).
+At import time it loads resources/crapi-openapi-spec.json, patches it with
+tool_helpers (inline $refs, drop array response schemas FastMCP cannot
+handle) and calls FastMCP.from_openapi, so every operation in the spec
+becomes a callable tool.
+
+Those tools are executed with get_http_client: an httpx client whose base URL
+is crapi-web and whose Authorization header is ``ApiKey <key>``, where the key
+is obtained once at startup by get_api_key posting Config.API_USER /
+API_PASSWORD (admin@example.com / Admin!123 by default) to Identity's
+/identity/management/user/apikey. The chatting user's identity plays no part:
+every tool call is made as admin. That privilege gap is the design behind the
+chatbot challenges. The agent in chatbot/langgraph_agent.py consumes these
+tools through chatbot/mcp_client.py.
+"""
+
 import json
 import logging
 import os

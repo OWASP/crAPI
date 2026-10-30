@@ -12,6 +12,13 @@
  * limitations under the License.
  */
 
+// Package auth is how the Community service checks who is calling.
+//
+// It does not verify JWT signatures itself. ExtractTokenID POSTs the token to
+// http(s)://$IDENTITY_SERVICE/identity/api/auth/verify, and on a 200 decodes
+// the subject (email) without verification and resolves it to a user id in the
+// Postgres table shared with Identity (CheckTokenInDB). Any change to how
+// Identity validates tokens therefore applies here at runtime.
 package auth
 
 import (

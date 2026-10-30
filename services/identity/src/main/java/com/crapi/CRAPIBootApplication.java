@@ -24,6 +24,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /*@PropertySources({
         @PropertySource(value = "file:/home/hasher/Music/resources/application.properties", ignoreResourceNotFound = true)
 })*/
+/**
+ * Entry point of the Identity service (container {@code crapi-identity}, the only JWT issuer in
+ * crAPI).
+ *
+ * <p>Boots Spring and component-scans {@code com.crapi}: the REST layer in {@code controller},
+ * business logic in {@code service.Impl}, JPA entities/repositories backed by PostgreSQL, and the
+ * security wiring in {@code config}. Once the context is ready, {@code InitialDataConfig} seeds the
+ * default users and vehicles.
+ *
+ * <p>Other services never talk to this class directly: {@code crapi-web} proxies {@code /identity/}
+ * here, and Community/Workshop call {@code /identity/api/auth/verify} over the Docker network to
+ * validate tokens.
+ */
 @SpringBootApplication(scanBasePackages = {"com.crapi"})
 public class CRAPIBootApplication {
 

@@ -12,6 +12,14 @@
  * limitations under the License.
  */
 
+// Post model and its MongoDB persistence.
+//
+// Post is a forum post with its embedded Author and Comments. SavePost,
+// GetPostByID and FindAllPost (paginated) are the only reads/writes of the
+// "post" collection, called from controllers/post_controller.go. Prepare
+// fills in the author from the current user and Validate enforces required
+// fields.
+
 package models
 
 import (

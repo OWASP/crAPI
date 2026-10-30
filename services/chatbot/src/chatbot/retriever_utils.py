@@ -1,3 +1,20 @@
+"""
+RAG layer: ChromaDB vector store over past chat messages.
+
+get_chroma_vectorstore connects to the chromadb container (CHROMA_HOST/PORT)
+and picks the embedding function from Config.EMBEDDINGS_PROVIDER: OpenAI's
+text-embedding-3-large in the "chats" collection, or Chroma's bundled ONNX
+MiniLM (LocalEmbeddings, no API needed) in "chats_local". The two collections
+are separate because vector sizes differ.
+
+add_to_chroma_collection is called by chat_service.py after every exchange to
+index the user message and the reply, tagged with the session id and role.
+get_retriever_tool wraps a similarity search as the ``chat_rag`` tool that
+langgraph_agent.py gives the model for "what did I ask earlier" questions.
+Documents are not filtered by session, so one session's history is
+retrievable from another.
+"""
+
 import chromadb
 from chromadb.utils.embedding_functions import DefaultEmbeddingFunction
 from langchain_chroma import Chroma as ChromaClient

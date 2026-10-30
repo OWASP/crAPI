@@ -1,3 +1,14 @@
+"""
+Chat history persistence and the per-message pipeline used by chat_api.py.
+
+History lives in the Mongo collection chat_sessions, one document per session
+id (get/update/delete_chat_history). process_user_message appends the user's
+message, runs the whole history through langgraph_agent.execute_langgraph_agent,
+appends the reply, indexes the exchange into ChromaDB
+(retriever_utils.add_to_chroma_collection) so the agent's chat_rag tool can
+recall it later, and trims the stored history to the last 20 messages.
+"""
+
 from uuid import uuid4
 
 from langgraph.graph.message import Messages

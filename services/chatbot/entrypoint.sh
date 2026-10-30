@@ -14,6 +14,18 @@
 # limitations under the License.
 
 # Get script directory
+# Container entrypoint for crapi-chatbot. It runs two processes:
+#
+#   1. `python -m mcpserver.server` in the background: the MCP server on port
+#      5500 that exposes crAPI's REST API as LLM tools (see src/mcpserver/).
+#   2. `uvicorn chatbot.app:app` in the foreground on SERVER_PORT (5002): the
+#      Quart API that crapi-web proxies /chatbot/ to (see src/chatbot/).
+#
+# The agent in process 2 reaches process 1 over localhost. Both import
+# chatbot.extensions, which connects to Postgres and Mongo at import time, so
+# a bad DB connection kills the whole container. With TLS_ENABLED, uvicorn
+# serves with the certs in ./certs unless TLS_CERTIFICATE/TLS_KEY override them.
+
 DIR="$( cd "$( dirname "$0" )" >/dev/null 2>&1 && pwd )"
 
 echo "Starting Flask server"

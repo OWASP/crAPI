@@ -12,6 +12,10 @@
  * limitations under the License.
  */
 
+// Comments model: a reply on a Post, stored inline in the post document.
+// CommentOnPost appends the comment to the post's comments array in Mongo and
+// returns the updated post; used by controllers/post_controller.go Comment.
+
 package models
 
 import (

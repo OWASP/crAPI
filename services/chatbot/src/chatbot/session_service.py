@@ -1,3 +1,15 @@
+"""
+Per-session state for the chatbot API.
+
+A session is identified by the chat_session_id cookie, created on first
+contact by get_or_create_session_id. Its LLM API key and chosen model name are
+stored in the Mongo collection ``sessions`` (store/get/delete_api_key,
+store/get_model_name); when no key was posted, get_api_key falls back to the
+container's CHATBOT_LLM_API_KEY from config.py. get_user_jwt reads the
+caller's own Bearer token off the request so langgraph_agent/mcp_client can
+pass it along. Used by every handler in chat_api.py.
+"""
+
 import uuid
 
 from quart import after_this_request, request

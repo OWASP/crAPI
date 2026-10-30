@@ -27,6 +27,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Profile picture and video endpoints under {@code /identity/api/v2/user} (plus one admin route).
+ *
+ * <p>Upload a picture ({@code POST /pictures}), upload/get/update/delete a profile video ({@code
+ * /videos}, {@code /videos/{video_id}}), and {@code GET /videos/convert_video}, whose {@code
+ * conversion_params} are handed to {@code ProfileServiceImpl} and, when shell injection is enabled
+ * in the properties, run through {@code utils.BashCommand}. {@code DELETE
+ * /api/v2/admin/videos/{video_id}} is the admin-only delete behind the BFLA challenge.
+ *
+ * <p>Delegates everything to {@code ProfileService}.
+ */
 @CrossOrigin
 @RestController
 @RequestMapping("/identity")

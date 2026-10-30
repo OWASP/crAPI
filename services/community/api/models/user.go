@@ -12,6 +12,15 @@
  * limitations under the License.
  */
 
+// Author model: the slice of a user that gets embedded in posts and comments
+// (nickname, email, vehicle id, profile picture URL).
+//
+// Users are not created here. FindAuthorByEmail joins the Identity-owned
+// user_details / user_login / vehicle_details tables in the shared Postgres
+// database, and the package-level variables it fills are what Prepare() in
+// post.go copies into each new post. Embedding the email and vehicle id is
+// deliberate: it feeds the excessive data exposure challenge.
+
 package models
 
 import (

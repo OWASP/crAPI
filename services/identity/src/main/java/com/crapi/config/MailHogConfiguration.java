@@ -23,6 +23,15 @@ import java.util.Properties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * Builds the JavaMail {@code Session} that points at the Mailhog container.
+ *
+ * <p>Reads the {@code mail.mailhog.*} properties (host, port, auth, STARTTLS, sender) from {@code
+ * application.properties} and hands a configured session to {@code utils.SMTPMailServer}, which
+ * every mail-sending flow uses: signup verification, OTP for password reset, change-email tokens
+ * and the vehicle-details mail. Nothing here reaches a real mail server; messages land in Mailhog's
+ * UI on port 8025, which is where the OTP and reset challenges are solved.
+ */
 @Component
 public class MailHogConfiguration {
 

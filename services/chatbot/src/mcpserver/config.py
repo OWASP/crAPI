@@ -1,3 +1,10 @@
+"""
+Configuration for the MCP server process: where crapi-web and crapi-identity
+are, the path to the OpenAPI spec that becomes the tool set, and the crAPI
+account (API_USER / API_PASSWORD, admin by default) whose API key every tool
+call is made with. Read by server.py.
+"""
+
 import os
 
 from dotenv import load_dotenv

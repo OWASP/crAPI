@@ -34,6 +34,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Vehicle logic behind {@code VehicleController}, and the vehicle seeding used by {@code
+ * InitialDataConfig}.
+ *
+ * <p>{@link #createVehicle} picks a random model, generates a VIN/pin code and attaches a {@code
+ * VehicleLocation}; {@link #registerVehicle} and {@link #sendVehicleDetails} mail those details
+ * through Mailhog; {@link #addVehicleDetails} claims a vehicle for the caller by VIN and pin;
+ * {@link #getVehicleDetails} lists the caller's vehicles. {@link #getVehicleLocation} looks a
+ * vehicle up by its UUID alone, with no owner check, which is what makes the vehicle-location BOLA
+ * challenge possible.
+ *
+ * <p>Writes the {@code VehicleDetails}, {@code VehicleLocation} and {@code VehicleModel} tables
+ * that Workshop reads by VIN for service requests.
+ */
 @Service
 @Slf4j
 public class VehicleServiceImpl implements VehicleService {

@@ -12,6 +12,15 @@
  * limitations under the License.
  */
 
+// Package api is the Community service: the forum (posts and comments) and
+// the coupon store behind /community/.
+//
+// Run wires the pieces together in order: config opens Postgres (user data
+// shared with Identity) and Mongo (posts, comments, coupons), the service
+// blocks until crapi-identity answers its health check, seed loads the default
+// posts and coupons, and router registers the routes. Requests arrive through
+// the crapi-web proxy; tokens on them are not verified here but forwarded to
+// Identity's /identity/api/auth/verify by the auth package.
 package api
 
 import (
