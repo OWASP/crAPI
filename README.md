@@ -1,5 +1,8 @@
 # crAPI
 
+[![pipeline status](https://gitlab.com/LinuxUser255/crAPI/badges/main/pipeline.svg)](https://gitlab.com/LinuxUser255/crAPI/-/pipelines?ref=main)
+[![latest release](https://gitlab.com/LinuxUser255/crAPI/-/badges/release.svg)](https://gitlab.com/LinuxUser255/crAPI/-/releases)
+
 **c**ompletely **r**idiculous **API** (crAPI) will help you to understand the
 ten most critical API security risks. crAPI is vulnerable by design, but you'll
 be able to safely run it to educate/train yourself.
@@ -59,6 +62,8 @@ git clone https://gitlab.com/LinuxUser255/crAPI.git && cd crAPI
 cp deploy/docker/llm.env.example deploy/docker/llm.env.local   # optional: then add your key
 ./quickstart.sh
 ```
+
+`main` is always deployable. To pin a tested version instead, clone a release tag, e.g. `git clone --branch v1.0.0 https://gitlab.com/LinuxUser255/crAPI.git`. All versions and their notes are on the [releases page](https://gitlab.com/LinuxUser255/crAPI/-/releases) and in [`CHANGELOG.md`](CHANGELOG.md).
 
 `quickstart.sh` pulls every image except `crapi-chatbot`, which it builds from local source. When it finishes, open [http://localhost:8889](http://localhost:8889). [`crapi-dev.sh`](crapi-dev.sh) wraps the same operations in an interactive menu.
 
@@ -407,7 +412,7 @@ See [the setup instructions](docs/setup.md), including [Kubernetes][setup-k8s], 
    | `bash-3.2-syntax` | The scripts parse under bash 3.2, the bash a stock Mac runs |
    | `compose-config` | `docker-compose.yml` validates with no `llm.env.local`, as in a fresh clone |
    | `chatbot-python` | The chatbot source compiles |
-   | `secret_detection` | GitLab's gitleaks scan for committed keys. GitLab's template runs it in branch pipelines only: `main`, tags, and `develop` while no merge request is open |
+   | `secret_detection` | GitLab's gitleaks scan for committed keys. GitLab's template runs it in branch pipelines only: `main`, and `develop` while no merge request is open. It skips merge request and tag pipelines; a release tag always points at a `main` commit that was already scanned |
    | `chatbot-image` | Builds the chatbot image and checks both LLM client libraries and the offline embedding model. Runs on merge requests, `main` and tags |
 
 2. **Open a merge request from `develop` to `main`.** From the command line:
