@@ -407,7 +407,7 @@ See [the setup instructions](docs/setup.md), including [Kubernetes][setup-k8s], 
    | `bash-3.2-syntax` | The scripts parse under bash 3.2, the bash a stock Mac runs |
    | `compose-config` | `docker-compose.yml` validates with no `llm.env.local`, as in a fresh clone |
    | `chatbot-python` | The chatbot source compiles |
-   | `secret_detection` | GitLab's gitleaks scan for committed keys |
+   | `secret_detection` | GitLab's gitleaks scan for committed keys. GitLab's template runs it in branch pipelines only: `main`, tags, and `develop` while no merge request is open |
    | `chatbot-image` | Builds the chatbot image and checks both LLM client libraries and the offline embedding model. Runs on merge requests, `main` and tags |
 
 2. **Open a merge request from `develop` to `main`.** From the command line:
