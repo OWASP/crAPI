@@ -108,8 +108,8 @@ print_compose_build_instructions() {
 #------------------------------------------------------------------------------
 parse_args() {
     debug "parse_args $*"  # §5 debug at function start
-    # §4 positional-independent --help check; ${1:-} / ${*} safe under set -u
-    [[ "${1:-}" == "--help" ]] || [[ "${*}" == *"--help"* ]] && { show_help; exit 0; }
+    # §4 positional-independent --help check; ${1:-} / ${*:-} safe under set -u (bash 3.2 errors on bare ${*} with no args)
+    [[ "${1:-}" == "--help" ]] || [[ "${*:-}" == *"--help"* ]] && { show_help; exit 0; }
     local arg  # §8 local variable
     for arg in "$@"; do
         case "$arg" in  # §4 quoted variable in case
