@@ -25,7 +25,7 @@ POSTGRES_USER = os.environ.get("DB_USER", "admin")
 POSTGRES_PASSWORD = os.environ.get("DB_PASSWORD", "crapisecretpassword")
 POSTGRES_DB = os.environ.get("DB_NAME", "crapi")
 
-POSTGRES_URI = "postgresql://%s:%s@%s:%s/%s?sslmode=disable" % (
+POSTGRES_URI = "postgresql+psycopg2://%s:%s@%s:%s/%s?sslmode=disable" % (
     POSTGRES_USER,
     POSTGRES_PASSWORD,
     POSTGRES_HOST,
