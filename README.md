@@ -12,6 +12,46 @@ know more about crAPI, please check [crAPI's overview][overview].
 
 ## For the super quickstart, run the [quickstart.sh](quickstart.sh) Shell Script
 
+```
+./quickstart.sh                    # binds to all interfaces (reachable from your LAN)
+./quickstart.sh --localhost-only   # binds to 127.0.0.1 only
+./quickstart.sh --vulnerable       # enable all vulnerabilities (shell injection, log4j)
+```
+
+`quickstart.sh` pulls every image except `crapi-chatbot`, which it builds from local source. The chatbot reads `CHATBOT_OPENAI_API_KEY` from your shell, so export it before running the script, otherwise the chatbot starts but its LLM features stay off (the UI reports `Model needs to be initialized`).
+
+### macOS with Colima
+
+This fork is run on macOS with [Colima](https://github.com/abiosoft/colima) instead of Docker Desktop. Colima's default VM (2 CPUs, 2 GiB) is too small for the full stack — the chatbot alone has a 1 GiB limit — so start it with more resources. The values persist in `~/.colima/default/colima.yaml`:
+
+```
+colima start --cpu 4 --memory 8
+```
+
+Colima does not start on its own after a reboot. Run `colima start` first, or `brew services start colima` to start it at login.
+
+### Ports
+
+The `docker-compose.yml` this fork runs locally publishes the web UI on **8889** instead of upstream's 8888, because 8888 is used by another app on the host. `quickstart.sh` and `crapi-dev.sh` health-check and print 8889 to match.
+
+| URL | What |
+|---|---|
+| [https://localhost:8443](https://localhost:8443) | crAPI web UI (HTTPS) |
+| [http://localhost:8889](http://localhost:8889) | crAPI web UI (HTTP) |
+| [http://localhost:8025](http://localhost:8025) | Mailhog (signup OTPs, password resets) |
+| [https://localhost:8443/mailhog/](https://localhost:8443/mailhog/) | Mailhog through the web front end |
+| `localhost:8090` | Identity service (direct) |
+| `30080` / `30443` | Alternate HTTP / HTTPS ports for the web UI |
+
+Everything else (community, workshop, chatbot, databases, `api.mypremiumdealership.com`) is reachable only on the internal Docker network. Host port **8080** is left free for Burp Suite's proxy listener — point your browser at `127.0.0.1:8080` and browse crAPI as usual. If `localhost` traffic bypasses the proxy, browse to the host's LAN IP instead.
+
+### Troubleshooting this setup
+
+- **`failed to connect to the docker API at unix:///Users/<you>/.colima/default/docker.sock`** — Colima's VM is stopped. Run `colima start`.
+- **`crapi-chatbot` exits with `ModuleNotFoundError: No module named 'psycopg'`** — SQLAlchemy 2.1 made psycopg v3 the default driver for `postgresql://` URIs, but the image ships `psycopg2-binary`. Fixed by using `postgresql+psycopg2://` in `services/chatbot/src/chatbot/dbconnections.py`; rebuild with `docker compose build crapi-chatbot && docker compose up -d --no-deps crapi-chatbot` from `deploy/docker`.
+- **Every `/chatbot/` request returns `503 crapi-chatbot is not running`** — `crapi-web` is mounting `deploy/docker/nginx-chatbot-disabled.ssl.conf.template`, a stub for when the chatbot can't run (the stock template makes nginx refuse to start if the `crapi-chatbot` host doesn't exist). Remove that volume from `crapi-web` in `docker-compose.yml` once the chatbot is up, then `docker compose up -d --no-deps crapi-web`.
+- **`quickstart.sh` ends with "Some services are still starting" even though the site is up** — its health check is hitting a different port than the web UI is published on. Make sure the port in `docker-compose.yml` matches the one in the scripts (8889).
+
 
 ### Docker and docker compose
 

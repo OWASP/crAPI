@@ -1,0 +1,227 @@
+server {
+  listen 443 ssl;
+  server_name _;
+  ssl_certificate /app/certs/server.crt;
+  ssl_certificate_key /app/certs/server.key;
+  ssl_protocols TLSv1.3 TLSv1.2 TLSv1.1;
+
+  client_max_body_size 50M;
+  index index.html;
+  root /usr/share/nginx/html;
+
+  location /community/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${COMMUNITY_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  ${HTTP_PROTOCOL}://${COMMUNITY_SERVICE};
+    proxy_set_header Host ${COMMUNITY_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    sub_filter_types application/json text/html;
+    sub_filter "${HTTP_PROTOCOL}://${COMMUNITY_SERVICE}" "$scheme://$http_host";
+    sub_filter_once off;
+    proxy_ssl_verify off;
+    proxy_ssl_trusted_certificate /app/certs/server.crt;
+  }
+
+  location /identity/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${IDENTITY_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  ${HTTP_PROTOCOL}://${IDENTITY_SERVICE};
+    proxy_set_header Host ${IDENTITY_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_ssl_verify off;
+    proxy_ssl_trusted_certificate /app/certs/server.crt;
+  }
+
+  location /workshop/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${WORKSHOP_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  ${HTTP_PROTOCOL}://${WORKSHOP_SERVICE};
+    proxy_set_header Host ${WORKSHOP_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    sub_filter_types application/json text/html;
+    sub_filter "${HTTP_PROTOCOL}://${WORKSHOP_SERVICE}" "$scheme://$http_host";
+    sub_filter_once off;
+    proxy_ssl_verify off;
+    proxy_ssl_trusted_certificate /app/certs/server.crt;
+  }
+
+  # crapi-chatbot not running; stub avoids nginx upstream resolution failure
+  location /chatbot/ {
+    default_type text/plain;
+    return 503 "crapi-chatbot is not running\n";
+  }
+
+  location /images {
+    try_files $uri $uri/ =404;
+  }
+
+  location /static {
+    try_files $uri $uri/ =404;
+  }
+
+  location /.well-known/jwks.json {
+    proxy_pass ${HTTP_PROTOCOL}://${IDENTITY_SERVICE}/identity/api/auth/jwks.json;
+    proxy_ssl_verify off;
+    proxy_ssl_trusted_certificate /app/certs/server.crt;
+  }
+
+  location /mailhog/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "http://${MAILHOG_WEB_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  http://${MAILHOG_WEB_SERVICE}/;
+    proxy_set_header Host ${MAILHOG_WEB_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+    sub_filter_types application/json text/html;
+    sub_filter "http://${MAILHOG_WEB_SERVICE}" "$scheme://$http_host";
+    sub_filter_once off;
+    proxy_ssl_verify off;
+    proxy_ssl_trusted_certificate /app/certs/server.crt;
+  }
+
+  location /health {
+    add_header Content-Type text/plain;
+    return 200 'OK';
+  }
+
+  location / {
+    set $fallback_file /index.html;
+    if ($http_accept !~ text/html) {
+        set $fallback_file =404;
+    }
+    try_files $uri $uri/ $fallback_file =404;
+  }
+}
+
+server {
+  listen 80;
+  server_name _;
+  client_max_body_size 50M;
+  index index.html;
+  root /usr/share/nginx/html;
+
+  location /community/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${COMMUNITY_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  ${HTTP_PROTOCOL}://${COMMUNITY_SERVICE};
+    proxy_set_header Host ${COMMUNITY_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    sub_filter_types application/json text/html;
+    sub_filter "${HTTP_PROTOCOL}://${COMMUNITY_SERVICE}" "$scheme://$http_host";
+    sub_filter_once off;
+  }
+
+  location /identity/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${IDENTITY_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  ${HTTP_PROTOCOL}://${IDENTITY_SERVICE};
+    proxy_set_header Host ${IDENTITY_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+
+  location /workshop/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "${HTTP_PROTOCOL}://${WORKSHOP_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  ${HTTP_PROTOCOL}://${WORKSHOP_SERVICE};
+    proxy_set_header Host ${WORKSHOP_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    sub_filter_types application/json text/html;
+    sub_filter "${HTTP_PROTOCOL}://${WORKSHOP_SERVICE}" "$scheme://$http_host";
+    sub_filter_once off;
+  }
+
+  # crapi-chatbot not running; stub avoids nginx upstream resolution failure
+  location /chatbot/ {
+    default_type text/plain;
+    return 503 "crapi-chatbot is not running\n";
+  }
+
+  location /images {
+    try_files $uri $uri/ =404;
+  }
+
+  location /static {
+    try_files $uri $uri/ =404;
+  }
+
+  location /.well-known/jwks.json {
+    proxy_pass ${HTTP_PROTOCOL}://${IDENTITY_SERVICE}/identity/api/auth/jwks.json;
+  }
+
+  location /mailhog/ {
+    rewrite_by_lua_block {
+      ngx.req.read_body()  -- explicitly read the req body
+      local body = ngx.req.get_body_data()
+      if body then
+        body = ngx.re.gsub(body, ngx.var.scheme.."://"..ngx.var.http_host, "http://${MAILHOG_WEB_SERVICE}")
+        ngx.req.set_body_data(body)
+      end
+    }
+    proxy_pass  http://${MAILHOG_WEB_SERVICE}/;
+    proxy_set_header Host ${MAILHOG_WEB_SERVICE};
+    proxy_set_header X-Forwarded-Host $http_host;
+    sub_filter_types application/json text/html;
+    sub_filter "http://${MAILHOG_WEB_SERVICE}" "$scheme://$http_host";
+    sub_filter_once off;
+  }
+
+  location /health {
+    add_header Content-Type text/plain;
+    return 200 'OK';
+  }
+
+  location / {
+    set $fallback_file /index.html;
+    if ($http_accept !~ text/html) {
+        set $fallback_file =404;
+    }
+    try_files $uri $uri/ $fallback_file =404;
+  }
+}
