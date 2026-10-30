@@ -13,6 +13,8 @@ WORKDIR /app
 COPY requirements.txt /app/requirements.txt
 # Install any needed dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
+# Bake in the ONNX model used when EMBEDDINGS_PROVIDER=local (~80 MB) so the first chat doesn't download it.
+RUN python -c "from chromadb.utils.embedding_functions import DefaultEmbeddingFunction; DefaultEmbeddingFunction()(['warmup'])"
 COPY src /app
 COPY certs /app/certs
 COPY retrieval /app/retrieval

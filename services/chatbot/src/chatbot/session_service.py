@@ -1,4 +1,3 @@
-import os
 import uuid
 
 from quart import after_this_request, request
@@ -31,8 +30,8 @@ async def store_api_key(session_id, api_key):
 
 
 async def get_api_key(session_id):
-    if os.environ.get("CHATBOT_OPENAI_API_KEY"):
-        return os.environ.get("CHATBOT_OPENAI_API_KEY")
+    if Config.LLM_API_KEY:
+        return Config.LLM_API_KEY
     doc = await db.sessions.find_one({"session_id": session_id})
     if not doc:
         return None

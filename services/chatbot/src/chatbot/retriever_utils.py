@@ -1,6 +1,8 @@
 import chromadb
+from chromadb.utils.embedding_functions import DefaultEmbeddingFunction
 from langchain_chroma import Chroma as ChromaClient
 from langchain_core.documents import Document
+from langchain_core.embeddings import Embeddings
 from langchain_core.tools import StructuredTool
 from langchain_openai import OpenAIEmbeddings
 
@@ -17,7 +19,22 @@ def get_chroma_client():
     return chroma_client
 
 
+class LocalEmbeddings(Embeddings):
+    """Chroma's bundled ONNX all-MiniLM-L6-v2, so no embeddings API is needed."""
+
+    def __init__(self):
+        self._fn = DefaultEmbeddingFunction()
+
+    def embed_documents(self, texts):
+        return [[float(x) for x in vector] for vector in self._fn(texts)]
+
+    def embed_query(self, text):
+        return self.embed_documents([text])[0]
+
+
 def get_embedding_function(api_key):
+    if Config.EMBEDDINGS_PROVIDER == "local":
+        return LocalEmbeddings()
     return OpenAIEmbeddings(
         openai_api_key=api_key,
         model="text-embedding-3-large",
@@ -28,7 +45,10 @@ def get_chroma_vectorstore(api_key):
     chroma_client = get_chroma_client()
     vectorstore = ChromaClient(
         client=chroma_client,
-        collection_name="chats",
+        # Vector sizes differ per embedding model, so each provider gets its own collection.
+        collection_name=(
+            "chats" if Config.EMBEDDINGS_PROVIDER == "openai" else "chats_local"
+        ),
         embedding_function=get_embedding_function(api_key),
         create_collection_if_not_exists=True,
     )

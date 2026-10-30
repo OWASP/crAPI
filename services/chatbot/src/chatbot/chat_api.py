@@ -21,7 +21,7 @@ async def init():
     logger.debug("Initializing bot for session %s", session_id)
     api_key = await get_api_key(session_id)
     if api_key:
-        logger.info("Model already initialized with OpenAI API Key from environment")
+        logger.info("Model already initialized with LLM API key from environment")
         return jsonify({"message": "Model Already Initialized"}), 200
     elif not data:
         logger.error("Invalid request")
