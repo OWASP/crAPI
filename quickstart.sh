@@ -13,9 +13,18 @@
 #                                 security testing scenarios
 #               --localhost-only  Bind services to 127.0.0.1 only instead of all
 #                                 network interfaces (default: 0.0.0.0)
+#               --yes             Answer yes to install/start prompts (Homebrew
+#                                 installs, starting the Linux Docker daemon)
 #               --help            Display usage information and exit
+# PLATFORMS:    macOS: finds or starts a Docker runtime (Colima, then Docker
+#               Desktop, then OrbStack) and offers to install Colima if none.
+#               Linux: checks the Docker daemon and offers to start it.
+#               Logic lives in scripts/lib/platform.sh, shared with crapi-dev.sh.
+# CHATBOT:      LLM provider and key come from deploy/docker/llm.env.local
+#               (gitignored); copy deploy/docker/llm.env.example to create it.
 # DEPENDENCIES: Docker >= 20.10
-#               Docker Compose plugin >= 1.27.0
+#               Docker Compose plugin >= 2.24.0
+#               macOS: Homebrew, only if Colima or Docker must be installed
 # AUTHOR:       LinuxUser255
 # REPO:         https://github.com/LinuxUser255/crAPI
 #==============================================================================
@@ -33,17 +42,21 @@ NC='\033[0m'
 ENABLE_VULNERABILITIES=false
 LOCALHOST_ONLY=false
 DEBUG="${DEBUG:-0}"                # §4 default value to satisfy set -u
-MIN_COMPOSE_VER="1.27.0"
+MIN_COMPOSE_VER="2.24.0"          # env_file `required: false` (optional llm.env.local) needs 2.24
 COMPOSE_CMD=""
 COMPOSE_VER=""
 LISTEN_IP=""
 ENABLE_SHELL_INJECTION="false"
 ENABLE_LOG4J="false"
 HEALTHY=true
-SCRIPT_DIR=""
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"  # §6 quoted path variable
 
 # §5 debug helper — emits only when DEBUG=1
 debug() { [[ "$DEBUG" == 1 ]] && echo "[DEBUG] $*"; return 0; }  # §5 debug function; return 0 prevents set -e triggering when DEBUG=0
+
+# Platform detection and Docker runtime bootstrap (sets ASSUME_YES, PLATFORM_OS, ...)
+# shellcheck source=scripts/lib/platform.sh
+source "${SCRIPT_DIR}/scripts/lib/platform.sh"  # §6 quoted path variable
 
 #------------------------------------------------------------------------------
 # Output helpers
@@ -67,7 +80,13 @@ show_help() {
     printf '%b\n' "${CYAN}Options:${NC}"                                                                     # §3 printf + color
     printf '%b\n' "  ${YELLOW}--vulnerable${NC}      Enable all vulnerabilities (shell injection, log4j)"     # §3 printf + color
     printf '%b\n' "  ${YELLOW}--localhost-only${NC}  Bind only to localhost (default: all interfaces)"        # §3 printf + color
+    printf '%b\n' "  ${YELLOW}--yes${NC}             Don't ask before installing or starting Docker"           # §3 printf + color
     printf '%b\n' "  ${YELLOW}--help${NC}            Show this help message"                                  # §3 printf + color
+    printf '\n'
+    printf '%b\n' "${CYAN}Docker runtime:${NC}"                                                              # §3 printf + color
+    printf '%b\n' "  macOS: starts Colima (or Docker Desktop / OrbStack) if it isn't running."              # §3 printf
+    printf '%b\n' "  A new Colima VM gets COLIMA_CPU (default 4) CPUs and COLIMA_MEMORY (default 8) GiB."   # §3 printf
+    printf '%b\n' "  Linux: checks the Docker daemon and offers to start it."                                 # §3 printf
     printf '\n'
     printf '%b\n' "${CYAN}Examples:${NC}"                                                                    # §3 printf + color
     printf '%b\n' "  $0                    ${GREEN}# Standard setup with external access${NC}"                # §3 printf + color
@@ -108,8 +127,8 @@ print_compose_build_instructions() {
 #------------------------------------------------------------------------------
 parse_args() {
     debug "parse_args $*"  # §5 debug at function start
-    # §4 positional-independent --help check; ${1:-} / ${*} safe under set -u
-    [[ "${1:-}" == "--help" ]] || [[ "${*}" == *"--help"* ]] && { show_help; exit 0; }
+    # §4 positional-independent --help check; ${1:-} / ${*:-} safe under set -u (bash 3.2 errors on bare ${*} with no args)
+    [[ "${1:-}" == "--help" ]] || [[ "${*:-}" == *"--help"* ]] && { show_help; exit 0; }
     local arg  # §8 local variable
     for arg in "$@"; do
         case "$arg" in  # §4 quoted variable in case
@@ -118,6 +137,9 @@ parse_args() {
                 ;;
             --localhost-only)
                 LOCALHOST_ONLY=true
+                ;;
+            --yes|-y)
+                ASSUME_YES=true
                 ;;
             --help)
                 show_help
@@ -151,9 +173,15 @@ version_ge() {  # §8 brace-form function to allow `local`
 #------------------------------------------------------------------------------
 check_docker() {
     debug "check_docker"  # §5 debug at function start
+    # macOS: ensure_docker_runtime installs Colima and the docker CLI through Homebrew
+    [[ "$PLATFORM_OS" == "macOS" ]] && return 0
     if ! command -v docker &>/dev/null; then
         printf '%b\n' "${RED}[ERROR]${NC} Docker Engine is not installed!"
         echo ""
+        printf '%b\n' "${CYAN}[OPTION 1]${NC} Install your distribution's package:"
+        print_docker_install_hint
+        echo ""
+        printf '%b\n' "${CYAN}[OPTION 2]${NC} Build from source:"
         print_docker_build_instructions
         echo ""
         printf '%b\n' "${CYAN}[ACTION REQUIRED]${NC} After building Docker, build Docker Compose V2:"
@@ -186,9 +214,17 @@ detect_compose() {
     # V2 not available — abort regardless of V1 presence
     printf '%b\n' "${RED}[ERROR]${NC} Docker Compose V2 plugin is not available or not functioning."
     echo ""
-    printf '%b\n' "${CYAN}[ACTION REQUIRED]${NC} Build Docker Compose V2 from source:"
-    echo ""
-    print_compose_build_instructions
+    if [[ "$PLATFORM_OS" == "macOS" ]]; then
+        printf '%b\n' "${CYAN}[ACTION REQUIRED]${NC} Install the Compose plugin:"
+        print_compose_install_hint
+    else
+        printf '%b\n' "${CYAN}[ACTION REQUIRED]${NC} Install the Compose plugin:"
+        print_compose_install_hint
+        echo ""
+        printf '%b\n' "${CYAN}[OR]${NC} Build Docker Compose V2 from source:"
+        echo ""
+        print_compose_build_instructions
+    fi
     echo ""
 
     # §4 V1 detection via command -v only; binary is never executed
@@ -211,6 +247,19 @@ validate_compose_version() {
         exit 1
     fi
     printf '%b\n' "${GREEN}[✓]${NC} Docker and Docker Compose ${COMPOSE_VER} detected"
+}
+
+#------------------------------------------------------------------------------
+# Chatbot LLM settings — optional; the lab runs without them
+#------------------------------------------------------------------------------
+check_llm_env() {
+    debug "check_llm_env"  # §5 debug at function start
+    if [[ -f llm.env.local ]]; then  # §3 [[ ]]; cwd is deploy/docker
+        printf '%b\n' "${GREEN}[✓]${NC} Chatbot LLM settings found (deploy/docker/llm.env.local)"
+        return 0
+    fi
+    printf '%b\n' "${YELLOW}[!]${NC} No deploy/docker/llm.env.local: the chatbot will start without an LLM."
+    printf '%b\n' "    To enable it: cp deploy/docker/llm.env.example deploy/docker/llm.env.local, set a provider and key, rerun."
 }
 
 #------------------------------------------------------------------------------
@@ -242,22 +291,28 @@ configure_environment() {
 #------------------------------------------------------------------------------
 deploy_stack() {
     debug "deploy_stack"  # §5 debug at function start
-    printf '%b\n' "${CYAN}[1/4]${NC} Pulling latest crAPI images..."
-    # shellcheck disable=SC2086  # §4 intentional word split: "docker compose" must expand to 2 tokens
-    $COMPOSE_CMD pull
+    printf '%b\n' "${CYAN}[1/5]${NC} Pulling latest crAPI images (excluding chatbot)..."
+    local pull_services  # §8 local; separate declaration from assignment to preserve exit code
+    pull_services=$(docker compose config --services | grep -v '^crapi-chatbot$')  # §5 no-fork grep
+    # shellcheck disable=SC2086  # §4 intentional word split: service names must expand separately
+    $COMPOSE_CMD pull $pull_services
 
-    printf '%b\n' "${CYAN}[2/4]${NC} Cleaning up any existing instances..."
+    printf '%b\n' "${CYAN}[2/5]${NC} Building chatbot image from local source..."
+    # shellcheck disable=SC2086  # §4 intentional word split on $COMPOSE_CMD
+    $COMPOSE_CMD build crapi-chatbot  # never pull upstream; local build contains SSL fix
+
+    printf '%b\n' "${CYAN}[3/5]${NC} Cleaning up any existing instances..."
     # shellcheck disable=SC2086  # §4 intentional word split on $COMPOSE_CMD
     $COMPOSE_CMD down -v 2>/dev/null || true
 
-    printf '%b\n' "${CYAN}[3/4]${NC} Starting crAPI hacking lab..."
+    printf '%b\n' "${CYAN}[4/5]${NC} Starting crAPI hacking lab..."
     LISTEN_IP="$LISTEN_IP" \
     ENABLE_SHELL_INJECTION="$ENABLE_SHELL_INJECTION" \
     ENABLE_LOG4J="$ENABLE_LOG4J" \
     TLS_ENABLED="true" \
     $COMPOSE_CMD -f docker-compose.yml --compatibility up -d  # §4 intentional split on $COMPOSE_CMD
 
-    printf '%b\n' "${CYAN}[4/4]${NC} Waiting for services to be ready..."
+    printf '%b\n' "${CYAN}[5/5]${NC} Waiting for services to be ready..."
     sleep 15
 }
 
@@ -268,7 +323,7 @@ check_health() {
     debug "check_health"  # §5 debug at function start
     local service  # §8 local variable
     HEALTHY=true
-    if curl -s -f http://localhost:8888/health > /dev/null 2>&1; then
+    if curl -s -f http://localhost:8889/health > /dev/null 2>&1; then
         printf '%b\n' "${GREEN}[✓]${NC} Web interface is ready"
     else
         printf '%b\n' "${YELLOW}[!]${NC} Web interface not responding yet"
@@ -297,7 +352,7 @@ print_summary() {
     printf '%b\n' "${GREEN}════════════════════════════════════════════════════════${NC}"
     echo ""
     printf '%b\n' "${CYAN}Access Points:${NC}"
-    printf '%b\n' "  Web UI:        ${GREEN}http://localhost:8888${NC}"
+    printf '%b\n' "  Web UI:        ${GREEN}http://localhost:8889${NC}"
     printf '%b\n' "  Web UI (TLS):  ${GREEN}https://localhost:8443${NC}"
     printf '%b\n' "  Mailhog:       ${GREEN}http://localhost:8025${NC}"
     echo ""
@@ -339,13 +394,15 @@ main() {
     debug "main $*"  # §5 debug at function start
     parse_args "$@"
     print_banner
+    detect_platform
     check_docker
+    ensure_docker_runtime
     detect_compose
     validate_compose_version
 
-    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"  # §6 quoted path variable
     cd "${SCRIPT_DIR}/deploy/docker"                           # §6 quoted path variable
 
+    check_llm_env
     configure_environment
     deploy_stack
     check_health

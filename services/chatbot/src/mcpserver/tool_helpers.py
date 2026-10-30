@@ -1,10 +1,10 @@
-import os
+from chatbot.config import Config
 from chatbot.extensions import db
 
 
 async def get_any_api_key():
-    if os.environ.get("CHATBOT_OPENAI_API_KEY"):
-        return os.environ.get("CHATBOT_OPENAI_API_KEY")
+    if Config.LLM_API_KEY:
+        return Config.LLM_API_KEY
     doc = await db.sessions.find_one(
         {"openai_api_key": {"$exists": True, "$ne": None}}, {"openai_api_key": 1}
     )

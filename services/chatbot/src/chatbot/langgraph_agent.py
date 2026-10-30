@@ -1,13 +1,21 @@
 import textwrap
 
 from langchain.agents import create_agent
+from langchain.chat_models import init_chat_model
 from langchain_community.agent_toolkits import SQLDatabaseToolkit
-from langchain_openai import ChatOpenAI
 
 from .agent_utils import truncate_tool_messages
+from .config import Config
 from .extensions import postgresdb
 from .mcp_client import get_mcp_client
 from .retriever_utils import get_retriever_tool
+
+
+def build_llm(api_key, model_name):
+    kwargs = {"base_url": Config.LLM_BASE_URL} if Config.LLM_BASE_URL else {}
+    return init_chat_model(
+        model_name, model_provider=Config.LLM_PROVIDER, api_key=api_key, **kwargs
+    )
 
 
 async def build_langgraph_agent(api_key, model_name, user_jwt):
@@ -48,7 +56,7 @@ Always explain your reasoning briefly and select tools wisely.
 Use the tools only if you don't know the answer.
     """
     )
-    llm = ChatOpenAI(api_key=api_key, model=model_name)
+    llm = build_llm(api_key, model_name)
     toolkit = SQLDatabaseToolkit(db=postgresdb, llm=llm)
     mcp_client = get_mcp_client(user_jwt)
     mcp_tools = await mcp_client.get_tools()

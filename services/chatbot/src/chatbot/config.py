@@ -11,6 +11,20 @@ class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "super-secret")
     MONGO_URI = MONGO_CONNECTION_URI
     DEFAULT_MODEL_NAME = os.getenv("DEFAULT_MODEL", "gpt-4o-mini")
+    # LangChain model_provider: "openai" (also any OpenAI-compatible API such as xAI,
+    # Groq, OpenRouter or Ollama, via LLM_BASE_URL) or "anthropic".
+    LLM_PROVIDER = os.getenv("LLM_PROVIDER", "openai")
+    # Overrides the provider's default endpoint, e.g. https://api.x.ai/v1. Empty keeps it.
+    LLM_BASE_URL = os.getenv("LLM_BASE_URL") or None
+    # CHATBOT_OPENAI_API_KEY is upstream's name for the same key and still works.
+    LLM_API_KEY = os.getenv("CHATBOT_LLM_API_KEY") or os.getenv(
+        "CHATBOT_OPENAI_API_KEY"
+    )
+    # "openai" (text-embedding-3-large) or "local" (Chroma's bundled all-MiniLM-L6-v2).
+    # Only OpenAI itself serves text-embedding-3-large, so every other setup defaults to local.
+    EMBEDDINGS_PROVIDER = os.getenv("EMBEDDINGS_PROVIDER") or (
+        "openai" if LLM_PROVIDER == "openai" and not LLM_BASE_URL else "local"
+    )
     MAX_CONTENT_LENGTH = int(os.getenv("MAX_CONTENT_LENGTH", 50000))
     CHROMA_HOST = CHROMA_HOST
     CHROMA_PORT = CHROMA_PORT
