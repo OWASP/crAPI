@@ -136,6 +136,17 @@
   min-width: 500px !important;
 }
 
+/* Dragged size. The library applies its inline style once at load, so the
+   size set by the resize handles is applied here from CSS variables that
+   Bot.tsx keeps on the container. Desktop only: on narrow screens the
+   library makes the window fullscreen. */
+@media (min-width: 768px) {
+  .app-chatbot-container:not(.expanded) .rcb-chat-window {
+    width: var(--chatbot-width) !important;
+    height: var(--chatbot-height) !important;
+  }
+}
+
 /* Drag handles for resizing the chat window. The window is fixed to the
    bottom-right corner, so its top and left edges (and their corner) are the
    ones that can be dragged. They are portalled into .rcb-chat-window. */

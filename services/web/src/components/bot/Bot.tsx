@@ -637,6 +637,14 @@ What would you like to do next?`);
           className={`app-chatbot-container${expanded ? " expanded" : ""}${
             resizing ? " resizing" : ""
           }`}
+          // react-chatbotify reads the `styles` prop only when it loads, so a
+          // size change has to reach the window through CSS (see chatbot.css).
+          style={
+            {
+              "--chatbot-width": `${size.width}px`,
+              "--chatbot-height": `${size.height}px`,
+            } as React.CSSProperties
+          }
         >
           {resizeHandles}
           <ChatBot
