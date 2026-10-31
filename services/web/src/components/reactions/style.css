@@ -1,0 +1,32 @@
+/* Like / dislike buttons */
+.reaction-buttons .reaction-btn {
+  font-weight: 600;
+  color: #6b7280;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: none;
+  transition: all 0.2s ease;
+}
+
+.reaction-buttons .reaction-btn:hover {
+  color: #7c3aed;
+  border-color: rgba(139, 92, 246, 0.6);
+  transform: translateY(-1px);
+}
+
+.reaction-buttons .reaction-btn.like.active {
+  color: #ffffff;
+  border-color: transparent;
+  background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
+}
+
+.reaction-buttons .reaction-btn.dislike.active {
+  color: #ffffff;
+  border-color: transparent;
+  background: linear-gradient(135deg, #f43f5e 0%, #ef4444 100%);
+}
+
+.reaction-buttons .reaction-btn.active:hover {
+  color: #ffffff;
+  filter: brightness(1.08);
+}

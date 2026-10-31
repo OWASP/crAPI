@@ -143,3 +143,72 @@ func FindAuthorByEmail(email string, db *gorm.DB) (*uint64, error) {
 	vehicleID = uuid
 	return number, err
 }
+
+// CurrentUserEmail is the email of the user whose token the authentication
+// middleware last verified (see FindAuthorByEmail).
+func CurrentUserEmail() string {
+	return userEmail
+}
+
+// AuthorPictures returns the current profile picture, as a data URL, of each
+// email that has one, read from the user tables Identity owns.
+func AuthorPictures(emails []string, db *gorm.DB) map[string]string {
+	pictures := map[string]string{}
+	if len(emails) == 0 {
+		return pictures
+	}
+	rows, err := db.Table("user_login").
+		Select("user_login.email, lo_get(user_details.picture)").
+		Joins("JOIN user_details ON user_details.user_id = user_login.id").
+		Where("user_login.email IN (?)", emails).
+		Where("user_details.picture IS NOT NULL").
+		Rows()
+	if err != nil {
+		log.Println("Error in AuthorPictures", err)
+		return pictures
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var email string
+		var picture []byte
+		if err := rows.Scan(&email, &picture); err != nil {
+			log.Println("Error in AuthorPictures", err)
+			continue
+		}
+		if len(picture) > 0 {
+			pictures[email] = "data:image/jpeg;base64," + base64.StdEncoding.EncodeToString(picture)
+		}
+	}
+	return pictures
+}
+
+// RefreshAuthorPictures replaces the profile picture that was copied into each
+// post and comment when it was written with the author's current one, so a
+// picture uploaded after posting still shows up in the forum.
+func RefreshAuthorPictures(db *gorm.DB, posts []Post) {
+	emails := []string{}
+	seen := map[string]bool{}
+	collect := func(email string) {
+		if email != "" && !seen[email] {
+			seen[email] = true
+			emails = append(emails, email)
+		}
+	}
+	for i := range posts {
+		collect(posts[i].Author.Email)
+		for j := range posts[i].Comments {
+			collect(posts[i].Comments[j].Author.Email)
+		}
+	}
+	pictures := AuthorPictures(emails, db)
+	for i := range posts {
+		if picture, ok := pictures[posts[i].Author.Email]; ok {
+			posts[i].Author.Picurl = picture
+		}
+		for j := range posts[i].Comments {
+			if picture, ok := pictures[posts[i].Comments[j].Author.Email]; ok {
+				posts[i].Comments[j].Author.Picurl = picture
+			}
+		}
+	}
+}

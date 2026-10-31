@@ -14,10 +14,13 @@
 
 // FORUM HANDLERS: THE SOCIAL "COMMUNITY" FEATURE OF CRAPI.
 //
-// AddNewPost, GetPost (paginated recent posts), GetPostByID and Comment are the
-// request handlers behind /community/api/v2/community/posts. They validate
-// input, stamp the post or comment with the author resolved from the token
-// (models.Prepare) and persist through the models package into MongoDB.
+// AddNewPost, GetPost (paginated recent posts), GetPostByID, Comment, LikePost
+// and DislikePost are the request handlers behind
+// /community/api/v2/community/posts. They validate input, stamp the post or
+// comment with the author resolved from the token (models.Prepare) and persist
+// through the models package into MongoDB. Before a post is returned,
+// presentPost refreshes the authors' profile pictures from Postgres and fills
+// in the like/dislike counts for the requesting user.
 // Every post is returned with its full embedded author, including the
 // author's email and vehicle id; that leak is what the vehicle-location BOLA
 // walkthrough (challenge 1) uses to find other users' vehicle ids.
@@ -26,6 +29,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"log"
 	"net/http"
@@ -80,10 +84,27 @@ func (s *Server) GetPostByID(w http.ResponseWriter, r *http.Request) {
 	GetPost, er := models.GetPostByID(s.Client, vars["postID"])
 	if er != nil {
 		responses.ERROR(w, http.StatusBadRequest, er)
+		return
 	}
 
-	responses.JSON(w, http.StatusOK, GetPost)
+	responses.JSON(w, http.StatusOK, s.presentPost(GetPost))
 
+}
+
+// presentPost prepares a post for the response: current author pictures and
+// the reaction counts as seen by the requesting user.
+func (s *Server) presentPost(post models.Post) models.Post {
+	posts := []models.Post{post}
+	s.presentPosts(posts)
+	return posts[0]
+}
+
+func (s *Server) presentPosts(posts []models.Post) {
+	models.RefreshAuthorPictures(s.DB, posts)
+	viewer := models.CurrentUserEmail()
+	for i := range posts {
+		posts[i].Hydrate(viewer)
+	}
 }
 
 // GetPost Vulnerabilities
@@ -117,6 +138,7 @@ func (s *Server) GetPost(w http.ResponseWriter, r *http.Request) {
 		responses.ERROR(w, http.StatusInternalServerError, err)
 		return
 	}
+	s.presentPosts(posts.Posts)
 	responses.JSON(w, http.StatusOK, posts)
 }
 
@@ -154,5 +176,33 @@ func (s *Server) Comment(w http.ResponseWriter, r *http.Request) {
 		responses.ERROR(w, http.StatusInternalServerError, er)
 		return
 	}
-	responses.JSON(w, http.StatusOK, postData)
+	responses.JSON(w, http.StatusOK, s.presentPost(postData))
+}
+
+// LikePost toggles the caller's like on a post,
+// @return HTTP Post Object
+// @params ResponseWriter, Request
+func (s *Server) LikePost(w http.ResponseWriter, r *http.Request) {
+	s.reactToPost(w, r, "like")
+}
+
+// DislikePost toggles the caller's dislike on a post,
+// @return HTTP Post Object
+// @params ResponseWriter, Request
+func (s *Server) DislikePost(w http.ResponseWriter, r *http.Request) {
+	s.reactToPost(w, r, "dislike")
+}
+
+func (s *Server) reactToPost(w http.ResponseWriter, r *http.Request, reaction string) {
+	vars := mux.Vars(r)
+	if vars["postID"] == "" {
+		responses.ERROR(w, http.StatusBadRequest, errors.New("postID is required"))
+		return
+	}
+	post, err := models.ReactToPost(s.Client, vars["postID"], models.CurrentUserEmail(), reaction)
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+	responses.JSON(w, http.StatusOK, s.presentPost(post))
 }

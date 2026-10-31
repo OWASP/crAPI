@@ -55,7 +55,8 @@ func CommentOnPost(client *mongo.Client, postComment Comments) (Post, error) {
 
 		collection := client.Database("crapi").Collection("post")
 
-		_, err = collection.UpdateOne(context.TODO(), preData, update)
+		filter := bson.D{{Key: "id", Value: postComment.ID}}
+		_, err = collection.UpdateOne(context.TODO(), filter, update)
 		if err != nil {
 			log.Println(err)
 		}

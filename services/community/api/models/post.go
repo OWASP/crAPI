@@ -45,6 +45,13 @@ type Post struct {
 	Comments  []Comments `json:"comments"`
 	AuthorID  uint64     `sql:"type:int REFERENCES users(id)" json:"authorid"`
 	CreatedAt time.Time
+	// Emails of the users who liked / disliked the post. Stored, never sent to clients.
+	LikedBy    []string `bson:"liked_by" json:"-"`
+	DislikedBy []string `bson:"disliked_by" json:"-"`
+	// Derived for the viewer by Hydrate; not stored.
+	Likes        int    `bson:"-" json:"likes"`
+	Dislikes     int    `bson:"-" json:"dislikes"`
+	UserReaction string `bson:"-" json:"user_reaction"`
 }
 
 // Prepare initialize data
@@ -164,4 +171,63 @@ func FindAllPost(client *mongo.Client, offset int64, limit int64) (PostsResponse
 		log.Println("Error in cursor: ", err)
 	}
 	return postsResponse, err
+}
+
+func contains(list []string, value string) bool {
+	for _, item := range list {
+		if item == value {
+			return true
+		}
+	}
+	return false
+}
+
+// Hydrate fills the reaction fields sent to clients: the like and dislike
+// counts, and which of the two (if any) the viewing user has given.
+func (post *Post) Hydrate(viewer string) {
+	post.Likes = len(post.LikedBy)
+	post.Dislikes = len(post.DislikedBy)
+	post.UserReaction = ""
+	if contains(post.LikedBy, viewer) {
+		post.UserReaction = "like"
+	} else if contains(post.DislikedBy, viewer) {
+		post.UserReaction = "dislike"
+	}
+}
+
+// ReactToPost toggles a "like" or "dislike" by the given user on a post and
+// returns the updated post. Reacting the same way twice removes the reaction;
+// liking a disliked post (or the reverse) switches it.
+func ReactToPost(client *mongo.Client, postID string, email string, reaction string) (Post, error) {
+	var field, other string
+	switch reaction {
+	case "like":
+		field, other = "liked_by", "disliked_by"
+	case "dislike":
+		field, other = "disliked_by", "liked_by"
+	default:
+		return Post{}, errors.New("reaction must be like or dislike")
+	}
+	post, err := GetPostByID(client, postID)
+	if err != nil {
+		return post, err
+	}
+	post.Hydrate(email)
+	var update bson.D
+	if post.UserReaction == reaction {
+		update = bson.D{{Key: "$pull", Value: bson.D{{Key: field, Value: email}}}}
+	} else {
+		update = bson.D{
+			{Key: "$addToSet", Value: bson.D{{Key: field, Value: email}}},
+			{Key: "$pull", Value: bson.D{{Key: other, Value: email}}},
+		}
+	}
+	collection := client.Database("crapi").Collection("post")
+	filter := bson.D{{Key: "id", Value: postID}}
+	_, err = collection.UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		log.Println(err)
+		return post, err
+	}
+	return GetPostByID(client, postID)
 }

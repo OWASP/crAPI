@@ -22,12 +22,13 @@ import Post from "../../components/post/post";
 import {
   getPostByIdAction,
   addCommentAction,
+  reactToPostAction,
 } from "../../actions/communityActions";
 import responseTypes from "../../constants/responseTypes";
 import { FAILURE_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 
 const PostContainer = (props) => {
-  const { accessToken, getPostById, addComment } = props;
+  const { accessToken, getPostById, addComment, reactToPost } = props;
 
   const [isCommentFormOpen, setIsCommentFormOpen] = useState(false);
 
@@ -70,9 +71,22 @@ const PostContainer = (props) => {
     });
   };
 
+  const onReact = (reaction) => {
+    const callback = (res, data) => {
+      if (res !== responseTypes.SUCCESS) {
+        Modal.error({
+          title: FAILURE_MESSAGE,
+          content: data,
+        });
+      }
+    };
+    reactToPost({ accessToken, postId, reaction, callback });
+  };
+
   return (
     <Post
       onFinish={onFinish}
+      onReact={onReact}
       hasErrored={hasErrored}
       errorMessage={errorMessage}
       isCommentFormOpen={isCommentFormOpen}
@@ -88,12 +102,14 @@ const mapStateToProps = ({ userReducer: { accessToken } }) => {
 const mapDispatchToProps = {
   getPostById: getPostByIdAction,
   addComment: addCommentAction,
+  reactToPost: reactToPostAction,
 };
 
 PostContainer.propTypes = {
   accessToken: PropTypes.string,
   getPostById: PropTypes.func,
   addComment: PropTypes.func,
+  reactToPost: PropTypes.func,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostContainer);

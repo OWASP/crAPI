@@ -31,6 +31,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { formatDateFromIso } from "../../utils";
 import defaultProficPic from "../../assets/default_profile_pic.png";
 import { useNavigate } from "react-router-dom";
+import ReactionButtons, { Reaction } from "../reactions/reactionButtons";
 
 const { Content } = Layout;
 const { Meta } = Card;
@@ -45,6 +46,9 @@ interface Post {
     nickname: string;
     profile_pic_url: string | null;
   };
+  likes: number;
+  dislikes: number;
+  user_reaction: string;
 }
 
 interface RootState {
@@ -67,6 +71,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface ForumProps extends PropsFromRedux {
   handleOffsetChange: (offset: number | null) => void;
+  handleReaction: (postId: string, reaction: Reaction) => void;
 }
 
 const Forum: React.FC<ForumProps> = (props) => {
@@ -128,6 +133,14 @@ const Forum: React.FC<ForumProps> = (props) => {
                     <Paragraph key={index}>{para}</Paragraph>
                   ))}
                 </Typography>
+                <ReactionButtons
+                  likes={post.likes}
+                  dislikes={post.dislikes}
+                  userReaction={post.user_reaction}
+                  onReact={(reaction) =>
+                    props.handleReaction(post.id, reaction)
+                  }
+                />
               </Card>
             </Col>
           ))}

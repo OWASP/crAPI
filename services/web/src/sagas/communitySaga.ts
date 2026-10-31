@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { put, takeLatest } from "redux-saga/effects";
+import { put, takeEvery, takeLatest } from "redux-saga/effects";
 import { APIService, requestURLS } from "../constants/APIConstant";
 import actionTypes from "../constants/actionTypes";
 import responseTypes from "../constants/responseTypes";
@@ -24,6 +24,7 @@ import {
   POST_NOT_CREATED,
   COMMENT_ADDED,
   COMMENT_NOT_ADDED,
+  REACTION_NOT_SAVED,
 } from "../constants/messages";
 import MyAction from "../types/action";
 
@@ -199,9 +200,50 @@ export function* addComment(action: MyAction): Generator<any, void, any> {
   }
 }
 
+/**
+ * like or dislike a post (toggles: reacting the same way again removes it)
+ * @payload { accessToken, callback, postId, reaction } payload
+ * accessToken: access token of the user
+ * callback : callback method
+ * reaction: "like" or "dislike"
+ */
+export function* reactToPost(action: MyAction): Generator<any, void, any> {
+  const { accessToken, callback, postId, reaction } = action.payload;
+  let receivedResponse: ReceivedResponse = {} as ReceivedResponse;
+  try {
+    const path =
+      reaction === "like" ? requestURLS.LIKE_POST : requestURLS.DISLIKE_POST;
+    const postUrl = APIService.COMMUNITY_SERVICE + path;
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    };
+    const JsonResponse = yield fetch(postUrl.replace("<postId>", postId), {
+      headers,
+      method: "POST",
+    }).then((response: Response) => {
+      receivedResponse = response as ReceivedResponse;
+      return response.json();
+    });
+
+    if (receivedResponse.ok) {
+      yield put({
+        type: actionTypes.FETCHED_POST,
+        payload: { postId, post: JsonResponse },
+      });
+      callback(responseTypes.SUCCESS, JsonResponse);
+    } else {
+      callback(responseTypes.FAILURE, REACTION_NOT_SAVED);
+    }
+  } catch (e) {
+    callback(responseTypes.FAILURE, REACTION_NOT_SAVED);
+  }
+}
+
 export function* communityActionWatcher(): Generator<any, void, any> {
   yield takeLatest(actionTypes.GET_POSTS, getPosts);
   yield takeLatest(actionTypes.GET_POST_BY_ID, getPostById);
   yield takeLatest(actionTypes.ADD_POST, addPost);
   yield takeLatest(actionTypes.ADD_COMMENT, addComment);
+  yield takeEvery(actionTypes.REACT_TO_POST, reactToPost);
 }

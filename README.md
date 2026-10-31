@@ -65,7 +65,7 @@ cp deploy/docker/llm.env.example deploy/docker/llm.env.local   # optional: then 
 
 `main` is always deployable. To pin a tested version instead, clone a release tag, e.g. `git clone --branch v1.0.0 https://gitlab.com/LinuxUser255/crAPI.git`. All versions and their notes are on the [releases page](https://gitlab.com/LinuxUser255/crAPI/-/releases) and in [`CHANGELOG.md`](CHANGELOG.md).
 
-`quickstart.sh` pulls every image except `crapi-chatbot`, which it builds from local source. When it finishes, open [http://localhost:8889](http://localhost:8889). [`crapi-dev.sh`](crapi-dev.sh) wraps the same operations in an interactive menu.
+`quickstart.sh` pulls the upstream images and builds `crapi-chatbot`, `crapi-community` and `crapi-web` from local source, since those carry this fork's changes. When it finishes, open [http://localhost:8889](http://localhost:8889). [`crapi-dev.sh`](crapi-dev.sh) wraps the same operations in an interactive menu.
 
 [↑ Back to contents](#table-of-contents)
 

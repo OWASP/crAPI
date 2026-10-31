@@ -136,6 +136,51 @@
   min-width: 500px !important;
 }
 
+/* Drag handles for resizing the chat window. The window is fixed to the
+   bottom-right corner, so its top and left edges (and their corner) are the
+   ones that can be dragged. They are portalled into .rcb-chat-window. */
+.chatbot-resize-handle {
+  position: absolute;
+  z-index: 10;
+  touch-action: none;
+  background: transparent;
+  transition: background 0.15s ease;
+}
+
+.chatbot-resize-left {
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 100%;
+  cursor: ew-resize;
+}
+
+.chatbot-resize-top {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  cursor: ns-resize;
+}
+
+.chatbot-resize-corner {
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  cursor: nwse-resize;
+}
+
+.chatbot-resize-handle:hover,
+.app-chatbot-container.resizing .chatbot-resize-handle {
+  background: rgba(139, 92, 246, 0.25);
+}
+
+/* No size animation while dragging, or the window lags behind the pointer. */
+.app-chatbot-container.resizing .rcb-chat-window {
+  transition: none !important;
+}
+
 .rcb-bot-avatar {
   background: fixed;
 }

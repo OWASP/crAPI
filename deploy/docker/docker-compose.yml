@@ -69,6 +69,8 @@ services:
   crapi-community:
     container_name: crapi-community
     image: crapi/crapi-community:${VERSION:-latest}
+    build:
+      context: ../../services/community
     #ports:
     #  - "${LISTEN_IP:-127.0.0.1}:8087:8087"
     environment:
@@ -201,6 +203,8 @@ services:
   crapi-web:
     container_name: crapi-web
     image: crapi/crapi-web:${VERSION:-latest}
+    build:
+      context: ../../services/web
     ports:
       # 8888 on this host belongs to another app; crAPI web uses 8889 instead.
       - "${LISTEN_IP:-127.0.0.1}:8889:80"

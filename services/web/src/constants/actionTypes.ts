@@ -80,6 +80,7 @@ const actionTypes = {
   ADD_POST: "ADD_POST",
   GET_POST_BY_ID: "GET_POST_BY_ID",
   ADD_COMMENT: "ADD_COMMENT",
+  REACT_TO_POST: "REACT_TO_POST",
 } as const;
 
 type ActionTypes = typeof actionTypes;

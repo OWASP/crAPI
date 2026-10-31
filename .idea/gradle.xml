@@ -5,7 +5,7 @@
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/services/identity" />
-        <option name="gradleJvm" value="zulu-13" />
+        <option name="gradleJvm" value="azul-13" />
       </GradleProjectSettings>
     </option>
   </component>

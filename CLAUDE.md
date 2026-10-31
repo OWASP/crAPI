@@ -22,7 +22,7 @@ The file diverges from upstream:
 
 `deploy/docker/.env` holds only the non-secret toggles. Validate any compose edit with `docker compose config --quiet` from `deploy/docker/`. Plain `docker compose config` prints the resolved `llm.env.local` values, key included.
 
-`quickstart.sh` deliberately pulls every service *except* `crapi-chatbot` and builds that one locally, so the fork's chatbot fixes are what runs.
+`crapi-community` and `crapi-web` also have `build:` contexts (`../../services/community`, `../../services/web`) because the fork changes them (forum likes/dislikes, refreshed profile pictures, resizable chat window). `quickstart.sh` runs `docker compose pull --ignore-buildable` and then `docker compose build`, so the three services with a build context are always what the fork's source produces and never the upstream images. A plain `docker compose pull` would overwrite the local images with upstream's, so keep `--ignore-buildable` in the scripts.
 
 ## Running tests
 

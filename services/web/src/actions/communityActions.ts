@@ -29,6 +29,10 @@ interface AddCommentPayload extends PostByIdPayload {
   comment: string;
 }
 
+interface ReactToPostPayload extends PostByIdPayload {
+  reaction: "like" | "dislike";
+}
+
 export const getPostsAction = ({
   accessToken,
   callback,
@@ -71,5 +75,17 @@ export const addCommentAction = ({
   return {
     type: actionTypes.ADD_COMMENT,
     payload: { accessToken, postId, comment, callback },
+  };
+};
+
+export const reactToPostAction = ({
+  accessToken,
+  callback,
+  postId,
+  reaction,
+}: ReactToPostPayload) => {
+  return {
+    type: actionTypes.REACT_TO_POST,
+    payload: { accessToken, postId, reaction, callback },
   };
 };

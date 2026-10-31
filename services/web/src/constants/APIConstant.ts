@@ -76,6 +76,8 @@ export const requestURLS: RequestURLSType = {
   GET_POSTS: "api/v2/community/posts/recent",
   GET_POST_BY_ID: "api/v2/community/posts/<postId>",
   ADD_COMMENT: "api/v2/community/posts/<postId>/comment",
+  LIKE_POST: "api/v2/community/posts/<postId>/like",
+  DISLIKE_POST: "api/v2/community/posts/<postId>/dislike",
   VALIDATE_COUPON: "api/v2/coupon/validate-coupon",
   NEW_COUPON: "api/v2/coupon/new-coupon",
   VALIDATE_TOKEN: "api/auth/verify",

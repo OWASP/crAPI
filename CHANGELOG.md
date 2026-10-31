@@ -2,6 +2,21 @@
 
 Releases of this crAPI lab fork. Each `## [vX.Y.Z]` section becomes the notes of the GitLab release for that tag (see `.gitlab-ci.yml`). Add new versions at the top.
 
+## [Unreleased]
+
+### Forum
+
+- Posts can be liked and disliked, from the forum list and the post page. Each is a toggle per user: reacting again removes it, and liking a disliked post (or the reverse) switches it. New Community endpoints: `POST /community/api/v2/community/posts/{id}/like` and `/dislike`; posts now carry `likes`, `dislikes` and `user_reaction`. The chatbot's OpenAPI spec knows the new routes.
+- Forum posts and comments show the author's current profile picture. Before, the picture was copied into the post when it was written, so one uploaded afterwards never appeared.
+
+### Chatbot
+
+- The chat window can be resized by dragging its top edge, left edge or top-left corner. The size is remembered in the browser.
+
+### Docs
+
+- Header comments on the main files of every backend service describing what each does and what it connects to, and `docs/crAPI_architecture_detailed.md`, a drill-down of the architecture overview that separates frontend from backend.
+
 ## [v1.0.0] - 2026-10-30
 
 First release of the fork as a ready-to-run lab, based on [OWASP/crAPI](https://github.com/OWASP/crAPI) `develop`.

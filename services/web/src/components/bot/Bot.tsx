@@ -13,7 +13,8 @@
  * limitations under the License.
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import ChatBot, { Params } from "react-chatbotify";
 import MarkdownRenderer, {
   MarkdownRendererBlock,
@@ -63,9 +64,136 @@ interface ChatBotComponentProps {
   role: string;
 }
 
+interface WindowSize {
+  width: number;
+  height: number;
+}
+
+// Which edge of the chat window is being dragged. The window is anchored to
+// the bottom-right corner of the viewport, so only the top and left edges move.
+type ResizeEdge = "left" | "top" | "corner";
+
+const SIZE_STORAGE_KEY = "chatbot_window_size";
+const MIN_WIDTH = 320;
+const MIN_HEIGHT = 300;
+const VIEWPORT_MARGIN = 40;
+
+const clampSize = ({ width, height }: WindowSize): WindowSize => ({
+  width: Math.min(
+    Math.max(width, MIN_WIDTH),
+    window.innerWidth - VIEWPORT_MARGIN,
+  ),
+  height: Math.min(
+    Math.max(height, MIN_HEIGHT),
+    window.innerHeight - VIEWPORT_MARGIN,
+  ),
+});
+
+const loadSize = (): WindowSize => {
+  try {
+    const saved = localStorage.getItem(SIZE_STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (
+        typeof parsed.width === "number" &&
+        typeof parsed.height === "number"
+      ) {
+        return clampSize(parsed);
+      }
+    }
+  } catch (err) {
+    // Ignore storage errors; fall through to the default size.
+  }
+  return clampSize({
+    width: 420,
+    height: Math.round(window.innerHeight * 0.7),
+  });
+};
+
 const ChatBotComponent: React.FC<ChatBotComponentProps> = (props) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   const [chatResetKey, setChatResetKey] = useState<number>(0);
+  const [size, setSize] = useState<WindowSize>(loadSize);
+  const [resizing, setResizing] = useState<boolean>(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [chatWindowEl, setChatWindowEl] = useState<HTMLElement | null>(null);
+
+  // react-chatbotify renders the chat window itself. Find it so the resize
+  // handles can be portalled inside and sit on its edges; keep watching because
+  // it is re-created when the chat is reset.
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const find = () =>
+      container.querySelector<HTMLElement>(".rcb-chat-window") ?? null;
+    setChatWindowEl(find());
+    const observer = new MutationObserver(() => setChatWindowEl(find()));
+    observer.observe(container, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [chatResetKey]);
+
+  useEffect(() => {
+    if (resizing) return;
+    try {
+      localStorage.setItem(SIZE_STORAGE_KEY, JSON.stringify(size));
+    } catch (err) {
+      // Storage may be unavailable; the size still applies for this session.
+    }
+  }, [size, resizing]);
+
+  const startResize =
+    (edge: ResizeEdge) => (event: React.PointerEvent<HTMLDivElement>) => {
+      if (!chatWindowEl) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const startX = event.clientX;
+      const startY = event.clientY;
+      // Start from the rendered size so a drag out of the expanded preset is smooth.
+      const rect = chatWindowEl.getBoundingClientRect();
+      const start = { width: rect.width, height: rect.height };
+      setExpanded(false);
+      setResizing(true);
+      document.body.style.userSelect = "none";
+
+      const onMove = (move: PointerEvent) => {
+        const next = { ...start };
+        if (edge !== "top") next.width = start.width + (startX - move.clientX);
+        if (edge !== "left")
+          next.height = start.height + (startY - move.clientY);
+        setSize(clampSize(next));
+      };
+      const onUp = () => {
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        document.body.style.userSelect = "";
+        setResizing(false);
+      };
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+    };
+
+  const resizeHandles =
+    chatWindowEl &&
+    createPortal(
+      <>
+        <div
+          className="chatbot-resize-handle chatbot-resize-left"
+          title="Drag to resize"
+          onPointerDown={startResize("left")}
+        />
+        <div
+          className="chatbot-resize-handle chatbot-resize-top"
+          title="Drag to resize"
+          onPointerDown={startResize("top")}
+        />
+        <div
+          className="chatbot-resize-handle chatbot-resize-corner"
+          title="Drag to resize"
+          onPointerDown={startResize("corner")}
+        />
+      </>,
+      chatWindowEl,
+    );
   const helpOptions = ["Initialize", "Clear", "Help"];
   const [apiKey, setApiKey] = useState("");
 
@@ -504,7 +632,13 @@ What would you like to do next?`);
   return (
     <Row>
       <Col xs={10}>
-        <div className={`app-chatbot-container${expanded ? " expanded" : ""}`}>
+        <div
+          ref={containerRef}
+          className={`app-chatbot-container${expanded ? " expanded" : ""}${
+            resizing ? " resizing" : ""
+          }`}
+        >
+          {resizeHandles}
           <ChatBot
             key={chatResetKey}
             flow={flow}
@@ -512,8 +646,8 @@ What would you like to do next?`);
             settings={settings}
             styles={{
               chatWindowStyle: {
-                width: expanded ? "max(50vw, 500px)" : "420px",
-                height: expanded ? "90vh" : "70vh",
+                width: expanded ? "max(50vw, 500px)" : `${size.width}px`,
+                height: expanded ? "90vh" : `${size.height}px`,
                 borderRadius: "16px",
                 boxShadow: expanded
                   ? "0 20px 60px rgba(0, 0, 0, 0.2)"

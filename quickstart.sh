@@ -291,15 +291,15 @@ configure_environment() {
 #------------------------------------------------------------------------------
 deploy_stack() {
     debug "deploy_stack"  # §5 debug at function start
-    printf '%b\n' "${CYAN}[1/5]${NC} Pulling latest crAPI images (excluding chatbot)..."
-    local pull_services  # §8 local; separate declaration from assignment to preserve exit code
-    pull_services=$(docker compose config --services | grep -v '^crapi-chatbot$')  # §5 no-fork grep
-    # shellcheck disable=SC2086  # §4 intentional word split: service names must expand separately
-    $COMPOSE_CMD pull $pull_services
-
-    printf '%b\n' "${CYAN}[2/5]${NC} Building chatbot image from local source..."
+    printf '%b\n' "${CYAN}[1/5]${NC} Pulling latest crAPI images (excluding the ones built locally)..."
+    # Services with a build: context (chatbot, community, web) carry this fork's changes and
+    # are never pulled from upstream. --ignore-buildable needs Compose 2.17+ (MIN_COMPOSE_VER is 2.24).
     # shellcheck disable=SC2086  # §4 intentional word split on $COMPOSE_CMD
-    $COMPOSE_CMD build crapi-chatbot  # never pull upstream; local build contains SSL fix
+    $COMPOSE_CMD pull --ignore-buildable
+
+    printf '%b\n' "${CYAN}[2/5]${NC} Building chatbot, community and web images from local source..."
+    # shellcheck disable=SC2086  # §4 intentional word split on $COMPOSE_CMD
+    $COMPOSE_CMD build
 
     printf '%b\n' "${CYAN}[3/5]${NC} Cleaning up any existing instances..."
     # shellcheck disable=SC2086  # §4 intentional word split on $COMPOSE_CMD

@@ -93,10 +93,11 @@ hacking_lab_quickstart() {
     # Check prerequisites
     check_docker
     
-    # Pull latest images
-    print_info "Pulling latest crAPI images..."
+    # Pull latest images; chatbot, community and web are built from local source instead
+    print_info "Pulling latest crAPI images and building local ones..."
     cd deploy/docker
-    docker compose pull
+    docker compose pull --ignore-buildable
+    docker compose build
     
     # Configure for hacking lab
     echo -e "\n${CYAN}Select vulnerability configuration:${NC}"
@@ -682,8 +683,9 @@ main() {
             23) export_api_docs ;;
             24) 
                 cd deploy/docker
-                docker compose pull
-                print_success "Images pulled successfully"
+                docker compose pull --ignore-buildable
+                docker compose build
+                print_success "Images pulled and local ones built successfully"
                 cd "$SCRIPT_DIR"
                 ;;
             

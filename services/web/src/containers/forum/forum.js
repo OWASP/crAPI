@@ -17,13 +17,16 @@ import React, { useEffect } from "react";
 import { Modal } from "antd";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { getPostsAction } from "../../actions/communityActions";
+import {
+  getPostsAction,
+  reactToPostAction,
+} from "../../actions/communityActions";
 import Forum from "../../components/forum/forum";
 import responseTypes from "../../constants/responseTypes";
 import { FAILURE_MESSAGE } from "../../constants/messages";
 
 const ForumContainer = (props) => {
-  const { accessToken, getPosts } = props;
+  const { accessToken, getPosts, reactToPost } = props;
 
   useEffect(() => {
     const callback = (res, data) => {
@@ -49,7 +52,21 @@ const ForumContainer = (props) => {
     getPosts({ accessToken, offset, callback });
   };
 
-  return <Forum handleOffsetChange={onOffsetChange} />;
+  const onReaction = (postId, reaction) => {
+    const callback = (res, data) => {
+      if (res !== responseTypes.SUCCESS) {
+        Modal.error({
+          title: FAILURE_MESSAGE,
+          content: data,
+        });
+      }
+    };
+    reactToPost({ accessToken, postId, reaction, callback });
+  };
+
+  return (
+    <Forum handleOffsetChange={onOffsetChange} handleReaction={onReaction} />
+  );
 };
 
 const mapStateToProps = ({ userReducer: { accessToken } }) => {
@@ -58,11 +75,13 @@ const mapStateToProps = ({ userReducer: { accessToken } }) => {
 
 const mapDispatchToProps = {
   getPosts: getPostsAction,
+  reactToPost: reactToPostAction,
 };
 
 ForumContainer.propTypes = {
   accessToken: PropTypes.string,
   getPosts: PropTypes.func,
+  reactToPost: PropTypes.func,
   prevOffset: PropTypes.string,
   nextOffset: PropTypes.string,
   handleOffsetChange: PropTypes.func,

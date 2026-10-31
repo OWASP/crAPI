@@ -90,6 +90,10 @@
   margin: 0;
 }
 
+.post-reactions {
+  margin-top: var(--spacing-md);
+}
+
 /* Post Content Section */
 .post-content-section {
   margin-bottom: calc(var(--spacing-xl) * 1.5);

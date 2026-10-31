@@ -71,6 +71,7 @@ export const POST_CREATED: string = "Post Created.";
 export const POST_NOT_CREATED: string = "Could not add new post";
 export const COMMENT_ADDED: string = "Comment Added";
 export const COMMENT_NOT_ADDED: string = "Could not add comment";
+export const REACTION_NOT_SAVED: string = "Could not save your reaction";
 export const PROFILE_PIC_UPDATED: string = "Profile pic updated successfully";
 export const PROFILE_PIC_NOT_UPDATED: string = "Could not upload Picture";
 export const VIDEO_UPDATED: string = "Video updated successfully";

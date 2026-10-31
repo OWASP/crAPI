@@ -1041,8 +1041,8 @@
                         "email"
                       ]
                     },
-                    "profileVideo" : {
-                      "type" : "string"
+                    "profileVideo": {
+                      "type": "string"
                     }
                   },
                   "example": {
@@ -1142,8 +1142,8 @@
                         "email"
                       ]
                     },
-                    "profileVideo" : {
-                      "type" : "string"
+                    "profileVideo": {
+                      "type": "string"
                     }
                   },
                   "example": {
@@ -1266,8 +1266,8 @@
                         "email"
                       ]
                     },
-                    "profileVideo" : {
-                      "type" : "string"
+                    "profileVideo": {
+                      "type": "string"
                     }
                   },
                   "example": {
@@ -2250,6 +2250,318 @@
               }
             },
             "description": ""
+          }
+        }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "postId",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "tiSTSUzh4BwtvYSLWPsqu9"
+          }
+        }
+      ]
+    },
+    "/community/api/v2/community/posts/{postId}/like": {
+      "post": {
+        "operationId": "like_post",
+        "summary": "Like Post",
+        "description": "Toggles the current user's like on a forum post: liking again removes it, and liking a post they disliked switches the reaction. Returns the updated post with likes, dislikes and user_reaction.",
+        "tags": [
+          "Community / Posts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "CreatedAt",
+                    "author",
+                    "authorid",
+                    "comments",
+                    "content",
+                    "id",
+                    "title"
+                  ],
+                  "properties": {
+                    "author": {
+                      "type": "object",
+                      "required": [
+                        "created_at",
+                        "email",
+                        "nickname",
+                        "profile_pic_url",
+                        "vehicleid"
+                      ],
+                      "properties": {
+                        "vehicleid": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "profile_pic_url": {
+                          "type": "string"
+                        },
+                        "nickname": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "authorid": {
+                      "type": "number"
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "CreatedAt": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "comments": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "CreatedAt",
+                          "author",
+                          "content",
+                          "id"
+                        ],
+                        "properties": {
+                          "CreatedAt": {
+                            "type": "string"
+                          },
+                          "author": {
+                            "type": "object",
+                            "required": [
+                              "created_at",
+                              "email",
+                              "nickname",
+                              "profile_pic_url",
+                              "vehicleid"
+                            ],
+                            "properties": {
+                              "vehicleid": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "email": {
+                                "type": "string"
+                              },
+                              "created_at": {
+                                "type": "string"
+                              },
+                              "profile_pic_url": {
+                                "type": "string"
+                              },
+                              "nickname": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "content": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "likes": {
+                      "type": "number"
+                    },
+                    "dislikes": {
+                      "type": "number"
+                    },
+                    "user_reaction": {
+                      "type": "string",
+                      "enum": [
+                        "like",
+                        "dislike",
+                        ""
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "in": "path",
+          "name": "postId",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "tiSTSUzh4BwtvYSLWPsqu9"
+          }
+        }
+      ]
+    },
+    "/community/api/v2/community/posts/{postId}/dislike": {
+      "post": {
+        "operationId": "dislike_post",
+        "summary": "Dislike Post",
+        "description": "Toggles the current user's dislike on a forum post: disliking again removes it, and disliking a post they liked switches the reaction. Returns the updated post with likes, dislikes and user_reaction.",
+        "tags": [
+          "Community / Posts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "CreatedAt",
+                    "author",
+                    "authorid",
+                    "comments",
+                    "content",
+                    "id",
+                    "title"
+                  ],
+                  "properties": {
+                    "author": {
+                      "type": "object",
+                      "required": [
+                        "created_at",
+                        "email",
+                        "nickname",
+                        "profile_pic_url",
+                        "vehicleid"
+                      ],
+                      "properties": {
+                        "vehicleid": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "profile_pic_url": {
+                          "type": "string"
+                        },
+                        "nickname": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "authorid": {
+                      "type": "number"
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "CreatedAt": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "comments": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "CreatedAt",
+                          "author",
+                          "content",
+                          "id"
+                        ],
+                        "properties": {
+                          "CreatedAt": {
+                            "type": "string"
+                          },
+                          "author": {
+                            "type": "object",
+                            "required": [
+                              "created_at",
+                              "email",
+                              "nickname",
+                              "profile_pic_url",
+                              "vehicleid"
+                            ],
+                            "properties": {
+                              "vehicleid": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "email": {
+                                "type": "string"
+                              },
+                              "created_at": {
+                                "type": "string"
+                              },
+                              "profile_pic_url": {
+                                "type": "string"
+                              },
+                              "nickname": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "content": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "likes": {
+                      "type": "number"
+                    },
+                    "dislikes": {
+                      "type": "number"
+                    },
+                    "user_reaction": {
+                      "type": "string",
+                      "enum": [
+                        "like",
+                        "dislike",
+                        ""
+                      ]
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -5076,8 +5388,8 @@
               "email"
             ]
           },
-          "profileVideo" : {
-            "type" : "string"
+          "profileVideo": {
+            "type": "string"
           }
         },
         "example": {

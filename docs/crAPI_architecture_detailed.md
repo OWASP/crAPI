@@ -178,7 +178,7 @@ community/
     └── seed/             seed posts and coupons
 ```
 
-Routes: `/community/api/v2/community/posts[/recent|/{id}|/{id}/comment]`, `/community/api/v2/coupon/{new-coupon,validate-coupon}`.
+Routes: `/community/api/v2/community/posts[/recent|/{id}|/{id}/comment|/{id}/like|/{id}/dislike]`, `/community/api/v2/coupon/{new-coupon,validate-coupon}`.
 
 ### 3c. Workshop — `services/workshop` (Django)
 

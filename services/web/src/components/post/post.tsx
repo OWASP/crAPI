@@ -35,6 +35,7 @@ import { CommentOutlined } from "@ant-design/icons";
 import { COMMENT_REQUIRED } from "../../constants/messages";
 import { formatDateFromIso } from "../../utils";
 import defaultProficPic from "../../assets/default_profile_pic.png";
+import ReactionButtons, { Reaction } from "../reactions/reactionButtons";
 
 const { Content } = Layout;
 const { Paragraph } = Typography;
@@ -56,6 +57,9 @@ interface Post {
   CreatedAt: string;
   content: string;
   comments: Comment[];
+  likes: number;
+  dislikes: number;
+  user_reaction: string;
 }
 
 interface RootState {
@@ -66,6 +70,7 @@ interface RootState {
 
 interface PostProps extends PropsFromRedux {
   onFinish: (values: any) => void;
+  onReact: (reaction: Reaction) => void;
   isCommentFormOpen: boolean;
   setIsCommentFormOpen: (isOpen: boolean) => void;
   hasErrored: boolean;
@@ -74,6 +79,7 @@ interface PostProps extends PropsFromRedux {
 
 const Posts: React.FC<PostProps> = ({
   onFinish,
+  onReact,
   post,
   isCommentFormOpen,
   setIsCommentFormOpen,
@@ -103,6 +109,17 @@ const Posts: React.FC<PostProps> = ({
                   {post &&
                     `${post.author.nickname}, ${formatDateFromIso(post.CreatedAt)}`}
                 </div>
+                {post && (
+                  <div className="post-reactions">
+                    <ReactionButtons
+                      likes={post.likes}
+                      dislikes={post.dislikes}
+                      userReaction={post.user_reaction}
+                      onReact={onReact}
+                      size="large"
+                    />
+                  </div>
+                )}
               </div>
             </Col>
           </Row>

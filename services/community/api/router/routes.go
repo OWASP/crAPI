@@ -21,6 +21,8 @@
 //	GET  /community/api/v2/community/posts/{postID}
 //	POST /community/api/v2/community/posts
 //	POST /community/api/v2/community/posts/{postID}/comment
+//	POST /community/api/v2/community/posts/{postID}/like
+//	POST /community/api/v2/community/posts/{postID}/dislike
 //	POST /community/api/v2/coupon/new-coupon
 //	POST /community/api/v2/coupon/validate-coupon
 //	GET  /community/home            (unauthenticated health page)
@@ -67,6 +69,9 @@ func (server *Server) InitializeRoutes() *mux.Router {
 	server.Router.HandleFunc("/community/api/v2/community/posts", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(controller.AddNewPost, server.DB))).Methods("POST", "OPTIONS")
 
 	server.Router.HandleFunc("/community/api/v2/community/posts/{postID}/comment", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(controller.Comment, server.DB))).Methods("POST", "OPTIONS")
+	//Like or dislike a post (toggles)
+	server.Router.HandleFunc("/community/api/v2/community/posts/{postID}/like", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(controller.LikePost, server.DB))).Methods("POST", "OPTIONS")
+	server.Router.HandleFunc("/community/api/v2/community/posts/{postID}/dislike", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(controller.DislikePost, server.DB))).Methods("POST", "OPTIONS")
 
 	//Coupon Route
 	server.Router.HandleFunc("/community/api/v2/coupon/new-coupon", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(controller.AddNewCoupon, server.DB))).Methods("POST", "OPTIONS")
