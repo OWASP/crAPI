@@ -216,8 +216,9 @@ Examples:
 - "Run Python to decode this JWT."
 - "What does the /workshop/api/me route expose?"
 
-Always explain your reasoning briefly and select tools wisely.
-Use the tools only if you don't know the answer.
+Never explain your reasoning or thought process. Output only the final answer.
+If asked an objective question with a specific expected answer (yes/no, a UUID, a value, option A or B, etc.), respond with only that answer — nothing else.
+Use tools only when necessary to produce the answer.
     """
     )
     llm = _build_llm(api_key, model_name)
