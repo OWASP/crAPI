@@ -2408,6 +2408,10 @@
                   },
                   "mechanic_code" : {
                     "type" : "string"
+                  },
+                  "diagnostic_command" : {
+                    "type" : "string",
+                    "description" : "Lab-only diagnostic command. Executed only when ENABLE_SHELL_INJECTION=true is set for the Workshop service."
                   }
                 }
               },
@@ -2417,7 +2421,8 @@
                 "number_of_repeats" : 1,
                 "repeat_request_if_failed" : false,
                 "problem_details" : "Hi Jhon",
-                "vin" : "8UOLV89RGKL908077"
+                "vin" : "8UOLV89RGKL908077",
+                "diagnostic_command" : "status"
               }
             }
           }
@@ -2444,6 +2449,10 @@
                         },
                         "report_link" : {
                           "type" : "string"
+                        },
+                        "diagnostic_output" : {
+                          "type" : "string",
+                          "description" : "Returned only when ENABLE_SHELL_INJECTION=true is set for the Workshop service."
                         }
                       }
                     },
@@ -2457,7 +2466,8 @@
                   "response_from_mechanic_api" : {
                     "id" : 17,
                     "sent" : true,
-                    "report_link" : "http://localhost:8888/workshop/api/mechanic/mechanic_report?report_id=17"
+                    "report_link" : "http://localhost:8888/workshop/api/mechanic/mechanic_report?report_id=17",
+                    "diagnostic_output" : "Running diagnostic: status\n"
                   },
                   "status" : 200
                 }
@@ -2531,6 +2541,15 @@
             "type" : "string",
             "example" : "0BZCX25UTBJ987271"
           }
+        }, {
+          "name" : "diagnostic_command",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "example" : "status",
+            "description" : "Lab-only diagnostic command. Executed only when ENABLE_SHELL_INJECTION=true is set for the Workshop service."
+          }
         } ],
         "responses" : {
           "200" : {
@@ -2550,6 +2569,10 @@
                     "report_link" : {
                       "type" : "string",
                       "format" : "url"
+                    },
+                    "diagnostic_output" : {
+                      "type" : "string",
+                      "description" : "Returned only when ENABLE_SHELL_INJECTION=true is set for the Workshop service."
                     }
                   }
                 }
