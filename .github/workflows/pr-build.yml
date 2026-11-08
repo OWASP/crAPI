@@ -167,7 +167,13 @@ jobs:
       - name: Run crAPI using built images
         run: |
              cd deploy/docker
-             VERSION=${{ env.TAG_NAME }} docker compose -f docker-compose.yml --compatibility up -d
+             VERSION=${{ env.TAG_NAME }} docker compose -f docker-compose.yml --compatibility up -d --wait --wait-timeout 300
+
+      - name: Wait for crAPI gateway to be ready
+        run: |
+          curl --retry 60 --retry-connrefused --retry-delay 5 --retry-max-time 300 \
+            --connect-timeout 5 --max-time 10 --silent --show-error --output /dev/null \
+            http://127.0.0.1:30080/health
 
       - name: Install Node
         uses: actions/setup-node@v3
