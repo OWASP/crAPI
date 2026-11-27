@@ -111,6 +111,7 @@ async def init():
     return jsonify({"message": f"Initialized ({provider})"}), 200
 
 
+# FIXME[CWE-862]: Apply the standard secure pattern for this weakness. (OWASP ASVS V1.1)
 @chat_bp.route("/model", methods=["POST"])
 async def model():
     session_id = await get_or_create_session_id()
