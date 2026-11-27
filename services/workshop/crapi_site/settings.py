@@ -59,6 +59,7 @@ IS_TESTING = os.environ.get("IS_TESTING", False)
 LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO").upper()
 DEBUG = os.environ.get("DEBUG", False)
 if LOG_LEVEL == "DEBUG":
+    # FIXME[CWE-489]: Apply the standard secure pattern for this weakness. (OWASP ASVS V1.1)
     DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
