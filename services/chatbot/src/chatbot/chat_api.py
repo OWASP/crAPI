@@ -62,6 +62,7 @@ def _validate_provider_env(provider: str) -> str | None:
     return f"Unsupported provider {provider}"
 
 
+# FIXME[CWE-862]: Apply the standard secure pattern for this weakness. (OWASP ASVS V1.1)
 @chat_bp.route("/init", methods=["POST"])
 async def init():
     session_id = await get_or_create_session_id()
